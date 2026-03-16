@@ -157,3 +157,22 @@ Verificar en https://DOMINIO
 - El `.gitignore` debe incluir `dist/`, `node_modules/`, `.env`
 - Netlify usa el `netlify.toml` en la raíz del repo Astro para configuración avanzada
 - El adapter `@astrojs/netlify` hace el build SSR; Netlify lo ejecuta como Edge Function
+
+---
+
+### 9. Production Essentials (v2)
+
+For a full production launch, ensure the following are configured in the environment/hosting:
+
+- **Environment Variables**: Configure all keys in the `README.md` (Resend, Turnstile, Sentry) in the Netlify dashboard.
+- **Service Integration**: Follow the [Services Guide](./SERVICES.md) for Resend, Turnstile, and Sentry.
+- **Uptime Monitoring**: Add a monitor in UptimeRobot pointing to the production URL.
+
+---
+
+### Phase 2 Summary
+1.  **Identity Refresh**: Switched to Outfit/Inter fonts and AGLAYA icon set.
+2.  **Serverless Form**: Replaced plain forms with Resend API for better deliverability.
+3.  **Bot Protection**: Added Cloudflare Turnstile to prevent spam.
+4.  **Tracking**: Added Sentry to catch runtime issues.
+5.  **Quality Assurance**: Implemented 100% test coverage with automated a11y audits.

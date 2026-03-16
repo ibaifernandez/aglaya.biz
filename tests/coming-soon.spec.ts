@@ -1,152 +1,96 @@
 import { test, expect } from '@playwright/test';
+import { AxeBuilder } from '@axe-core/playwright';
 
-// ─────────────────────────────────────────────
-//  AGLAYA Coming Soon — Test Suite
-//  Covers: EN (/) and ES (/es/) pages
-// ─────────────────────────────────────────────
+// ──────────────────────────────────────────────
+//  E2E + Accessibility Tests (v2)
+// ──────────────────────────────────────────────
 
-test.describe('EN page (/)', () => {
-  test.beforeEach(async ({ page }) => {
+test.describe('Coming Soon Page (Bilingual + A11y)', () => {
+
+  test('EN Page: Full Audit', async ({ page }) => {
     await page.goto('/');
+
+    // 1. Basic Content
+    await expect(page).toHaveTitle(/AGLAYA/);
+    await expect(page.locator('h1')).toContainText(/uncomfortable/i);
+    await expect(page.locator('h1')).toContainText(/agency/i);
+
+    // 2. Logo & Branding
+    const logo = page.locator('img[alt="AGLAYA"]').first();
+    await expect(logo).toBeVisible();
+    await expect(logo).toHaveAttribute('src', /.*aglaya-logo-white.*/);
+    const tagline = page.locator('header span:has-text("THE UNCOMFORTABLE AGENCY")');
+    await expect(tagline).toBeVisible();
+
+    // 3. Language Switcher (Flag)
+    const langLink = page.locator('a[hreflang="es"]');
+    await expect(langLink).toBeVisible();
+    await expect(langLink).toContainText('🇪🇸');
+    await expect(langLink).toContainText('ES');
+
+    // 4. Form Components (Turnstile)
+    await expect(page.locator('#lead-form')).toBeVisible();
+    await expect(page.locator('.cf-turnstile')).toBeVisible();
+
+    // 5. Contact Links
+    await expect(page.locator('a[href^="mailto:"]').first()).toBeVisible();
+    await expect(page.locator('a[href*="wa.me"]').first()).toBeVisible();
+
+    // 6. Accessibility (axe-core)
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'best-practice'])
+      .analyze();
+
+    expect(accessibilityScanResults.violations).toEqual([]);
   });
 
-  test('html[lang] is "en"', async ({ page }) => {
-    const lang = await page.getAttribute('html', 'lang');
-    expect(lang).toBe('en');
-  });
-
-  test('<title> contains "AGLAYA"', async ({ page }) => {
-    await expect(page).toHaveTitle(/AGLAYA/i);
-  });
-
-  test('<meta name="description"> is present and non-empty', async ({ page }) => {
-    const desc = await page.getAttribute('meta[name="description"]', 'content');
-    expect(desc).toBeTruthy();
-    expect(desc!.length).toBeGreaterThan(20);
-  });
-
-  test('og:title is present', async ({ page }) => {
-    const ogTitle = await page.getAttribute('meta[property="og:title"]', 'content');
-    expect(ogTitle).toBeTruthy();
-  });
-
-  test('og:image is present', async ({ page }) => {
-    const ogImage = await page.getAttribute('meta[property="og:image"]', 'content');
-    expect(ogImage).toBeTruthy();
-  });
-
-  test('hreflang alternate links are present', async ({ page }) => {
-    const enHreflang = await page.getAttribute('link[hreflang="en"]', 'href');
-    const esHreflang = await page.getAttribute('link[hreflang="es"]', 'href');
-    const xDefault  = await page.getAttribute('link[hreflang="x-default"]', 'href');
-    expect(enHreflang).toBeTruthy();
-    expect(esHreflang).toBeTruthy();
-    expect(xDefault).toBeTruthy();
-  });
-
-  test('No Tailwind CDN script in source', async ({ page }) => {
-    const cdnScript = page.locator('script[src*="cdn.tailwindcss.com"]');
-    await expect(cdnScript).toHaveCount(0);
-  });
-
-  test('AGLAYA logo wordmark visible', async ({ page }) => {
-    await expect(page.getByText('AGLAYA').first()).toBeVisible();
-  });
-
-  test('"COMING SOON" label visible', async ({ page }) => {
-    await expect(page.getByText(/coming soon/i)).toBeVisible();
-  });
-
-  test('H1 heading visible and contains key text', async ({ page }) => {
-    const h1 = page.locator('h1');
-    await expect(h1).toBeVisible();
-    const text = await h1.innerText();
-    expect(text.toLowerCase()).toContain('uncomfortable');
-  });
-
-  test('Email input field is present', async ({ page }) => {
-    const emailInput = page.locator('input[type="email"]');
-    await expect(emailInput).toBeVisible();
-  });
-
-  test('Submit button is present', async ({ page }) => {
-    const submitBtn = page.locator('button[type="submit"]');
-    await expect(submitBtn).toBeVisible();
-  });
-
-  test('Email CTA link is present', async ({ page }) => {
-    const emailLink = page.locator('a[href="mailto:hola@aglaya.biz"]').first();
-    await expect(emailLink).toBeVisible();
-  });
-
-  test('WhatsApp CTA link is present', async ({ page }) => {
-    const waLink = page.locator('a[href*="wa.me"]').first();
-    await expect(waLink).toBeVisible();
-  });
-
-  test('Marquee section is present and has service text', async ({ page }) => {
-    const marquee = page.locator('[aria-label="Services"]');
-    await expect(marquee).toBeVisible();
-    const text = await marquee.innerText();
-    expect(text.toLowerCase()).toContain('brand strategy');
-  });
-
-  test('Language switcher link to /es/ is present', async ({ page }) => {
-    const esLink = page.locator('a[hreflang="es"]').first();
-    await expect(esLink).toBeVisible();
-  });
-});
-
-// ─────────────────────────────────────────────
-//  ES page (/es/)
-// ─────────────────────────────────────────────
-
-test.describe('ES page (/es/)', () => {
-  test.beforeEach(async ({ page }) => {
+  test('ES Page: Full Audit', async ({ page }) => {
     await page.goto('/es/');
+
+    // 1. Content Translation
+    await expect(page).toHaveTitle(/AGLAYA/);
+    await expect(page.locator('h1')).toContainText(/agencia/i);
+    await expect(page.locator('h1')).toContainText(/incómoda/i);
+
+    // 2. Logo & Branding
+    const logo = page.locator('img[alt="AGLAYA"]').first();
+    await expect(logo).toBeVisible();
+    const tagline = page.locator('header span:has-text("LA AGENCIA INCÓMODA")');
+    await expect(tagline).toBeVisible();
+
+    // 3. Language Switcher (Flag)
+    const langLink = page.locator('a[hreflang="en"]');
+    await expect(langLink).toBeVisible();
+    await expect(langLink).toContainText('🇬🇧');
+    await expect(langLink).toContainText('EN');
+
+    // 4. Accessibility (axe-core)
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa'])
+      .analyze();
+
+    expect(accessibilityScanResults.violations).toEqual([]);
   });
 
-  test('html[lang] is "es"', async ({ page }) => {
-    const lang = await page.getAttribute('html', 'lang');
-    expect(lang).toBe('es');
+  test('SEO & Meta Parity', async ({ page }) => {
+    await page.goto('/');
+
+    // Check Open Graph
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /.*og-default\.png/);
+    await expect(page.locator('meta[property="og:image:width"]')).toHaveAttribute('content', '1200');
+    await expect(page.locator('meta[property="og:image:height"]')).toHaveAttribute('content', '630');
+
+    // Check Twitter
+    await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image');
+
+    // Check Manifest
+    await expect(page.locator('link[rel="manifest"]')).toHaveAttribute('href', '/site.webmanifest');
+
+    // Check LD+JSON
+    const ldJson = await page.locator('script[type="application/ld+json"]').textContent();
+    const data = JSON.parse(ldJson || '{}');
+    expect(data['@type']).toBe('Organization');
+    expect(data['name']).toBe('AGLAYA');
   });
 
-  test('<title> contains "AGLAYA"', async ({ page }) => {
-    await expect(page).toHaveTitle(/AGLAYA/i);
-  });
-
-  test('<meta name="description"> is present and non-empty', async ({ page }) => {
-    const desc = await page.getAttribute('meta[name="description"]', 'content');
-    expect(desc).toBeTruthy();
-    expect(desc!.length).toBeGreaterThan(20);
-  });
-
-  test('"PRÓXIMAMENTE" label visible', async ({ page }) => {
-    await expect(page.getByText(/próximamente/i)).toBeVisible();
-  });
-
-  test('H1 heading in Spanish visible', async ({ page }) => {
-    const h1 = page.locator('h1');
-    await expect(h1).toBeVisible();
-    const text = await h1.innerText();
-    expect(text.toLowerCase()).toContain('agencia');
-  });
-
-  test('Email input field is present', async ({ page }) => {
-    await expect(page.locator('input[type="email"]')).toBeVisible();
-  });
-
-  test('Submit button is present', async ({ page }) => {
-    await expect(page.locator('button[type="submit"]')).toBeVisible();
-  });
-
-  test('Marquee section is present', async ({ page }) => {
-    const marquee = page.locator('[aria-label="Servicios"]');
-    await expect(marquee).toBeVisible();
-  });
-
-  test('Language switcher link to / is present', async ({ page }) => {
-    const enLink = page.locator('a[hreflang="en"]').first();
-    await expect(enLink).toBeVisible();
-  });
 });

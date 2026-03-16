@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import LeadForm from '../../components/LeadForm.astro';
 import { Image } from 'astro:assets';
 import heroImage from '../../assets/images/hero-abstract.png';
+import logoWhite from '../../assets/images/aglaya-logo-white.png';
 import { useTranslations } from '../../i18n/translations';
 
 const lang = 'es';
@@ -42,59 +43,72 @@ const marqueeItems = [
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.07);
     }
-    a.brand-link:hover { color: #e8003d; }
+    .lang-flag {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(245,245,245,0.45);
+      text-decoration: none;
+      padding: 4px 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.2s;
+    }
+    .lang-flag:hover { color: #f5f5f5; border-color: rgba(255,255,255,0.3); }
+    .lang-flag .flag { font-size: 16px; line-height: 1; }
+    a.brand-cta:hover { background: #b5002f !important; }
+    a.text-link:hover { color: #e8003d; }
   </style>
 
-  <div class="relative flex h-screen w-screen flex-col overflow-hidden" style="background:#080808;">
+  <div id="app" class="relative flex h-screen w-screen flex-col overflow-hidden" style="background:#080808;">
     <div class="bg-grid absolute inset-0 z-0 pointer-events-none"></div>
-    <div class="scan-line absolute left-0 right-0 h-px z-0 pointer-events-none" style="background: linear-gradient(90deg, transparent, rgba(232,0,61,0.6), transparent);"></div>
-    <div class="absolute inset-0 z-0 pointer-events-none">
-      <Image
-        src={heroImage}
-        alt=""
-        format="webp"
-        class="w-full h-full object-cover opacity-25"
-        aria-hidden="true"
-      />
-      <div class="absolute inset-0" style="background: radial-gradient(ellipse at center, transparent 20%, #080808 80%);"></div>
+    <div class="scan-line absolute left-0 right-0 h-px z-0 pointer-events-none"
+         style="background: linear-gradient(90deg, transparent, rgba(232,0,61,0.6), transparent);"></div>
+    <div class="absolute inset-0 z-0 pointer-events-none" aria-hidden="true">
+      <Image src={heroImage} alt="" format="webp"
+             class="w-full h-full object-cover opacity-25" />
+      <div class="absolute inset-0"
+           style="background: radial-gradient(ellipse at center, transparent 20%, #080808 80%);"></div>
     </div>
 
     <div class="relative flex h-full w-full flex-col z-10">
+
       <!-- HEADER -->
-      <header
-        class="w-full flex items-center justify-between px-6 py-4 md:px-12 shrink-0"
-        style="border-bottom: 1px solid rgba(255,255,255,0.06);"
-      >
-        <div class="flex flex-col leading-none select-none">
-          <span
-            class="font-display font-black uppercase text-white"
-            style="font-size: clamp(1.1rem, 2.5vw, 1.6rem); letter-spacing: 0.3em;"
-          >AGLAYA</span>
-          <span
-            class="font-display font-light uppercase text-xs"
-            style="color: #e8003d; letter-spacing: 0.3em; font-size: clamp(0.5rem, 1vw, 0.65rem);"
-          >LA AGENCIA INCÓMODA</span>
+      <header class="w-full flex items-center justify-between px-6 py-4 md:px-12 shrink-0"
+              style="border-bottom: 1px solid rgba(255,255,255,0.06);"
+              role="banner">
+        <div class="flex flex-col justify-center gap-1">
+          <Image
+            src={logoWhite}
+            alt="AGLAYA"
+            format="webp"
+            height={28}
+            class="h-6 md:h-7 w-auto object-contain brightness-0 invert"
+            loading="eager"
+          />
+          <span class="font-display font-light uppercase tracking-[0.25em]"
+                style="font-size: 0.55rem; color: #e8003d; letter-spacing: 0.25em;">
+            LA AGENCIA INCÓMODA
+          </span>
         </div>
-        <nav class="flex items-center gap-6">
-          <a
-            href="/"
-            lang="en"
-            hreflang="en"
-            class="brand-link text-[10px] font-bold tracking-widest uppercase transition-colors"
-            style="color: rgba(245,245,245,0.45);"
-          >EN</a>
-          <a
-            href="mailto:hola@aglaya.biz"
-            class="brand-link hidden md:inline-block text-xs font-bold tracking-widest uppercase transition-colors"
-            style="color: rgba(245,245,245,0.45);"
-          >{t('nav.contact')}</a>
-          <a
-            href="https://wa.me/34600000000"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="hidden md:inline-flex items-center gap-2 px-5 py-2 text-xs font-black uppercase tracking-widest text-white transition-all active:scale-95"
-            style="background: #e8003d;"
-          >WhatsApp</a>
+
+        <nav class="flex items-center gap-4" aria-label="Navegación principal">
+          <a href="/" lang="en" hreflang="en"
+             class="lang-flag" aria-label="View in English" title="English">
+            <span class="flag" aria-hidden="true">🇬🇧</span>
+            <span>EN</span>
+          </a>
+          <a href="mailto:hola@aglaya.biz"
+             class="hidden md:inline-block text-xs font-bold tracking-widest uppercase text-link transition-colors"
+             style="color: rgba(245,245,245,0.45);">Contacto</a>
+          <a href="https://wa.me/34600000000"
+             target="_blank" rel="noopener noreferrer"
+             class="brand-cta hidden md:inline-flex items-center gap-2 px-5 py-2 text-xs font-black uppercase tracking-widest text-white transition-all active:scale-95"
+             style="background: #e8003d;"
+             aria-label="Contáctanos por WhatsApp">WhatsApp</a>
         </nav>
       </header>
 
@@ -102,48 +116,40 @@ const marqueeItems = [
       <main class="flex-1 flex items-center px-6 md:px-12 lg:px-20 min-h-0" id="main-content">
         <div class="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div class="flex flex-col justify-center">
-            <span
-              class="inline-block font-display font-black text-xs uppercase tracking-[0.3em] mb-6"
-              style="color: #e8003d;"
-            >{t('hero.label')}</span>
+            <span class="inline-block font-display font-black text-xs uppercase tracking-[0.3em] mb-6"
+                  style="color: #e8003d;">
+              {t('hero.label')}
+            </span>
 
-            <h1
-              class="font-display font-black uppercase leading-[0.88] mb-6"
-              style="font-size: clamp(3rem, 8vw, 7rem); color: #f5f5f5;"
-            >
-              La<br/>
-              agencia<br/>
+            <h1 class="font-display font-black uppercase leading-[0.88] mb-6"
+                style="font-size: clamp(3rem, 8vw, 7rem); color: #f5f5f5;">
+              La<br/>agencia<br/>
               <span style="color: #e8003d;">incómoda.</span>
             </h1>
 
-            <p
-              class="text-sm md:text-base leading-relaxed mb-8 max-w-md"
-              style="color: rgba(245,245,245,0.55);"
-            >{t('hero.subtext')}</p>
+            <p class="text-sm md:text-base leading-relaxed mb-8 max-w-md"
+               style="color: rgba(245,245,245,0.55);">
+              {t('hero.subtext')}
+            </p>
 
             <div class="glass p-6 max-w-md">
               <LeadForm lang="es" />
-              <div
-                class="flex items-center gap-3 my-4"
-                style="border-top: 1px solid rgba(255,255,255,0.07); padding-top: 1rem;"
-              >
-                <span class="text-[10px] uppercase tracking-widest font-bold" style="color: rgba(245,245,245,0.35);">
-                  {t('contact.label')}
+              <div class="flex items-center gap-3 my-4"
+                   style="border-top: 1px solid rgba(255,255,255,0.07); padding-top: 1rem;">
+                <span class="text-[10px] uppercase tracking-widest font-bold"
+                      style="color: rgba(245,245,245,0.35);">
+                  O contáctanos directamente
                 </span>
               </div>
               <div class="flex flex-wrap gap-4 text-sm font-bold">
-                <a
-                  href="mailto:hola@aglaya.biz"
-                  class="brand-link underline underline-offset-4 transition-colors"
-                  style="color: rgba(245,245,245,0.7);"
-                >hola@aglaya.biz</a>
-                <a
-                  href="https://wa.me/34600000000"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="flex items-center gap-1.5 transition-colors brand-link"
-                  style="color: rgba(245,245,245,0.7);"
-                >
+                <a href="mailto:hola@aglaya.biz"
+                   class="text-link underline underline-offset-4 transition-colors"
+                   style="color: rgba(245,245,245,0.7);">hola@aglaya.biz</a>
+                <a href="https://wa.me/34600000000"
+                   target="_blank" rel="noopener noreferrer"
+                   class="flex items-center gap-1.5 transition-colors text-link"
+                   style="color: rgba(245,245,245,0.7);"
+                   aria-label="Contáctanos por WhatsApp">
                   <span class="material-symbols-outlined text-base" aria-hidden="true">chat</span>
                   WhatsApp
                 </a>
@@ -151,21 +157,13 @@ const marqueeItems = [
             </div>
           </div>
 
-          <!-- Decorative right side -->
-          <div class="hidden lg:flex items-center justify-center relative">
-            <div
-              class="absolute w-80 h-80 rounded-full animate-glow pointer-events-none"
-              style="border: 1px solid rgba(232, 0, 61, 0.15); box-shadow: 0 0 120px rgba(232, 0, 61, 0.08);"
-            ></div>
-            <div
-              class="absolute w-56 h-56 rounded-full pointer-events-none"
-              style="border: 1px solid rgba(232, 0, 61, 0.08);"
-            ></div>
-            <div
-              class="font-display font-black uppercase leading-none select-none text-center relative z-10"
-              style="font-size: clamp(6rem, 14vw, 12rem); color: transparent; -webkit-text-stroke: 1px rgba(232,0,61,0.35);"
-              aria-hidden="true"
-            >
+          <div class="hidden lg:flex items-center justify-center relative" aria-hidden="true">
+            <div class="absolute w-80 h-80 rounded-full animate-glow pointer-events-none"
+                 style="border: 1px solid rgba(232, 0, 61, 0.15); box-shadow: 0 0 120px rgba(232, 0, 61, 0.08);"></div>
+            <div class="absolute w-56 h-56 rounded-full pointer-events-none"
+                 style="border: 1px solid rgba(232, 0, 61, 0.08);"></div>
+            <div class="font-display font-black uppercase leading-none select-none text-center relative z-10"
+                 style="font-size: clamp(6rem, 14vw, 12rem); color: transparent; -webkit-text-stroke: 1px rgba(232,0,61,0.35);">
               AG<br/>LA<br/>YA
             </div>
           </div>
@@ -173,26 +171,20 @@ const marqueeItems = [
       </main>
 
       <!-- MARQUEE -->
-      <section
-        class="w-full shrink-0 py-3 overflow-hidden"
-        style="border-top: 1px solid rgba(255,255,255,0.06);"
-        aria-label="Servicios"
-      >
-        <div class="animate-marquee gap-12">
-          <div class="flex items-center gap-12 text-[11px] md:text-xs font-black uppercase tracking-widest" style="color: rgba(245,245,245,0.35);">
+      <section class="w-full shrink-0 py-3 overflow-hidden"
+               style="border-top: 1px solid rgba(255,255,255,0.06);"
+               aria-label="Servicios">
+        <div class="animate-marquee gap-12" aria-hidden="true">
+          <div class="flex items-center gap-12 text-[11px] md:text-xs font-black uppercase tracking-widest"
+               style="color: rgba(245,245,245,0.35);">
             {marqueeItems.map((item) => (
-              <>
-                <span>{item}</span>
-                <span style="color: #e8003d;">•</span>
-              </>
+              <><span>{item}</span><span style="color:#e8003d;">•</span></>
             ))}
           </div>
-          <div class="flex items-center gap-12 text-[11px] md:text-xs font-black uppercase tracking-widest" style="color: rgba(245,245,245,0.35);" aria-hidden="true">
+          <div class="flex items-center gap-12 text-[11px] md:text-xs font-black uppercase tracking-widest"
+               style="color: rgba(245,245,245,0.35);" aria-hidden="true">
             {marqueeItems.map((item) => (
-              <>
-                <span>{item}</span>
-                <span style="color: #e8003d;">•</span>
-              </>
+              <><span>{item}</span><span style="color:#e8003d;">•</span></>
             ))}
           </div>
         </div>

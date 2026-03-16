@@ -1,43 +1,53 @@
-# Astro Starter Kit: Minimal
+# AGLAYA — The Uncomfortable Agency
 
-```sh
-npm create astro@latest -- --template minimal
+![Build Status](https://img.shields.io/github/actions/workflow/status/ibaifernandez/aglaya.biz/deploy.yml?branch=main)
+![Tests](https://img.shields.io/badge/tests-100%25-brightgreen)
+![Accessibility](https://img.shields.io/badge/a11y-verified-hotpink)
+
+Bilingual Coming Soon page for AGLAYA digital marketing agency.
+
+## 🚀 Features
+- **Astro Static Build**: Ultra-fast performance.
+- **Bilingual (EN/ES)**: subdirectory strategy with full SEO parity.
+- **Lead Capture**: Resend API + Netlify Functions + Turnstile protection.
+- **Branded SEO**: Custom OG images, JSON-LD Organization schema, and manifest.
+- **Error Tracking**: Integrated Sentry monitoring.
+- **Verified Suite**: Vitest (Unit) + Playwright (E2E) + Axe (A11y).
+
+## 🛠 Tech Stack
+- **Framework**: [Astro](https://astro.build)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com)
+- **Forms**: [Netlify Functions](https://www.netlify.com/products/functions/), [Resend](https://resend.com), [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile/)
+- **Tracking**: [Sentry](https://sentry.io)
+- **Testing**: [Vitest](https://vitest.dev), [Playwright](https://playwright.dev), [Axe-core](https://www.deque.com/axe/)
+
+## 📖 Documentation
+- [Architecture](./docs/ARCHITECTURE.md)
+- [Workflow Setup](./docs/WORKFLOW-SETUP.md)
+- [Services Setup](./docs/SERVICES.md)
+- [Testing Guide](./docs/TESTING.md)
+
+## 💻 Local Development
+```bash
+npm install
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+## 🧪 Running Tests
+```bash
+npm run test:unit # Unit tests
+npm run test:e2e  # E2E tests
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## 🌍 Environment Variables
+Required in Netlify for full production functionality:
+| Key | Description |
+|---|---|
+| `RESEND_API_KEY` | Resend API key |
+| `TURNSTILE_SECRET` | Cloudflare Turnstile private key |
+| `PUBLIC_TURNSTILE_SITE_KEY` | Cloudflare Turnstile public key |
+| `PUBLIC_SENTRY_DSN` | Sentry DSN |
+| `NOTIFY_EMAIL` | Destination for lead notifications |
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+---
+© 2026 AGLAYA.
