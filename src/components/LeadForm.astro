@@ -1,0 +1,112 @@
+---
+interface Props {
+  lang?: 'en' | 'es';
+  submitLabel?: string;
+  placeholder?: string;
+  successMsg?: string;
+  formLabel?: string;
+}
+
+const {
+  lang = 'en',
+  submitLabel = lang === 'en' ? 'Notify me' : 'Avísame',
+  placeholder = lang === 'en' ? 'your@email.com' : 'tu@email.com',
+  successMsg = lang === 'en' ? "You're in. We'll be in touch." : 'Perfecto. Te contactaremos pronto.',
+  formLabel = lang === 'en' ? 'Get early access' : 'Acceso anticipado',
+} = Astro.props;
+---
+
+<div class="w-full">
+  <p class="text-[10px] uppercase tracking-widest font-bold mb-2" style="color: rgba(245,245,245,0.45)">
+    {formLabel}
+  </p>
+
+  <!-- Netlify Form -->
+  <form
+    id="lead-form"
+    name="aglaya-leads"
+    method="POST"
+    data-netlify="true"
+    data-netlify-honeypot="bot-field"
+    class="flex flex-col sm:flex-row gap-2"
+    novalidate
+  >
+    <!-- Honeypot -->
+    <input type="hidden" name="form-name" value="aglaya-leads" />
+    <p class="hidden"><input name="bot-field" /></p>
+
+    <input
+      id="lead-email"
+      type="email"
+      name="email"
+      placeholder={placeholder}
+      required
+      autocomplete="email"
+      class="flex-1 px-4 py-3 text-sm font-medium border focus:outline-none focus:ring-2 transition-all"
+      style="background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.12); color: #f5f5f5;"
+    />
+    <button
+      id="lead-submit"
+      type="submit"
+      class="px-6 py-3 text-sm font-black uppercase tracking-widest text-white transition-all active:scale-95 shrink-0"
+      style="background: #e8003d;"
+    >
+      <span id="lead-btn-text">{submitLabel}</span>
+    </button>
+  </form>
+
+  <!-- Status messages -->
+  <p
+    id="lead-success"
+    class="hidden mt-3 text-sm font-medium"
+    style="color: #4ade80;"
+    role="status"
+  >
+    {successMsg}
+  </p>
+  <p
+    id="lead-error"
+    class="hidden mt-3 text-sm font-medium"
+    style="color: #f87171;"
+    role="alert"
+  >
+    {lang === 'en' ? 'Something went wrong. Try again.' : 'Algo salió mal. Inténtalo de nuevo.'}
+  </p>
+</div>
+
+<script>
+  const form = document.getElementById('lead-form') as HTMLFormElement | null;
+  const successMsg = document.getElementById('lead-success');
+  const errorMsg = document.getElementById('lead-error');
+  const btnText = document.getElementById('lead-btn-text');
+  const submitBtn = document.getElementById('lead-submit') as HTMLButtonElement | null;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!form || !submitBtn) return;
+
+    const originalText = btnText?.textContent ?? '';
+    if (btnText) btnText.textContent = '...';
+    if (submitBtn) submitBtn.disabled = true;
+
+    try {
+      const data = new FormData(form);
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(data as unknown as Record<string, string>).toString(),
+      });
+
+      if (response.ok) {
+        form.style.display = 'none';
+        successMsg?.classList.remove('hidden');
+      } else {
+        throw new Error('Network response not ok');
+      }
+    } catch {
+      errorMsg?.classList.remove('hidden');
+      if (btnText) btnText.textContent = originalText;
+      if (submitBtn) submitBtn.disabled = false;
+    }
+  });
+</script>
