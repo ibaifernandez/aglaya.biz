@@ -22,3 +22,11 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Netlify build output
+.netlify/
+
+# Playwright
+test-results/
+playwright-report/
+
