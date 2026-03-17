@@ -86,15 +86,16 @@ const t = labels[lang];
     ></div>
   </div>
 
-  <div id="contact-success" class="cf-msg cf-msg--success hidden" role="status" aria-live="polite">
-    <span class="cf-msg-dot"></span>
-    {t.success}
-  </div>
   <div id="contact-error" class="cf-msg cf-msg--error hidden" role="alert" aria-live="assertive">
     <span class="cf-msg-dot"></span>
     {t.error}
   </div>
 </form>
+
+<div id="contact-success" class="cf-msg cf-msg--success hidden" role="status" aria-live="polite">
+  <span class="cf-msg-dot"></span>
+  {t.success}
+</div>
 
 <style>
 .cf-form { display: flex; flex-direction: column; gap: 0.875rem; }
