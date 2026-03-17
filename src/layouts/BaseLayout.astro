@@ -48,7 +48,6 @@ const structuredData = {
   }
 };
 
-const PUBLIC_SENTRY_DSN = import.meta.env.PUBLIC_SENTRY_DSN;
 ---
 
 <!doctype html>
@@ -105,19 +104,7 @@ const PUBLIC_SENTRY_DSN = import.meta.env.PUBLIC_SENTRY_DSN;
     <!-- LD+JSON — Organization structured data -->
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
-    <!-- Sentry — error tracking -->
-    {PUBLIC_SENTRY_DSN && (
-      <script
-        is:inline
-        src="https://js.sentry-cdn.com/YOUR_BUNDLE_ID.min.js"
-        crossorigin="anonymous"
-      ></script>
-      <script is:inline define:vars={{ PUBLIC_SENTRY_DSN }}>
-        if (typeof Sentry !== 'undefined') {
-          Sentry.init({ dsn: PUBLIC_SENTRY_DSN });
-        }
-      </script>
-    )}
+    <!-- Sentry — injected via @sentry/astro integration in astro.config.mjs -->
   </head>
   <body>
     <slot />
