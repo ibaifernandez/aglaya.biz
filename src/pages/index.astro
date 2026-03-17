@@ -1,0 +1,546 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { useTranslations } from '../i18n/translations';
+
+const lang = 'en';
+const t = useTranslations(lang);
+---
+
+<BaseLayout
+  title={t('meta.title')}
+  description={t('meta.description')}
+  lang={lang}
+>
+
+<!-- Cursor glow -->
+<div id="cursor-glow" aria-hidden="true"></div>
+
+<!-- Header -->
+<header role="banner">
+  <div class="header-logo">
+    <img src="/assets/brand/aglaya-logo-blanco.svg" alt="AGLAYA" width="120" height="22" loading="eager" style="display:block;" />
+    <span class="header-tagline">The Uncomfortable Agency · AI·gency</span>
+  </div>
+  <nav aria-label="Main navigation">
+    <a href="/es/" lang="es" hreflang="es" class="lang-btn" aria-label="Ver en Español">
+      <img src="/assets/brand/spain.svg" alt="" width="20" height="20" loading="eager" />
+      <span>ES</span>
+    </a>
+    <a href="https://wa.me/573224288532" target="_blank" rel="noopener noreferrer" class="wa-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+      WhatsApp
+    </a>
+  </nav>
+</header>
+
+<!-- Hero -->
+<main>
+  <section class="hero" aria-labelledby="hero-heading">
+
+    <!-- Scanline -->
+    <div class="scanline" aria-hidden="true"></div>
+
+    <!-- Label -->
+    <div class="hero-label" data-animate="fade-up" data-delay="0">
+      <span class="label-line"></span>
+      <span class="label-text">Coming Soon · Introducing AI·gency</span>
+    </div>
+
+    <!-- Heading -->
+    <h1 id="hero-heading" class="hero-heading">
+      <span class="word w1" data-animate="word" data-delay="100">The</span>
+      <span class="word w2 accent" data-animate="word" data-delay="200">Uncomfortable</span>
+      <span class="word w3" data-animate="word" data-delay="300">Agency</span>
+    </h1>
+
+    <!-- Subtext -->
+    <p class="hero-sub" data-animate="fade-up" data-delay="500">
+      AI executes. Humans strategize.<br />Enterprise-quality marketing at a fraction of the price — without the BS.
+    </p>
+
+    <!-- CTAs -->
+    <div class="hero-ctas" data-animate="fade-up" data-delay="650">
+      <a href="#contact" class="cta-primary">
+        Get in touch
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+      </a>
+      <a href="https://wa.me/573224288532" target="_blank" rel="noopener noreferrer" class="cta-secondary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+        WhatsApp
+      </a>
+    </div>
+
+    <!-- Marquee -->
+    <div class="marquee-wrap" role="complementary" aria-label="Services" data-animate="fade-up" data-delay="800">
+      <div class="marquee-track">
+        {['AI Brand Strategy','AI Content Engine','AI-Powered Ads','Web Design & Dev','Marketing Intelligence','AI Visual Identity','WhatsApp Automation','AI SEO',
+          'AI Brand Strategy','AI Content Engine','AI-Powered Ads','Web Design & Dev','Marketing Intelligence','AI Visual Identity','WhatsApp Automation','AI SEO'].map(item => (
+          <span class="marquee-item">{item}</span>
+        ))}
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Contact Form Section -->
+  <section id="contact" class="contact-section" aria-labelledby="contact-heading">
+    <div class="contact-inner">
+      <div class="contact-left" data-animate="fade-up" data-delay="0">
+        <div class="contact-eyebrow">
+          <span class="eyebrow-line"></span>
+          <span>Early Access</span>
+        </div>
+        <h2 id="contact-heading" class="contact-heading">
+          Be the first<br />to <em>know</em>.
+        </h2>
+        <p class="contact-note">
+          We're rebuilding AGLAYA as an AI-powered agency.<br />
+          Leave your email and we'll reach out before anyone else.<br /><br />
+          We respond within 24 hours.<br />No templates, no auto-replies.
+        </p>
+      </div>
+      <div class="contact-right" data-animate="fade-up" data-delay="150">
+        <ContactForm lang={lang} />
+      </div>
+    </div>
+  </section>
+</main>
+
+</BaseLayout>
+
+<style>
+/* ── Reset / base ──────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ── Cursor glow ───────────────────────────────── */
+#cursor-glow {
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  top: 0; left: 0;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(232,0,61,0.07) 0%, transparent 70%);
+  transition: transform 0.12s ease-out;
+  will-change: transform;
+}
+
+/* ── Header ────────────────────────────────────── */
+header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2.5rem;
+  background: rgba(5,5,5,0.92);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.header-logo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.header-tagline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.28);
+}
+
+header nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.5rem 0.875rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 2rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+}
+.lang-btn:hover { border-color: rgba(255,255,255,0.4); color: white; }
+.lang-btn img { border-radius: 50%; }
+
+.wa-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.55rem 1.25rem;
+  background: #e8003d;
+  border-radius: 2rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: white;
+  text-decoration: none;
+  box-shadow: 0 0 0 0 rgba(232,0,61,0.4);
+  transition: box-shadow 0.3s, transform 0.15s;
+}
+.wa-btn:hover {
+  box-shadow: 0 0 0 6px rgba(232,0,61,0.15), 0 0 30px rgba(232,0,61,0.3);
+  transform: translateY(-1px);
+}
+.wa-btn:active { transform: translateY(0) scale(0.97); }
+
+/* ── Hero ──────────────────────────────────────── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 7rem 2.5rem 8rem;
+  overflow: hidden;
+  overflow-x: clip;
+}
+
+/* Scanline */
+.scanline {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(232,0,61,0.6) 50%, transparent 100%);
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+@keyframes scanline {
+  0%   { top: 0;    opacity: 0; }
+  5%   { opacity: 1; }
+  95%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* Label */
+.hero-label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  opacity: 0;
+}
+.label-line {
+  display: block;
+  width: 2.5rem;
+  height: 1px;
+  background: #e8003d;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+.hero-label.visible .label-line { transform: scaleX(1); }
+.label-text {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: #ff4d70;
+}
+
+/* Heading */
+.hero-heading {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  font-size: clamp(1.75rem, 8.5vw, 9.5rem);
+  line-height: 0.87;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  margin: 0 0 2.5rem;
+  padding: 0;
+}
+
+.word {
+  display: block;
+  overflow: hidden;
+  color: white;
+}
+.word.accent { color: #e8003d; font-style: italic; }
+
+.word-inner {
+  display: block;
+  transform: translateY(110%);
+  opacity: 0;
+  transition: transform 0.75s cubic-bezier(0.16,1,0.3,1), opacity 0.5s ease;
+}
+.word.visible .word-inner {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Subtext */
+.hero-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+  line-height: 1.7;
+  color: rgba(255,255,255,0.38);
+  margin: 0 0 3rem;
+  max-width: 420px;
+  opacity: 0;
+}
+
+/* CTAs */
+.hero-ctas {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  opacity: 0;
+}
+
+.cta-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.875rem 2rem;
+  background: #e8003d;
+  color: white;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s;
+}
+.cta-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+.cta-primary:hover::after { transform: translateX(100%); }
+.cta-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(232,0,61,0.4); }
+.cta-primary:active { transform: translateY(0) scale(0.97); }
+
+.cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.875rem 1.75rem;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.6);
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 2px;
+  transition: border-color 0.2s, color 0.2s, transform 0.15s;
+}
+.cta-secondary:hover {
+  border-color: rgba(255,255,255,0.5);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Marquee */
+.marquee-wrap {
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  overflow: hidden;
+  padding: 1rem 0;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.marquee-item {
+  font-family: 'Outfit', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+  padding: 0 2rem;
+  transition: color 0.3s;
+  white-space: nowrap;
+  cursor: default;
+}
+.marquee-item:hover { color: rgba(255,255,255,0.7); }
+
+/* ── Contact Section ───────────────────────────── */
+.contact-section {
+  background: #0a0a0a;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding: 6rem 2.5rem;
+}
+
+.contact-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .contact-inner { grid-template-columns: 1fr; gap: 3rem; }
+  .hero { padding: 6rem 1.5rem 7rem; }
+  header { padding: 1rem 1.25rem; }
+  .header-tagline { display: none; }
+  .contact-section { padding: 4rem 1.5rem; }
+}
+
+.contact-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: #e8003d;
+}
+.eyebrow-line {
+  display: block;
+  width: 2rem;
+  height: 1px;
+  background: #e8003d;
+}
+
+.contact-heading {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: white;
+  margin: 0 0 1.5rem;
+  text-transform: uppercase;
+}
+.contact-heading em {
+  font-style: italic;
+  color: #e8003d;
+}
+
+.contact-note {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.3);
+  margin: 0;
+}
+
+/* ── Global animations ─────────────────────────── */
+[data-animate="fade-up"] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16,1,0.3,1);
+}
+[data-animate="fade-up"].visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Reduced motion ────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .word-inner, [data-animate="fade-up"] {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+</style>
+
+<script>
+// ── Cursor glow ──────────────────────────────────
+const glow = document.getElementById('cursor-glow');
+if (glow && window.matchMedia('(pointer: fine)').matches) {
+  document.addEventListener('mousemove', (e) => {
+    glow.style.transform = `translate(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%))`;
+  });
+}
+
+// ── Word split animation ─────────────────────────
+document.querySelectorAll('.word').forEach(word => {
+  const inner = document.createElement('span');
+  inner.className = 'word-inner';
+  inner.textContent = word.textContent;
+  word.textContent = '';
+  word.appendChild(inner);
+});
+
+// ── Intersection Observer for all animations ─────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target as HTMLElement;
+      const delay = parseInt(el.dataset.delay || '0');
+      setTimeout(() => el.classList.add('visible'), delay);
+      observer.unobserve(el);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('[data-animate], .hero-label').forEach(el => observer.observe(el));
+
+// Also observe word elements
+document.querySelectorAll('.word[data-animate="word"]').forEach(word => {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target as HTMLElement;
+        const delay = parseInt(el.dataset.delay || '0');
+        setTimeout(() => el.classList.add('visible'), delay);
+        obs.unobserve(el);
+      }
+    });
+  }, { threshold: 0.1 });
+  obs.observe(word);
+});
+
+// ── Smooth scroll for anchor ─────────────────────
+document.querySelector('a[href="#contact"]')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+});
+</script>
+

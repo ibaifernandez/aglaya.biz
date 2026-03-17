@@ -1,0 +1,125 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+  ogType?: string;
+  lang?: string;
+  alternateUrl?: string;
+}
+
+const {
+  title,
+  description = 'Digital marketing and brand strategy agency. We build brands that convert.',
+  ogImage = '/images/og-default.png',
+  ogType = 'website',
+  lang = 'en',
+  alternateUrl,
+} = Astro.props;
+
+import '../styles/global.css';
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const altLang = lang === 'en' ? 'es' : 'en';
+const altUrl = alternateUrl ?? (lang === 'en'
+  ? new URL('/es/', Astro.site).href
+  : new URL('/', Astro.site).href);
+const ogImageAbsolute = ogImage.startsWith('http')
+  ? ogImage
+  : new URL(ogImage, Astro.site).href;
+
+const ogLocale = lang === 'en' ? 'en_US' : 'es_ES';
+const fullTitle = title;
+
+// Organization LD+JSON structured data
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "AGLAYA",
+  "alternateName": "The Uncomfortable Agency",
+  "url": "https://aglaya.biz",
+  "logo": "https://aglaya.biz/android-chrome-512x512.png",
+  "description": "Digital marketing and brand strategy agency focused on conversion.",
+  "sameAs": [],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "email": "info@aglaya.biz",
+    "contactType": "customer service"
+  }
+};
+
+const PUBLIC_SENTRY_DSN = import.meta.env.PUBLIC_SENTRY_DSN;
+---
+
+<!doctype html>
+<html lang={lang} class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Primary SEO -->
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#e8003d" />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- hreflang — bilingual SEO, no duplicate content -->
+    <link rel="alternate" hreflang={lang} href={canonicalURL} />
+    <link rel="alternate" hreflang={altLang} href={altUrl} />
+    <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site).href} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImageAbsolute} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="AGLAYA — The Uncomfortable Agency" />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:site_name" content="AGLAYA" />
+
+    <!-- Twitter / X Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageAbsolute} />
+    <meta name="twitter:image:alt" content="AGLAYA — The Uncomfortable Agency" />
+
+    <!-- Favicon suite -->
+    <link rel="icon" type="image/svg+xml" href="/assets/brand/aglaya-favicon-blanco.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/aglaya-favicon-blanco.svg" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Google Fonts: Outfit + Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- LD+JSON — Organization structured data -->
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+    <!-- Sentry — error tracking -->
+    {PUBLIC_SENTRY_DSN && (
+      <script
+        is:inline
+        src="https://js.sentry-cdn.com/YOUR_BUNDLE_ID.min.js"
+        crossorigin="anonymous"
+      ></script>
+      <script is:inline define:vars={{ PUBLIC_SENTRY_DSN }}>
+        if (typeof Sentry !== 'undefined') {
+          Sentry.init({ dsn: PUBLIC_SENTRY_DSN });
+        }
+      </script>
+    )}
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

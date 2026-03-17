@@ -1,0 +1,290 @@
+---
+import Mail from './icons/Mail.astro';
+import User from './icons/User.astro';
+import MessageSquare from './icons/MessageSquare.astro';
+import Send from './icons/Send.astro';
+
+interface Props {
+  lang?: 'en' | 'es';
+  turnstileSiteKey?: string;
+}
+
+const {
+  lang = 'en',
+  turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '1x00000000000000000000AA',
+} = Astro.props;
+
+const labels = {
+  en: {
+    namePlaceholder: 'Your name',
+    emailPlaceholder: 'your@email.com',
+    messagePlaceholder: 'Tell us about your project...',
+    submit: 'Send Message',
+    success: "Message sent. We'll get back to you soon.",
+    error: 'Something went wrong. Please try again.',
+  },
+  es: {
+    namePlaceholder: 'Tu nombre',
+    emailPlaceholder: 'tu@email.com',
+    messagePlaceholder: 'Cuéntanos sobre tu proyecto...',
+    submit: 'Enviar Mensaje',
+    success: 'Mensaje enviado. Te contactaremos pronto.',
+    error: 'Algo salió mal. Inténtalo de nuevo.',
+  },
+};
+
+const t = labels[lang];
+---
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer is:inline></script>
+
+<form id="contact-form" class="cf-form" novalidate aria-label={lang === 'en' ? 'Contact form' : 'Formulario de contacto'}>
+
+  <div class="cf-field">
+    <User class="cf-icon" aria-hidden="true" />
+    <input
+      id="contact-name"
+      type="text"
+      name="name"
+      placeholder={t.namePlaceholder}
+      autocomplete="name"
+      class="cf-input"
+    />
+  </div>
+
+  <div class="cf-field">
+    <Mail class="cf-icon" aria-hidden="true" />
+    <input
+      id="contact-email"
+      type="email"
+      name="email"
+      placeholder={t.emailPlaceholder}
+      required
+      autocomplete="email"
+      class="cf-input"
+    />
+  </div>
+
+  <div class="cf-field cf-field--textarea">
+    <MessageSquare class="cf-icon cf-icon--top" aria-hidden="true" />
+    <textarea
+      id="contact-message"
+      name="message"
+      placeholder={t.messagePlaceholder}
+      required
+      rows="5"
+      class="cf-input cf-textarea"
+    ></textarea>
+  </div>
+
+  <div class="cf-footer">
+    <button id="contact-submit" type="submit" class="cf-btn" disabled>
+      <span id="contact-btn-text">{t.submit}</span>
+      <Send class="cf-btn-icon" />
+    </button>
+    <div
+      class="cf-turnstile"
+      data-sitekey={turnstileSiteKey}
+      data-theme="dark"
+      data-callback="onTurnstileSuccess"
+      role="region"
+      aria-label="Bot verification"
+    ></div>
+  </div>
+
+  <div id="contact-success" class="cf-msg cf-msg--success hidden" role="status" aria-live="polite">
+    <span class="cf-msg-dot"></span>
+    {t.success}
+  </div>
+  <div id="contact-error" class="cf-msg cf-msg--error hidden" role="alert" aria-live="assertive">
+    <span class="cf-msg-dot"></span>
+    {t.error}
+  </div>
+</form>
+
+<style>
+.cf-form { display: flex; flex-direction: column; gap: 0.875rem; }
+
+.cf-field {
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 3px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.cf-field--textarea { align-items: flex-start; }
+.cf-field:focus-within {
+  border-color: rgba(232,0,61,0.5);
+  background: rgba(232,0,61,0.03);
+}
+
+.cf-icon {
+  width: 15px; height: 15px;
+  flex-shrink: 0;
+  margin: 0 0.75rem 0 1rem;
+  color: rgba(255,255,255,0.2);
+  pointer-events: none;
+  transition: color 0.2s;
+}
+.cf-icon--top { margin-top: 0.9rem; align-self: flex-start; }
+.cf-field:focus-within .cf-icon { color: #e8003d; }
+
+.cf-input {
+  flex: 1;
+  padding: 0.875rem 1rem 0.875rem 0;
+  background: transparent;
+  border: none;
+  color: #f5f5f5;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  min-width: 0;
+}
+.cf-input::placeholder { color: rgba(255,255,255,0.18); }
+
+.cf-textarea {
+  resize: none;
+  padding-top: 0.875rem;
+  line-height: 1.6;
+}
+
+.cf-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.cf-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 1rem 2rem;
+  background: #e8003d;
+  color: white;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+}
+.cf-btn:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 25px rgba(232,0,61,0.4);
+}
+.cf-btn:not(:disabled):active { transform: scale(0.98); }
+.cf-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Shine sweep */
+.cf-btn::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+.cf-btn:not(:disabled):hover::after { transform: translateX(100%); }
+
+.cf-btn-icon { width: 14px; height: 14px; }
+
+/* Turnstile sizing */
+.cf-turnstile { transform-origin: left; }
+
+/* Messages */
+.cf-msg {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.875rem 1rem;
+  border-radius: 3px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+.cf-msg.hidden { display: none; }
+
+.cf-msg--success {
+  background: rgba(74,222,128,0.07);
+  border: 1px solid rgba(74,222,128,0.2);
+  color: #4ade80;
+}
+.cf-msg--error {
+  background: rgba(248,113,113,0.07);
+  border: 1px solid rgba(248,113,113,0.2);
+  color: #f87171;
+}
+.cf-msg-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: currentColor; flex-shrink: 0;
+}
+.cf-msg--success .cf-msg-dot { animation: pulse 1.5s ease-in-out infinite; }
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+</style>
+
+<script>
+// Enable submit button once Turnstile succeeds
+(window as any).onTurnstileSuccess = () => {
+  const btn = document.getElementById('contact-submit') as HTMLButtonElement | null;
+  if (btn) btn.disabled = false;
+};
+
+const form       = document.getElementById('contact-form') as HTMLFormElement | null;
+const emailInput = document.getElementById('contact-email') as HTMLInputElement | null;
+const msgInput   = document.getElementById('contact-message') as HTMLTextAreaElement | null;
+const successEl  = document.getElementById('contact-success');
+const errorEl    = document.getElementById('contact-error');
+const btnText    = document.getElementById('contact-btn-text');
+const submitBtn  = document.getElementById('contact-submit') as HTMLButtonElement | null;
+
+form?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!form || !submitBtn || !emailInput || !msgInput) return;
+
+  const token = (form.querySelector('[name="cf-turnstile-response"]') as HTMLInputElement | null)?.value ?? '';
+  const email = emailInput.value.trim();
+  const name  = (document.getElementById('contact-name') as HTMLInputElement | null)?.value.trim() ?? '';
+  const message = msgInput.value.trim();
+
+  if (!email || !message) return;
+
+  const orig = btnText?.textContent ?? '';
+  if (btnText) btnText.textContent = '...';
+  submitBtn.disabled = true;
+  errorEl?.classList.add('hidden');
+
+  try {
+    const res = await fetch('/.netlify/functions/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, message, token }),
+    });
+    if (res.ok) {
+      form.style.display = 'none';
+      successEl?.classList.remove('hidden');
+    } else {
+      const data = await res.json().catch(() => ({}));
+      throw new Error((data as { error?: string }).error ?? 'Error');
+    }
+  } catch {
+    errorEl?.classList.remove('hidden');
+    if (btnText) btnText.textContent = orig;
+    submitBtn.disabled = false;
+  }
+});
+</script>
