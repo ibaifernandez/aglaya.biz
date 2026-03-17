@@ -17,6 +17,7 @@
   "dependencies": {
     "@astrojs/netlify": "^7.0.3",
     "@astrojs/sitemap": "^3.7.1",
+    "@sentry/astro": "^10.43.0",
     "@sentry/browser": "^10.43.0",
     "@tailwindcss/vite": "^4.2.1",
     "astro": "^6.0.5",
