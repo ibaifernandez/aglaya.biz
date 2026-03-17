@@ -44,9 +44,18 @@ const t = labels[lang];
      async CDN script loads first, window.onTurnstileSuccess would be
      undefined and the button would stay disabled forever. -->
 <script is:inline>
-  window.onTurnstileSuccess = function() {
+  window.onTurnstileSuccess = function(token) {
+    console.log('[Turnstile] ✅ Success — token received, enabling button');
     var btn = document.getElementById('contact-submit');
     if (btn) btn.disabled = false;
+  };
+  window.onTurnstileError = function(code) {
+    console.error('[Turnstile] ❌ Error code:', code);
+  };
+  window.onTurnstileExpired = function() {
+    console.warn('[Turnstile] ⚠️ Token expired — disabling button');
+    var btn = document.getElementById('contact-submit');
+    if (btn) btn.disabled = true;
   };
 </script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer is:inline></script>
@@ -100,6 +109,8 @@ const t = labels[lang];
       data-sitekey={turnstileSiteKey}
       data-theme="dark"
       data-callback="onTurnstileSuccess"
+      data-error-callback="onTurnstileError"
+      data-expired-callback="onTurnstileExpired"
       role="region"
       aria-label="Bot verification"
     ></div>
