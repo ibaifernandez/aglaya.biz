@@ -6,7 +6,7 @@
 
 ## 1. El Pivote Estratégico
 
-AGLAYA deja de ser una agencia de marketing digital convencional para convertirse en **la primera Agenc·IA** del mercado hispanohablante: una agencia que opera con inteligencia artificial como columna vertebral de cada servicio que presta.
+AGLAYA deja de ser una Agenc·IA de marketing digital convencional para convertirse en **la primera Agenc·IA** del mercado hispanohablante: una Agenc·IA que opera con inteligencia artificial como columna vertebral de cada servicio que presta.
 
 Este cambio no es cosmético. Es estructural:
 
@@ -27,7 +27,7 @@ El nombre se mantiene. Tiene historia, reconocimiento y equity acumulado.
 
 ### Agenc·IA
 El subconcepto que define el nuevo posicionamiento:
-- **Agenc** → agencia, acción, ejecución
+- **Agenc** → Agenc·IA, acción, ejecución
 - **·IA** → inteligencia artificial
 - El punto intermedio `·` es intencional: separa y une al mismo tiempo
 
@@ -39,17 +39,17 @@ El subconcepto que define el nuevo posicionamiento:
 ### Taglines (a testear con audiencia)
 | ES | EN |
 |---|---|
-| "La agencia que trabaja mientras duermes." | "The agency that works while you sleep." |
+| "La Agenc·IA que trabaja mientras duermes." | "The AI·gency that works while you sleep." |
 | "IA al servicio de tu marca." | "AI at the service of your brand." |
 | "Resultados de gran empresa. Precio de startup." | "Enterprise results. Startup prices." |
-| "La agencia incómoda, ahora con superpoderes." | "The uncomfortable agency, now with superpowers." |
+| "La Agenc·IA incómoda, ahora con superpoderes." | "The uncomfortable AI·gency, now with superpowers." |
 
 ---
 
 ## 3. Posicionamiento
 
 ### Statement de Posicionamiento
-**Para** emprendedores, startups y PYMEs de LATAM y España **que quieren** crecer digitalmente sin gastar como una corporación, **AGLAYA es** la única agencia que combina estrategia humana con ejecución de inteligencia artificial **para dar** resultados medibles, rápidos y asequibles. **A diferencia de** las agencias tradicionales que facturan horas, AGLAYA entrega resultados automatizados con supervisión experta.
+**Para** emprendedores, startups y PYMEs de LATAM y España **que quieren** crecer digitalmente sin gastar como una corporación, **AGLAYA es** la única Agenc·IA que combina estrategia humana con ejecución de inteligencia artificial **para dar** resultados medibles, rápidos y asequibles. **A diferencia de** las agencias tradicionales que facturan horas, AGLAYA entrega resultados automatizados con supervisión experta.
 
 ### Propuesta de Valor Única (UVP)
 > **Inteligencia artificial para tu marca. Sin los precios absurdos.**
@@ -68,7 +68,7 @@ El subconcepto que define el nuevo posicionamiento:
 - **Edad**: 28–45 años
 - **Ubicación**: Colombia, México, Argentina, España
 - **Situación**: Tiene un negocio que funciona pero no crece como debería
-- **Dolor**: No puede pagar una agencia grande / las agencias baratas no entregan
+- **Dolor**: No puede pagar una Agenc·IA grande / las agencias baratas no entregan
 - **Deseo**: Verse profesional, generar leads, automatizar su marketing
 - **Tech-savviness**: Media-alta. Usa ChatGPT, conoce Canva, quiere más pero no sabe cómo
 
@@ -122,7 +122,7 @@ El subconcepto que define el nuevo posicionamiento:
 "AGLAYA. La Agenc·IA. Construimos marcas que convierten usando inteligencia artificial."
 
 ### LinkedIn
-"Hacemos lo que una agencia grande haría por $10K/mes. Nosotros lo hacemos por $500. La diferencia: IA."
+"Hacemos lo que una Agenc·IA grande haría por $10K/mes. Nosotros lo hacemos por $500. La diferencia: IA."
 
 ### Instagram / TikTok
 Mostrar el proceso: "Cómo creamos una campaña completa en 2 horas con IA."

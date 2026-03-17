@@ -47,7 +47,7 @@ EMBAJADOR
 | Canal | Táctica | Presupuesto mínimo |
 |---|---|---|
 | **Meta Ads** | Lead gen para PYMEs. Creativos en video corto. | $300 USD/mes |
-| **Google Ads** | Keywords: "agencia marketing IA colombia", "agencia digital barata" | $200 USD/mes |
+| **Google Ads** | Keywords: "Agenc·IA marketing IA colombia", "Agenc·IA digital barata" | $200 USD/mes |
 
 ### Tier 3 — Canal de Contenido (Costo: tiempo + IA)
 | Canal | Táctica |

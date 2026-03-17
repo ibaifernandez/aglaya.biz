@@ -70,7 +70,7 @@ async function sendContactEmail(name: string, email: string, message: string): P
     }),
   });
 
-  // 2. Notify the agency
+  // 2. Notify the AI·gency
   await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {

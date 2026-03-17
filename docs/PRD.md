@@ -1,10 +1,10 @@
 # PRD — Product Requirements Document
 
 ## Product
-**AGLAYA Website** — Corporate web presence for AGLAYA, a digital marketing agency branded as "The Uncomfortable Agency."
+**AGLAYA Website** — Corporate web presence for AGLAYA, a digital marketing AI·gency branded as "The Uncomfortable Agency."
 
 ## Vision
-A bilingual (EN/ES) website that is extraordinary in design, bulletproof in robustness, impeccable in accessibility, and uncompromising in security. Not just another agency website — a statement piece.
+A bilingual (EN/ES) website that is extraordinary in design, bulletproof in robustness, impeccable in accessibility, and uncompromising in security. Not just another AI·gency website — a statement piece.
 
 ---
 
@@ -22,7 +22,7 @@ Establish online presence, capture leads, and build anticipation before full sit
 | CS-02 | Complete metadata: OG tags, Twitter Cards, JSON-LD, hreflang, canonical URLs | Done |
 | CS-03 | Contact form with name, email, message fields | Done |
 | CS-04 | Bot protection via Cloudflare Turnstile | Done |
-| CS-05 | Email delivery via Resend (user confirmation + agency notification) | Done |
+| CS-05 | Email delivery via Resend (user confirmation + AI·gency notification) | Done |
 | CS-06 | Deployment on Netlify with auto-deploy from GitHub | Pending |
 | CS-07 | Error tracking via Sentry | Partial |
 | CS-08 | Uptime monitoring via UptimeRobot | Pending |
@@ -49,7 +49,7 @@ Establish online presence, capture leads, and build anticipation before full sit
 ## Phase 2: Full Website (Future)
 
 ### Objective
-Complete agency website with service pages, portfolio, case studies, blog, and team section.
+Complete AI·gency website with service pages, portfolio, case studies, blog, and team section.
 
 ### High-Level Requirements
 | ID | Requirement |
@@ -98,7 +98,7 @@ Complete agency website with service pages, portfolio, case studies, blog, and t
 ---
 
 ## Target Audience
-- Business owners and marketing directors seeking a bold, results-driven agency
+- Business owners and marketing directors seeking a bold, results-driven AI·gency
 - Tech-savvy professionals who appreciate design and attention to detail
 - Bilingual audience (English-speaking international + Spanish-speaking LATAM/Spain)
 

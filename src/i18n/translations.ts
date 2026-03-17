@@ -31,7 +31,7 @@ export const ui = {
     'contact.section.eyebrow': 'Early Access',
     'contact.section.heading': 'Be the first to know.',
     'contact.section.body':
-      'We\'re rebuilding AGLAYA from the ground up as an AI-powered agency. Leave your email and we\'ll reach out before anyone else.',
+      'We\'re rebuilding AGLAYA from the ground up as an AI·gency. Leave your email and we\'ll reach out before anyone else.',
 
     /* Form */
     'form.label': 'Get early access',
@@ -63,7 +63,7 @@ export const ui = {
     /* Meta */
     'meta.title': 'AGLAYA — La Agencia Incómoda · Agenc·IA',
     'meta.description':
-      'Agencia de marketing impulsada por IA para PYMEs y emprendedores. Resultados de gran empresa a precio de startup. Próximamente.',
+      'Agenc·IA de marketing impulsada por IA para PYMEs y emprendedores. Resultados de gran empresa a precio de startup. Próximamente.',
 
     /* Nav */
     'nav.contact': 'Contacto',

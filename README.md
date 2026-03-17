@@ -6,7 +6,7 @@
 ![Astro](https://img.shields.io/badge/Astro-6.x-FF5D01)
 ![Tailwind](https://img.shields.io/badge/Tailwind-v4-38BDF8)
 
-Bilingual Coming Soon page for **AGLAYA**, a digital marketing agency that builds brands that convert.
+Bilingual Coming Soon page for **AGLAYA**, a digital marketing AI·gency that builds brands that convert.
 
 ## Tech Stack
 

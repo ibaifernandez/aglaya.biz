@@ -39,7 +39,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 - Contact form with name, email, message fields (`ContactForm.astro`)
 - Netlify serverless function for form processing (`netlify/functions/contact.ts`)
 - Cloudflare Turnstile bot protection integration
-- Resend API email delivery (user confirmation + agency notification)
+- Resend API email delivery (user confirmation + AI·gency notification)
 - Sentry error tracking scaffolding in BaseLayout
 - Icon components (User, Mail, MessageSquare, MessageCircle, Languages, Send)
 - Unit tests for translations and contact function (Vitest)

@@ -1,6 +1,6 @@
 # CATÁLOGO DE SERVICIOS — AGLAYA Agenc·IA
 
-> Servicios pensados para PYMEs y emprendedores que quieren resultados de agencia grande con presupuesto de startup.
+> Servicios pensados para PYMEs y emprendedores que quieren resultados de Agenc·IA grande con presupuesto de startup.
 
 ---
 
@@ -108,7 +108,7 @@ Implementación de un sistema de medición y analítica para que sepas exactamen
 ## 6. AI Visual Identity
 **"Una marca que se ve como lo que quieres llegar a ser"**
 
-Creación de identidad visual completa usando IA generativa supervisada por diseñadores, a una fracción del precio de una agencia tradicional.
+Creación de identidad visual completa usando IA generativa supervisada por diseñadores, a una fracción del precio de una Agenc·IA tradicional.
 
 **Incluye:**
 - Logotipo principal + variantes
