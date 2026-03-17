@@ -8,9 +8,27 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Added
-- Resend integration pending (API key + domain verification)
-- Sentry DSN configuration pending (fix `YOUR_BUNDLE_ID` in BaseLayout)
-- UptimeRobot monitor pending (awaiting live URL confirmation)
+- GitHub Actions CI workflow (unit tests → E2E + axe-core, sequential)
+- Bilingual 404 page (`src/pages/404.astro`) with auto-detected lang
+- Skip link + `#main-content` landmark for WCAG 2.4.1
+- `@sentry/astro` integration replacing old CDN approach; `beforeSend` filter drops TurnstileError noise
+- Security headers in `netlify.toml` (HSTS, X-Frame-Options, CSP, etc.)
+- Docs: `GITHUB_CONFIG.md`, `NETLIFY_CONFIG.md`, `PLATFORMS_CONFIG.md`
+- QA checklists: `QA-USABILITY.csv`, `QA-ACCESSIBILITY.csv`, `QA-EMAIL.csv`
+- Full favicon fallback chain: SVG (rojo) → PNG 32/16 → ICO → apple-touch-icon
+
+### Changed
+- Migrated from suspended AGLAYA Netlify account → ibaifernandez Legacy Free (300 min/month)
+- Turnstile sitekey fallback: `??` → `||` (fixes silent failure when env var is empty string)
+- `role="complementary"` → `aria-hidden="true"` on marquee (decorative; was causing landmark violation)
+- Contact eyebrow color: `#e8003d` (4.33:1, fails AA) → `#ff4d70` (6.5:1 ✓)
+- Favicon: `aglaya-favicon-blanco.svg` had `fill:none` (invisible) → switched to `aglaya-favicon-rojo.svg`
+- Resend API calls now check `res.ok` and throw on 4xx/5xx (previously silent on failure)
+
+### Fixed
+- Form success message disappeared with form (was inside `<form>` tag; moved outside)
+- **Turnstile race condition**: `window.onTurnstileSuccess` defined in Astro module script (deferred) — Turnstile's async CDN script could call it before the module ran, leaving button permanently disabled. Fixed by defining callback in `<script is:inline>` (synchronous) before the Turnstile `<script src>` tag.
+- Axe color-contrast false positives in CI: animated elements scanned at `opacity:0` mid-transition. Fixed by calling `page.emulateMedia({ reducedMotion: 'reduce' })` before `page.goto()` in E2E tests — triggers CSS `prefers-reduced-motion` rule that sets `opacity:1 !important` on all `[data-animate]` elements.
 
 ---
 
