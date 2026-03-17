@@ -39,7 +39,7 @@ async function sendContactEmail(name: string, email: string, message: string): P
   }
 
   // 1. Send confirmation email to user
-  await fetch("https://api.resend.com/emails", {
+  const confirmRes = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${apiKey}`,
@@ -69,9 +69,13 @@ async function sendContactEmail(name: string, email: string, message: string): P
       `,
     }),
   });
+  if (!confirmRes.ok) {
+    const errBody = await confirmRes.text();
+    throw new Error(`Resend confirmation email failed (${confirmRes.status}): ${errBody}`);
+  }
 
   // 2. Notify the AI·gency
-  await fetch("https://api.resend.com/emails", {
+  const notifyRes = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${apiKey}`,
@@ -90,6 +94,10 @@ async function sendContactEmail(name: string, email: string, message: string): P
       `,
     }),
   });
+  if (!notifyRes.ok) {
+    const errBody = await notifyRes.text();
+    throw new Error(`Resend notification email failed (${notifyRes.status}): ${errBody}`);
+  }
 }
 
 /* ── handler ─────────────────────────────────── */
