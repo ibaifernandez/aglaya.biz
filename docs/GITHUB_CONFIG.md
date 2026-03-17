@@ -5,20 +5,35 @@ URL: https://github.com/ibaifernandez/aglaya.biz
 
 ---
 
-## 1. Branch Protection (Settings → Branches)
+## 1. Branch Protection — Ruleset "Protect main" ✅ ACTIVO
 
-Configura la regla para la rama `main`:
+> Ruta: Settings → Rules → Rulesets → "Protect main"
 
-| Setting | Value |
+Configuración aplicada (17 Mar 2026):
+
+| Setting | Valor |
 |---|---|
-| Require a pull request before merging | ✅ |
-| Require status checks to pass | ✅ — checks: `Unit Tests`, `E2E + Accessibility Tests` |
-| Require branches to be up to date | ✅ |
-| Do not allow bypassing the above settings | ✅ |
-| Allow force pushes | ❌ |
-| Allow deletions | ❌ |
+| Ruleset name | `Protect main` |
+| Enforcement status | Active |
+| Target branches | Default branch (`main`) |
+| Restrict deletions | ✅ |
+| Require status checks to pass | ✅ |
+| → Unit Tests | ✅ GitHub Actions |
+| → E2E + Accessibility Tests | ✅ GitHub Actions |
+| Block force pushes | ✅ |
 
-> Ruta: Settings → Branches → Add branch ruleset → Branch name: `main`
+**Efecto práctico:** Un push a `main` cuyo commit no tenga los dos status checks en verde es rechazado. Ningún código roto llega a producción ni dispara un deploy de Netlify.
+
+**Flujo de trabajo recomendado:**
+```bash
+git checkout -b fix/nombre-descriptivo
+# ... cambios ...
+git push origin fix/nombre-descriptivo
+gh pr create --title "fix: descripción" --body "..."
+# CI corre en la rama → verde → merge → Netlify despliega
+```
+
+**Nota sobre push directo a main:** Sin "Require a pull request before merging" activado, los push directos a `main` siguen siendo técnicamente posibles si el commit tiene checks pasados (e.g. ya corrió CI en una rama). Para trabajo en solitario esto es aceptable. Activar "Require PR" si en el futuro hay colaboradores.
 
 ---
 
