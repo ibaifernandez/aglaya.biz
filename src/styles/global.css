@@ -176,6 +176,52 @@ body {
   background-size: 60px 60px;
 }
 
+/* ------ Accessibility utilities ------ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.5rem 1rem;
+  background: #e8003d;
+  color: white;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  border-radius: 0 0 4px 4px;
+  transition: top 0.1s;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* Global focus-visible ring */
+:focus-visible {
+  outline: 2px solid #e8003d;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid #e8003d;
+  outline-offset: 3px;
+}
+
 /* ------ Reduced motion ------ */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

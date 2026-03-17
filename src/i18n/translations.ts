@@ -39,7 +39,7 @@ export const ui = {
     'form.placeholder': 'your@email.com',
     'form.message': 'What do you need? (optional)',
     'form.submit': 'Notify me',
-    'form.success': "You're in. We'll be in touch within 4 hours.",
+    'form.success': "You're in. We'll be in touch within 24 hours.",
     'form.error': 'Something went wrong. Try again.',
 
     /* Direct contact */
@@ -87,7 +87,7 @@ export const ui = {
     'form.placeholder': 'tu@email.com',
     'form.message': '¿Qué necesitas? (opcional)',
     'form.submit': 'Avísame',
-    'form.success': 'Perfecto. Te contactamos en menos de 4 horas.',
+    'form.success': 'Perfecto. Te contactamos en menos de 24 horas.',
     'form.error': 'Algo salió mal. Inténtalo de nuevo.',
 
     /* Direct contact */
