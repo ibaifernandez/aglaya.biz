@@ -8,4 +8,16 @@ Sentry.init({
   tracesSampleRate: 0.1,
   // Only send in production
   enabled: import.meta.env.PROD,
+  beforeSend(event, hint) {
+    const err = hint?.originalException;
+    // Filter out Cloudflare Turnstile widget errors — these are third-party
+    // noise (hostname mismatch on crawlers, challenge expiry) and not actionable.
+    if (err && typeof err === 'object' && 'name' in err && err.name === 'TurnstileError') {
+      return null;
+    }
+    if (err && typeof err === 'string' && err.includes('[Cloudflare Turnstile]')) {
+      return null;
+    }
+    return event;
+  },
 });
