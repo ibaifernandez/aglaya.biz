@@ -65,7 +65,7 @@ const t = useTranslations(lang);
       </a>
     </div>
 
-    <div class="marquee-wrap" role="region" aria-label="Servicios" data-animate="fade-up" data-delay="800">
+    <div class="marquee-wrap" aria-hidden="true" data-animate="fade-up" data-delay="800">
       <div class="marquee-track">
         {['AI Brand Strategy','AI Content Engine','Publicidad con IA','Diseño Web & Dev','Inteligencia de Marketing','Identidad Visual con IA','Automatización WhatsApp','AI SEO',
           'AI Brand Strategy','AI Content Engine','Publicidad con IA','Diseño Web & Dev','Inteligencia de Marketing','Identidad Visual con IA','Automatización WhatsApp','AI SEO'].map(item => (
@@ -316,9 +316,9 @@ header nav { display: flex; align-items: center; gap: 0.75rem; }
 .contact-eyebrow {
   display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;
   font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 700;
-  letter-spacing: 0.4em; text-transform: uppercase; color: #e8003d;
+  letter-spacing: 0.4em; text-transform: uppercase; color: #ff4d70; /* #e8003d = 4.33:1 fails AA; #ff4d70 = 6.5:1 ✓ */
 }
-.eyebrow-line { display: block; width: 2rem; height: 1px; background: #e8003d; }
+.eyebrow-line { display: block; width: 2rem; height: 1px; background: #ff4d70; }
 
 .contact-heading {
   font-family: 'Outfit', sans-serif;

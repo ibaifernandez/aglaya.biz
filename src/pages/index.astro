@@ -72,7 +72,7 @@ const t = useTranslations(lang);
     </div>
 
     <!-- Marquee -->
-    <div class="marquee-wrap" role="region" aria-label="Services" data-animate="fade-up" data-delay="800">
+    <div class="marquee-wrap" aria-hidden="true" data-animate="fade-up" data-delay="800">
       <div class="marquee-track">
         {['AI Brand Strategy','AI Content Engine','AI-Powered Ads','Web Design & Dev','Marketing Intelligence','AI Visual Identity','WhatsApp Automation','AI SEO',
           'AI Brand Strategy','AI Content Engine','AI-Powered Ads','Web Design & Dev','Marketing Intelligence','AI Visual Identity','WhatsApp Automation','AI SEO'].map(item => (
@@ -456,13 +456,13 @@ header nav {
   font-weight: 700;
   letter-spacing: 0.4em;
   text-transform: uppercase;
-  color: #e8003d;
+  color: #ff4d70; /* #e8003d = 4.33:1 fails AA; #ff4d70 = 6.5:1 ✓ */
 }
 .eyebrow-line {
   display: block;
   width: 2rem;
   height: 1px;
-  background: #e8003d;
+  background: #ff4d70;
 }
 
 .contact-heading {
