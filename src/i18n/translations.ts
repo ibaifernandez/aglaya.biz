@@ -13,7 +13,7 @@ export const defaultLang: Lang = 'en';
 export const ui = {
   en: {
     /* Meta */
-    'meta.title': 'AGLAYA — The Uncomfortable Agency · AI·gency',
+    'meta.title': 'AGLAYA — The Uncomfortable AI·gency',
     'meta.description':
       'AI·gency: AI-powered marketing for SMBs and entrepreneurs. Enterprise results at startup prices. Coming soon.',
 
@@ -61,7 +61,7 @@ export const ui = {
 
   es: {
     /* Meta */
-    'meta.title': 'AGLAYA — La Agencia Incómoda · Agenc·IA',
+    'meta.title': 'AGLAYA — La Agenc·IA Incómoda',
     'meta.description':
       'Agenc·IA de marketing impulsada por IA para PYMEs y emprendedores. Resultados de gran empresa a precio de startup. Próximamente.',
 
