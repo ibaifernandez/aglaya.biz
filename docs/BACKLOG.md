@@ -9,24 +9,25 @@
 ### Critical Path
 | # | Task | Status | Notes |
 |---|---|---|---|
-| 1 | Initialize Git repo and push to GitHub | todo | `ibaifernandez/aglaya.biz` |
-| 2 | Configure Netlify deployment with auto-deploy | todo | Connect to GitHub repo |
-| 3 | Set up Resend: verify domain, create API key | todo | See docs/SERVICES.md |
-| 4 | Set up Cloudflare Turnstile: create site widget | todo | Need site key + secret |
-| 5 | Set up Sentry: create project, get DSN | todo | Fix bundle ID in BaseLayout |
-| 6 | Configure environment variables in Netlify | todo | All 5 vars from README |
-| 7 | Set up UptimeRobot monitors | todo | Monitor `/` and `/es/` |
-| 8 | Add security headers in netlify.toml | todo | CSP, HSTS, X-Frame |
+| 1 | Initialize Git repo and push to GitHub | **done** | SSH → `ibaifernandez/aglaya.biz` |
+| 2 | Configure Netlify deployment with auto-deploy | **done** | Auto-deploy on push to `main` |
+| 3 | Set up Cloudflare Turnstile: create site widget | **done** | Site key `0x4AAAAAACr7qLXpzOQqF7Ni`; secret in Netlify env |
+| 4 | Configure environment variables in Netlify | **in-progress** | `TURNSTILE_SECRET` ✅ · `PUBLIC_TURNSTILE_SITE_KEY` ✅ · `RESEND_API_KEY` ⏳ · `NOTIFY_EMAIL` ⏳ · `PUBLIC_SENTRY_DSN` ⏳ |
+| 5 | Set up Resend: verify domain, create API key | **todo** | Next up — need API key + domain verification |
+| 6 | Set up Sentry: create project, get DSN | **todo** | Fix `YOUR_BUNDLE_ID` in BaseLayout.astro |
+| 7 | Set up UptimeRobot monitors | **todo** | Monitor `/` and `/es/` once Sentry is live |
+| 8 | Add security headers in netlify.toml | **todo** | CSP, HSTS, X-Frame |
 
 ### UX/Design Enhancement
 | # | Task | Status | Notes |
 |---|---|---|---|
-| 9 | Redesign Coming Soon page — impactful hero animation | in-progress | Current design is functional but generic |
-| 10 | Add particle/geometric background effect | todo | CSS-only or lightweight canvas |
-| 11 | Enhance form micro-interactions | todo | Focus glow, submit animation |
-| 12 | Add smooth page transitions between EN/ES | todo | View Transitions API |
-| 13 | Create custom loading state | todo | Brand-consistent spinner |
-| 14 | Optimize for Lighthouse 95+ | todo | After design changes |
+| 9 | Redesign Coming Soon page — cinematic hero | **done** | Cursor glow, scanline, word-by-word animation, marquee |
+| 10 | AI·gency / Agenc·IA bilingual branding | **done** | EN: AI·gency · ES: Agenc·IA |
+| 11 | OG image 1200×630 | **done** | Generated with `sharp`; editorial layout matching site |
+| 12 | Clean contact form (no icons, minimal) | **done** | Pure inputs, 24h response copy |
+| 13 | Add smooth page transitions between EN/ES | **todo** | View Transitions API |
+| 14 | Create custom 404 page | **todo** | Bilingual |
+| 15 | Optimize for Lighthouse 95+ | **todo** | After all integrations are live |
 
 ### Infrastructure
 | # | Task | Status | Notes |

@@ -17,19 +17,23 @@
 - [x] Brand assets (logos, favicons, flags)
 
 ### Milestone 1.1 — Production Launch (Current)
-- [ ] Git repository initialization and GitHub push
-- [ ] Netlify deployment with auto-deploy
-- [ ] Environment variables configured in Netlify
-- [ ] Third-party services activated (Resend, Turnstile, Sentry, UptimeRobot)
-- [ ] Security headers configured
-- [ ] Lighthouse audit passed (95+)
+- [x] Git repository initialization and push to `ibaifernandez/aglaya.biz`
+- [x] Netlify deployment with auto-deploy on `main`
+- [x] Cloudflare Turnstile configured (`TURNSTILE_SECRET` + `PUBLIC_TURNSTILE_SITE_KEY` in Netlify)
+- [ ] Resend domain verified and `RESEND_API_KEY` set in Netlify
+- [ ] Sentry project created, DSN set, `YOUR_BUNDLE_ID` fixed in BaseLayout
+- [ ] `NOTIFY_EMAIL` set in Netlify env vars
+- [ ] UptimeRobot monitors on `/` and `/es/`
+- [ ] Security headers in netlify.toml
+- [ ] Lighthouse audit 95+
 
-### Milestone 1.2 — Visual Impact
-- [ ] Redesigned Coming Soon page with striking animations
-- [ ] Particle/geometric background effects
-- [ ] Form micro-interactions
+### Milestone 1.2 — Visual Impact (Done ahead of schedule)
+- [x] Cinematic Coming Soon hero: cursor glow, scanline, word-by-word animation
+- [x] AI·gency / Agenc·IA bilingual branding pivot
+- [x] OG image 1200×630 — editorial layout with brand identity
+- [x] Clean minimal contact form (no icons, 24h response copy)
 - [ ] View Transitions API for language switching
-- [ ] Custom 404 page
+- [ ] Custom 404 page (bilingual)
 
 ---
 

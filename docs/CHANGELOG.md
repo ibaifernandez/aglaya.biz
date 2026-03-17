@@ -8,8 +8,28 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Added
-- Comprehensive documentation suite: CLAUDE.md, AGENTS.md, PRD, BACKLOG, ROADMAP, CHANGELOG, IA-RULES
-- Updated and expanded existing documentation
+- Resend integration pending (API key + domain verification)
+- Sentry DSN configuration pending (fix `YOUR_BUNDLE_ID` in BaseLayout)
+- UptimeRobot monitor pending (awaiting live URL confirmation)
+
+---
+
+## [0.3.0] — 2026-03-16
+
+### Added
+- **Strategic pivot documentation**: `docs/BRAND-STRATEGY.md`, `docs/MARKETING-STRATEGY.md`, `docs/SERVICES-AI.md`, `docs/PLATFORM-SETUP.md`
+- **AI·gency branding** (EN): "AI·gency" as the English expression of the pivot concept; "Agenc·IA" retained for ES
+- **New OG image** 1200×630: editorial layout matching current site design (AGLAYA wordmark, radial red glow, tagline, body copy, red bottom stripe). Generated with `sharp` from SVG template.
+- **Git repo initialized** and connected to `git@github.com:ibaifernandez/aglaya.biz.git` via SSH
+- **Turnstile real site key** `0x4AAAAAACr7qLXpzOQqF7Ni` set as fallback in ContactForm; `TURNSTILE_SECRET` configured in Netlify env vars
+
+### Changed
+- **Contact form**: removed inline icons from input fields — pure minimal inputs, consistent with editorial aesthetic
+- **Response time copy**: "4 hours" → "24 hours" in both EN and ES pages
+- **`.gitignore`**: expanded from 2 lines to full Node/Astro/macOS coverage (dist, node_modules, .env, .DS_Store, logs, editor files)
+
+### Fixed
+- Merge conflict with remote history (remote had older design); resolved all add/add conflicts keeping local redesign
 
 ---
 
