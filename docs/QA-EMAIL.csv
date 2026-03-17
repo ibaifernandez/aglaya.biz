@@ -1,0 +1,8 @@
+ID,Caso de prueba,Remitente esperado,Destinatario,Asunto esperado,Contenido clave,Estado,Notas
+E01,Email de confirmación al usuario,AGLAYA <info@aglaya.biz>,Email introducido en el form,"Thanks for reaching out to AGLAYA","Nombre del usuario, copia del mensaje, link aglaya.biz",Pendiente,Requiere RESEND_API_KEY activo
+E02,Email de notificación a la agencia,AGLAYA <info@aglaya.biz>,NOTIFY_EMAIL configurado,"📩 New Contact: {nombre o email}","Nombre, email, mensaje completo",Pendiente,Requiere RESEND_API_KEY activo
+E03,No spam / no auto-reply genérico,–,–,–,"Sin asunto 'noreply', sin imagen rota, sin links rotos",Pendiente,
+E04,Diseño email confirmación,–,–,–,"Fondo oscuro #080808, texto blanco, acento rojo, sin imágenes externas",Pendiente,
+E05,Envío con nombre vacío,AGLAYA <info@aglaya.biz>,Email introducido,–,"Saludo: 'Hello there,' (sin nombre)",Pendiente,Nombre es opcional
+E06,Dominio verificado en Resend,–,–,–,"DKIM, SPF, DMARC pasan — no cae en spam",Pendiente,Verificar con mail-tester.com
+E07,Rate limit / doble envío,–,–,–,"Segundo envío inmediato no duplica emails",Pendiente,
