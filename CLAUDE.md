@@ -122,6 +122,15 @@ Without `res.ok` check, a 401/422 from Resend is silently swallowed — the Netl
 ### Brand red `#e8003d` fails WCAG AA on small text
 `#e8003d` on `#080808` = **4.33:1** contrast — below the 4.5:1 AA threshold for text under 18px/14px bold. Use `#ff4d70` (6.5:1) for small text elements like eyebrow labels. Reserve `#e8003d` for large headings (≥18px) or decorative non-text elements.
 
+### axe-core 4.11 checks `color-contrast` on `aria-hidden` children
+`aria-hidden="true"` hides elements from the accessibility tree but axe-core 4.11's `color-contrast` rule still audits visually rendered children. For decorative elements (e.g. scrolling marquees) that are intentionally `aria-hidden`, exclude them explicitly in the test:
+```js
+const results = await new AxeBuilder({ page })
+  .withTags(['wcag2a', 'wcag2aa', 'best-practice'])
+  .exclude('.marquee-wrap') // decorative, aria-hidden="true"
+  .analyze();
+```
+
 ### Sentry TurnstileErrors are noise — filter them
 Cloudflare Turnstile fires unhandled browser errors on hostname mismatches (bots hitting deploy preview URLs) and expired challenges. These pollute the Sentry feed. Filter in `sentry.client.config.js`:
 ```js

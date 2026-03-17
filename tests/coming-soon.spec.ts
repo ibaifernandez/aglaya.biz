@@ -57,8 +57,11 @@ test.describe('Coming Soon Page (Bilingual + A11y)', () => {
     await expect(page.locator('a[href*="wa.me"]').first()).toBeVisible();
 
     // 10. Accessibility (axe-core WCAG 2AA)
+    // .marquee-wrap is decorative animation (aria-hidden="true") — axe 4.11
+    // still checks color-contrast on aria-hidden children, so exclude explicitly.
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'best-practice'])
+      .exclude('.marquee-wrap')
       .analyze();
     expect(results.violations).toEqual([]);
   });
@@ -89,6 +92,7 @@ test.describe('Coming Soon Page (Bilingual + A11y)', () => {
     // 6. Accessibility (axe-core WCAG 2AA)
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'best-practice'])
+      .exclude('.marquee-wrap')
       .analyze();
     expect(results.violations).toEqual([]);
   });
