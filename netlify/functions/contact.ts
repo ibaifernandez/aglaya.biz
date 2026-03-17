@@ -1,10 +1,5 @@
 import type { Handler } from "@netlify/functions";
 
-const RESEND_API_KEY = process.env.RESEND_API_KEY ?? "";
-const TURNSTILE_SECRET = process.env.TURNSTILE_SECRET ?? "";
-const FROM_EMAIL = "AGLAYA <hola@aglaya.biz>";
-const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL ?? "hola@aglaya.biz";
-
 /* ── helpers ─────────────────────────────────── */
 
 function isValidEmail(email: string): boolean {
@@ -12,9 +7,9 @@ function isValidEmail(email: string): boolean {
 }
 
 async function verifyTurnstile(token: string, ip: string): Promise<boolean> {
-  if (!TURNSTILE_SECRET) {
-    // Dev / staging without a secret — skip verification
-    console.warn("[subscribe] TURNSTILE_SECRET not set — skipping verification");
+  const secret = process.env.TURNSTILE_SECRET ?? "";
+  if (!secret) {
+    console.warn("[contact] TURNSTILE_SECRET not set — skipping verification");
     return true;
   }
   const res = await fetch(
@@ -23,7 +18,7 @@ async function verifyTurnstile(token: string, ip: string): Promise<boolean> {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
-        secret: TURNSTILE_SECRET,
+        secret,
         response: token,
         remoteip: ip,
       }),
@@ -33,46 +28,40 @@ async function verifyTurnstile(token: string, ip: string): Promise<boolean> {
   return data.success;
 }
 
-async function sendViaResend(email: string): Promise<void> {
-  if (!RESEND_API_KEY) {
-    console.warn("[subscribe] RESEND_API_KEY not set — skipping send");
+async function sendContactEmail(name: string, email: string, message: string): Promise<void> {
+  const apiKey = process.env.RESEND_API_KEY ?? "";
+  const fromEmail = "AGLAYA <info@aglaya.biz>";
+  const notifyTo = process.env.NOTIFY_EMAIL ?? "info@aglaya.biz";
+
+  if (!apiKey) {
+    console.warn("[contact] RESEND_API_KEY not set — skipping send");
     return;
   }
 
-  // 1. Add contact to Resend Contacts audience
-  // Replace RESEND_AUDIENCE_ID env var once you create an audience in Resend
-  const audienceId = process.env.RESEND_AUDIENCE_ID ?? "";
-  if (audienceId) {
-    await fetch(`https://api.resend.com/audiences/${audienceId}/contacts`, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${RESEND_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, unsubscribed: false }),
-    });
-  }
-
-  // 2. Send confirmation email to subscriber
+  // 1. Send confirmation email to user
   await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${RESEND_API_KEY}`,
+      "Authorization": `Bearer ${apiKey}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: FROM_EMAIL,
+      from: fromEmail,
       to: [email],
-      subject: "You're in. AGLAYA is coming.",
+      subject: "Thanks for reaching out to AGLAYA",
       html: `
-        <div style="background:#080808;color:#f5f5f5;font-family:Inter,sans-serif;padding:48px 32px;max-width:560px;margin:0 auto;">
+        <div style="background:#080808;color:#f5f5f5;font-family:sans-serif;padding:48px 32px;max-width:560px;margin:0 auto;">
           <p style="color:#e8003d;font-size:11px;letter-spacing:.3em;text-transform:uppercase;margin:0 0 24px">AGLAYA</p>
-          <h1 style="font-size:32px;font-weight:900;margin:0 0 16px;line-height:1.1;">You're on<br/>the list.</h1>
+          <h1 style="font-size:24px;font-weight:900;margin:0 0 16px;line-height:1.1;">We've received your message.</h1>
           <p style="color:rgba(245,245,245,.6);margin:0 0 32px;line-height:1.6;">
-            We'll let you know the moment the new AGLAYA is live.<br/>
-            Something uncomfortable is coming.
+            Hello ${name || 'there'},<br/><br/>
+            Thanks for contacting AGLAYA. Our team will review your message and get back to you shortly.
           </p>
-          <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:0 0 24px"/>
+          <div style="background:rgba(255,255,255,0.03); padding: 24px; border: 1px solid rgba(255,255,255,0.08);">
+            <p style="font-size:12px; color:rgba(245,245,245,0.4); margin:0 0 8px;">Your message:</p>
+            <p style="font-size:14px; margin:0; line-height:1.5;">${message}</p>
+          </div>
+          <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:32px 0 24px"/>
           <p style="font-size:12px;color:rgba(245,245,245,.35);">
             © AGLAYA · <a href="https://aglaya.biz" style="color:#e8003d;text-decoration:none;">aglaya.biz</a>
           </p>
@@ -81,18 +70,24 @@ async function sendViaResend(email: string): Promise<void> {
     }),
   });
 
-  // 3. Notify the agency of a new lead
+  // 2. Notify the agency
   await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${RESEND_API_KEY}`,
+      "Authorization": `Bearer ${apiKey}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: FROM_EMAIL,
-      to: [NOTIFY_EMAIL],
-      subject: `🔥 New lead: ${email}`,
-      html: `<p>New subscription on aglaya.biz: <strong>${email}</strong></p>`,
+      from: fromEmail,
+      to: [notifyTo],
+      subject: `📩 New Contact: ${name || email}`,
+      html: `
+        <h2>New lead from aglaya.biz</h2>
+        <p><strong>Name:</strong> ${name || 'N/A'}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Message:</strong></p>
+        <div style="background:#f4f4f4; padding: 20px;">${message}</div>
+      `,
     }),
   });
 }
@@ -114,28 +109,29 @@ export const handler: Handler = async (event) => {
     return { statusCode: 405, headers, body: JSON.stringify({ error: "Method not allowed" }) };
   }
 
-  let body: { email?: string; token?: string };
+  let body: { name?: string; email?: string; message?: string; token?: string };
   try {
     body = JSON.parse(event.body ?? "{}");
   } catch {
     return { statusCode: 400, headers, body: JSON.stringify({ error: "Invalid JSON" }) };
   }
 
+  const name = (body.name ?? "").trim();
   const email = (body.email ?? "").trim().toLowerCase();
+  const message = (body.message ?? "").trim();
   const token = body.token ?? "";
 
-  // Validate email
-  if (!email || !isValidEmail(email)) {
+  if (!email || !isValidEmail(email) || !message) {
     return {
       statusCode: 422,
       headers,
-      body: JSON.stringify({ error: "Invalid email address" }),
+      body: JSON.stringify({ error: "Invalid input" }),
     };
   }
 
-  // Verify Turnstile
   const ip = event.headers["x-forwarded-for"] ?? event.headers["x-nf-client-connection-ip"] ?? "";
   const turnstileOk = await verifyTurnstile(token, ip);
+  
   if (!turnstileOk) {
     return {
       statusCode: 422,
@@ -144,15 +140,14 @@ export const handler: Handler = async (event) => {
     };
   }
 
-  // Send via Resend
   try {
-    await sendViaResend(email);
+    await sendContactEmail(name, email, message);
   } catch (err) {
-    console.error("[subscribe] Resend error:", err);
+    console.error("[contact] Error:", err);
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: "Failed to process subscription" }),
+      body: JSON.stringify({ error: "Failed to process message" }),
     };
   }
 

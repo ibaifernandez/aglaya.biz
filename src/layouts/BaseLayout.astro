@@ -43,10 +43,12 @@ const structuredData = {
   "sameAs": [],
   "contactPoint": {
     "@type": "ContactPoint",
-    "email": "hola@aglaya.biz",
+    "email": "info@aglaya.biz",
     "contactType": "customer service"
   }
 };
+
+const PUBLIC_SENTRY_DSN = import.meta.env.PUBLIC_SENTRY_DSN;
 ---
 
 <!doctype html>
@@ -101,21 +103,23 @@ const structuredData = {
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <!-- Material Symbols -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0&display=swap"
-      rel="stylesheet"
-    />
 
     <!-- LD+JSON — Organization structured data -->
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
-    <!-- Sentry — error tracking (loaded only when DSN is available) -->
-    <script>
-      const sentryDsn = typeof window !== 'undefined'
-        ? (window as any).__SENTRY_DSN__
-        : null;
-    </script>
+    <!-- Sentry — error tracking -->
+    {PUBLIC_SENTRY_DSN && (
+      <script
+        is:inline
+        src="https://js.sentry-cdn.com/YOUR_BUNDLE_ID.min.js"
+        crossorigin="anonymous"
+      ></script>
+      <script is:inline define:vars={{ PUBLIC_SENTRY_DSN }}>
+        if (typeof Sentry !== 'undefined') {
+          Sentry.init({ dsn: PUBLIC_SENTRY_DSN });
+        }
+      </script>
+    )}
   </head>
   <body>
     <slot />

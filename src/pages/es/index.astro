@@ -1,9 +1,7 @@
----
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import LeadForm from '../../components/LeadForm.astro';
+import ContactForm from '../../components/ContactForm.astro';
 import { Image } from 'astro:assets';
-import heroImage from '../../assets/images/hero-abstract.png';
-import logoWhite from '../../assets/images/aglaya-logo-white.png';
+import logoSvg from '../../assets/images/aglaya-logo.svg';
 import { useTranslations } from '../../i18n/translations';
 
 const lang = 'es';
@@ -64,15 +62,11 @@ const marqueeItems = [
   </style>
 
   <div id="app" class="relative flex h-screen w-screen flex-col overflow-hidden" style="background:#080808;">
+    <!-- Background: mesh + grid + scan -->
+    <div class="mesh-gradient"></div>
     <div class="bg-grid absolute inset-0 z-0 pointer-events-none"></div>
-    <div class="scan-line absolute left-0 right-0 h-px z-0 pointer-events-none"
+    <div class="scan-line absolute left-0 right-0 h-px z-10 pointer-events-none"
          style="background: linear-gradient(90deg, transparent, rgba(232,0,61,0.6), transparent);"></div>
-    <div class="absolute inset-0 z-0 pointer-events-none" aria-hidden="true">
-      <Image src={heroImage} alt="" format="webp"
-             class="w-full h-full object-cover opacity-25" />
-      <div class="absolute inset-0"
-           style="background: radial-gradient(ellipse at center, transparent 20%, #080808 80%);"></div>
-    </div>
 
     <div class="relative flex h-full w-full flex-col z-10">
 
@@ -82,11 +76,10 @@ const marqueeItems = [
               role="banner">
         <div class="flex flex-col justify-center gap-1">
           <Image
-            src={logoWhite}
+            src={logoSvg}
             alt="AGLAYA"
-            format="webp"
             height={28}
-            class="h-6 md:h-7 w-auto object-contain brightness-0 invert"
+            class="h-6 md:h-7 w-auto object-contain"
             loading="eager"
           />
           <span class="font-display font-light uppercase tracking-[0.25em]"
@@ -97,18 +90,19 @@ const marqueeItems = [
 
         <nav class="flex items-center gap-4" aria-label="Navegación principal">
           <a href="/" lang="en" hreflang="en"
-             class="lang-flag" aria-label="View in English" title="English">
-            <span class="flag" aria-hidden="true">🇬🇧</span>
+             class="lang-flag flex items-center gap-2 px-3 py-1.5 border border-white/10 hover:border-brand/40 transition-all text-[10px] font-black tracking-widest text-muted hover:text-white group"
+             aria-label="View in English">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 group-hover:text-brand transition-colors" aria-hidden="true"><path d="m5 8 6 6 6-6"/><path d="m4 14 8-8 8 8"/></svg>
             <span>EN</span>
           </a>
-          <a href="mailto:hola@aglaya.biz"
-             class="hidden md:inline-block text-xs font-bold tracking-widest uppercase text-link transition-colors"
-             style="color: rgba(245,245,245,0.45);">Contacto</a>
-          <a href="https://wa.me/34600000000"
+          <a href="https://wa.me/573224288532"
              target="_blank" rel="noopener noreferrer"
-             class="brand-cta hidden md:inline-flex items-center gap-2 px-5 py-2 text-xs font-black uppercase tracking-widest text-white transition-all active:scale-95"
+             class="brand-cta hidden md:inline-flex items-center gap-2 px-5 py-2 text-[10px] font-black uppercase tracking-widest text-white transition-all active:scale-95"
              style="background: #e8003d;"
-             aria-label="Contáctanos por WhatsApp">WhatsApp</a>
+             aria-label="Contáctanos por WhatsApp">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+            WhatsApp
+          </a>
         </nav>
       </header>
 
@@ -124,7 +118,7 @@ const marqueeItems = [
             <h1 class="font-display font-black uppercase leading-[0.88] mb-6"
                 style="font-size: clamp(3rem, 8vw, 7rem); color: #f5f5f5;">
               La<br/>agencia<br/>
-              <span style="color: #e8003d;">incómoda.</span>
+              <span class="text-brand">incómoda.</span>
             </h1>
 
             <p class="text-sm md:text-base leading-relaxed mb-8 max-w-md"
@@ -133,27 +127,7 @@ const marqueeItems = [
             </p>
 
             <div class="glass p-6 max-w-md">
-              <LeadForm lang="es" />
-              <div class="flex items-center gap-3 my-4"
-                   style="border-top: 1px solid rgba(255,255,255,0.07); padding-top: 1rem;">
-                <span class="text-[10px] uppercase tracking-widest font-bold"
-                      style="color: rgba(245,245,245,0.35);">
-                  O contáctanos directamente
-                </span>
-              </div>
-              <div class="flex flex-wrap gap-4 text-sm font-bold">
-                <a href="mailto:hola@aglaya.biz"
-                   class="text-link underline underline-offset-4 transition-colors"
-                   style="color: rgba(245,245,245,0.7);">hola@aglaya.biz</a>
-                <a href="https://wa.me/34600000000"
-                   target="_blank" rel="noopener noreferrer"
-                   class="flex items-center gap-1.5 transition-colors text-link"
-                   style="color: rgba(245,245,245,0.7);"
-                   aria-label="Contáctanos por WhatsApp">
-                  <span class="material-symbols-outlined text-base" aria-hidden="true">chat</span>
-                  WhatsApp
-                </a>
-              </div>
+              <ContactForm lang="es" />
             </div>
           </div>
 

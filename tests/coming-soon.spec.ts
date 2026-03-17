@@ -22,14 +22,17 @@ test.describe('Coming Soon Page (Bilingual + A11y)', () => {
     const tagline = page.locator('header span:has-text("THE UNCOMFORTABLE AGENCY")');
     await expect(tagline).toBeVisible();
 
-    // 3. Language Switcher (Flag)
+    // 3. Language Switcher (Native Icon + Text)
     const langLink = page.locator('a[hreflang="es"]');
     await expect(langLink).toBeVisible();
-    await expect(langLink).toContainText('🇪🇸');
     await expect(langLink).toContainText('ES');
+    await expect(page.locator('a[hreflang="es"] svg')).toBeVisible(); // Check for native SVG icon
 
-    // 4. Form Components (Turnstile)
-    await expect(page.locator('#lead-form')).toBeVisible();
+    // 4. Form Components (Contact Form)
+    await expect(page.locator('#contact-form')).toBeVisible();
+    await expect(page.locator('#contact-name')).toBeVisible();
+    await expect(page.locator('#contact-email')).toBeVisible();
+    await expect(page.locator('#contact-message')).toBeVisible();
     await expect(page.locator('.cf-turnstile')).toBeVisible();
 
     // 5. Contact Links
@@ -58,11 +61,11 @@ test.describe('Coming Soon Page (Bilingual + A11y)', () => {
     const tagline = page.locator('header span:has-text("LA AGENCIA INCÓMODA")');
     await expect(tagline).toBeVisible();
 
-    // 3. Language Switcher (Flag)
+    // 3. Language Switcher (Native Icon + Text)
     const langLink = page.locator('a[hreflang="en"]');
     await expect(langLink).toBeVisible();
-    await expect(langLink).toContainText('🇬🇧');
     await expect(langLink).toContainText('EN');
+    await expect(page.locator('a[hreflang="en"] svg')).toBeVisible();
 
     // 4. Accessibility (axe-core)
     const accessibilityScanResults = await new AxeBuilder({ page })
