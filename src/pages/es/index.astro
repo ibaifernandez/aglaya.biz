@@ -29,7 +29,7 @@ const t = useTranslations(lang);
     </a>
     <a href="https://wa.me/573224288532" target="_blank" rel="noopener noreferrer" class="wa-btn">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
-      WhatsApp
+      <span>WhatsApp</span>
     </a>
   </nav>
 </header>
@@ -297,10 +297,20 @@ header nav { display: flex; align-items: center; gap: 0.75rem; }
 }
 @media (max-width: 768px) {
   .contact-inner { grid-template-columns: 1fr; gap: 3rem; }
-  .hero { padding: 6rem 1.5rem 7rem; }
+  .contact-section { padding: 4rem 1.5rem; }
   header { padding: 1rem 1.25rem; }
   .header-tagline { display: none; }
-  .contact-section { padding: 4rem 1.5rem; }
+  .wa-btn span { display: none; }
+  .wa-btn { padding: 0.55rem 0.75rem; }
+  .hero {
+    padding: 6rem 1.5rem 5rem;
+    min-height: auto;
+    justify-content: flex-start;
+    padding-top: 8rem;
+  }
+  .label-text { font-size: 9px; letter-spacing: 0.35em; }
+  .hero-ctas { flex-direction: column; align-items: stretch; }
+  .cta-primary, .cta-secondary { justify-content: center; width: 100%; }
 }
 
 .contact-eyebrow {
