@@ -9,6 +9,9 @@ import { AxeBuilder } from '@axe-core/playwright';
 test.describe('Coming Soon Page (Bilingual + A11y)', () => {
 
   test('EN Page: Full Audit', async ({ page }) => {
+    // Emulate reduced-motion so animated elements start at opacity:1
+    // (otherwise axe scans them mid-transition and fails color-contrast)
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/');
 
     // 1. Basic Content
@@ -61,6 +64,8 @@ test.describe('Coming Soon Page (Bilingual + A11y)', () => {
   });
 
   test('ES Page: Full Audit', async ({ page }) => {
+    // Emulate reduced-motion so animated elements start at opacity:1
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/es/');
 
     // 1. Content Translation
