@@ -22,10 +22,9 @@ test.describe('Coming Soon Page (Bilingual + A11y)', () => {
     const tagline = page.locator('header span:has-text("THE UNCOMFORTABLE AGENCY")');
     await expect(tagline).toBeVisible();
 
-    // 3. Language Switcher (Native Icon + Text)
+    // 3. Language Switcher (Circular Flag)
     const langLink = page.locator('a[hreflang="es"]');
     await expect(langLink).toBeVisible();
-    await expect(langLink).toContainText('ES');
     await expect(page.locator('a[hreflang="es"] img')).toBeVisible(); // Check for flag img asset
 
     // 4. Form Components (Contact Form)
@@ -60,10 +59,9 @@ test.describe('Coming Soon Page (Bilingual + A11y)', () => {
     const tagline = page.locator('header span:has-text("LA AGENCIA INCÓMODA")');
     await expect(tagline).toBeVisible();
 
-    // 3. Language Switcher (Native Icon + Text)
+    // 3. Language Switcher (Circular Flag)
     const langLink = page.locator('a[hreflang="en"]');
     await expect(langLink).toBeVisible();
-    await expect(langLink).toContainText('EN');
     await expect(page.locator('a[hreflang="en"] img')).toBeVisible(); // Check for flag img asset
 
     // 4. Accessibility (axe-core)
