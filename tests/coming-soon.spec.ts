@@ -18,7 +18,7 @@ test.describe('Coming Soon Page (Bilingual + A11y)', () => {
     // 2. Logo & Branding
     const logo = page.locator('img[alt="AGLAYA"]').first();
     await expect(logo).toBeVisible();
-    await expect(logo).toHaveAttribute('src', /.*aglaya-logo-white.*/);
+    await expect(logo).toHaveAttribute('src', /.*aglaya-logo-blanco.*/);
     const tagline = page.locator('header span:has-text("THE UNCOMFORTABLE AGENCY")');
     await expect(tagline).toBeVisible();
 
@@ -26,7 +26,7 @@ test.describe('Coming Soon Page (Bilingual + A11y)', () => {
     const langLink = page.locator('a[hreflang="es"]');
     await expect(langLink).toBeVisible();
     await expect(langLink).toContainText('ES');
-    await expect(page.locator('a[hreflang="es"] svg')).toBeVisible(); // Check for native SVG icon
+    await expect(page.locator('a[hreflang="es"] img')).toBeVisible(); // Check for flag img asset
 
     // 4. Form Components (Contact Form)
     await expect(page.locator('#contact-form')).toBeVisible();
@@ -35,8 +35,7 @@ test.describe('Coming Soon Page (Bilingual + A11y)', () => {
     await expect(page.locator('#contact-message')).toBeVisible();
     await expect(page.locator('.cf-turnstile')).toBeVisible();
 
-    // 5. Contact Links
-    await expect(page.locator('a[href^="mailto:"]').first()).toBeVisible();
+    // 5. Contact Links (WhatsApp)
     await expect(page.locator('a[href*="wa.me"]').first()).toBeVisible();
 
     // 6. Accessibility (axe-core)
@@ -65,11 +64,11 @@ test.describe('Coming Soon Page (Bilingual + A11y)', () => {
     const langLink = page.locator('a[hreflang="en"]');
     await expect(langLink).toBeVisible();
     await expect(langLink).toContainText('EN');
-    await expect(page.locator('a[hreflang="en"] svg')).toBeVisible();
+    await expect(page.locator('a[hreflang="en"] img')).toBeVisible(); // Check for flag img asset
 
     // 4. Accessibility (axe-core)
     const accessibilityScanResults = await new AxeBuilder({ page })
-      .withTags(['wcag2a', 'wcag2aa'])
+      .withTags(['wcag2a', 'wcag2aa', 'best-practice'])
       .analyze();
 
     expect(accessibilityScanResults.violations).toEqual([]);

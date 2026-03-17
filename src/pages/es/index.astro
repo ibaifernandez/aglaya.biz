@@ -1,8 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ContactForm from '../../components/ContactForm.astro';
-import { Image } from 'astro:assets';
-import logoSvg from '../../assets/images/aglaya-logo.svg';
 import { useTranslations } from '../../i18n/translations';
 
 const lang = 'es';
@@ -27,143 +25,113 @@ const marqueeItems = [
       background-image:
         linear-gradient(rgba(232, 0, 61, 0.04) 1px, transparent 1px),
         linear-gradient(90deg, rgba(232, 0, 61, 0.04) 1px, transparent 1px);
-      background-size: 48px 48px;
+      background-size: 40px 40px;
     }
-    @keyframes scan {
-      0%   { transform: translateY(-100%); opacity: 0; }
-      10%  { opacity: 1; }
-      90%  { opacity: 1; }
+    @keyframes scanline {
+      0% { transform: translateY(-100%); opacity: 0; }
+      50% { opacity: 1; }
       100% { transform: translateY(100vh); opacity: 0; }
     }
-    .scan-line { animation: scan 6s linear infinite; }
-    .glass {
-      background: rgba(17, 17, 17, 0.85);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.07);
+    .scanner {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--color-brand), transparent);
+      animation: scanline 8s linear infinite;
     }
-    .lang-flag {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: rgba(245,245,245,0.45);
-      text-decoration: none;
-      padding: 4px 10px;
-      border: 1px solid rgba(255,255,255,0.1);
-      transition: all 0.2s;
-    }
-    .lang-flag:hover { color: #f5f5f5; border-color: rgba(255,255,255,0.3); }
-    .lang-flag .flag { font-size: 16px; line-height: 1; }
-    a.brand-cta:hover { background: #b5002f !important; }
-    a.text-link:hover { color: #e8003d; }
   </style>
 
-  <div id="app" class="relative flex h-screen w-screen flex-col overflow-hidden" style="background:#080808;">
-    <!-- Background: mesh + grid + scan -->
-    <div class="mesh-gradient"></div>
-    <div class="bg-grid absolute inset-0 z-0 pointer-events-none"></div>
-    <div class="scan-line absolute left-0 right-0 h-px z-10 pointer-events-none"
-         style="background: linear-gradient(90deg, transparent, rgba(232,0,61,0.6), transparent);"></div>
-
-    <div class="relative flex h-full w-full flex-col z-10">
-
-      <!-- HEADER -->
-      <header class="w-full flex items-center justify-between px-6 py-4 md:px-12 shrink-0"
+    <!-- Header / Nav -->
+    <header class="fixed top-0 inset-x-0 z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md bg-black/20 border-b border-white/5"
               style="border-bottom: 1px solid rgba(255,255,255,0.06);"
               role="banner">
         <div class="flex flex-col justify-center gap-1">
-          <Image
-            src={logoSvg}
+          <img
+            src="/assets/brand/aglaya-logo-blanco.svg"
             alt="AGLAYA"
-            height={28}
+            height="28"
             class="h-6 md:h-7 w-auto object-contain"
             loading="eager"
           />
-          <span class="font-display font-light uppercase tracking-[0.25em]"
-                style="font-size: 0.55rem; color: #e8003d; letter-spacing: 0.25em;">
-            LA AGENCIA INCÓMODA
-          </span>
+          <span class="text-[8px] font-black tracking-[0.3em] text-muted uppercase pl-0.5">LA AGENCIA INCÓMODA</span>
         </div>
 
-        <nav class="flex items-center gap-4" aria-label="Navegación principal">
+        <div class="flex items-center gap-4">
           <a href="/" lang="en" hreflang="en"
              class="lang-flag flex items-center gap-2 px-3 py-1.5 border border-white/10 hover:border-brand/40 transition-all text-[10px] font-black tracking-widest text-muted hover:text-white group"
              aria-label="View in English">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 group-hover:text-brand transition-colors" aria-hidden="true"><path d="m5 8 6 6 6-6"/><path d="m4 14 8-8 8 8"/></svg>
+            <div class="w-4 h-4 rounded-full overflow-hidden border border-white/10 flex items-center justify-center shrink-0">
+              <img src="/assets/brand/english.svg" alt="English" width="16" height="16" class="w-full h-full object-cover" loading="eager" />
+            </div>
             <span>EN</span>
           </a>
           <a href="https://wa.me/573224288532"
-             target="_blank" rel="noopener noreferrer"
-             class="brand-cta hidden md:inline-flex items-center gap-2 px-5 py-2 text-[10px] font-black uppercase tracking-widest text-white transition-all active:scale-95"
-             style="background: #e8003d;"
-             aria-label="Contáctanos por WhatsApp">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
-            WhatsApp
+             target="_blank"
+             rel="noopener noreferrer"
+             class="brand-cta bg-brand hover:bg-brand-hover text-white px-5 py-2 text-[10px] font-bold tracking-widest uppercase transition-all hover:scale-105 active:scale-95 flex items-center gap-2 rounded-sm shadow-[0_0_20px_rgba(232,0,61,0.3)]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+            <span>WhatsApp</span>
           </a>
-        </nav>
-      </header>
+        </div>
+    </header>
 
-      <!-- MAIN -->
-      <main class="flex-1 flex items-center px-6 md:px-12 lg:px-20 min-h-0" id="main-content">
-        <div class="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div class="flex flex-col justify-center">
-            <span class="inline-block font-display font-black text-xs uppercase tracking-[0.3em] mb-6"
-                  style="color: #e8003d;">
-              {t('hero.label')}
-            </span>
+    <main class="relative min-h-screen bg-black text-white selection:bg-brand selection:text-white">
 
-            <h1 class="font-display font-black uppercase leading-[0.88] mb-6"
-                style="font-size: clamp(3rem, 8vw, 7rem); color: #f5f5f5;">
-              La<br/>agencia<br/>
-              <span class="text-brand">incómoda.</span>
-            </h1>
+    <!-- Hero Section -->
+    <section class="relative pt-40 pb-20 px-6 min-h-[90vh] flex flex-col justify-center items-center text-center z-30"
+             aria-labelledby="hero-heading">
+      <div class="max-w-5xl mx-auto">
+        <div class="mb-8 flex flex-col items-center">
+          <div class="h-px w-24 bg-brand mb-6"></div>
+          <span class="text-xs font-black tracking-[0.5em] text-brand-light uppercase mb-4 decoration-brand/30 underline-offset-8 underline decoration-2">PRÓXIMAMENTE</span>
+        </div>
 
-            <p class="text-sm md:text-base leading-relaxed mb-8 max-w-md"
-               style="color: rgba(245,245,245,0.55);">
-              {t('hero.subtext')}
-            </p>
+        <h1 id="hero-heading" class="text-6xl md:text-9xl font-black tracking-tighter mb-12 leading-[0.85] uppercase">
+          <span class="block text-white mb-2">La Agencia</span>
+          <span class="block relative py-2">
+            <span class="relative z-10 text-brand italic">Incómoda</span>
+          </span>
+        </h1>
 
-            <div class="glass p-6 max-w-md">
-              <ContactForm lang="es" />
-            </div>
-          </div>
+        <div class="max-w-xl mx-auto mb-16">
+          <p class="text-lg md:text-xl text-muted leading-relaxed font-light">
+            Construimos marcas que convierten. Sin rellenos, sin excusas — solo resultados. Algo mejor está en camino.
+          </p>
+        </div>
 
-          <div class="hidden lg:flex items-center justify-center relative" aria-hidden="true">
-            <div class="absolute w-80 h-80 rounded-full animate-glow pointer-events-none"
-                 style="border: 1px solid rgba(232, 0, 61, 0.15); box-shadow: 0 0 120px rgba(232, 0, 61, 0.08);"></div>
-            <div class="absolute w-56 h-56 rounded-full pointer-events-none"
-                 style="border: 1px solid rgba(232, 0, 61, 0.08);"></div>
-            <div class="font-display font-black uppercase leading-none select-none text-center relative z-10"
-                 style="font-size: clamp(6rem, 14vw, 12rem); color: transparent; -webkit-text-stroke: 1px rgba(232,0,61,0.35);">
-              AG<br/>LA<br/>YA
+        <div class="flex flex-col items-center gap-12">
+          <div class="w-full max-w-md p-8 bg-white/5 border border-white/10 backdrop-blur-xl relative group rounded-sm shadow-2xl">
+            <div class="absolute -inset-0.5 bg-gradient-to-r from-brand/20 to-purple-500/20 rounded-sm blur opacity-50 group-hover:opacity-100 transition duration-1000"></div>
+            <div class="relative">
+              <ContactForm lang={lang} />
             </div>
           </div>
         </div>
-      </main>
+      </div>
+    </section>
 
-      <!-- MARQUEE -->
-      <section class="w-full shrink-0 py-3 overflow-hidden"
-               style="border-top: 1px solid rgba(255,255,255,0.06);"
-               aria-label="Servicios">
-        <div class="animate-marquee gap-12" aria-hidden="true">
-          <div class="flex items-center gap-12 text-[11px] md:text-xs font-black uppercase tracking-widest"
-               style="color: rgba(245,245,245,0.35);">
-            {marqueeItems.map((item) => (
-              <><span>{item}</span><span style="color:#e8003d;">•</span></>
-            ))}
-          </div>
-          <div class="flex items-center gap-12 text-[11px] md:text-xs font-black uppercase tracking-widest"
-               style="color: rgba(245,245,245,0.35);" aria-hidden="true">
-            {marqueeItems.map((item) => (
-              <><span>{item}</span><span style="color:#e8003d;">•</span></>
-            ))}
-          </div>
-        </div>
-      </section>
+    <!-- Marquee Tech Stack -->
+    <div class="fixed bottom-0 inset-x-0 z-40 bg-black/80 backdrop-blur-lg border-t border-white/5 py-4 overflow-hidden" role="complementary">
+      <div class="flex whitespace-nowrap animate-marquee">
+        {marqueeItems.concat(marqueeItems).map((item) => (
+          <span class="text-[10px] font-black tracking-[0.4em] uppercase text-muted hover:text-brand transition-colors mx-8 block">
+            {item}
+          </span>
+        ))}
+      </div>
     </div>
-  </div>
+  </main>
 </BaseLayout>
+
+<style>
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .animate-marquee {
+    animation: marquee 40s linear infinite;
+  }
+  .text-brand { color: var(--color-brand); }
+  .text-brand-light { color: #FF4D70; }
+  .text-muted { color: rgba(255, 255, 255, 0.5); }
+  .bg-brand { background-color: var(--color-brand); }
+  .bg-black { background-color: #000; }
+</style>
