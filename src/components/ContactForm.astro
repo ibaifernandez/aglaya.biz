@@ -56,7 +56,7 @@ const t = labels[lang];
 </script>
 <script src="https://js.hcaptcha.com/1/api.js" async defer is:inline></script>
 
-<form id="contact-form" class="cf-form" novalidate aria-label={lang === 'en' ? 'Contact form' : 'Formulario de contacto'}>
+<form id="contact-form" class="cf-form" novalidate aria-label={lang === 'en' ? 'Contact form' : 'Formulario de contacto'} data-lang={lang}>
 
   <div class="cf-field">
     <label for="contact-name" class="sr-only">{t.nameLabel}</label>
@@ -271,6 +271,7 @@ form?.addEventListener('submit', async (e) => {
   const email = emailInput.value.trim();
   const name  = (document.getElementById('contact-name') as HTMLInputElement | null)?.value.trim() ?? '';
   const message = msgInput.value.trim();
+  const lang = (form as HTMLFormElement).dataset.lang ?? 'en';
 
   if (!email || !message) return;
 
@@ -283,7 +284,7 @@ form?.addEventListener('submit', async (e) => {
     const res = await fetch('/.netlify/functions/contact', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, message, token }),
+      body: JSON.stringify({ name, email, message, token, lang }),
     });
     if (res.ok) {
       form.style.display = 'none';
