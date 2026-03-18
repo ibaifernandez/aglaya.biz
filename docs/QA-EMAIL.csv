@@ -6,6 +6,7 @@ E04,Diseño email confirmación,–,–,–,"Barra roja top/bottom (#e8003d), ey
 E05,Envío con nombre vacío,AGLAYA <info@aglaya.biz>,Email introducido,Signal received — AGLAYA,"Saludo: 'Hello there,' (sin nombre)",Pendiente,Nombre es opcional
 E06,Dominio verificado en Resend,–,–,–,"DKIM, SPF, DMARC pasan — no cae en spam",Pendiente,Verificar con mail-tester.com
 E07,Rate limit / doble envío,–,–,–,"Segundo envío inmediato no duplica emails",Pendiente,
-E08,Email de confirmación en español,AGLAYA <info@aglaya.biz>,Email introducido en el form (formulario ES),Señal recibida — AGLAYA,"// TRANSMISIÓN RECIBIDA, 'Tu mensaje ha llegado.', La IA ejecuta. El humano estrategiza.",Pendiente,Enviar desde /es/
-E09,Notificación interna ES,AGLAYA <info@aglaya.biz>,NOTIFY_EMAIL,"📩 New Contact [ES]: {nombre}","Language: ES visible en el cuerpo",Pendiente,
+E08,Email de confirmación en español,AGLAYA <info@aglaya.biz>,Email introducido en el form (formulario ES),Señal recibida — AGLAYA,"// TRANSMISIÓN RECIBIDA, 'Tu mensaje ha llegado.', La IA ejecuta. El humano estrategiza.",✅ Pasado,"Prueba 2 — /es/ — 17 Mar 2026"
+E09,Notificación interna ES,AGLAYA <info@aglaya.biz>,NOTIFY_EMAIL,"📩 New Contact [ES]: {nombre}","Language: ES visible en el cuerpo",✅ Pasado,Language: ES visible ✅
 E10,Saludo sin nombre ES,AGLAYA <info@aglaya.biz>,Email introducido,Señal recibida — AGLAYA,"Saludo: 'Hola,' (sin nombre)",Pendiente,Nombre es opcional
+E11,Email diseño — mejoras pendientes,–,–,–,"Diseño actual funcional pero mejorable. Notificación interna sin branding. Revisión futura prevista.",Backlog,Ver BACKLOG — email redesign v2
