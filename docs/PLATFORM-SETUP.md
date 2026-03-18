@@ -63,7 +63,7 @@ Netlify activa Let's Encrypt automáticamente cuando el DNS propaga. No tienes q
 Antes de continuar con las otras plataformas, ten este panel abierto:
 **Site settings → Environment variables** en tu dashboard de Netlify.
 
-Aquí añadirás las 5 variables una a una mientras configuras cada plataforma.
+Aquí añadirás las variables una a una mientras configuras cada plataforma.
 
 ---
 
@@ -103,42 +103,40 @@ NOTIFY_EMAIL   = info@aglaya.biz  (o el email donde quieres recibir leads)
 
 ### Verificación
 Haz un test enviando el formulario en la web. Deberías recibir:
-1. Email de confirmación en la dirección que pusiste en el formulario
-2. Email de notificación en `NOTIFY_EMAIL`
+1. Email de confirmación en la dirección que pusiste en el formulario (en el idioma del formulario)
+2. Email de notificación en `NOTIFY_EMAIL` con tag `[EN]` o `[ES]` en el asunto
 
 ---
 
-## Plataforma 3: Cloudflare Turnstile (Bot Protection)
+## Plataforma 3: hCaptcha (Bot Protection)
 
-### Paso 1 — Cuenta Cloudflare
-Si no tienes cuenta: **https://dash.cloudflare.com** → Sign up (gratuito).
+### Paso 1 — Cuenta
+1. Ve a **https://www.hcaptcha.com** → **"Sign up"** (gratuito, verificaciones ilimitadas)
+2. Confirma tu email y accede al dashboard
 
-No necesitas mover tus DNS a Cloudflare para usar Turnstile.
-
-### Paso 2 — Crear el widget
-1. En el dashboard de Cloudflare → barra lateral izquierda → **"Turnstile"**
-2. Click **"Add site"**
-3. Configuración:
-   - **Site name**: `aglaya.biz`
-   - **Domain**: `aglaya.biz` (también añade `localhost` para development)
-   - **Widget type**: **Managed** (recomendado — invisible para usuarios reales, desafía a bots)
-4. Click **"Create"**
+### Paso 2 — Añadir el sitio
+1. En el dashboard → **"New Site"**
+2. Configura:
+   - **Label**: `aglaya.biz`
+   - **Hostname**: `aglaya.biz` (también puedes añadir `localhost` para development)
+   - **Difficulty**: Normal
+3. Click **"Save"**
 
 ### Paso 3 — Copiar las keys
 Verás dos valores:
-- **Site Key** (pública, va en el frontend): `0x4AAAAAAA...`
-- **Secret Key** (privada, va en el servidor): `0x4AAAAAAA...`
+- **Site Key** (pública, va en el frontend): tu site key única
+- En **Settings → Secret Key**: copia el Secret Key (va en el servidor)
 
 ### Paso 4 — Variables en Netlify
 ```
-PUBLIC_TURNSTILE_SITE_KEY = 0x4AAAAAAA...  (la Site Key)
-TURNSTILE_SECRET          = 0x4AAAAAAA...  (la Secret Key)
+PUBLIC_HCAPTCHA_SITE_KEY = a772dbf8-f0da-4658-a4be-5b0848440ac8
+HCAPTCHA_SECRET          = (tu secret key de hCaptcha)
 ```
 
-> 🔑 La `PUBLIC_` prefix hace que Astro la exponga al cliente (necesario para el widget). La `TURNSTILE_SECRET` NUNCA debe tener prefix PUBLIC_.
+> 🔑 La `PUBLIC_` prefix hace que Astro la exponga al cliente (necesario para el widget). La `HCAPTCHA_SECRET` NUNCA debe tener prefix PUBLIC_.
 
 ### Verificación
-El widget de Cloudflare debe aparecer en el formulario. Antes de configurar las keys reales, el código usa `1x00000000000000000000AA` (key de testing de Cloudflare que siempre pasa). Una vez configuradas las keys reales, el botón de envío estará deshabilitado hasta que Turnstile complete la verificación.
+El widget de hCaptcha debe aparecer en el formulario con tema oscuro. El botón de envío estará deshabilitado hasta que hCaptcha complete la verificación. La verificación del token ocurre en el servidor contra `https://api.hcaptcha.com/siteverify`.
 
 ---
 
@@ -244,7 +242,8 @@ Antes de declarar el sitio como "production-ready":
 [ ] https://aglaya.biz/es/ carga correctamente
 [ ] El formulario de contacto envía (recibes email de confirmación)
 [ ] El formulario de contacto recibe notificación en NOTIFY_EMAIL
-[ ] Turnstile widget aparece y permite/bloquea según corresponde
+[ ] hCaptcha widget aparece y permite/bloquea según corresponde
+[ ] Cookie banner aparece en primera visita y desaparece tras la elección
 [ ] Sentry → Issues muestra el proyecto activo
 [ ] UptimeRobot → todos los monitores en estado UP (verde)
 [ ] Google Search Console → sitio verificado y sitemap enviado
@@ -259,8 +258,8 @@ Antes de declarar el sitio como "production-ready":
 |---|---|---|---|
 | `RESEND_API_KEY` | Resend | Server | `re_abc123...` |
 | `NOTIFY_EMAIL` | — | Server | `info@aglaya.biz` |
-| `TURNSTILE_SECRET` | Cloudflare | Server | `0x4AAAAAAA...` |
-| `PUBLIC_TURNSTILE_SITE_KEY` | Cloudflare | Client | `0x4AAAAAAA...` |
+| `HCAPTCHA_SECRET` | hCaptcha | Server | `ES_xxxxxxxx...` |
+| `PUBLIC_HCAPTCHA_SITE_KEY` | hCaptcha | Client | `a772dbf8-f0da-4658-a4be-5b0848440ac8` |
 | `PUBLIC_SENTRY_DSN` | Sentry | Client | `https://abc@sentry.io/123` |
 
 > En Netlify: Site → **Environment variables** → para cada una, click "Add variable".

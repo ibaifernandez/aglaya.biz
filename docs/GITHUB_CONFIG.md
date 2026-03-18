@@ -43,9 +43,9 @@ Estos secrets son necesarios para el pipeline de CI:
 
 | Secret | Descripción | Obligatorio |
 |---|---|---|
-| `PUBLIC_TURNSTILE_SITE_KEY` | Site key de Cloudflare Turnstile (`0x4AAAAAACr7qLXpzOQqF7Ni`) | ✅ Para build en CI |
+| `PUBLIC_HCAPTCHA_SITE_KEY` | Site key de hCaptcha (`a772dbf8-f0da-4658-a4be-5b0848440ac8`) | ✅ Para build en CI |
 
-> **Nota:** Las demás variables (`RESEND_API_KEY`, `TURNSTILE_SECRET`, etc.) son server-side y NO deben estar en GitHub — solo en Netlify.
+> **Nota:** Las demás variables (`RESEND_API_KEY`, `HCAPTCHA_SECRET`, etc.) son server-side y NO deben estar en GitHub — solo en Netlify.
 
 ---
 
@@ -105,4 +105,4 @@ El repositorio está conectado a Netlify (cuenta `ibaifernandez`). Cada push a `
 
 - **Description:** Coming soon page for AGLAYA — The Uncomfortable AI·gency
 - **Website:** https://aglaya.biz
-- **Topics:** `astro`, `netlify`, `tailwindcss`, `typescript`, `i18n`, `sentry`, `cloudflare-turnstile`
+- **Topics:** `astro`, `netlify`, `tailwindcss`, `typescript`, `i18n`, `sentry`, `hcaptcha`

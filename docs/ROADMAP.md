@@ -11,7 +11,7 @@
 - [x] BaseLayout with full SEO metadata
 - [x] Contact form component
 - [x] Netlify Functions contact handler
-- [x] Cloudflare Turnstile integration
+- [x] Cloudflare Turnstile integration (later replaced by hCaptcha)
 - [x] Resend email integration
 - [x] Unit + E2E + A11y test suite
 - [x] Brand assets (logos, favicons, flags)
@@ -19,21 +19,32 @@
 ### Milestone 1.1 — Production Launch (Current)
 - [x] Git repository initialization and push to `ibaifernandez/aglaya.biz`
 - [x] Netlify deployment with auto-deploy on `main`
-- [x] Cloudflare Turnstile configured (`TURNSTILE_SECRET` + `PUBLIC_TURNSTILE_SITE_KEY` in Netlify)
-- [ ] Resend domain verified and `RESEND_API_KEY` set in Netlify
-- [ ] Sentry project created, DSN set, `YOUR_BUNDLE_ID` fixed in BaseLayout
-- [ ] `NOTIFY_EMAIL` set in Netlify env vars
+- [x] Resend domain verified and `RESEND_API_KEY` set in Netlify
+- [x] Sentry DSN set and working
+- [x] `NOTIFY_EMAIL` set in Netlify env vars
+- [x] Security headers in netlify.toml
 - [ ] UptimeRobot monitors on `/` and `/es/`
-- [ ] Security headers in netlify.toml
 - [ ] Lighthouse audit 95+
 
-### Milestone 1.2 — Visual Impact (Done ahead of schedule)
+### Milestone 1.2 — Visual Impact
 - [x] Cinematic Coming Soon hero: cursor glow, scanline, word-by-word animation
 - [x] AI·gency / Agenc·IA bilingual branding pivot
-- [x] OG image 1200×630 — editorial layout with brand identity
+- [x] OG image 1200×630 — real production screenshot
 - [x] Clean minimal contact form (no icons, 24h response copy)
+- [x] Custom 404 page (bilingual)
+- [x] hCaptcha bot protection (replaced Cloudflare Turnstile)
+- [x] Branded confirmation email (futuristic dark theme, bilingual EN/ES)
+- [x] Bilingual confirmation email (EN/ES — sent in submission language)
+- [x] Cookie consent banner (GDPR — localStorage-based, bilingual)
 - [ ] View Transitions API for language switching
-- [ ] Custom 404 page (bilingual)
+
+### Milestone 1.3 — v1.0.0 Release
+- [x] Form end-to-end tested (1/3 successful submissions — 2 more pending)
+- [ ] Form end-to-end tested (3/3 successful submissions)
+- [ ] GitHub Release v1.0.0 tagged
+- [ ] UptimeRobot monitors configured
+- [ ] QA-USABILITY manual checklist completed
+- [ ] QA-EMAIL manual checklist completed
 
 ---
 

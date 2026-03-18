@@ -71,9 +71,8 @@ https://d1d3347073dadf16d4c7d7625ee28190@o4511058994724864.ingest.us.sentry.io/4
 - [x] DSN configurado en `sentry.client.config.js`
 - [x] DSN configurado en `sentry.server.config.js`
 - [x] `SENTRY_AUTH_TOKEN` en Netlify
-- [x] Primer error capturado (TurnstileError desde bot — comportamiento esperado)
+- [x] `beforeSend()` TurnstileError filter eliminado (Turnstile reemplazado por hCaptcha)
 - [ ] Alertas de email configuradas
-- [ ] Issue resuelto: JAVASCRIPT-ASTRO-1 (TurnstileError bot — marcar como resolved)
 
 ---
 
@@ -95,17 +94,18 @@ https://d1d3347073dadf16d4c7d7625ee28190@o4511058994724864.ingest.us.sentry.io/4
 | `NOTIFY_EMAIL` | Destinatario de notificaciones de leads (`info@aglaya.biz`) |
 
 ### Flujo de emails del formulario
-1. Usuario envía formulario → Netlify Function verifica Turnstile
-2. **Email de confirmación** → al remitente (desde `info@aglaya.biz`)
-3. **Email de notificación de lead** → a `NOTIFY_EMAIL`
+1. Usuario envía formulario → Netlify Function verifica hCaptcha
+2. Función detecta idioma del formulario (`lang: "en"` o `lang: "es"`)
+3. **Email de confirmación** → al remitente, en el idioma del formulario (EN: `Signal received — AGLAYA` / ES: `Señal recibida — AGLAYA`), diseño branded con barra roja, eyebrow monospace, titular en negrita y bloque de mensaje con borde rojo izquierdo
+4. **Email de notificación de lead** → a `NOTIFY_EMAIL` con tag `[EN]` o `[ES]` en el asunto
 
 ### Verificar que funciona
 1. Ir a https://aglaya.biz/
 2. Completar el formulario (nombre + email + mensaje)
-3. Pasar el Turnstile
+3. Pasar el hCaptcha
 4. Enviar
-5. Confirmar: mensaje de éxito "Message sent. We'll be in touch within 24 hours."
-6. Confirmar: email de confirmación recibido
+5. Confirmar: mensaje de éxito visible
+6. Confirmar: email de confirmación branded recibido (diseño con barras rojas)
 7. Confirmar: notificación de lead recibida en `info@aglaya.biz`
 
 ### Logs
@@ -115,45 +115,41 @@ https://d1d3347073dadf16d4c7d7625ee28190@o4511058994724864.ingest.us.sentry.io/4
 - [x] API key configurada en Netlify
 - [x] DNS DKIM verificado
 - [x] Función `contact.ts` implementada
-- [ ] **Prueba end-to-end pendiente** (QA manual)
+- [x] **1 prueba end-to-end exitosa completada** — 2 adicionales pendientes
 
 ---
 
-## 4. Cloudflare Turnstile
+## 4. hCaptcha (Bot Protection)
 
-**URL:** https://dash.cloudflare.com → Turnstile
-**Plan:** Free (ilimitado)
-**Tipo:** Widget de verificación anti-bot (invisible/managed)
+**URL:** https://www.hcaptcha.com
+**Plan:** Free (verificaciones ilimitadas)
+**Tipo:** Widget CAPTCHA anti-bot
 
 ### Keys configuradas
 | Variable | Scope | Valor |
 |---|---|---|
-| `PUBLIC_TURNSTILE_SITE_KEY` | Client | `0x4AAAAAACr7qLXpzOQqF7Ni` |
-| `TURNSTILE_SECRET` | Server | En Netlify (no exponer) |
+| `PUBLIC_HCAPTCHA_SITE_KEY` | Client | `a772dbf8-f0da-4658-a4be-5b0848440ac8` |
+| `HCAPTCHA_SECRET` | Server | En Netlify (no exponer) |
 
 ### Dominio autorizado
-> Cloudflare Dashboard → Turnstile → Widget → Allowed domains
+> hCaptcha Dashboard → Sites → aglaya.biz
 
-Debe incluir:
 - `aglaya.biz` ✅
-- `www.aglaya.biz` (si aplica)
-
-> ⚠️ Los deploy previews de Netlify (`*.netlify.app`) **no están autorizados** intencionalmente. El error `TurnstileError: 110200` que captura Sentry desde bots en URLs de preview es comportamiento esperado y correcto.
 
 ### Cómo funciona en el sitio
-1. Widget se carga en el formulario de contacto
-2. Usuario completa el challenge (normalmente invisible)
-3. Turnstile emite un token → se habilita el botón "Send Message"
+1. Widget se carga en el formulario de contacto (`class="h-captcha"`, `data-theme="dark"`)
+2. Usuario completa el challenge
+3. hCaptcha emite un token → se habilita el botón "Send Message"
 4. El token se envía al backend con el formulario
-5. Netlify Function verifica el token contra la API de Cloudflare
-6. Si válido → se procesan y envían los emails
+5. Netlify Function verifica el token contra `https://api.hcaptcha.com/siteverify` con `HCAPTCHA_SECRET`
+6. Si válido → se detecta el idioma y se procesan y envían los emails
 
 ### Estado actual
 - [x] Site key en código fuente (`ContactForm.astro`)
-- [x] Site key en Netlify env vars
-- [x] Secret key en Netlify env vars
-- [x] Dominio `aglaya.biz` autorizado en Cloudflare
-- [ ] **Prueba end-to-end pendiente** (QA manual)
+- [x] Site key en Netlify env vars (`PUBLIC_HCAPTCHA_SITE_KEY`)
+- [x] Secret key en Netlify env vars (`HCAPTCHA_SECRET`)
+- [x] Dominio `aglaya.biz` autorizado en hCaptcha dashboard
+- [x] **1 prueba end-to-end exitosa** — 2 adicionales pendientes
 
 ---
 
@@ -193,7 +189,7 @@ Debe incluir:
 | Netlify | ✅ | ✅ |
 | GitHub Actions | ✅ | 🔄 En progreso |
 | Sentry | ✅ | ✅ (captura activa) |
-| Resend | ✅ | ⏳ QA pendiente |
-| Turnstile | ✅ | ⏳ QA pendiente |
+| Resend | ✅ | ✅ (1/3 pruebas) |
+| hCaptcha | ✅ | ✅ (1/3 pruebas) |
 | UptimeRobot | ⏳ Crear monitores | ⏳ |
 | Migadu | ✅ | ✅ |
