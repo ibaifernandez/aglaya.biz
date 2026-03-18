@@ -46,7 +46,7 @@ test.describe('Coming Soon Page (Bilingual + A11y)', () => {
     await expect(page.locator('#contact-name')).toBeVisible();
     await expect(page.locator('#contact-email')).toBeVisible();
     await expect(page.locator('#contact-message')).toBeVisible();
-    await expect(page.locator('.cf-turnstile')).toBeAttached();
+    await expect(page.locator('.h-captcha')).toBeAttached();
 
     // 8. Form labels present (a11y)
     await expect(page.locator('label[for="contact-name"]')).toBeAttached();
