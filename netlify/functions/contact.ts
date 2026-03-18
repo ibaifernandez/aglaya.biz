@@ -12,14 +12,12 @@ async function verifyHCaptcha(token: string, ip: string): Promise<boolean> {
     console.warn("[contact] HCAPTCHA_SECRET not set — skipping verification");
     return true;
   }
+  const params: Record<string, string> = { secret, response: token };
+  if (ip) params.remoteip = ip;
   const res = await fetch("https://api.hcaptcha.com/siteverify", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
-      secret,
-      response: token,
-      remoteip: ip,
-    }),
+    body: new URLSearchParams(params),
   });
   const data = (await res.json()) as { success: boolean; "error-codes"?: string[] };
   console.log("[contact] hCaptcha result:", JSON.stringify(data));
