@@ -40,7 +40,7 @@
 
 ### Milestone 1.3 — v1.0.0 Release
 - [x] Form end-to-end tested (1/3 successful submissions — 2 more pending)
-- [ ] Form end-to-end tested (3/3 successful submissions)
+- [ ] Form end-to-end tested — 2/3 complete (EN ✅ ES ✅, 1 pending)
 - [ ] GitHub Release v1.0.0 tagged
 - [ ] UptimeRobot monitors configured
 - [ ] QA-USABILITY manual checklist completed
