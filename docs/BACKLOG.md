@@ -46,7 +46,7 @@
 | 31 | Form E2E test 3/3 | **in-progress** | 2/3 complete (EN ✅, ES ✅). 1 more needed. |
 | 32 | GitHub Release v1.0.0 | **todo** | After 3/3 form tests pass |
 | 33 | UptimeRobot monitors | **todo** | 2 HTTPS monitors: aglaya.biz + aglaya.biz/es/ |
-| 34 | Remove debug console.log from contact.ts | **todo** | Line: `console.log('[contact] hCaptcha result:', ...)` |
+| 34 | Remove debug console.log from contact.ts | **done** | Debería haberse limpiado en PR #7 — corregido en fix/cookie-banner-eyebrow |
 
 ---
 
