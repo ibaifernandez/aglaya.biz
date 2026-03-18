@@ -44,25 +44,71 @@ async function sendContactEmail(name: string, email: string, message: string): P
     body: JSON.stringify({
       from: fromEmail,
       to: [email],
-      subject: "Thanks for reaching out to AGLAYA",
-      html: `
-        <div style="background:#080808;color:#f5f5f5;font-family:sans-serif;padding:48px 32px;max-width:560px;margin:0 auto;">
-          <p style="color:#e8003d;font-size:11px;letter-spacing:.3em;text-transform:uppercase;margin:0 0 24px">AGLAYA</p>
-          <h1 style="font-size:24px;font-weight:900;margin:0 0 16px;line-height:1.1;">We've received your message.</h1>
-          <p style="color:rgba(245,245,245,.6);margin:0 0 32px;line-height:1.6;">
-            Hello ${name || 'there'},<br/><br/>
-            Thanks for contacting AGLAYA. Our team will review your message and get back to you shortly.
+      subject: "Signal received — AGLAYA",
+      html: `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#080808;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#080808;">
+    <tr><td align="center" style="padding:40px 16px;">
+      <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
+
+        <!-- RED TOP BAR -->
+        <tr><td style="background:#e8003d;height:3px;font-size:0;">&nbsp;</td></tr>
+
+        <!-- HEADER -->
+        <tr><td style="background:#0d0d0d;padding:32px 40px 24px;border-left:1px solid #1a1a1a;border-right:1px solid #1a1a1a;">
+          <p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:#e8003d;">AGLAYA</p>
+          <p style="margin:0;font-family:Arial,sans-serif;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(245,245,245,.3);">The Uncomfortable AI·gency</p>
+        </td></tr>
+
+        <!-- HERO -->
+        <tr><td style="background:#080808;padding:40px 40px 32px;border-left:1px solid #1a1a1a;border-right:1px solid #1a1a1a;">
+          <p style="margin:0 0 8px;font-family:'Courier New',monospace;font-size:11px;color:#e8003d;letter-spacing:.2em;">// TRANSMISSION RECEIVED</p>
+          <h1 style="margin:0 0 24px;font-family:Arial,sans-serif;font-size:32px;font-weight:900;line-height:1.05;color:#f5f5f5;letter-spacing:-.5px;">
+            We've got<br>your signal.
+          </h1>
+          <p style="margin:0;font-family:Arial,sans-serif;font-size:15px;line-height:1.7;color:rgba(245,245,245,.6);">
+            ${name ? `${name},` : 'Hey there,'}<br><br>
+            Your message landed. A human — not a bot — will read it, think about it, and get back to you within <span style="color:#f5f5f5;font-weight:700;">24 hours</span>.<br><br>
+            No templates. No auto-replies. Just real thinking.
           </p>
-          <div style="background:rgba(255,255,255,0.03); padding: 24px; border: 1px solid rgba(255,255,255,0.08);">
-            <p style="font-size:12px; color:rgba(245,245,245,0.4); margin:0 0 8px;">Your message:</p>
-            <p style="font-size:14px; margin:0; line-height:1.5;">${message}</p>
-          </div>
-          <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:32px 0 24px"/>
-          <p style="font-size:12px;color:rgba(245,245,245,.35);">
-            © AGLAYA · <a href="https://aglaya.biz" style="color:#e8003d;text-decoration:none;">aglaya.biz</a>
+        </td></tr>
+
+        <!-- MESSAGE BLOCK -->
+        <tr><td style="background:#080808;padding:0 40px 40px;border-left:1px solid #1a1a1a;border-right:1px solid #1a1a1a;">
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr><td style="background:#0d0d0d;border:1px solid #1f1f1f;border-left:3px solid #e8003d;padding:20px 24px;">
+              <p style="margin:0 0 10px;font-family:'Courier New',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,245,245,.3);">// YOUR MESSAGE</p>
+              <p style="margin:0;font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:rgba(245,245,245,.75);">${message}</p>
+            </td></tr>
+          </table>
+        </td></tr>
+
+        <!-- DIVIDER -->
+        <tr><td style="background:#080808;padding:0 40px;border-left:1px solid #1a1a1a;border-right:1px solid #1a1a1a;">
+          <table width="100%" cellpadding="0" cellspacing="0"><tr>
+            <td style="border-top:1px solid #1a1a1a;font-size:0;">&nbsp;</td>
+          </tr></table>
+        </td></tr>
+
+        <!-- FOOTER -->
+        <tr><td style="background:#080808;padding:24px 40px 32px;border-left:1px solid #1a1a1a;border-right:1px solid #1a1a1a;">
+          <p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:11px;color:rgba(245,245,245,.25);">
+            © AGLAYA ·
+            <a href="https://aglaya.biz" style="color:#e8003d;text-decoration:none;">aglaya.biz</a>
           </p>
-        </div>
-      `,
+          <p style="margin:0;font-family:'Courier New',monospace;font-size:10px;color:rgba(245,245,245,.15);letter-spacing:.1em;">AI executes. Humans strategize.</p>
+        </td></tr>
+
+        <!-- RED BOTTOM BAR -->
+        <tr><td style="background:#e8003d;height:3px;font-size:0;">&nbsp;</td></tr>
+
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`,
     }),
   });
   if (!confirmRes.ok) {
