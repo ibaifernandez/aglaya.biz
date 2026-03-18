@@ -31,9 +31,10 @@ Estado de configuración de todas las plataformas integradas.
 - Alerta por email si el sitio cae
 
 ### Estado actual
-- [ ] Monitor EN creado
-- [ ] Monitor ES creado
-- [ ] Alertas configuradas a `info@aglaya.biz`
+- [x] Monitor EN creado — `AGLAYA (EN)` · `https://aglaya.biz/` · 5 min · ✅ Up
+- [x] Monitor ES creado — `AGLAYA (ES)` · `https://aglaya.biz/es/` · 5 min · ✅ Up
+- [x] Alertas configuradas a `info@aglaya.biz`
+- **Configurado:** 17 Mar 2026
 
 ---
 
@@ -192,9 +193,9 @@ El código original incluía un filtro `beforeSend()` en `sentry.client.config.j
 | Plataforma | Configurada | Probada E2E |
 |---|---|---|
 | Netlify | ✅ | ✅ |
-| GitHub Actions | ✅ | 🔄 En progreso |
+| GitHub Actions | ✅ | ✅ CI verde consistente |
 | Sentry | ✅ | ✅ (captura activa) |
-| Resend | ✅ | ✅ (1/3 pruebas) |
-| hCaptcha | ✅ | ✅ (1/3 pruebas) |
-| UptimeRobot | ⏳ Crear monitores | ⏳ |
+| Resend | ✅ | ✅ (2/3 pruebas — EN + ES) |
+| hCaptcha | ✅ | ✅ (2/3 pruebas — EN + ES) |
+| UptimeRobot | ✅ | ✅ 2 monitores activos |
 | Migadu | ✅ | ✅ |
