@@ -1,12 +1,12 @@
-# AGLAYA — The Uncomfortable Agency
+# AGLAYA — The Uncomfortable AI·gency
 
-![Build Status](https://img.shields.io/github/actions/workflow/status/ibaifernandez/aglaya.biz/deploy.yml?branch=main)
+![Build Status](https://img.shields.io/github/actions/workflow/status/ibaifernandez/aglaya.biz/ci.yml?branch=main&label=build)
 ![Tests](https://img.shields.io/badge/tests-100%25-brightgreen)
 ![Accessibility](https://img.shields.io/badge/a11y-WCAG_2AA-hotpink)
 ![Astro](https://img.shields.io/badge/Astro-6.x-FF5D01)
 ![Tailwind](https://img.shields.io/badge/Tailwind-v4-38BDF8)
 
-Bilingual Coming Soon page for **AGLAYA**, a digital marketing AI·gency that builds brands that convert.
+Bilingual website for **AGLAYA**, a digital marketing AI·gency. The Uncomfortable AI·gency — obsession, excellence, uncomfortable honesty.
 
 ## Tech Stack
 
@@ -15,7 +15,7 @@ Bilingual Coming Soon page for **AGLAYA**, a digital marketing AI·gency that bu
 | Framework | [Astro 6.x](https://astro.build) (SSR via Netlify) |
 | Styling | [Tailwind CSS v4](https://tailwindcss.com) |
 | Forms | [Netlify Functions](https://www.netlify.com/products/functions/) + [Resend](https://resend.com) |
-| Bot Protection | [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile/) |
+| Bot Protection | [hCaptcha](https://www.hcaptcha.com) |
 | Error Tracking | [Sentry](https://sentry.io) |
 | Monitoring | [UptimeRobot](https://uptimerobot.com) |
 | Testing | [Vitest](https://vitest.dev) + [Playwright](https://playwright.dev) + [Axe-core](https://www.deque.com/axe/) |
@@ -24,7 +24,7 @@ Bilingual Coming Soon page for **AGLAYA**, a digital marketing AI·gency that bu
 
 - **Bilingual (EN/ES)** — subdirectory routing with full SEO parity and hreflang
 - **Complete Metadata** — OG, Twitter Cards, JSON-LD, canonical URLs
-- **Lead Capture** — contact form with Turnstile + Resend dual notifications
+- **Lead Capture** — contact form with hCaptcha + Resend dual notifications (bilingual)
 - **Error Tracking** — Sentry integration
 - **Accessible** — WCAG 2AA verified with Axe-core
 - **Tested** — 100% coverage on critical paths
@@ -53,8 +53,8 @@ Set in Netlify dashboard for production:
 | Variable | Scope | Description |
 |---|---|---|
 | `RESEND_API_KEY` | Server | Resend API key |
-| `TURNSTILE_SECRET` | Server | Turnstile secret key |
-| `PUBLIC_TURNSTILE_SITE_KEY` | Client | Turnstile public key |
+| `HCAPTCHA_SECRET` | Server | hCaptcha secret key |
+| `PUBLIC_HCAPTCHA_SITE_KEY` | Client | hCaptcha site key |
 | `PUBLIC_SENTRY_DSN` | Client | Sentry DSN |
 | `NOTIFY_EMAIL` | Server | Lead notification email |
 
