@@ -135,9 +135,9 @@ export const handler: Handler = async (event) => {
   }
 
   const ip = event.headers["x-forwarded-for"] ?? event.headers["x-nf-client-connection-ip"] ?? "";
-  const turnstileOk = await verifyHCaptcha(token, ip);
+  const captchaOk = await verifyHCaptcha(token, ip);
 
-  if (!turnstileOk) {
+  if (!captchaOk) {
     return {
       statusCode: 422,
       headers,
