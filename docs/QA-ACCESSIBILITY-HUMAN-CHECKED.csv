@@ -1,0 +1,30 @@
+ID;Criterio WCAG;Nivel;Área;Caso de prueba;Herramienta;Resultado esperado;Resultado real;Estado;Notas
+A01;1.1.1 Non-text Content;A;Global;Todas las imágenes tienen alt text;Axe / inspección manual;Logo: alt='AGLAYA', banderas: alt vacío (decorativo);;Pendiente;Esto mejor lo revisas tú, que para eso tienes una mejor «vista del código» que yo, ¿no?
+A02;1.3.1 Info and Relationships;A;Formulario;Formulario tiene label semántico;Axe;aria-label='Contact form' / 'Formulario de contacto' en <form>;;Pendiente;Ídem a anterior.
+A03;1.3.1 Info and Relationships;A;Header;Landmark roles definidos;Axe;<header role='banner'>, <main>, <nav aria-label='Main navigation'>;;Pendiente;Ídem a anterior.
+A04;1.4.3 Contrast (Minimum);AA;Global;Contraste texto blanco/rojo sobre negro;Colour Contrast Analyser;"White #f5f5f5 on #080808 ≥ 7:1; Red #e8003d on #080808 ≥ 4.5:1";;Pendiente;"Verificar #e8003d sobre #080808
+
+Yo diría que los textos se ven perfectamente. Es decir, al ojo humano, bien. Tú me dirás desde un punto de vista «informático» si el contraste es bueno o no, pero yo lo veo bien.
+
+Te he dejado `/Users/AGLAYA/Local Sites/aglaya.biz/src/assets/images/screenshot-for-preview.png` para que lo compruebes. Además, esta imagen puede servir como imagen de preview bastante mejor que la que está ahora mismo, ya que es un pantallazo literal de lo que existe hoy en producción. "
+A05;1.4.3 Contrast (Minimum);AA;Formulario;Placeholder text contraste;Colour Contrast Analyser;rgba(255,255,255,0.22) puede fallar — verificar;;Pendiente;Ídem a anterior. Decide tú, bro. Yo lo veo bien.
+A06;1.4.10 Reflow;AA;Global;Sin scroll horizontal a 320px;Navegador a 320px;Sin overflow en ningún breakpoint;;Pendiente;Efectivamente, yo no siento ningún scroll horizontal a 320px de ancho.
+A07;1.4.11 Non-text Contrast;AA;Formulario;Borde de inputs visible;Inspección visual;Borde rgba(255,255,255,0.07) puede ser insuficiente;;Pendiente;"Yo sí veo el borde de los inputs. 
+
+Te dejo un pantallazo en `/Users/AGLAYA/Local Sites/aglaya.biz/src/assets/images/screenshot-for-review-1.png` por si te sirve de algo."
+A08;2.1.1 Keyboard;A;Global;Todo accesible por teclado;Navegación con Tab;Tab navega: header logo, ES, WhatsApp, GET IN TOUCH, WhatsApp CTA, campos form, botón envío;;Pendiente;Sí, el tabulador se mueve dignamente entre los elementos.
+A09;2.1.1 Keyboard;A;Formulario;Submit con Enter/Space;Teclado;Botón responde a Enter y Space;;Pendiente;Sí, fui capaz de enviar un mensaje formulario mediante con la barra espaciadora.
+A10;2.4.1 Bypass Blocks;A;Global;Skip link o landmark adecuado;Teclado;Primer Tab lleva a contenido principal o hay skip-to-content;;Pendiente;Sí que hay una forma de dándole al tabulador, «sacar» un botoncito, pero el botoncito no lleva a ningún lado. Te dejo un pantallazo en `/Users/AGLAYA/Local Sites/aglaya.biz/src/assets/images/screenshot-for-review-2.png`
+A11;2.4.2 Page Titled;A;Global;Título de página descriptivo;Inspección;EN: 'AGLAYA — The Uncomfortable Agency · AI·gency', ES: equivalente;;Pendiente;El título debería ser «AGLAYA — The Uncomfortable AI·gency» y «AGLAYA — La agenc·IA incómoda».
+A12;2.4.3 Focus Order;A;Global;Orden de foco lógico;Teclado;Tab sigue orden visual: header → hero CTAs → form → footer;;Pendiente;Yep. Todo bien.
+A13;2.4.7 Focus Visible;AA;Global;Foco visible en todos los elementos;Teclado;Outline visible en links, inputs y botones al navegar con Tab;;Pendiente;Yo sí le veo outline a los inputs cuando están activos.
+A14;3.1.1 Language of Page;A;Global;Atributo lang correcto;Inspección HTML;EN: <html lang='en'>, ES: <html lang='es'>;;Pendiente;¡Dímelo tú que eres quien mejor acceso tiene al código, bro!
+A15;3.1.2 Language of Parts;AA;Header;Atributo lang en switch de idioma;Inspección HTML;Botón ES tiene lang='es' y hreflang='es';;Pendiente;Ídem a anterior.
+A16;3.2.2 On Input;A;Formulario;Sin cambios de contexto inesperados;Prueba funcional;Escribir en campos no provoca navegación ni alertas;;Pendiente;De entrada, todo bien. Ya he enviado mensaje por formulario. Pero los correos siguen sin llegar.
+A17;3.3.1 Error Identification;A;Formulario;Errores identificados con texto;Prueba funcional;Mensaje de error rojo incluye texto descriptivo, no solo color;;Pendiente;Curiosamente... no puedo saberlo, porque después de enviar un mensaje por el formulario, ya no puedo enviar otro... ¿Será el Turnstile trabajando para que no hay un flooding de mensajes desde el mismo agente/browser/IP?
+A18;3.3.2 Labels or Instructions;A;Formulario;Instrucciones claras;Inspección;"Placeholders comunican el propósito; no sustituyen labels formalmente";;Pendiente;Está perfecto como está.
+A19;4.1.2 Name Role Value;A;Formulario;Estado disabled del botón;Axe;Botón SEND MESSAGE tiene aria-disabled o disabled cuando inactivo;;Pendiente;Justo lo que acabo de mencionar antes, pero... ¿por qué?
+A20;4.1.3 Status Messages;AA;Formulario;Mensajes de estado anunciados;Axe;"#contact-success: role='status' aria-live='polite'; #contact-error: role='alert' aria-live='assertive'";;Pendiente;El de éxito lo he visto... y bien... podría entrar animado o ser más bonito, pero como está cumple función. El resto no los he podido ver porque, de nuevo, no he podido tratar de enviar un segundo mensaje por el formulario después de haber enviado el primero.
+A21;–;–;Motion;Respeto a prefers-reduced-motion;Ajuste sistema;Con reduced-motion activo: sin scanline, sin word animation, sin marquee animate;;Pendiente;No lo sé, porque no tengo «prefers-reduced-motion» activado en mi browser
+A22;–;–;Global;Axe automated scan EN;axe-core / Playwright;0 violations críticas en /;;Pendiente;Ni idea, la verdad.
+A23;–;–;Global;Axe automated scan ES;axe-core / Playwright;0 violations críticas en /es/;;Pendiente;Ni idea, la verdad.

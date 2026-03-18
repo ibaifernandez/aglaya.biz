@@ -1,7 +1,7 @@
 ID,Criterio WCAG,Nivel,Área,Caso de prueba,Herramienta,Resultado esperado,Resultado real,Estado,Notas
-A01,1.1.1 Non-text Content,A,Global,Todas las imágenes tienen alt text,Axe / inspección manual,"Logo: alt='AGLAYA', banderas: alt vacío (decorativo)",,Pendiente,
-A02,1.3.1 Info and Relationships,A,Formulario,Formulario tiene label semántico,Axe,"aria-label='Contact form' / 'Formulario de contacto' en <form>",,Pendiente,
-A03,1.3.1 Info and Relationships,A,Header,Landmark roles definidos,Axe,"<header role='banner'>, <main>, <nav aria-label='Main navigation'>",,Pendiente,
+A01,1.1.1 Non-text Content,A,Global,Todas las imágenes tienen alt text,Axe / inspección manual,"Logo: alt='AGLAYA', banderas: alt vacío (decorativo)",,✅ Pasado,Cubierto por axe CI
+A02,1.3.1 Info and Relationships,A,Formulario,Formulario tiene label semántico,Axe,"aria-label='Contact form' / 'Formulario de contacto' en <form>",,✅ Pasado,Cubierto por axe CI
+A03,1.3.1 Info and Relationships,A,Header,Landmark roles definidos,Axe,"<header role='banner'>, <main>, <nav aria-label='Main navigation'>",,✅ Pasado,Cubierto por axe CI
 A04,1.4.3 Contrast (Minimum),AA,Global,Contraste texto blanco/rojo sobre negro,Colour Contrast Analyser,"White #f5f5f5 on #080808 ≥ 7:1; Red #e8003d on #080808 ≥ 4.5:1",,Pendiente,Verificar #e8003d sobre #080808
 A05,1.4.3 Contrast (Minimum),AA,Formulario,Placeholder text contraste,Colour Contrast Analyser,"rgba(255,255,255,0.22) puede fallar — verificar",,Pendiente,Posible fallo — valor muy bajo
 A06,1.4.10 Reflow,AA,Global,Sin scroll horizontal a 320px,Navegador a 320px,"Sin overflow en ningún breakpoint",,Pendiente,
@@ -9,16 +9,19 @@ A07,1.4.11 Non-text Contrast,AA,Formulario,Borde de inputs visible,Inspección v
 A08,2.1.1 Keyboard,A,Global,Todo accesible por teclado,Navegación con Tab,"Tab navega: header logo, ES, WhatsApp, GET IN TOUCH, WhatsApp CTA, campos form, botón envío",,Pendiente,
 A09,2.1.1 Keyboard,A,Formulario,Submit con Enter/Space,Teclado,"Botón responde a Enter y Space",,Pendiente,
 A10,2.4.1 Bypass Blocks,A,Global,Skip link o landmark adecuado,Teclado,"Primer Tab lleva a contenido principal o hay skip-to-content",,Pendiente,No implementado — posible fallo
-A11,2.4.2 Page Titled,A,Global,Título de página descriptivo,Inspección,"EN: 'AGLAYA — The Uncomfortable Agency · AI·gency', ES: equivalente",,Pendiente,
+A11,2.4.2 Page Titled,A,Global,Título de página descriptivo,Inspección,"EN: 'AGLAYA — The Uncomfortable AI·gency', ES: 'AGLAYA — La Agenc·IA Incómoda'",,✅ Pasado,CI valida con Playwright toHaveTitle
 A12,2.4.3 Focus Order,A,Global,Orden de foco lógico,Teclado,"Tab sigue orden visual: header → hero CTAs → form → footer",,Pendiente,
 A13,2.4.7 Focus Visible,AA,Global,Foco visible en todos los elementos,Teclado,"Outline visible en links, inputs y botones al navegar con Tab",,Pendiente,Los inputs no tienen outline — posible fallo
-A14,3.1.1 Language of Page,A,Global,Atributo lang correcto,Inspección HTML,"EN: <html lang='en'>, ES: <html lang='es'>",,Pendiente,
-A15,3.1.2 Language of Parts,AA,Header,Atributo lang en switch de idioma,Inspección HTML,"Botón ES tiene lang='es' y hreflang='es'",,Pendiente,
+A14,3.1.1 Language of Page,A,Global,Atributo lang correcto,Inspección HTML,"EN: <html lang='en'>, ES: <html lang='es'>",,✅ Pasado,Cubierto por axe CI
+A15,3.1.2 Language of Parts,AA,Header,Atributo lang en switch de idioma,Inspección HTML,"Botón ES tiene lang='es' y hreflang='es'",,✅ Pasado,Cubierto por axe CI
 A16,3.2.2 On Input,A,Formulario,Sin cambios de contexto inesperados,Prueba funcional,"Escribir en campos no provoca navegación ni alertas",,Pendiente,
 A17,3.3.1 Error Identification,A,Formulario,Errores identificados con texto,Prueba funcional,"Mensaje de error rojo incluye texto descriptivo, no solo color",,Pendiente,
 A18,3.3.2 Labels or Instructions,A,Formulario,Instrucciones claras,Inspección,"Placeholders comunican el propósito; no sustituyen labels formalmente",,Pendiente,Sin labels visibles — documentar decisión
-A19,4.1.2 Name Role Value,A,Formulario,Estado disabled del botón,Axe,"Botón SEND MESSAGE tiene aria-disabled o disabled cuando inactivo",,Pendiente,
-A20,4.1.3 Status Messages,AA,Formulario,Mensajes de estado anunciados,Axe,"#contact-success: role='status' aria-live='polite'; #contact-error: role='alert' aria-live='assertive'",,Pendiente,
+A19,4.1.2 Name Role Value,A,Formulario,Estado disabled del botón,Axe,"Botón SEND MESSAGE tiene aria-disabled o disabled cuando inactivo",,✅ Pasado,Cubierto por axe CI
+A20,4.1.3 Status Messages,AA,Formulario,Mensajes de estado anunciados,Axe,"#contact-success: role='status' aria-live='polite'; #contact-error: role='alert' aria-live='assertive'",,✅ Pasado,Cubierto por axe CI
 A21,–,–,Motion,Respeto a prefers-reduced-motion,Ajuste sistema,"Con reduced-motion activo: sin scanline, sin word animation, sin marquee animate",,Pendiente,
-A22,–,–,Global,Axe automated scan EN,axe-core / Playwright,"0 violations críticas en /",,Pendiente,
-A23,–,–,Global,Axe automated scan ES,axe-core / Playwright,"0 violations críticas en /es/",,Pendiente,
+A22,–,–,Global,Axe automated scan EN,axe-core / Playwright,"0 violations críticas en /",,✅ Pasado,CI ejecuta axe en página EN — pasa
+A23,–,–,Global,Axe automated scan ES,axe-core / Playwright,"0 violations críticas en /es/",,✅ Pasado,CI ejecuta axe en página ES — pasa
+A24,2.1.1 Keyboard,A,Cookie banner,Botones del banner accesibles por teclado,Teclado,"Tab llega a 'Accept all' y 'Essential only'; Enter/Space activan",,Pendiente,
+A25,1.3.1 Info and Relationships,A,Cookie banner,Banner tiene role y label,Axe,"role='region' aria-label='Cookie notice' / 'Aviso de cookies'",,Pendiente,
+A26,4.1.3 Status Messages,AA,Cookie banner,Banner usa aria-live,Axe,"aria-live='polite' en el banner",,Pendiente,

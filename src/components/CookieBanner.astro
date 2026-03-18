@@ -1,0 +1,185 @@
+---
+import type { Lang } from '../i18n/translations';
+import { useTranslations } from '../i18n/translations';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'en' } = Astro.props;
+const t = useTranslations(lang);
+
+const policyUrl = lang === 'es' ? '/es/cookies/' : '/cookies/';
+---
+
+<div
+  id="cookie-banner"
+  class="ck-banner"
+  role="region"
+  aria-label={lang === 'es' ? 'Aviso de cookies' : 'Cookie notice'}
+  aria-live="polite"
+  hidden
+>
+  <!-- Red top accent bar -->
+  <div class="ck-bar" aria-hidden="true"></div>
+
+  <div class="ck-inner">
+    <div class="ck-text">
+      <p class="ck-eyebrow">// COOKIES</p>
+      <p class="ck-message">{t('cookie.message')}</p>
+    </div>
+
+    <div class="ck-actions">
+      <button id="cookie-accept" class="ck-btn ck-btn--primary" type="button">
+        {t('cookie.accept')}
+      </button>
+      <button id="cookie-reject" class="ck-btn ck-btn--ghost" type="button">
+        {t('cookie.reject')}
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+.ck-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: #0d0d0d;
+  border-top: 1px solid #1f1f1f;
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.6);
+  /* slide-up animation — starts below viewport */
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ck-banner.is-visible {
+  transform: translateY(0);
+}
+
+.ck-bar {
+  height: 3px;
+  background: #e8003d;
+}
+
+.ck-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+}
+
+.ck-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.ck-eyebrow {
+  margin: 0 0 0.25rem;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: #e8003d;
+}
+
+.ck-message {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(245, 245, 245, 0.6);
+}
+
+.ck-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.ck-btn {
+  padding: 0.625rem 1.25rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-radius: 3px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+  white-space: nowrap;
+}
+
+.ck-btn:hover { transform: translateY(-1px); }
+.ck-btn:active { transform: scale(0.98); }
+
+.ck-btn--primary {
+  background: #e8003d;
+  color: #fff;
+}
+.ck-btn--primary:hover {
+  box-shadow: 0 4px 20px rgba(232, 0, 61, 0.45);
+}
+
+.ck-btn--ghost {
+  background: transparent;
+  color: rgba(245, 245, 245, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.ck-btn--ghost:hover {
+  color: rgba(245, 245, 245, 0.85);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Responsive — stack on mobile */
+@media (max-width: 640px) {
+  .ck-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  .ck-actions {
+    width: 100%;
+  }
+  .ck-btn {
+    flex: 1;
+    text-align: center;
+  }
+}
+</style>
+
+<script>
+(function () {
+  const STORAGE_KEY = 'aglaya_cookie_consent';
+  const banner = document.getElementById('cookie-banner');
+  if (!banner) return;
+
+  // Already decided — stay silent
+  if (localStorage.getItem(STORAGE_KEY)) return;
+
+  // Show after a short delay so the page settles first
+  banner.hidden = false;
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => banner.classList.add('is-visible'));
+  });
+
+  function dismiss(value: string) {
+    localStorage.setItem(STORAGE_KEY, value);
+    banner.classList.remove('is-visible');
+    banner.addEventListener(
+      'transitionend',
+      () => { banner.hidden = true; },
+      { once: true }
+    );
+  }
+
+  document.getElementById('cookie-accept')?.addEventListener('click', () => dismiss('all'));
+  document.getElementById('cookie-reject')?.addEventListener('click', () => dismiss('essential'));
+})();
+</script>

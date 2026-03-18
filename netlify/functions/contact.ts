@@ -24,29 +24,25 @@ async function verifyHCaptcha(token: string, ip: string): Promise<boolean> {
   return data.success;
 }
 
-async function sendContactEmail(name: string, email: string, message: string): Promise<void> {
-  const apiKey = process.env.RESEND_API_KEY ?? "";
-  const fromEmail = "AGLAYA <info@aglaya.biz>";
-  const notifyTo = process.env.NOTIFY_EMAIL ?? "info@aglaya.biz";
+function buildConfirmationHtml(name: string, message: string, lang: string): string {
+  const isEs = lang === "es";
+  const tagline = isEs ? "La Agenc·IA Incómoda" : "The Uncomfortable AI·gency";
+  const eyebrow = isEs ? "// TRANSMISIÓN RECIBIDA" : "// TRANSMISSION RECEIVED";
+  const headline = isEs ? "Tu mensaje<br>ha llegado." : "We've got<br>your signal.";
+  const greeting = isEs
+    ? (name ? `${name},` : "Hola,")
+    : (name ? `${name},` : "Hey there,");
+  const body1 = isEs
+    ? `Tu mensaje está en nuestras manos. Una persona —no un bot— lo leerá, lo pensará y te responderá en <span style="color:#f5f5f5;font-weight:700;">menos de 24 horas</span>.`
+    : `Your message landed. A human — not a bot — will read it, think about it, and get back to you within <span style="color:#f5f5f5;font-weight:700;">24 hours</span>.`;
+  const body2 = isEs
+    ? "Sin plantillas. Sin respuestas automáticas. Solo pensamiento real."
+    : "No templates. No auto-replies. Just real thinking.";
+  const msgLabel = isEs ? "// TU MENSAJE" : "// YOUR MESSAGE";
+  const footerTagline = isEs ? "La IA ejecuta. El humano estrategiza." : "AI executes. Humans strategize.";
 
-  if (!apiKey) {
-    console.warn("[contact] RESEND_API_KEY not set — skipping send");
-    return;
-  }
-
-  // 1. Send confirmation email to user
-  const confirmRes = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: fromEmail,
-      to: [email],
-      subject: "Signal received — AGLAYA",
-      html: `<!DOCTYPE html>
-<html lang="en">
+  return `<!DOCTYPE html>
+<html lang="${lang}">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background:#080808;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#080808;">
@@ -59,19 +55,19 @@ async function sendContactEmail(name: string, email: string, message: string): P
         <!-- HEADER -->
         <tr><td style="background:#0d0d0d;padding:32px 40px 24px;border-left:1px solid #1a1a1a;border-right:1px solid #1a1a1a;">
           <p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:#e8003d;">AGLAYA</p>
-          <p style="margin:0;font-family:Arial,sans-serif;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(245,245,245,.3);">The Uncomfortable AI·gency</p>
+          <p style="margin:0;font-family:Arial,sans-serif;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(245,245,245,.3);">${tagline}</p>
         </td></tr>
 
         <!-- HERO -->
         <tr><td style="background:#080808;padding:40px 40px 32px;border-left:1px solid #1a1a1a;border-right:1px solid #1a1a1a;">
-          <p style="margin:0 0 8px;font-family:'Courier New',monospace;font-size:11px;color:#e8003d;letter-spacing:.2em;">// TRANSMISSION RECEIVED</p>
+          <p style="margin:0 0 8px;font-family:'Courier New',monospace;font-size:11px;color:#e8003d;letter-spacing:.2em;">${eyebrow}</p>
           <h1 style="margin:0 0 24px;font-family:Arial,sans-serif;font-size:32px;font-weight:900;line-height:1.05;color:#f5f5f5;letter-spacing:-.5px;">
-            We've got<br>your signal.
+            ${headline}
           </h1>
           <p style="margin:0;font-family:Arial,sans-serif;font-size:15px;line-height:1.7;color:rgba(245,245,245,.6);">
-            ${name ? `${name},` : 'Hey there,'}<br><br>
-            Your message landed. A human — not a bot — will read it, think about it, and get back to you within <span style="color:#f5f5f5;font-weight:700;">24 hours</span>.<br><br>
-            No templates. No auto-replies. Just real thinking.
+            ${greeting}<br><br>
+            ${body1}<br><br>
+            ${body2}
           </p>
         </td></tr>
 
@@ -79,7 +75,7 @@ async function sendContactEmail(name: string, email: string, message: string): P
         <tr><td style="background:#080808;padding:0 40px 40px;border-left:1px solid #1a1a1a;border-right:1px solid #1a1a1a;">
           <table width="100%" cellpadding="0" cellspacing="0">
             <tr><td style="background:#0d0d0d;border:1px solid #1f1f1f;border-left:3px solid #e8003d;padding:20px 24px;">
-              <p style="margin:0 0 10px;font-family:'Courier New',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,245,245,.3);">// YOUR MESSAGE</p>
+              <p style="margin:0 0 10px;font-family:'Courier New',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,245,245,.3);">${msgLabel}</p>
               <p style="margin:0;font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:rgba(245,245,245,.75);">${message}</p>
             </td></tr>
           </table>
@@ -98,7 +94,7 @@ async function sendContactEmail(name: string, email: string, message: string): P
             © AGLAYA ·
             <a href="https://aglaya.biz" style="color:#e8003d;text-decoration:none;">aglaya.biz</a>
           </p>
-          <p style="margin:0;font-family:'Courier New',monospace;font-size:10px;color:rgba(245,245,245,.15);letter-spacing:.1em;">AI executes. Humans strategize.</p>
+          <p style="margin:0;font-family:'Courier New',monospace;font-size:10px;color:rgba(245,245,245,.15);letter-spacing:.1em;">${footerTagline}</p>
         </td></tr>
 
         <!-- RED BOTTOM BAR -->
@@ -108,7 +104,34 @@ async function sendContactEmail(name: string, email: string, message: string): P
     </td></tr>
   </table>
 </body>
-</html>`,
+</html>`;
+}
+
+async function sendContactEmail(name: string, email: string, message: string, lang: string): Promise<void> {
+  const apiKey = process.env.RESEND_API_KEY ?? "";
+  const fromEmail = "AGLAYA <info@aglaya.biz>";
+  const notifyTo = process.env.NOTIFY_EMAIL ?? "info@aglaya.biz";
+
+  if (!apiKey) {
+    console.warn("[contact] RESEND_API_KEY not set — skipping send");
+    return;
+  }
+
+  const isEs = lang === "es";
+  const confirmSubject = isEs ? "Señal recibida — AGLAYA" : "Signal received — AGLAYA";
+
+  // 1. Send confirmation email to user
+  const confirmRes = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: fromEmail,
+      to: [email],
+      subject: confirmSubject,
+      html: buildConfirmationHtml(name, message, lang),
     }),
   });
   if (!confirmRes.ok) {
@@ -126,9 +149,10 @@ async function sendContactEmail(name: string, email: string, message: string): P
     body: JSON.stringify({
       from: fromEmail,
       to: [notifyTo],
-      subject: `📩 New Contact: ${name || email}`,
+      subject: `📩 New Contact [${lang.toUpperCase()}]: ${name || email}`,
       html: `
         <h2>New lead from aglaya.biz</h2>
+        <p><strong>Language:</strong> ${lang.toUpperCase()}</p>
         <p><strong>Name:</strong> ${name || 'N/A'}</p>
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>Message:</strong></p>
@@ -159,7 +183,7 @@ export const handler: Handler = async (event) => {
     return { statusCode: 405, headers, body: JSON.stringify({ error: "Method not allowed" }) };
   }
 
-  let body: { name?: string; email?: string; message?: string; token?: string };
+  let body: { name?: string; email?: string; message?: string; token?: string; lang?: string };
   try {
     body = JSON.parse(event.body ?? "{}");
   } catch {
@@ -170,6 +194,7 @@ export const handler: Handler = async (event) => {
   const email = (body.email ?? "").trim().toLowerCase();
   const message = (body.message ?? "").trim();
   const token = body.token ?? "";
+  const lang = body.lang === "es" ? "es" : "en";
 
   if (!email || !isValidEmail(email) || !message) {
     return {
@@ -192,7 +217,7 @@ export const handler: Handler = async (event) => {
   }
 
   try {
-    await sendContactEmail(name, email, message);
+    await sendContactEmail(name, email, message, lang);
   } catch (err) {
     console.error("[contact] Error:", err);
     return {

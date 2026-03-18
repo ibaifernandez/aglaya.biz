@@ -13,6 +13,8 @@ test.describe('Coming Soon Page (Bilingual + A11y)', () => {
     // (otherwise axe scans them mid-transition and fails color-contrast)
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/');
+    // Dismiss cookie banner so it doesn't interfere with form/a11y tests
+    await page.evaluate(() => localStorage.setItem('aglaya_cookie_consent', 'all'));
 
     // 1. Basic Content
     await expect(page).toHaveTitle(/AGLAYA/);
@@ -59,10 +61,12 @@ test.describe('Coming Soon Page (Bilingual + A11y)', () => {
     // 10. Accessibility (axe-core WCAG 2AA)
     // .marquee-wrap is decorative animation (aria-hidden="true") — axe 4.11
     // still checks color-contrast on aria-hidden children, so exclude explicitly.
+    // #cookie-banner is hidden (hidden attr) on page load when consent is stored.
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'best-practice'])
       .exclude('.marquee-wrap')
       .exclude('.h-captcha')
+      .exclude('#cookie-banner')
       .analyze();
     expect(results.violations).toEqual([]);
   });
@@ -71,6 +75,8 @@ test.describe('Coming Soon Page (Bilingual + A11y)', () => {
     // Emulate reduced-motion so animated elements start at opacity:1
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/es/');
+    // Dismiss cookie banner
+    await page.evaluate(() => localStorage.setItem('aglaya_cookie_consent', 'all'));
 
     // 1. Content Translation
     await expect(page).toHaveTitle(/AGLAYA/);
@@ -95,6 +101,7 @@ test.describe('Coming Soon Page (Bilingual + A11y)', () => {
       .withTags(['wcag2a', 'wcag2aa', 'best-practice'])
       .exclude('.marquee-wrap')
       .exclude('.h-captcha')
+      .exclude('#cookie-banner')
       .analyze();
     expect(results.violations).toEqual([]);
   });

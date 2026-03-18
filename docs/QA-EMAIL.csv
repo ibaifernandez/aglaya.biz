@@ -1,8 +1,11 @@
 ID,Caso de prueba,Remitente esperado,Destinatario,Asunto esperado,Contenido clave,Estado,Notas
-E01,Email de confirmación al usuario,AGLAYA <info@aglaya.biz>,Email introducido en el form,"Thanks for reaching out to AGLAYA","Nombre del usuario, copia del mensaje, link aglaya.biz",Pendiente,Requiere RESEND_API_KEY activo
-E02,Email de notificación a la Agenc·IA,AGLAYA <info@aglaya.biz>,NOTIFY_EMAIL configurado,"📩 New Contact: {nombre o email}","Nombre, email, mensaje completo",Pendiente,Requiere RESEND_API_KEY activo
+E01,Email de confirmación al usuario (EN),AGLAYA <info@aglaya.biz>,Email introducido en el form,Signal received — AGLAYA,"Barra roja top/bottom, // TRANSMISSION RECEIVED eyebrow, 'We've got your signal.', mensaje con borde rojo izquierdo, footer: 'AI executes. Humans strategize.'","1/3 — En progreso","1 prueba exitosa"
+E02,Email de notificación a la Agenc·IA,AGLAYA <info@aglaya.biz>,NOTIFY_EMAIL configurado,"📩 New Contact [EN]: {nombre} / 📩 New Contact [ES]: {nombre}","Nombre, email, mensaje completo, language tag visible","1/3 — En progreso",Requiere RESEND_API_KEY activo
 E03,No spam / no auto-reply genérico,–,–,–,"Sin asunto 'noreply', sin imagen rota, sin links rotos",Pendiente,
-E04,Diseño email confirmación,–,–,–,"Fondo oscuro #080808, texto blanco, acento rojo, sin imágenes externas",Pendiente,
-E05,Envío con nombre vacío,AGLAYA <info@aglaya.biz>,Email introducido,–,"Saludo: 'Hello there,' (sin nombre)",Pendiente,Nombre es opcional
+E04,Diseño email confirmación,–,–,–,"Barra roja top/bottom (#e8003d), eyebrow monospace (// TRANSMISSION RECEIVED), titular en negrita, bloque de mensaje con borde rojo izquierdo, fondo oscuro, sin imágenes externas","1/3 — En progreso",
+E05,Envío con nombre vacío,AGLAYA <info@aglaya.biz>,Email introducido,Signal received — AGLAYA,"Saludo: 'Hello there,' (sin nombre)",Pendiente,Nombre es opcional
 E06,Dominio verificado en Resend,–,–,–,"DKIM, SPF, DMARC pasan — no cae en spam",Pendiente,Verificar con mail-tester.com
 E07,Rate limit / doble envío,–,–,–,"Segundo envío inmediato no duplica emails",Pendiente,
+E08,Email de confirmación en español,AGLAYA <info@aglaya.biz>,Email introducido en el form (formulario ES),Señal recibida — AGLAYA,"// TRANSMISIÓN RECIBIDA, 'Tu mensaje ha llegado.', La IA ejecuta. El humano estrategiza.",Pendiente,Enviar desde /es/
+E09,Notificación interna ES,AGLAYA <info@aglaya.biz>,NOTIFY_EMAIL,"📩 New Contact [ES]: {nombre}","Language: ES visible en el cuerpo",Pendiente,
+E10,Saludo sin nombre ES,AGLAYA <info@aglaya.biz>,Email introducido,Señal recibida — AGLAYA,"Saludo: 'Hola,' (sin nombre)",Pendiente,Nombre es opcional

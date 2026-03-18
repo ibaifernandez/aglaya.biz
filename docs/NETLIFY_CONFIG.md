@@ -14,14 +14,14 @@ Todas deben estar configuradas en **All scopes** (Production, Deploy Previews, B
 
 | Variable | Scope | Descripción | Valor ejemplo |
 |---|---|---|---|
-| `RESEND_API_KEY` | Builds, Functions, Runtime | API key de Resend para envío de emails | `re_xxxxxxxxx` |
-| `TURNSTILE_SECRET` | Builds, Functions, Runtime | Secret key de Cloudflare Turnstile (server-side) | `0x4AAAA...` |
-| `PUBLIC_TURNSTILE_SITE_KEY` | All scopes | Site key de Cloudflare Turnstile (client-side) | `0x4AAAAAACr7qLXpzOQqF7Ni` |
+| `RESEND_API_KEY` | Builds, Functions, Runtime | API key de Resend para envío de emails (**Sensitive**) | `re_xxxxxxxxx` |
+| `HCAPTCHA_SECRET` | Builds, Functions, Runtime | Secret key de hCaptcha (server-side) (**Sensitive**) | `ES_xxxxxxxx...` |
+| `PUBLIC_HCAPTCHA_SITE_KEY` | All scopes | Site key de hCaptcha (client-side) | `a772dbf8-f0da-4658-a4be-5b0848440ac8` |
 | `NOTIFY_EMAIL` | All scopes | Email destinatario de notificaciones de leads | `info@aglaya.biz` |
 | `SENTRY_AUTH_TOKEN` | Builds, Functions, Runtime | Auth token de Sentry para subir source maps | `sntrys_xxxxx` |
 | `NODE_VERSION` | All scopes | Versión de Node.js para el build | `22` |
 
-> ⚠️ **CRÍTICO:** `RESEND_API_KEY` y `TURNSTILE_SECRET` deben marcarse como **Sensitive** (no visibles en los logs).
+> ⚠️ **CRÍTICO:** `RESEND_API_KEY` y `HCAPTCHA_SECRET` deben marcarse como **Sensitive** (no visibles en los logs).
 
 ---
 
@@ -68,7 +68,7 @@ Las Netlify Functions están en `netlify/functions/`. Se despliegan automáticam
 
 | Función | Endpoint | Descripción |
 |---|---|---|
-| `contact.ts` | `/.netlify/functions/contact` | Gestiona el formulario de contacto: verifica Turnstile + envía emails vía Resend |
+| `contact.ts` | `/.netlify/functions/contact` | Gestiona el formulario de contacto: verifica hCaptcha + envía emails bilingües vía Resend |
 
 ---
 
@@ -122,7 +122,8 @@ Ya configurados en `netlify.toml`:
 | ~~Netlify AGLAYA~~ | ~~AGLAYA team~~ | ~~Eliminar — créditos agotados~~ |
 | Sentry | aglaya-s6 | Proyecto `javascript-astro` |
 | Resend | info@aglaya.biz | 3.000 emails/mes gratis |
-| Cloudflare | ibaifernandez | DNS + Turnstile |
+| hCaptcha | ibaifernandez | Bot protection (reemplaza Turnstile) |
+| Cloudflare | ibaifernandez | DNS (proxy) |
 | Migadu | aglaya.biz | Email transaccional |
 
 ---
@@ -132,8 +133,8 @@ Ya configurados en `netlify.toml`:
 Después de cada deploy a producción:
 - [ ] https://aglaya.biz/ carga correctamente
 - [ ] https://aglaya.biz/es/ carga correctamente
-- [ ] Formulario de contacto completa el flujo (Turnstile → envío → mensaje de éxito)
-- [ ] Email de confirmación llega al remitente
+- [ ] Formulario de contacto completa el flujo (hCaptcha → envío → mensaje de éxito)
+- [ ] Email de confirmación llega al remitente (EN o ES según idioma del formulario)
 - [ ] Email de notificación llega a `info@aglaya.biz`
 - [ ] Sentry no registra errores nuevos
 - [ ] UptimeRobot muestra ambos monitores en verde

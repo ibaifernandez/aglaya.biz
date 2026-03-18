@@ -7,28 +7,41 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+---
+
+## [1.0.0] — 2026-03-17
+
 ### Added
 - GitHub Actions CI workflow (unit tests → E2E + axe-core, sequential)
 - Bilingual 404 page (`src/pages/404.astro`) with auto-detected lang
 - Skip link + `#main-content` landmark for WCAG 2.4.1
-- `@sentry/astro` integration replacing old CDN approach; `beforeSend` filter drops TurnstileError noise
+- `@sentry/astro` integration replacing old CDN approach
 - Security headers in `netlify.toml` (HSTS, X-Frame-Options, CSP, etc.)
 - Docs: `GITHUB_CONFIG.md`, `NETLIFY_CONFIG.md`, `PLATFORMS_CONFIG.md`
 - QA checklists: `QA-USABILITY.csv`, `QA-ACCESSIBILITY.csv`, `QA-EMAIL.csv`
 - Full favicon fallback chain: SVG (rojo) → PNG 32/16 → ICO → apple-touch-icon
+- **hCaptcha bot protection** — complete replacement for Cloudflare Turnstile (see Changed)
+- **Cookie consent banner** (`CookieBanner.astro`): fixed bottom position, brand-red 3px top bar, monospace `// COOKIES` eyebrow, "Accept all" (red) / "Essential only" (ghost) buttons, bilingual EN/ES, consent stored in `localStorage` key `aglaya_cookie_consent` (`all` or `essential`), slides up on first visit, never shown again after a decision, rendered in `BaseLayout.astro` below `<slot />`
+- **Branded confirmation email** (new HTML design): red top/bottom bars, `// TRANSMISSION RECEIVED` / `// TRANSMISIÓN RECIBIDA` eyebrow, bold headline, red left-border message block, footer taglines ("AI executes. Humans strategize." / "La IA ejecuta. El humano estrategiza.")
+- **Bilingual email flow**: confirmation email sent in the language the user submitted the form from (EN or ES); form passes `lang` to the serverless function; internal notification subject now includes `[EN]` or `[ES]` tag
 
 ### Changed
+- **Cloudflare Turnstile → hCaptcha**: Turnstile had an unresolvable error 300030 on proxied Cloudflare domains. Completely removed. hCaptcha integrated throughout: widget (`class="h-captcha"`, `data-sitekey`, `data-theme="dark"`), script (`https://js.hcaptcha.com/1/api.js`), verify URL (`https://api.hcaptcha.com/siteverify`), env vars renamed (`TURNSTILE_SECRET` → `HCAPTCHA_SECRET`, `PUBLIC_TURNSTILE_SITE_KEY` → `PUBLIC_HCAPTCHA_SITE_KEY`)
+- **Favicon**: was showing Astro logo (655 bytes) — replaced with correct AGLAYA red PNG favicon
+- **OG image**: replaced auto-generated image with real production screenshot at 1200×630
+- **Page titles updated**: EN: `AGLAYA — The Uncomfortable AI·gency`, ES: `AGLAYA — La Agenc·IA Incómoda`
+- **Confirmation email subjects**: EN: `Signal received — AGLAYA`, ES: `Señal recibida — AGLAYA`
 - Migrated from suspended AGLAYA Netlify account → ibaifernandez Legacy Free (300 min/month)
-- Turnstile sitekey fallback: `??` → `||` (fixes silent failure when env var is empty string)
 - `role="complementary"` → `aria-hidden="true"` on marquee (decorative; was causing landmark violation)
 - Contact eyebrow color: `#e8003d` (4.33:1, fails AA) → `#ff4d70` (6.5:1 ✓)
-- Favicon: `aglaya-favicon-blanco.svg` had `fill:none` (invisible) → switched to `aglaya-favicon-rojo.svg`
 - Resend API calls now check `res.ok` and throw on 4xx/5xx (previously silent on failure)
 
 ### Fixed
 - Form success message disappeared with form (was inside `<form>` tag; moved outside)
-- **Turnstile race condition**: `window.onTurnstileSuccess` defined in Astro module script (deferred) — Turnstile's async CDN script could call it before the module ran, leaving button permanently disabled. Fixed by defining callback in `<script is:inline>` (synchronous) before the Turnstile `<script src>` tag.
-- Axe color-contrast false positives in CI: animated elements scanned at `opacity:0` mid-transition. Fixed by calling `page.emulateMedia({ reducedMotion: 'reduce' })` before `page.goto()` in E2E tests — triggers CSS `prefers-reduced-motion` rule that sets `opacity:1 !important` on all `[data-animate]` elements.
+- **hCaptcha IP parsing**: `x-forwarded-for` had comma-separated IPs; now uses `.split(",")[0].trim()` to extract the first (real) IP
+- **Turnstile race condition** (now moot — Turnstile removed): `window.onTurnstileSuccess` defined in Astro module script (deferred) could be called before module ran, leaving button permanently disabled. Documented for reference.
+- Axe color-contrast false positives in CI: animated elements scanned at `opacity:0` mid-transition. Fixed by calling `page.emulateMedia({ reducedMotion: 'reduce' })` before `page.goto()` in E2E tests
+- **Sentry**: removed `beforeSend()` TurnstileError filter (no longer needed after Turnstile removal)
 
 ---
 
