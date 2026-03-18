@@ -57,6 +57,12 @@ export const ui = {
       'WhatsApp Automation',
       'AI SEO',
     ],
+
+    /* Cookie banner */
+    'cookie.message': 'We use cookies to improve your experience and analyse site performance. You can accept all cookies or use only the essential ones.',
+    'cookie.accept': 'Accept all',
+    'cookie.reject': 'Essential only',
+    'cookie.policy': 'Cookie policy',
   },
 
   es: {
@@ -105,6 +111,12 @@ export const ui = {
       'Automatización WhatsApp',
       'AI SEO',
     ],
+
+    /* Cookie banner */
+    'cookie.message': 'Usamos cookies para mejorar tu experiencia y analizar el rendimiento del sitio. Puedes aceptar todas las cookies o usar solo las esenciales.',
+    'cookie.accept': 'Aceptar todas',
+    'cookie.reject': 'Solo esenciales',
+    'cookie.policy': 'Política de cookies',
   },
 } as const;
 
