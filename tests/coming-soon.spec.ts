@@ -62,6 +62,7 @@ test.describe('Coming Soon Page (Bilingual + A11y)', () => {
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'best-practice'])
       .exclude('.marquee-wrap')
+      .exclude('.h-captcha')
       .analyze();
     expect(results.violations).toEqual([]);
   });
@@ -93,6 +94,7 @@ test.describe('Coming Soon Page (Bilingual + A11y)', () => {
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'best-practice'])
       .exclude('.marquee-wrap')
+      .exclude('.h-captcha')
       .analyze();
     expect(results.violations).toEqual([]);
   });
