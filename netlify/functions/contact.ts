@@ -133,7 +133,8 @@ export const handler: Handler = async (event) => {
     };
   }
 
-  const ip = event.headers["x-forwarded-for"] ?? event.headers["x-nf-client-connection-ip"] ?? "";
+  const rawIp = event.headers["x-forwarded-for"] ?? event.headers["x-nf-client-connection-ip"] ?? "";
+  const ip = rawIp.split(",")[0].trim();
   const captchaOk = await verifyHCaptcha(token, ip);
 
   if (!captchaOk) {
