@@ -20,7 +20,6 @@ async function verifyHCaptcha(token: string, ip: string): Promise<boolean> {
     body: new URLSearchParams(params),
   });
   const data = (await res.json()) as { success: boolean; "error-codes"?: string[] };
-  console.log("[contact] hCaptcha result:", JSON.stringify(data));
   return data.success;
 }
 
