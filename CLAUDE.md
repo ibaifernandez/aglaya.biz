@@ -8,7 +8,7 @@
 - **Styling**: Tailwind CSS v4 (design tokens in `src/styles/global.css`)
 - **Serverless**: Netlify Functions (`netlify/functions/`)
 - **Email**: Resend API
-- **Bot Protection**: Cloudflare Turnstile
+- **Bot Protection**: hCaptcha
 - **Error Tracking**: Sentry (browser SDK)
 - **Monitoring**: UptimeRobot
 - **Testing**: Vitest (unit) + Playwright (E2E) + Axe-core (a11y)
@@ -39,7 +39,7 @@ docs/                # Project documentation
 
 ## Architecture Decisions
 - **i18n**: Subdirectory strategy (EN at `/`, ES at `/es/`). Full hreflang parity.
-- **Forms**: Client → Turnstile validation → Netlify Function → Resend (dual email: confirmation + lead notification)
+- **Forms**: Client → hCaptcha validation → Netlify Function → Resend (dual email: confirmation + lead notification)
 - **Styling**: Tailwind v4 via Vite plugin, NOT PostCSS. Design tokens defined in `@theme` block.
 - **Fonts**: Outfit (display/headings), Inter (body). Loaded via Google Fonts with preconnect.
 
@@ -63,8 +63,8 @@ docs/                # Project documentation
 | Variable | Scope | Purpose |
 |---|---|---|
 | `RESEND_API_KEY` | Server | Resend email API key |
-| `TURNSTILE_SECRET` | Server | Cloudflare Turnstile secret |
-| `PUBLIC_TURNSTILE_SITE_KEY` | Client | Turnstile widget site key |
+| `HCAPTCHA_SECRET` | Server | hCaptcha secret key |
+| `PUBLIC_HCAPTCHA_SITE_KEY` | Client | hCaptcha site key (fallback hardcoded in ContactForm) |
 | `PUBLIC_SENTRY_DSN` | Client | Sentry project DSN |
 | `NOTIFY_EMAIL` | Server | Lead notification recipient |
 
@@ -78,18 +78,18 @@ docs/                # Project documentation
 ## Known Gotchas & Hard-Won Lessons
 
 ### Astro script modules are deferred — use `is:inline` for global callbacks
-Astro compiles `<script>` blocks as ES modules (`type="module"`), which the browser **defers** until after parsing. Any third-party `async` script (e.g. Cloudflare Turnstile, Google Analytics) can fire before the module runs. If a third-party calls `window.someCallback`, define it in a **`<script is:inline>`** block placed *before* the third-party `<script src>` tag — inline scripts are synchronous and always run first.
+Astro compiles `<script>` blocks as ES modules (`type="module"`), which the browser **defers** until after parsing. Any third-party `async` script (e.g. hCaptcha, Google Analytics) can fire before the module runs. If a third-party calls `window.someCallback`, define it in a **`<script is:inline>`** block placed *before* the third-party `<script src>` tag — inline scripts are synchronous and always run first.
 
 ```html
-<!-- ✅ Correct — inline runs before async Turnstile -->
+<!-- ✅ Correct — inline runs before async hCaptcha -->
 <script is:inline>
-  window.onTurnstileSuccess = function() { /* ... */ };
+  window.onHCaptchaSuccess = function(token) { /* ... */ };
 </script>
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer is:inline></script>
+<script src="https://js.hcaptcha.com/1/api.js" async defer is:inline></script>
 
-<!-- ❌ Wrong — module is deferred; Turnstile may fire callback first -->
+<!-- ❌ Wrong — module is deferred; hCaptcha may fire callback first -->
 <script>
-  window.onTurnstileSuccess = () => { /* ... */ };
+  window.onHCaptchaSuccess = (token) => { /* ... */ };
 </script>
 ```
 
@@ -104,12 +104,12 @@ Fix: call `await page.emulateMedia({ reducedMotion: 'reduce' })` **before** `pag
 ```
 
 ### `??` vs `||` for env var fallbacks
-`PUBLIC_TURNSTILE_SITE_KEY ?? 'fallback'` only catches `null`/`undefined`. If Netlify stores the var as an empty string `""`, the fallback never triggers. Always use `||` for env vars that could be empty strings:
+`import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY ?? 'fallback'` only catches `null`/`undefined`. If Netlify stores the var as an empty string `""`, the fallback never triggers. Always use `||` for env vars that could be empty strings:
 ```js
 // ✅
-const key = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '0x4AAAAAACr7qLXpzOQqF7Ni';
+const key = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY || 'd9205cec-4106-4c24-add6-b4ca3bb40472';
 // ❌ — empty string passes through
-const key = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '0x4AAAAAACr7qLXpzOQqF7Ni';
+const key = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY ?? 'd9205cec-4106-4c24-add6-b4ca3bb40472';
 ```
 
 ### Always check fetch() responses from external APIs
@@ -131,14 +131,13 @@ const results = await new AxeBuilder({ page })
   .analyze();
 ```
 
-### Sentry TurnstileErrors are noise — filter them
-Cloudflare Turnstile fires unhandled browser errors on hostname mismatches (bots hitting deploy preview URLs) and expired challenges. These pollute the Sentry feed. Filter in `sentry.client.config.js`:
+### Cloudflare Turnstile error 300030 — avoid Invisible mode on proxied domains
+Turnstile error 300030 ("widget hung") occurs consistently when the site is proxied through Cloudflare (orange cloud DNS) and Turnstile is in Invisible mode. The widget loads but the verification iframe hangs indefinitely. Root cause: likely an internal Cloudflare account conflict between the proxy and Turnstile's own challenge servers. **Workaround attempted:** Managed mode, disabling proxy, disabling Bot Fight Mode — none resolved it. **Solution: migrate to hCaptcha** (`https://js.hcaptcha.com/1/api.js`), which has no dependency conflicts with Cloudflare.
+
+### hCaptcha in CI — exclude from axe scan
+hCaptcha injects a "Warning: localhost detected" div in non-production environments with low-contrast text (#bf1722 on #333333 = 2.02:1). Exclude the widget container from axe:
 ```js
-beforeSend(event, hint) {
-  const err = hint?.originalException;
-  if (err?.name === 'TurnstileError') return null;
-  return event;
-}
+await new AxeBuilder({ page }).exclude('.h-captcha').analyze();
 ```
 
 ### Astro 6.x: `ViewTransitions` is now `ClientRouter`
