@@ -27,7 +27,7 @@ npm run test:e2e   # Playwright E2E + accessibility
 src/
 ├── pages/           # Astro pages (/ = EN, /es/ = ES)
 ├── layouts/         # BaseLayout.astro (SEO, meta, structured data)
-├── components/      # ContactForm.astro, icons/
+├── components/      # ContactForm.astro, CookieBanner.astro, icons/
 ├── i18n/            # translations.ts (useTranslations helper)
 ├── styles/          # global.css (Tailwind v4 + design tokens)
 └── assets/images/   # SVG brand assets
@@ -39,7 +39,8 @@ docs/                # Project documentation
 
 ## Architecture Decisions
 - **i18n**: Subdirectory strategy (EN at `/`, ES at `/es/`). Full hreflang parity.
-- **Forms**: Client → hCaptcha validation → Netlify Function → Resend (dual email: confirmation + lead notification)
+- **Forms**: Client → hCaptcha validation → Netlify Function → Resend (dual email: confirmation + lead notification). Confirmation email is bilingual — rendered in the same language (`lang`) the form was submitted from.
+- **Cookie consent**: `CookieBanner.astro` rendered in `BaseLayout.astro`. Consent stored in `localStorage` (`aglaya_cookie_consent`: `all` | `essential`). No external CMP — first-party only.
 - **Styling**: Tailwind v4 via Vite plugin, NOT PostCSS. Design tokens defined in `@theme` block.
 - **Fonts**: Outfit (display/headings), Inter (body). Loaded via Google Fonts with preconnect.
 
@@ -48,8 +49,10 @@ docs/                # Project documentation
 - **Background**: `#080808` (near-black)
 - **Surface**: `#111111`
 - **Typography**: Outfit 300–900, Inter 300–700
-- **Tagline EN**: "The Uncomfortable Agency"
-- **Tagline ES**: "La Agencia Incómoda"
+- **Tagline EN**: "The Uncomfortable AI·gency"
+- **Tagline ES**: "La Agenc·IA Incómoda"
+- **Email tagline EN**: "AI executes. Humans strategize."
+- **Email tagline ES**: "La IA ejecuta. El humano estrategiza."
 
 ## Coding Conventions
 - All text must be bilingual (EN + ES). Use `src/i18n/translations.ts` for all user-facing strings.

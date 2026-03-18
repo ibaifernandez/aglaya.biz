@@ -42,6 +42,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 - **Turnstile race condition** (now moot — Turnstile removed): `window.onTurnstileSuccess` defined in Astro module script (deferred) could be called before module ran, leaving button permanently disabled. Documented for reference.
 - Axe color-contrast false positives in CI: animated elements scanned at `opacity:0` mid-transition. Fixed by calling `page.emulateMedia({ reducedMotion: 'reduce' })` before `page.goto()` in E2E tests
 - **Sentry**: removed `beforeSend()` TurnstileError filter (no longer needed after Turnstile removal)
+- **Cookie banner eyebrow**: `// COOKIES` label `#e8003d` at 10px monospace on `#0d0d0d` had insufficient luminosity — changed to `#ff4d6e`
+- **Debug log in production**: `console.log("[contact] hCaptcha result:", ...)` added in PR #5 for diagnosis, survived into production after fix in PR #7 — removed
 
 ---
 

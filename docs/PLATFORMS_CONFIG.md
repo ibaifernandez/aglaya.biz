@@ -31,9 +31,10 @@ Estado de configuración de todas las plataformas integradas.
 - Alerta por email si el sitio cae
 
 ### Estado actual
-- [ ] Monitor EN creado
-- [ ] Monitor ES creado
-- [ ] Alertas configuradas a `info@aglaya.biz`
+- [x] Monitor EN creado — `AGLAYA (EN)` · `https://aglaya.biz/` · 5 min · ✅ Up
+- [x] Monitor ES creado — `AGLAYA (ES)` · `https://aglaya.biz/es/` · 5 min · ✅ Up
+- [x] Alertas configuradas a `info@aglaya.biz`
+- **Configurado:** 17 Mar 2026
 
 ---
 
@@ -67,11 +68,16 @@ https://d1d3347073dadf16d4c7d7625ee28190@o4511058994724864.ingest.us.sentry.io/4
 | New issue | First seen | Email a `info@aglaya.biz` |
 | Error spike | >10 events in 1h | Email a `info@aglaya.biz` |
 
+### Nota sobre el filtro `beforeSend()` y Turnstile
+El código original incluía un filtro `beforeSend()` en `sentry.client.config.js` para descartar errores de tipo `TurnstileError` (ruido generado por el widget de Cloudflare en URLs no autorizadas). Ese filtro fue **eliminado** cuando se migró a hCaptcha — no porque Sentry esté filtrando el ruido, sino porque **el ruido ya no existe**: hCaptcha no genera ese tipo de error. El resultado es idéntico (Sentry limpio), pero por una razón diferente.
+
+> ⚠️ Si en el futuro se reintegra Cloudflare Turnstile o cualquier widget de terceros que genere errores esperados, habrá que restaurar un filtro `beforeSend()` adecuado.
+
 ### Estado actual
 - [x] DSN configurado en `sentry.client.config.js`
 - [x] DSN configurado en `sentry.server.config.js`
 - [x] `SENTRY_AUTH_TOKEN` en Netlify
-- [x] `beforeSend()` TurnstileError filter eliminado (Turnstile reemplazado por hCaptcha)
+- [x] `beforeSend()` TurnstileError filter eliminado — ya no necesario (ver nota arriba)
 - [ ] Alertas de email configuradas
 
 ---
@@ -187,9 +193,9 @@ https://d1d3347073dadf16d4c7d7625ee28190@o4511058994724864.ingest.us.sentry.io/4
 | Plataforma | Configurada | Probada E2E |
 |---|---|---|
 | Netlify | ✅ | ✅ |
-| GitHub Actions | ✅ | 🔄 En progreso |
+| GitHub Actions | ✅ | ✅ CI verde consistente |
 | Sentry | ✅ | ✅ (captura activa) |
-| Resend | ✅ | ✅ (1/3 pruebas) |
-| hCaptcha | ✅ | ✅ (1/3 pruebas) |
-| UptimeRobot | ⏳ Crear monitores | ⏳ |
+| Resend | ✅ | ✅ (2/3 pruebas — EN + ES) |
+| hCaptcha | ✅ | ✅ (2/3 pruebas — EN + ES) |
+| UptimeRobot | ✅ | ✅ 2 monitores activos |
 | Migadu | ✅ | ✅ |
