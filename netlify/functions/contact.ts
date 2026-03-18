@@ -6,24 +6,21 @@ function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-async function verifyTurnstile(token: string, ip: string): Promise<boolean> {
-  const secret = process.env.TURNSTILE_SECRET ?? "";
+async function verifyHCaptcha(token: string, ip: string): Promise<boolean> {
+  const secret = process.env.HCAPTCHA_SECRET ?? "";
   if (!secret) {
-    console.warn("[contact] TURNSTILE_SECRET not set — skipping verification");
+    console.warn("[contact] HCAPTCHA_SECRET not set — skipping verification");
     return true;
   }
-  const res = await fetch(
-    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({
-        secret,
-        response: token,
-        remoteip: ip,
-      }),
-    }
-  );
+  const res = await fetch("https://api.hcaptcha.com/siteverify", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      secret,
+      response: token,
+      remoteip: ip,
+    }),
+  });
   const data = (await res.json()) as { success: boolean };
   return data.success;
 }
@@ -138,8 +135,8 @@ export const handler: Handler = async (event) => {
   }
 
   const ip = event.headers["x-forwarded-for"] ?? event.headers["x-nf-client-connection-ip"] ?? "";
-  const turnstileOk = await verifyTurnstile(token, ip);
-  
+  const turnstileOk = await verifyHCaptcha(token, ip);
+
   if (!turnstileOk) {
     return {
       statusCode: 422,

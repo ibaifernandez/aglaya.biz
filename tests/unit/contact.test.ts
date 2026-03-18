@@ -7,7 +7,7 @@ describe('contact function', () => {
     vi.clearAllMocks();
     
     vi.stubEnv('RESEND_API_KEY', 're_test_123');
-    vi.stubEnv('TURNSTILE_SECRET', '0x_test_secret');
+    vi.stubEnv('HCAPTCHA_SECRET', 'test_hcaptcha_secret');
     vi.stubEnv('NOTIFY_EMAIL', 'info@aglaya.biz');
 
     // Global fetch mock
@@ -49,7 +49,7 @@ describe('contact function', () => {
     expect(global.fetch).toHaveBeenCalled();
   });
 
-  it('verifies turnstile and fails on bad token', async () => {
+  it('verifies hcaptcha and fails on bad token', async () => {
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: () => Promise.resolve({ success: false })

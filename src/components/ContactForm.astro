@@ -3,12 +3,12 @@ import Send from './icons/Send.astro';
 
 interface Props {
   lang?: 'en' | 'es';
-  turnstileSiteKey?: string;
+  hcaptchaSiteKey?: string;
 }
 
 const {
   lang = 'en',
-  turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '0x4AAAAAACr7qLXpzOQqF7Ni',
+  hcaptchaSiteKey = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY || 'd9205cec-4106-4c24-add6-b4ca3bb40472',
 } = Astro.props;
 
 const labels = {
@@ -39,26 +39,22 @@ const labels = {
 const t = labels[lang];
 ---
 
-<!-- Define callback synchronously BEFORE Turnstile loads.
-     Astro bundles <script> blocks as deferred ES modules — if Turnstile's
-     async CDN script loads first, window.onTurnstileSuccess would be
-     undefined and the button would stay disabled forever. -->
+<!-- Define hCaptcha callbacks synchronously BEFORE the hCaptcha script loads -->
 <script is:inline>
-  window.onTurnstileSuccess = function(token) {
-    console.log('[Turnstile] ✅ Success — token received, enabling button');
+  window.onHCaptchaSuccess = function(token) {
     var btn = document.getElementById('contact-submit');
     if (btn) btn.disabled = false;
   };
-  window.onTurnstileError = function(code) {
-    console.error('[Turnstile] ❌ Error code:', code);
+  window.onHCaptchaExpired = function() {
+    var btn = document.getElementById('contact-submit');
+    if (btn) btn.disabled = true;
   };
-  window.onTurnstileExpired = function() {
-    console.warn('[Turnstile] ⚠️ Token expired — disabling button');
+  window.onHCaptchaError = function() {
     var btn = document.getElementById('contact-submit');
     if (btn) btn.disabled = true;
   };
 </script>
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer is:inline></script>
+<script src="https://js.hcaptcha.com/1/api.js" async defer is:inline></script>
 
 <form id="contact-form" class="cf-form" novalidate aria-label={lang === 'en' ? 'Contact form' : 'Formulario de contacto'}>
 
@@ -105,12 +101,12 @@ const t = labels[lang];
       <Send class="cf-btn-icon" />
     </button>
     <div
-      class="cf-turnstile"
-      data-sitekey={turnstileSiteKey}
+      class="h-captcha"
+      data-sitekey={hcaptchaSiteKey}
       data-theme="dark"
-      data-callback="onTurnstileSuccess"
-      data-error-callback="onTurnstileError"
-      data-expired-callback="onTurnstileExpired"
+      data-callback="onHCaptchaSuccess"
+      data-expired-callback="onHCaptchaExpired"
+      data-error-callback="onHCaptchaError"
       role="region"
       aria-label="Bot verification"
     ></div>
@@ -212,8 +208,8 @@ const t = labels[lang];
 
 .cf-btn-icon { width: 14px; height: 14px; }
 
-/* Turnstile sizing */
-.cf-turnstile { transform-origin: left; }
+/* hCaptcha sizing */
+.h-captcha { transform-origin: left; }
 
 /* Messages */
 .cf-msg {
@@ -263,7 +259,7 @@ form?.addEventListener('submit', async (e) => {
   e.preventDefault();
   if (!form || !submitBtn || !emailInput || !msgInput) return;
 
-  const token = (form.querySelector('[name="cf-turnstile-response"]') as HTMLInputElement | null)?.value ?? '';
+  const token = (form.querySelector('[name="h-captcha-response"]') as HTMLInputElement | null)?.value ?? '';
   const email = emailInput.value.trim();
   const name  = (document.getElementById('contact-name') as HTMLInputElement | null)?.value.trim() ?? '';
   const message = msgInput.value.trim();
