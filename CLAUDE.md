@@ -107,7 +107,7 @@ Fix: call `await page.emulateMedia({ reducedMotion: 'reduce' })` **before** `pag
 `import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY ?? 'fallback'` only catches `null`/`undefined`. If Netlify stores the var as an empty string `""`, the fallback never triggers. Always use `||` for env vars that could be empty strings:
 ```js
 // ✅
-const key = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY || 'd9205cec-4106-4c24-add6-b4ca3bb40472';
+const key = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY || 'a772dbf8-f0da-4658-a4be-5b0848440ac8';
 // ❌ — empty string passes through
 const key = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY ?? 'd9205cec-4106-4c24-add6-b4ca3bb40472';
 ```
