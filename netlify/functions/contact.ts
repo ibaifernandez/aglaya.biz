@@ -107,7 +107,7 @@ function buildConfirmationHtml(name: string, message: string, lang: string): str
 </html>`;
 }
 
-async function sendContactEmail(name: string, email: string, message: string, lang: string): Promise<void> {
+async function sendContactEmail(name: string, email: string, message: string, lang: string, company: string, inquiryType: string): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY ?? "";
   const fromEmail = "AGLAYA <info@aglaya.biz>";
   const notifyTo = process.env.NOTIFY_EMAIL ?? "info@aglaya.biz";
@@ -149,12 +149,14 @@ async function sendContactEmail(name: string, email: string, message: string, la
     body: JSON.stringify({
       from: fromEmail,
       to: [notifyTo],
-      subject: `📩 New Contact [${lang.toUpperCase()}]: ${name || email}`,
+      subject: `📩 New Contact [${lang.toUpperCase()}]: ${company || name || email}`,
       html: `
         <h2>New lead from aglaya.biz</h2>
         <p><strong>Language:</strong> ${lang.toUpperCase()}</p>
         <p><strong>Name:</strong> ${name || 'N/A'}</p>
         <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Company:</strong> ${company || 'N/A'}</p>
+        <p><strong>Inquiry Type:</strong> ${inquiryType || 'N/A'}</p>
         <p><strong>Message:</strong></p>
         <div style="background:#f4f4f4; padding: 20px;">${message}</div>
       `,
@@ -183,7 +185,7 @@ export const handler: Handler = async (event) => {
     return { statusCode: 405, headers, body: JSON.stringify({ error: "Method not allowed" }) };
   }
 
-  let body: { name?: string; email?: string; message?: string; token?: string; lang?: string };
+  let body: { name?: string; email?: string; message?: string; token?: string; lang?: string; company?: string; inquiry_type?: string };
   try {
     body = JSON.parse(event.body ?? "{}");
   } catch {
@@ -195,6 +197,8 @@ export const handler: Handler = async (event) => {
   const message = (body.message ?? "").trim();
   const token = body.token ?? "";
   const lang = body.lang === "es" ? "es" : "en";
+  const company = (body.company ?? "").trim();
+  const inquiryType = (body.inquiry_type ?? "").trim();
 
   if (!email || !isValidEmail(email) || !message) {
     return {
@@ -217,7 +221,7 @@ export const handler: Handler = async (event) => {
   }
 
   try {
-    await sendContactEmail(name, email, message, lang);
+    await sendContactEmail(name, email, message, lang, company, inquiryType);
   } catch (err) {
     console.error("[contact] Error:", err);
     return {

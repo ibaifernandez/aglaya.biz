@@ -12,6 +12,7 @@ This document defines how AI agents should interact with this codebase, what rol
   - Run `npm run build` after structural changes to verify no breakage.
   - Run `npm run test:unit` after modifying logic in `i18n/`, `netlify/functions/`, or component scripts.
   - Maintain bilingual parity: any new user-facing string must appear in both EN and ES in `translations.ts`.
+  - Follow the brand identity: use `#e8003d` for brand accents and `#9FC243` for corporate elements.
 
 ### 2. Documentation Agent
 - **Scope**: Maintains `docs/`, `README.md`, `CLAUDE.md`, `AGENTS.md`, and `CHANGELOG.md`.
@@ -20,12 +21,14 @@ This document defines how AI agents should interact with this codebase, what rol
   - Use imperative mood in changelogs ("Add feature", not "Added feature").
   - Update `docs/ROADMAP.md` when milestones are completed.
   - All documentation in English unless explicitly bilingual.
+  - Include brand color references in documentation when relevant.
 
 ### 3. Design Agent
 - **Scope**: Modifies styles, layout, animations, and visual components.
 - **Rules**:
   - Respect the design token system in `global.css` (`@theme` block).
   - Brand color `#e8003d` is immutable unless explicitly authorized.
+  - Use corporate color `#9FC243` for accent elements and corporate branding.
   - Maintain dark theme consistency (black/near-black backgrounds).
   - All animations must respect `prefers-reduced-motion`.
   - Test responsive layouts at 375px, 768px, 1024px, 1440px.
@@ -36,6 +39,7 @@ This document defines how AI agents should interact with this codebase, what rol
   - Run full test suite before declaring work complete.
   - Report Axe-core violations with severity and element selectors.
   - Verify both `/` and `/es/` routes for bilingual content.
+  - Ensure brand colors and identity elements are consistent.
 
 ## Coordination Protocol
 1. **Before starting work**: Read `CLAUDE.md` for project context and conventions.
@@ -60,3 +64,4 @@ Every change must satisfy:
 - [ ] Pages render correctly at mobile and desktop widths
 - [ ] Both EN and ES routes work
 - [ ] No Axe-core WCAG 2AA violations
+- [ ] Brand identity elements (colors, logo) are consistent

@@ -1,0 +1,186 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import QualifiedForm from './QualifiedForm.astro';
+import BorderlineForm from './BorderlineForm.astro';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<div id="icp-container" class="max-w-4xl mx-auto w-full bg-[#050505] border border-white/10 p-8 md:p-16 relative overflow-hidden transition-all duration-700">
+  
+  <!-- Step 1: Initial Inputs -->
+  <div id="icp-step-1" class="flex flex-col gap-16 transition-opacity duration-500">
+    <div class="flex flex-col gap-4 text-center">
+       <span class="text-brand font-mono text-[10px] uppercase tracking-[0.5em]">{t('contact.qualify.eyebrow')}</span>
+       <h3 class="text-white font-display font-black text-4xl uppercase tracking-tighter">{t('contact.qualify.heading')}</h3>
+    </div>
+
+    <div class="flex flex-col gap-12">
+      <!-- Employees Input -->
+      <div class="flex flex-col gap-6">
+        <label class="text-white/60 font-mono text-[11px] uppercase tracking-widest flex justify-between">
+          <span>{t('contact.qualify.emp_label')}</span>
+          <span id="employee-val" class="text-brand font-black">X</span>
+        </label>
+        <input 
+          type="range" 
+          id="icp-employees" 
+          min="1" max="300" step="1" value="1"
+          class="w-full accent-brand bg-white/10 h-1 appearance-none cursor-pointer"
+        />
+        <div class="flex justify-between font-mono text-[8px] text-white/20 uppercase">
+          <span>{t('contact.qualify.emp_range_1')}</span>
+          <span>{t('contact.qualify.emp_range_2')}</span>
+          <span>{t('contact.qualify.emp_range_3')}</span>
+        </div>
+      </div>
+
+      <!-- Spend Input -->
+      <div class="flex flex-col gap-6">
+        <label class="text-white/60 font-mono text-[11px] uppercase tracking-widest flex justify-between">
+          <span>{t('contact.qualify.spend_label')}</span>
+          <span id="spend-val" class="text-brand font-black">$X</span>
+        </label>
+        <input 
+          type="range" 
+          id="icp-spend" 
+          min="0" max="50000" step="1000" value="0"
+          class="w-full accent-brand bg-white/10 h-1 appearance-none cursor-pointer"
+        />
+        <div class="flex justify-between font-mono text-[8px] text-white/20 uppercase">
+          <span>{t('contact.qualify.spend_range_1')}</span>
+          <span>{t('contact.qualify.spend_range_2')}</span>
+          <span>{t('contact.qualify.spend_range_3')}</span>
+        </div>
+      </div>
+    </div>
+
+    <button 
+      id="icp-evaluate"
+      class="bg-white text-black px-12 py-6 font-display font-black uppercase tracking-widest hover:bg-brand hover:text-white transition-all transform hover:scale-[1.02]"
+    >
+      {t('contact.qualify.button')}
+    </button>
+  </div>
+
+  <!-- Branch 1: Disqualified -->
+  <div id="icp-disqualified" class="hidden flex flex-col gap-10 text-center animate-fade-in">
+    <div class="w-20 h-20 border-2 border-brand mx-auto flex items-center justify-center">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#e8003d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+    </div>
+    <h3 class="text-white font-display font-black text-3xl uppercase tracking-tighter">{t('contact.disqualified.title')}</h3>
+    <p class="text-white/60 font-body text-xl leading-relaxed italic max-w-xl mx-auto">
+      {t('contact.disqualified.msg')}
+    </p>
+    <div class="mt-8 pt-8 border-t border-white/10 opacity-20 font-mono text-[10px] uppercase tracking-[0.4em]">SYSTEM_ENTRY_DENIED</div>
+  </div>
+
+  <!-- Branch 2: Qualified -->
+  <div id="icp-qualified" class="hidden animate-fade-in">
+     <div class="mb-10 text-center">
+        <h3 class="text-white font-display font-black text-3xl uppercase tracking-tighter mb-4">{t('contact.qualified.title')}</h3>
+        <p class="text-brand font-mono text-[10px] uppercase tracking-[0.5em]">PRIORITY_LEAD_CHANNEL_OPEN</p>
+     </div>
+     <QualifiedForm employees="" spend="" />
+  </div>
+
+  <!-- Branch 3: Borderline -->
+  <div id="icp-borderline" class="hidden animate-fade-in">
+     <div class="mb-10 text-center">
+        <h3 class="text-white font-display font-black text-3xl uppercase tracking-tighter mb-4">{t('contact.borderline.title')}</h3>
+        <p class="text-white/40 font-mono text-[10px] uppercase tracking-[0.5em]">ESTABLISHING_SEQUENCE</p>
+     </div>
+     <BorderlineForm employees="" spend="" />
+  </div>
+
+  <!-- Industrial Detail -->
+  <div class="absolute bottom-4 right-4 opacity-10 font-mono text-[8px] uppercase tracking-widest">ICP_ENGINE_v4</div>
+</div>
+
+<script>
+  const container = document.getElementById('icp-container');
+  const step1 = document.getElementById('icp-step-1');
+  const evalBtn = document.getElementById('icp-evaluate');
+  
+  const empInput = document.getElementById('icp-employees') as HTMLInputElement;
+  const spendInput = document.getElementById('icp-spend') as HTMLInputElement;
+  const empVal = document.getElementById('employee-val');
+  const spendVal = document.getElementById('spend-val');
+
+  // Update displays
+  empInput?.addEventListener('input', () => { empVal!.textContent = empInput.value; });
+  spendInput?.addEventListener('input', () => { spendVal!.textContent = `$${parseInt(spendInput.value).toLocaleString()}`; });
+  
+  // Initial fill
+  if (empInput && empVal) empVal.textContent = empInput.value;
+  if (spendInput && spendVal) spendVal.textContent = `$${parseInt(spendInput.value).toLocaleString()}`;
+
+  evalBtn?.addEventListener('click', () => {
+    const e = parseInt(empInput.value);
+    const s = parseInt(spendInput.value);
+
+    step1?.classList.add('opacity-0');
+
+    setTimeout(() => {
+      step1?.classList.add('hidden');
+
+      let branchId = '';
+
+      // Qualification Logic (from FASE1.md)
+      // 1. Disqualified: employees < 20 OR spend < $5K
+      if (e < 20 || s < 5000) {
+        branchId = 'icp-disqualified';
+      }
+      // 2. Qualified: employees 20-200 AND spend > $15K
+      else if (e >= 20 && e <= 200 && s >= 15000) {
+        branchId = 'icp-qualified';
+      }
+      // 3. Borderline: everyone else
+      else {
+        branchId = 'icp-borderline';
+      }
+
+      const branchEl = document.getElementById(branchId);
+      branchEl?.classList.remove('hidden');
+
+      // Update hidden inputs in forms
+      const forms = branchEl?.querySelectorAll('form');
+      forms?.forEach(f => {
+        (f.querySelector('[name="employees"]') as HTMLInputElement).value = e.toString();
+        (f.querySelector('[name="monthly_spend"]') as HTMLInputElement).value = s.toString();
+
+        // Set company and inquiry_type fields for qualified form
+        if (branchId === 'icp-qualified') {
+          // For qualified form, we'll set these to default values for now
+          // In a real implementation, these would be populated from form inputs
+          const companyInput = f.querySelector('[name="company"]');
+          const inquiryTypeInput = f.querySelector('[name="inquiry_type"]');
+          if (companyInput) companyInput.value = 'Not provided';
+          if (inquiryTypeInput) inquiryTypeInput.value = 'General Inquiry';
+        }
+      });
+
+      // Visual accent
+      container?.classList.add('border-brand/40');
+    }, 500);
+  });
+</script>
+
+<style>
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #e8003d;
+    cursor: pointer;
+    border: 2px solid white;
+  }
+</style>

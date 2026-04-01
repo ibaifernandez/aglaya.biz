@@ -1,0 +1,124 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import Send from './icons/Send.astro';
+
+interface Props {
+  employees: string;
+  spend: string;
+}
+
+const { employees, spend } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const hcaptchaSiteKey = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY || 'a772dbf8-f0da-4658-a4be-5b0848440ac8';
+---
+
+<script is:inline>
+  window.onHCaptchaSuccess = function() {
+    document.getElementById('q-submit').removeAttribute('disabled');
+  };
+</script>
+<script src="https://js.hcaptcha.com/1/api.js" async defer is:inline></script>
+
+<form id="qualified-form" class="flex flex-col gap-6" data-lang={lang}>
+  <input type="hidden" name="icp_status" value="QUALIFIED" />
+  <input type="hidden" name="employees" value={employees} />
+  <input type="hidden" name="monthly_spend" value={spend} />
+  <input type="hidden" name="company" value="" />
+  <input type="hidden" name="inquiry_type" value="" />
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="flex flex-col gap-2">
+      <label for="q-name" class="font-mono text-[10px] text-white/40 uppercase tracking-widest">{t('contact.form.name')}</label>
+      <input type="text" id="q-name" name="name" required class="bg-white/5 border border-white/10 px-6 py-4 text-white font-body outline-none focus:border-brand transition-colors" />
+    </div>
+    <div class="flex flex-col gap-2">
+      <label for="q-email" class="font-mono text-[10px] text-white/40 uppercase tracking-widest">{t('contact.form.email')}</label>
+      <input type="email" id="q-email" name="email" required class="bg-white/5 border border-white/10 px-6 py-4 text-white font-body outline-none focus:border-brand transition-colors" />
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label for="q-website" class="font-mono text-[10px] text-white/40 uppercase tracking-widest">{t('contact.form.website')}</label>
+    <input type="url" id="q-website" name="website" placeholder="https://" class="bg-white/5 border border-white/10 px-6 py-4 text-white font-body outline-none focus:border-brand transition-colors" />
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label for="q-message" class="font-mono text-[10px] text-white/40 uppercase tracking-widest">{t('contact.form.message')}</label>
+    <textarea id="q-message" name="message" rows="5" required class="bg-white/5 border border-white/10 px-6 py-4 text-white font-body outline-none focus:border-brand transition-colors resize-none"></textarea>
+  </div>
+
+  <div class="flex flex-col sm:flex-row items-center justify-between gap-8 mt-4">
+    <div 
+      class="h-captcha" 
+      data-sitekey={hcaptchaSiteKey} 
+      data-theme="dark" 
+      data-callback="onHCaptchaSuccess"
+    ></div>
+    
+    <button 
+      type="submit" 
+      id="q-submit" 
+      disabled
+      class="bg-brand text-white px-12 py-5 font-display font-black uppercase tracking-widest flex items-center gap-4 hover:bg-brand-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+    >
+      <span>{t('contact.form.submit')}</span>
+      <Send class="w-4 h-4" />
+    </button>
+  </div>
+
+  <div id="q-error" class="hidden text-brand font-mono text-xs uppercase tracking-widest border border-brand/20 p-4 bg-brand/5">
+    ERROR_DURING_TRANSMISSION. REATTEMPT_REQUIRED.
+  </div>
+</form>
+
+<div id="q-success" class="hidden flex flex-col items-center gap-8 py-20 border border-white/10 bg-[#050505]">
+  <div class="w-16 h-16 border-2 border-brand flex items-center justify-center">
+    <div class="w-8 h-8 bg-brand animate-pulse"></div>
+  </div>
+  <h3 class="text-white font-display font-black text-3xl uppercase tracking-tighter">DATA_SYNCHRONIZED</h3>
+  <p class="text-white/60 font-body text-center max-w-sm italic">
+    {t('contact.success')}
+  </p>
+</div>
+
+<script>
+  const form = document.querySelector('#qualified-form') as HTMLFormElement;
+  const success = document.querySelector('#q-success');
+  const error = document.querySelector('#q-error');
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = form.querySelector('button');
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'SYNCHRONIZING...';
+    }
+    
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    const lang = form.dataset.lang;
+
+    try {
+      const res = await fetch('/.netlify/functions/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...data, lang }),
+      });
+
+      if (res.ok) {
+        form.classList.add('hidden');
+        success?.classList.remove('hidden');
+      } else {
+        throw new Error('Sync failed');
+      }
+    } catch (err) {
+      error?.classList.remove('hidden');
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'REATTEMPT_SYNC';
+      }
+    }
+  });
+</script>

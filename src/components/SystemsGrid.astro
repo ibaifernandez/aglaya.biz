@@ -1,0 +1,106 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import SystemCard from './SystemCard.astro';
+import SectionHeader from './SectionHeader.astro';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const systems = [
+  {
+    name: t('systems.1.title'),
+    tagline: t('systems.1.tagline'),
+    useCases: t('systems.1.cases'),
+  },
+  {
+    name: t('systems.2.title'),
+    tagline: t('systems.2.tagline'),
+    useCases: t('systems.2.cases'),
+  },
+  {
+    name: t('systems.3.title'),
+    tagline: t('systems.3.tagline'),
+    useCases: t('systems.3.cases'),
+  },
+  {
+    name: t('systems.4.title'),
+    tagline: t('systems.4.tagline'),
+    useCases: t('systems.4.cases'),
+  },
+  {
+    name: t('systems.5.title'),
+    tagline: t('systems.5.tagline'),
+    useCases: t('systems.5.cases'),
+  },
+];
+---
+
+<section 
+  id="systems" 
+  class="relative px-6 py-32 sm:px-10 lg:px-20 bg-black overflow-hidden border-t border-white/5"
+>
+  <div class="max-w-7xl mx-auto flex flex-col gap-16">
+    <!-- Header -->
+    <div data-animate="fade-up">
+      <SectionHeader 
+        eyebrow="The Architecture" 
+        heading={t('systems.heading')} 
+      />
+    </div>
+
+    <!-- 5 Systems Grid (Flexbox) -->
+    <div class="flex flex-col md:flex-row md:flex-wrap gap-8">
+      {systems.map((system, i) => (
+        <div class="flex-1 min-w-[100%] md:min-w-[45%] lg:min-w-[30%] max-w-full">
+          <SystemCard 
+            name={system.name}
+            tagline={system.tagline}
+            useCases={system.useCases}
+            index={i}
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Industrial Marquee - Moved Below -->
+  <div class="marquee-container mt-32 border-y border-white/5 bg-[#050505] py-8 rotate-[-1deg] translate-y-10">
+    <div class="marquee-content flex whitespace-nowrap gap-20">
+      {[...Array(10)].map(() => (
+        <div class="flex items-center gap-20 text-white/20 font-display font-black text-4xl uppercase tracking-tighter">
+          <span>Systemic Alchemy</span>
+          <span class="text-brand">/</span>
+          <span>Narrative Delivery</span>
+          <span class="text-brand">/</span>
+          <span>Zero-Leak Architecture</span>
+          <span class="text-brand">/</span>
+          <span>AI Orchestration</span>
+          <span class="text-brand">/</span>
+          <span>Productive Friction</span>
+          <span class="text-brand">/</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .marquee-content {
+    animation: marquee 80s linear infinite;
+  }
+
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* Reduce motion fallback */
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-content {
+      animation: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      white-space: normal;
+    }
+  }
+</style>

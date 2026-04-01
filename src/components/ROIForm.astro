@@ -1,0 +1,182 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const labels = {
+  en: {
+    step1Title: 'Identify your operational scale',
+    step1Desc: 'We only partner with businesses ready for systemic infrastructure.',
+    ticketLabel: 'Average Customer Lifetime Value (LTV)',
+    ticketOption1: 'Under $1,000',
+    ticketOption2: '$1,000 - $10,000',
+    ticketOption3: 'Over $10,000',
+    nextBtn: 'Analyze Compatibility',
+    filterTitle: 'Compatibility Issue',
+    filterDesc: "AGLAYA's systems are designed for high-ticket environments where manual entropy carries a massive cost. We recommend starting with our free resources until your scale requires engineering.",
+    step2Title: 'ROI Audit Details',
+    step2Desc: 'Provide your coordinates for the systemic analysis.',
+    nameLabel: 'Name',
+    emailLabel: 'Email',
+    companyLabel: 'Company / URL',
+    submitBtn: 'Initiate Audit',
+    successTitle: 'Analysis Initialized',
+    successDesc: 'Our engineers are decrypting your data. Expect a response within 24 business hours.',
+  },
+  es: {
+    step1Title: 'Identifica tu escala operativa',
+    step1Desc: 'Solo nos asociamos con negocios listos para una infraestructura sistémica.',
+    ticketLabel: 'Valor de Vida del Cliente (LTV) promedio',
+    ticketOption1: 'Menos de $1,000',
+    ticketOption2: '$1,000 - $10,000',
+    ticketOption3: 'Más de $10,000',
+    nextBtn: 'Analizar Compatibilidad',
+    filterTitle: 'Incompatibilidad de Escala',
+    filterDesc: 'Los sistemas de AGLAYA están diseñados para entornos de alto ticket donde la entropía manual tiene un coste masivo. Recomendamos usar nuestros recursos gratuitos hasta que tu escala requiera ingeniería.',
+    step2Title: 'Detalles de la Auditoría ROI',
+    step2Desc: 'Proporciona tus coordenadas para el análisis sistémico.',
+    nameLabel: 'Nombre',
+    emailLabel: 'Email',
+    companyLabel: 'Empresa / URL',
+    submitBtn: 'Iniciar Auditoría',
+    successTitle: 'Análisis Inicializado',
+    successDesc: 'Nuestros ingenieros están desencriptando tus datos. Espera una respuesta en menos de 24 horas laborables.',
+  }
+};
+
+const lp = labels[lang];
+---
+
+<div class="w-full max-w-2xl mx-auto bg-surface border border-white/5 p-10 md:p-16 relative overflow-hidden group">
+  <!-- Industrial Accent -->
+  <div class="absolute top-0 left-0 w-full h-1 bg-brand"></div>
+  
+  <!-- Step 1: ICP Filter -->
+  <div id="step-1" class="flex flex-col gap-10">
+    <div class="flex flex-col gap-4">
+      <h3 class="text-white font-display font-black text-3xl tracking-tighter uppercase">{lp.step1Title}</h3>
+      <p class="text-muted text-sm font-body leading-relaxed">{lp.step1Desc}</p>
+    </div>
+
+    <div class="flex flex-col gap-6">
+      <label class="text-white/40 font-mono text-[10px] uppercase tracking-[0.2em]">{lp.ticketLabel}</label>
+      <div class="flex flex-col gap-3">
+        <label class="flex items-center gap-4 p-5 border border-white/10 hover:border-brand/40 cursor-pointer transition-all bg-black/40 group/opt">
+          <input type="radio" name="ltv" value="low" class="sr-only peer" />
+          <div class="w-4 h-4 border-2 border-white/20 peer-checked:border-brand peer-checked:bg-brand transition-all shrink-0"></div>
+          <span class="text-white font-display font-bold uppercase tracking-widest text-xs">{lp.ticketOption1}</span>
+        </label>
+        <label class="flex items-center gap-4 p-5 border border-white/10 hover:border-brand/40 cursor-pointer transition-all bg-black/40 group/opt">
+          <input type="radio" name="ltv" value="mid" class="sr-only peer" />
+          <div class="w-4 h-4 border-2 border-white/20 peer-checked:border-brand peer-checked:bg-brand transition-all shrink-0"></div>
+          <span class="text-white font-display font-bold uppercase tracking-widest text-xs">{lp.ticketOption2}</span>
+        </label>
+        <label class="flex items-center gap-4 p-5 border border-white/10 hover:border-brand/40 cursor-pointer transition-all bg-black/40 group/opt">
+          <input type="radio" name="ltv" value="high" class="sr-only peer" checked />
+          <div class="w-4 h-4 border-2 border-white/20 peer-checked:border-brand peer-checked:bg-brand transition-all shrink-0"></div>
+          <span class="text-white font-display font-bold uppercase tracking-widest text-xs">{lp.ticketOption3}</span>
+        </label>
+      </div>
+    </div>
+
+    <button id="btn-next" class="bg-brand hover:bg-brand-dark text-white py-5 font-display font-black uppercase tracking-[0.2em] text-sm transition-all hover:scale-[1.02]">
+      {lp.nextBtn}
+    </button>
+  </div>
+
+  <!-- Filtered Message (Hidden) -->
+  <div id="filter-msg" class="hidden flex flex-col gap-8 text-center py-10 animate-fade">
+     <div class="w-16 h-16 border-2 border-brand/20 flex items-center justify-center mx-auto">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e8003d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+     </div>
+     <h3 class="text-white font-display font-black text-3xl tracking-tighter uppercase text-brand">{lp.filterTitle}</h3>
+     <p class="text-muted text-lg font-body leading-relaxed max-w-sm mx-auto">{lp.filterDesc}</p>
+     <a href="/" class="text-white font-display font-bold text-xs uppercase tracking-widest hover:text-brand transition-colors pt-4">Return to Core</a>
+  </div>
+
+  <!-- Step 2: Details (Hidden) -->
+  <form id="contact-form" class="hidden flex flex-col gap-10">
+    <div class="flex flex-col gap-4">
+      <h3 class="text-white font-display font-black text-3xl tracking-tighter uppercase">{lp.step2Title}</h3>
+      <p class="text-muted text-sm font-body leading-relaxed">{lp.step2Desc}</p>
+    </div>
+
+    <div class="flex flex-col gap-6">
+       <div class="flex flex-col gap-2">
+         <label class="text-white/40 font-mono text-[10px] uppercase tracking-[0.2em]">{lp.nameLabel}</label>
+         <input type="text" name="name" required class="bg-black/80 border border-white/10 p-5 text-white font-display text-sm focus:border-brand outline-none transition-all" />
+       </div>
+       <div class="flex flex-col gap-2">
+         <label class="text-white/40 font-mono text-[10px] uppercase tracking-[0.2em]">{lp.emailLabel}</label>
+         <input type="email" name="email" required class="bg-black/80 border border-white/10 p-5 text-white font-display text-sm focus:border-brand outline-none transition-all" />
+       </div>
+       <div class="flex flex-col gap-2">
+         <label class="text-white/40 font-mono text-[10px] uppercase tracking-[0.2em]">{lp.companyLabel}</label>
+         <input type="text" name="company" required class="bg-black/80 border border-white/10 p-5 text-white font-display text-sm focus:border-brand outline-none transition-all" />
+       </div>
+    </div>
+
+    <button type="submit" class="bg-brand hover:bg-brand-dark text-white py-5 font-display font-black uppercase tracking-[0.2em] text-sm transition-all hover:scale-[1.02]">
+      {lp.submitBtn}
+    </button>
+  </form>
+
+  <!-- Success Message (Hidden) -->
+  <div id="success-msg" class="hidden flex flex-col gap-8 text-center py-10 animate-fade">
+     <div class="w-16 h-16 border-2 border-brand/20 flex items-center justify-center mx-auto">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e8003d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+     </div>
+     <h3 class="text-white font-display font-black text-3xl tracking-tighter uppercase text-brand">{lp.successTitle}</h3>
+     <p class="text-muted text-lg font-body leading-relaxed max-w-sm mx-auto">{lp.successDesc}</p>
+  </div>
+
+  <!-- Decorative Corner Info -->
+  <div class="absolute bottom-4 right-6 opacity-10 font-mono text-[8px] text-white">
+    DATA_PROTOCOL_v04 // ENCRYPTED
+  </div>
+</div>
+
+<script>
+  const btnNext = document.getElementById('btn-next');
+  const step1 = document.getElementById('step-1');
+  const step2 = document.getElementById('contact-form');
+  const filterMsg = document.getElementById('filter-msg');
+  const successMsg = document.getElementById('success-msg');
+  const form = document.getElementById('contact-form');
+
+  btnNext?.addEventListener('click', () => {
+    const ltv = (document.querySelector('input[name="ltv"]:checked') as HTMLInputElement)?.value;
+    
+    step1?.classList.add('hidden');
+    
+    if (ltv === 'low') {
+      filterMsg?.classList.remove('hidden');
+    } else {
+      step2?.classList.remove('hidden');
+    }
+  });
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    // Simulate submission for Phase 1 (Netlify functions integration later)
+    const btn = form.querySelector('button');
+    if (btn) btn.disabled = true;
+    if (btn) btn.textContent = 'INITIATING...';
+    
+    setTimeout(() => {
+      form?.classList.add('hidden');
+      successMsg?.classList.remove('hidden');
+    }, 1500);
+  });
+</script>
+
+<style>
+  .animate-fade {
+    animation: fadeIn 0.5s ease-out;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>

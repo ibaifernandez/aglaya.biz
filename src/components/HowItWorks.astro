@@ -1,0 +1,76 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import SectionHeader from './SectionHeader.astro';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const steps = [
+  {
+    number: '01',
+    title: t('how.1.title'),
+    description: t('how.1.description'),
+  },
+  {
+    number: '02',
+    title: t('how.2.title'),
+    description: t('how.2.description'),
+  },
+  {
+    number: '03',
+    title: t('how.3.title'),
+    description: t('how.3.description'),
+  },
+];
+---
+
+<section 
+  id="how-it-works" 
+  class="px-6 py-32 sm:px-10 lg:px-20 bg-black border-t border-white/5"
+>
+  <div class="max-w-7xl mx-auto flex flex-col gap-16">
+    <!-- Header -->
+    <div data-animate="fade-up">
+      <SectionHeader 
+        eyebrow="The Protocol" 
+        heading={t('how.heading')} 
+      />
+    </div>
+
+    <!-- Steps Layout (Flexbox) -->
+    <div class="flex flex-col lg:flex-row items-stretch gap-8">
+      {steps.map((step, i) => (
+        <div 
+          class="flex-1 flex flex-col gap-6 p-10 bg-[#080808] border border-white/5 relative group"
+          data-animate="fade-up"
+        >
+          <!-- Step Number -->
+          <span class="font-mono text-5xl font-black text-brand/20 group-hover:text-brand transition-colors duration-500">
+            {step.number}
+          </span>
+          
+          <h3 class="text-white font-display font-black text-2xl uppercase tracking-widest mt-4">
+            {step.title}
+          </h3>
+          
+          <p class="text-muted font-body text-lg leading-relaxed max-w-sm">
+            {step.description}
+          </p>
+
+          <!-- Connector Detail -->
+          {i < steps.length - 1 && (
+            <div class="hidden lg:block absolute top-1/2 -right-4 w-8 h-[1px] bg-white/10 z-10 group-hover:bg-brand transition-colors"></div>
+          )}
+        </div>
+      ))}
+    </div>
+
+    <!-- CTA Anchor -->
+    <div class="mt-10 flex justify-end" data-animate="fade-up">
+      <div class="flex items-center gap-4 text-white font-mono text-[10px] uppercase tracking-[0.4em] opacity-40 hover:opacity-100 transition-opacity">
+        <span>PROCEED_TO_VALIDATION</span>
+        <div class="w-12 h-[1px] bg-brand"></div>
+      </div>
+    </div>
+  </div>
+</section>

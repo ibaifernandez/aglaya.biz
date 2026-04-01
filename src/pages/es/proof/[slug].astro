@@ -1,0 +1,124 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import SectionHeader from '../../../components/SectionHeader.astro';
+import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('proof');
+  return entries
+    .filter(entry => entry.id.startsWith('es/'))
+    .map(entry => ({
+      params: { slug: entry.id.replace('es/', '') },
+      props: { entry },
+    }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const { title, client, industry, challenge, results, solution_systems, date } = entry.data;
+---
+
+<BaseLayout 
+  title={`${title[lang]} — AGLAYA Evidencia`} 
+  description={challenge[lang]}
+  lang={lang}
+>
+  <Header />
+  
+  <main id="main-content" class="flex flex-col pt-40 pb-32">
+    <article class="max-w-4xl mx-auto px-6 w-full flex flex-col gap-16">
+      
+      <!-- Detailed Header -->
+      <header class="flex flex-col gap-10 border-l border-brand/40 pl-10">
+        <div class="flex flex-col gap-4">
+          <span class="text-brand font-mono text-[10px] sm:text-xs font-black tracking-[0.4em] uppercase">{industry} / {client}</span>
+          <h1 class="text-white font-display font-black text-4xl sm:text-7xl lg:text-8xl tracking-tighter leading-[0.9] uppercase">
+            {title[lang]}
+          </h1>
+        </div>
+        
+        <div class="flex flex-col gap-4">
+          <span class="text-brand font-mono text-[8px] uppercase tracking-[0.5em]">{t('proof.detail.systems')}:</span>
+          <div class="flex flex-wrap gap-2 text-white/40 font-mono text-[10px] uppercase tracking-widest leading-none">
+            {solution_systems.map((s, i) => (
+              <span>{s}{i < solution_systems.length - 1 ? ' /' : ''}</span>
+            ))}
+          </div>
+        </div>
+      </header>
+
+      <!-- Challenge Statement -->
+      <section class="max-w-2xl px-10 py-12 bg-[#050505] border-l-2 border-brand">
+        <span class="text-brand font-mono text-[8px] uppercase tracking-[0.5em] mb-4 block">{t('proof.detail.challenge')}</span>
+        <p class="text-white/80 text-xl sm:text-2xl font-body leading-relaxed italic">
+          "{challenge[lang]}"
+        </p>
+      </section>
+
+      <!-- Key Metrics -->
+      <div class="flex flex-col md:flex-row gap-8">
+        {results.map((result, i) => (
+          <div class="flex-1 p-10 bg-[#080808] border border-white/5 flex flex-col gap-4 group hover:border-brand/30 transition-all duration-500">
+            <span class="text-brand font-display font-black text-4xl lg:text-5xl tracking-tighter group-hover:scale-105 transition-transform origin-left">
+              {result.metric}
+            </span>
+            <p class="text-muted font-mono text-[10px] uppercase tracking-widest leading-tight">
+              {result.label[lang]}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <!-- Main Narrative -->
+      <div class="prose-industrial flex flex-col gap-12 text-white/50 text-xl leading-relaxed font-body pt-12 border-t border-white/5">
+        <Content />
+      </div>
+
+      <!-- Action -->
+      <footer class="pt-24 border-t border-white/10 flex flex-col items-center gap-10">
+         <div class="flex flex-col items-center gap-4 text-center">
+           <span class="text-brand font-mono text-[10px] uppercase tracking-widest">{t('proof.detail.check')}</span>
+           <p class="text-white/40 font-body italic">"{t('proof.detail.quote')}"</p>
+         </div>
+         
+         <a 
+           href="/es/contact" 
+           class="group bg-brand hover:bg-brand-dark text-white px-16 py-8 font-display text-2xl font-black uppercase tracking-widest transition-all transform hover:scale-[1.02]"
+         >
+           {t('proof.detail.cta')}
+         </a>
+         
+         <div class="opacity-10 font-mono text-[8px] uppercase tracking-[0.5em] flex gap-4">
+           <span>BATCH: {date}</span>
+           <span>ARCHIVE_ID: {entry.id.toUpperCase()}</span>
+         </div>
+      </footer>
+
+    </article>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style is:global>
+  @reference "../../../styles/global.css";
+
+  .prose-industrial h2 {
+    @apply text-white font-display font-black text-3xl tracking-tight mt-16 mb-8 uppercase;
+  }
+  .prose-industrial p {
+    @apply mb-8;
+  }
+  .prose-industrial ul {
+    @apply flex flex-col gap-6 mb-12 list-none pl-0;
+  }
+  .prose-industrial li {
+    @apply flex items-start gap-6 before:content-[''] before:w-2 before:h-2 before:bg-brand before:shrink-0 before:mt-3;
+  }
+</style>

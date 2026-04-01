@@ -115,11 +115,38 @@ const structuredData = {
     <!-- Client-side navigation (View Transitions API) -->
     <ClientRouter />
   </head>
-  <body>
+  <body class="bg-black text-white selection:bg-brand/30 selection:text-white overflow-x-hidden">
     <a href="#main-content" class="skip-link">
       {lang === 'es' ? 'Saltar al contenido principal' : 'Skip to main content'}
     </a>
     <slot />
     <CookieBanner lang={lang as 'en' | 'es'} />
+
+    <script is:inline>
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-in');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      function initAnimations() {
+        const animElements = document.querySelectorAll('[data-animate]');
+        animElements.forEach(el => observer.observe(el));
+      }
+
+      // Initial run
+      initAnimations();
+
+      // Ensure it works with View Transitions
+      document.addEventListener('astro:page-load', initAnimations);
+    </script>
   </body>
 </html>

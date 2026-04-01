@@ -1,0 +1,190 @@
+---
+import { getCollection } from 'astro:content';
+import { getLangFromUrl, useTranslations, useTranslatedPath } from '../../i18n/utils';
+import ProofGrid from '../../components/ProofGrid.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+
+// Get all proof entries for the current language
+const allEntries = await getCollection('proof');
+const entries = allEntries
+  .filter(entry => entry.id.startsWith(`${lang}/`))
+  .sort((a, b) => b.data.date.localeCompare(a.data.date));
+
+// Get the first entry for the meta description
+const firstEntry = entries[0];
+const metaDescription = firstEntry ? `${t('proof.heading')} ${firstEntry.data.client} - ${firstEntry.data.industry}` : t('meta.description');
+---
+
+<!DOCTYPE html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- SEO Meta Tags -->
+    <title>{t('proof.heading')}</title>
+    <meta name="description" content={metaDescription} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={t('proof.heading')} />
+    <meta property="og:description" content={metaDescription} />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={t('proof.heading')} />
+    <meta property="twitter:description" content={metaDescription} />
+
+    <!-- JSON-LD CollectionPage -->
+    <script type="application/ld+json">
+      {JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": t('proof.heading'),
+        "description": metaDescription,
+        "url": Astro.url
+      })}
+    </script>
+
+    <!-- Hreflang -->
+    <link rel="alternate" hreflang="en" href={translatePath('/proof/')} />
+    <link rel="alternate" hreflang="es" href={translatePath('/es/proof/')} />
+
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="/styles/global.css" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" />
+
+    <!-- Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
+  </head>
+  <body class="bg-black text-white font-body">
+    <!-- BaseLayout -->
+    <div class="min-h-screen flex flex-col">
+      <!-- Header -->
+      <header class="relative z-50">
+        <div class="max-w-7xl mx-auto px-6 sm:px-10 lg:px-20 py-6 flex justify-between items-center">
+          <a href={translatePath('/')} class="text-white font-display font-black text-2xl tracking-tighter">
+            AGLAYA
+          </a>
+
+          <nav class="hidden md:flex items-center gap-8">
+            <a href={translatePath('/proof/')} class="text-white/60 hover:text-white transition-colors">{t('nav.proof')}</a>
+            <a href={translatePath('/systems/')} class="text-white/60 hover:text-white transition-colors">{t('nav.systems')}</a>
+            <a href={translatePath('/economics/')} class="text-white/60 hover:text-white transition-colors">{t('nav.economics')}</a>
+            <a href={translatePath('/contact/')} class="text-white/60 hover:text-white transition-colors">{t('nav.contact')}</a>
+          </nav>
+
+          <div class="flex items-center gap-4">
+            <a href={translatePath('/es/')} class="text-white/60 hover:text-white transition-colors text-sm">
+              ES
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="flex-1">
+        <!-- Hero Section -->
+        <section class="relative min-h-screen flex flex-col justify-center items-start pt-20 px-6 sm:px-10 lg:px-20 overflow-hidden bg-black">
+          <!-- Background Aura -->
+          <div class="absolute top-1/2 left-1/4 w-[500px] h-[500px] bg-brand/5 blur-[120px] rounded-full -translate-y-1/2 pointer-events-none"></div>
+
+          <div class="relative z-10 max-w-7xl w-full flex flex-col gap-10">
+            <!-- Eyebrow -->
+            <div class="flex items-center gap-4 overflow-hidden" data-animate="fade-up">
+              <div class="w-8 h-[1px] bg-brand"></div>
+              <span class="text-brand font-mono text-[10px] sm:text-xs font-black tracking-[0.5em] uppercase">
+                {t('hero.eyebrow')}
+              </span>
+            </div>
+
+            <!-- Main Heading -->
+            <h1
+              class="text-white font-display font-black text-5xl sm:text-7xl lg:text-9xl tracking-tighter leading-[0.9] uppercase"
+              data-animate="fade-up"
+            >
+              {t('proof.heading').split('\n').map((line, i) => (
+                <span class="block overflow-hidden">
+                  <span class={`block ${i === 1 ? 'text-brand' : ''}`}>{line}</span>
+                </span>
+              ))}
+            </h1>
+
+            <!-- Subtext -->
+            <div class="max-w-xl flex flex-col gap-12" data-animate="fade-up">
+              <p class="text-muted font-body text-xl sm:text-2xl leading-relaxed">
+                {t('proof.subtext')}
+              </p>
+            </div>
+          </div>
+
+          <!-- Scroll Decryptor -->
+          <div
+            class="absolute bottom-10 left-10 hidden lg:flex items-center gap-6 opacity-30 font-mono text-[10px] uppercase tracking-[0.4em] text-white"
+            data-animate="fade-up"
+          >
+            <div class="w-[1px] h-20 bg-gradient-to-b from-transparent to-brand"></div>
+            <span class="rotate-90 origin-left translate-y-10 whitespace-nowrap">SCROLL_FOR_SISTEMIC_TRUTH</span>
+          </div>
+        </section>
+
+        <!-- Proof Grid -->
+        <ProofGrid />
+      </main>
+
+      <!-- Footer -->
+      <footer class="border-t border-white/5 bg-black py-16">
+        <div class="max-w-7xl mx-auto px-6 sm:px-10 lg:px-20">
+          <div class="flex flex-col md:flex-row justify-between items-start gap-12">
+            <div class="flex flex-col gap-6">
+              <a href={translatePath('/')} class="text-white font-display font-black text-2xl tracking-tighter">
+                AGLAYA
+              </a>
+              <p class="text-white/60 max-w-md">
+                {t('mission.statement')}
+              </p>
+            </div>
+
+            <div class="flex flex-col gap-6">
+              <div class="flex flex-col gap-2">
+                <a href={translatePath('/proof/')} class="text-white/60 hover:text-white transition-colors">{t('nav.proof')}</a>
+                <a href={translatePath('/systems/')} class="text-white/60 hover:text-white transition-colors">{t('nav.systems')}</a>
+                <a href={translatePath('/economics/')} class="text-white/60 hover:text-white transition-colors">{t('nav.economics')}</a>
+                <a href={translatePath('/contact/')} class="text-white/60 hover:text-white transition-colors">{t('nav.contact')}</a>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <a href={translatePath('/legal/')} class="text-white/60 hover:text-white transition-colors">{t('nav.legal')}</a>
+                <a href={translatePath('/privacy/')} class="text-white/60 hover:text-white transition-colors">{t('nav.privacy')}</a>
+                <a href={translatePath('/cookies/')} class="text-white/60 hover:text-white transition-colors">{t('nav.cookies')}</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-16 pt-8 border-t border-white/5 text-center text-white/40 text-sm">
+            <p>© {new Date().getFullYear()} AGLAYA. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
