@@ -1,5 +1,8 @@
 ---
 import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
+import logoBlanco from '../assets/images/aglaya-logo-blanco.svg?raw';
+import spainFlag from '../assets/images/spain.svg?raw';
+import englishFlag from '../assets/images/english.svg?raw';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -7,20 +10,19 @@ const translatePath = useTranslatedPath(lang);
 
 const navItems = [
   { href: translatePath('/#systems'), label: t('nav.systems') },
-  { href: translatePath('/proof'), label: t('nav.proof') },
+  { href: translatePath('/#proof'), label: t('nav.proof') },
   { href: translatePath('/#economics'), label: t('nav.economics') },
 ];
 ---
 
-<header class="fixed top-0 left-0 w-full z-50 transition-colors duration-300 border-b border-white/5 bg-black/80 backdrop-blur-xl">
+<header id="site-header" class="fixed top-0 left-0 w-full z-50 transition-colors duration-300 border-b border-white/5 bg-black/80 backdrop-blur-xl">
   <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between gap-8">
 
     <!-- Logo -->
-    <a href={translatePath('/')} class="flex items-center gap-2 group" aria-label="AGLAYA Home">
-      <div class="w-8 h-8 bg-brand flex items-center justify-center shrink-0">
-        <span class="text-black font-black text-xl leading-none">A</span>
+    <a href={translatePath('/')} class="flex items-center group shrink-0" aria-label="AGLAYA Home">
+      <div class="h-6 w-auto group-hover:opacity-80 transition-opacity [&_svg]:h-6 [&_svg]:w-auto [&_.st0]:fill-white">
+        <Fragment set:html={logoBlanco} />
       </div>
-      <span class="text-white font-display font-bold text-xl tracking-tighter group-hover:text-brand transition-colors">AGLAYA</span>
     </a>
 
     <!-- Desktop Nav -->
@@ -38,39 +40,138 @@ const navItems = [
     <!-- Actions -->
     <div class="flex items-center gap-6">
       <!-- Language Switcher -->
-      <div class="flex items-center gap-2 border-r border-white/10 pr-6">
+      <div class="hidden md:flex items-center gap-3 border-r border-white/10 pr-6">
         <a
           href="/"
-          class={`text-[10px] font-bold tracking-tighter ${lang === 'en' ? 'text-brand' : 'text-muted hover:text-white'}`}
+          class={`flex items-center justify-center w-5 h-5 rounded-full overflow-hidden transition-all ${lang === 'en' ? 'opacity-100 ring-1 ring-brand ring-offset-2 ring-offset-black' : 'opacity-40 hover:opacity-100 grayscale'}`}
           aria-current={lang === 'en' ? 'page' : undefined}
+          title="English"
         >
-          EN
+          <Fragment set:html={englishFlag} />
         </a>
-        <span class="text-white/10 text-[10px]">/</span>
         <a
           href="/es/"
-          class={`text-[10px] font-bold tracking-tighter ${lang === 'es' ? 'text-brand' : 'text-muted hover:text-white'}`}
+          class={`flex items-center justify-center w-5 h-5 rounded-full overflow-hidden transition-all ${lang === 'es' ? 'opacity-100 ring-1 ring-brand ring-offset-2 ring-offset-black' : 'opacity-40 hover:opacity-100 grayscale'}`}
           aria-current={lang === 'es' ? 'page' : undefined}
+          title="Español"
         >
-          ES
+          <Fragment set:html={spainFlag} />
         </a>
       </div>
 
-      <!-- CTA -->
+      <!-- CTA (desktop only) -->
       <a
         href={translatePath('/contact')}
-        class="bg-brand hover:bg-brand-dark text-white px-5 py-2 font-display text-xs font-black uppercase tracking-widest transition-all hover:scale-[1.02] active:scale-95 flex items-center gap-2"
+        class="hidden md:flex bg-brand hover:bg-brand-dark text-white px-5 py-2 font-display text-xs font-black uppercase tracking-widest transition-all hover:scale-[1.02] active:scale-95 items-center gap-2"
       >
         {t('nav.contact')}
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
       </a>
-    </div>
 
-    <!-- Mobile Menu Toggle (TBD implementation) -->
-    <button class="md:hidden text-white" aria-label="Toggle Menu">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></button>
+      <!-- Mobile Menu Toggle -->
+      <button
+        id="mobile-menu-toggle"
+        class="md:hidden text-white p-1"
+        aria-label="Toggle Menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <!-- Hamburger -->
+        <svg id="icon-menu" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+        <!-- Close (X) -->
+        <svg id="icon-close" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="hidden">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
   </div>
+
+  <!-- Mobile Menu Panel -->
+  <nav
+    id="mobile-menu"
+    class="hidden md:hidden border-t border-white/5 bg-black/95"
+    aria-label="Mobile navigation"
+  >
+    <div class="max-w-7xl mx-auto px-6 py-6 flex flex-col gap-1">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class="mobile-nav-link text-white/80 hover:text-brand font-display font-bold text-lg uppercase tracking-widest py-3 border-b border-white/5 transition-colors"
+        >
+          {item.label}
+        </a>
+      ))}
+      <!-- Language + CTA -->
+      <div class="flex items-center justify-between pt-6">
+        <div class="flex items-center gap-4">
+          <a
+            href="/"
+            class={`flex items-center justify-center w-6 h-6 rounded-full overflow-hidden transition-all ${lang === 'en' ? 'opacity-100 ring-2 ring-brand ring-offset-2 ring-offset-black' : 'opacity-40 hover:opacity-100 grayscale'}`}
+          >
+            <Fragment set:html={englishFlag} />
+          </a>
+          <a
+            href="/es/"
+            class={`flex items-center justify-center w-6 h-6 rounded-full overflow-hidden transition-all ${lang === 'es' ? 'opacity-100 ring-2 ring-brand ring-offset-2 ring-offset-black' : 'opacity-40 hover:opacity-100 grayscale'}`}
+          >
+            <Fragment set:html={spainFlag} />
+          </a>
+        </div>
+        <a
+          href={translatePath('/contact')}
+          class="mobile-nav-link bg-brand text-white px-6 py-3 font-display font-black text-xs uppercase tracking-widest flex items-center gap-2"
+        >
+          {t('nav.contact')}
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </nav>
 </header>
+
+<script is:inline>
+  (function () {
+    const toggle = document.getElementById('mobile-menu-toggle');
+    const menu = document.getElementById('mobile-menu');
+    const iconMenu = document.getElementById('icon-menu');
+    const iconClose = document.getElementById('icon-close');
+
+    if (!toggle || !menu) return;
+
+    function openMenu() {
+      menu.classList.remove('hidden');
+      iconMenu.classList.add('hidden');
+      iconClose.classList.remove('hidden');
+      toggle.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeMenu() {
+      menu.classList.add('hidden');
+      iconMenu.classList.remove('hidden');
+      iconClose.classList.add('hidden');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+
+    toggle.addEventListener('click', function () {
+      menu.classList.contains('hidden') ? openMenu() : closeMenu();
+    });
+
+    // Close on nav link click
+    menu.querySelectorAll('.mobile-nav-link').forEach(function (link) {
+      link.addEventListener('click', closeMenu);
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeMenu();
+    });
+  })();
+</script>
 
 <style>
   /* Scanline effect on header hover */

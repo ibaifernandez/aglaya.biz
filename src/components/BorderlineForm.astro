@@ -15,7 +15,7 @@ const hcaptchaSiteKey = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY || 'a772dbf8-f0
 ---
 
 <script is:inline>
-  window.onHCaptchaSuccess = function() {
+  window.onHCaptchaSuccessBorderline = function() {
     document.getElementById('b-submit').removeAttribute('disabled');
   };
 </script>
@@ -26,7 +26,7 @@ const hcaptchaSiteKey = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY || 'a772dbf8-f0
   <input type="hidden" name="employees" value={employees} />
   <input type="hidden" name="monthly_spend" value={spend} />
   <input type="hidden" name="company" value="" />
-  <input type="hidden" name="inquiry_type" value="" />
+  <input type="hidden" name="inquiry_type" value="BORDERLINE_LEAD" />
 
   <div class="flex flex-col gap-8 text-center max-w-lg mx-auto">
     <p class="text-white/60 font-body text-lg leading-relaxed italic">
@@ -36,21 +36,28 @@ const hcaptchaSiteKey = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY || 'a772dbf8-f0
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <div class="flex flex-col gap-2">
-      <label for="b-name" class="font-mono text-[10px] text-white/40 uppercase tracking-widest">{t('contact.form.name')}</label>
-      <input type="text" id="b-name" name="name" required class="bg-white/5 border border-white/10 px-6 py-4 text-white font-body outline-none focus:border-brand transition-colors" />
+      <label for="b-name" class="font-mono text-[10px] text-white/60 uppercase tracking-widest">{t('contact.form.name')}</label>
+      <input type="text" id="b-name" name="name" required autocomplete="name" class="bg-white/5 border border-white/10 px-6 py-4 text-white font-body outline-none focus:border-brand transition-colors" />
     </div>
     <div class="flex flex-col gap-2">
-      <label for="b-email" class="font-mono text-[10px] text-white/40 uppercase tracking-widest">{t('contact.form.email')}</label>
-      <input type="email" id="b-email" name="email" required class="bg-white/5 border border-white/10 px-6 py-4 text-white font-body outline-none focus:border-brand transition-colors" />
+      <label for="b-email" class="font-mono text-[10px] text-white/60 uppercase tracking-widest">{t('contact.form.email')}</label>
+      <input type="email" id="b-email" name="email" required autocomplete="email" class="bg-white/5 border border-white/10 px-6 py-4 text-white font-body outline-none focus:border-brand transition-colors" />
     </div>
   </div>
 
+  <div class="flex flex-col gap-2">
+    <label for="b-website" class="font-mono text-[10px] text-white/60 uppercase tracking-widest">{t('contact.form.website')}</label>
+    <input type="url" id="b-website" name="website" placeholder="https://" autocomplete="url" class="bg-white/5 border border-white/10 px-6 py-4 text-white font-body outline-none focus:border-brand transition-colors" />
+  </div>
+
   <div class="flex flex-col sm:flex-row items-center justify-between gap-8 mt-4">
-    <div 
-      class="h-captcha" 
-      data-sitekey={hcaptchaSiteKey} 
-      data-theme="dark" 
-      data-callback="onHCaptchaSuccess"
+    <div
+      class="h-captcha"
+      data-sitekey={hcaptchaSiteKey}
+      data-theme="dark"
+      data-callback="onHCaptchaSuccessBorderline"
+      role="region"
+      aria-label="Bot verification"
     ></div>
     
     <button 
@@ -64,7 +71,7 @@ const hcaptchaSiteKey = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY || 'a772dbf8-f0
     </button>
   </div>
 
-  <div id="b-error" class="hidden text-brand font-mono text-xs uppercase tracking-widest border border-brand/20 p-4 bg-brand/5">
+  <div id="b-error" class="hidden text-brand font-mono text-xs uppercase tracking-widest border border-brand/20 p-4 bg-brand/5" role="alert" aria-live="assertive">
     ERROR_DURING_TRANSMISSION. REATTEMPT_REQUIRED.
   </div>
 </form>

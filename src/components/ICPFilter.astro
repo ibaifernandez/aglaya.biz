@@ -12,24 +12,24 @@ const t = useTranslations(lang);
   <!-- Step 1: Initial Inputs -->
   <div id="icp-step-1" class="flex flex-col gap-16 transition-opacity duration-500">
     <div class="flex flex-col gap-4 text-center">
-       <span class="text-brand font-mono text-[10px] uppercase tracking-[0.5em]">{t('contact.qualify.eyebrow')}</span>
-       <h3 class="text-white font-display font-black text-4xl uppercase tracking-tighter">{t('contact.qualify.heading')}</h3>
+       <span class="text-corporate-green font-mono text-[10px] uppercase tracking-[0.5em]">{t('contact.qualify.eyebrow')}</span>
+       <h2 class="text-white font-display font-black text-4xl uppercase tracking-tighter">{t('contact.qualify.heading')}</h2>
     </div>
 
     <div class="flex flex-col gap-12">
       <!-- Employees Input -->
       <div class="flex flex-col gap-6">
-        <label class="text-white/60 font-mono text-[11px] uppercase tracking-widest flex justify-between">
+        <label for="icp-employees" class="text-white/60 font-mono text-[11px] uppercase tracking-widest flex justify-between">
           <span>{t('contact.qualify.emp_label')}</span>
-          <span id="employee-val" class="text-brand font-black">X</span>
+          <span id="employee-val" class="text-[#ff4d70] font-black">X</span>
         </label>
-        <input 
-          type="range" 
-          id="icp-employees" 
+        <input
+          type="range"
+          id="icp-employees"
           min="1" max="300" step="1" value="1"
           class="w-full accent-brand bg-white/10 h-1 appearance-none cursor-pointer"
         />
-        <div class="flex justify-between font-mono text-[8px] text-white/20 uppercase">
+        <div class="flex justify-between font-mono text-[8px] text-white/60 uppercase" aria-hidden="true">
           <span>{t('contact.qualify.emp_range_1')}</span>
           <span>{t('contact.qualify.emp_range_2')}</span>
           <span>{t('contact.qualify.emp_range_3')}</span>
@@ -38,17 +38,17 @@ const t = useTranslations(lang);
 
       <!-- Spend Input -->
       <div class="flex flex-col gap-6">
-        <label class="text-white/60 font-mono text-[11px] uppercase tracking-widest flex justify-between">
+        <label for="icp-spend" class="text-white/60 font-mono text-[11px] uppercase tracking-widest flex justify-between">
           <span>{t('contact.qualify.spend_label')}</span>
-          <span id="spend-val" class="text-brand font-black">$X</span>
+          <span id="spend-val" class="text-[#ff4d70] font-black">$X</span>
         </label>
-        <input 
-          type="range" 
-          id="icp-spend" 
+        <input
+          type="range"
+          id="icp-spend"
           min="0" max="50000" step="1000" value="0"
           class="w-full accent-brand bg-white/10 h-1 appearance-none cursor-pointer"
         />
-        <div class="flex justify-between font-mono text-[8px] text-white/20 uppercase">
+        <div class="flex justify-between font-mono text-[8px] text-white/60 uppercase" aria-hidden="true">
           <span>{t('contact.qualify.spend_range_1')}</span>
           <span>{t('contact.qualify.spend_range_2')}</span>
           <span>{t('contact.qualify.spend_range_3')}</span>
@@ -69,18 +69,18 @@ const t = useTranslations(lang);
     <div class="w-20 h-20 border-2 border-brand mx-auto flex items-center justify-center">
       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#e8003d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
     </div>
-    <h3 class="text-white font-display font-black text-3xl uppercase tracking-tighter">{t('contact.disqualified.title')}</h3>
+    <h2 class="text-white font-display font-black text-3xl uppercase tracking-tighter">{t('contact.disqualified.title')}</h2>
     <p class="text-white/60 font-body text-xl leading-relaxed italic max-w-xl mx-auto">
       {t('contact.disqualified.msg')}
     </p>
-    <div class="mt-8 pt-8 border-t border-white/10 opacity-20 font-mono text-[10px] uppercase tracking-[0.4em]">SYSTEM_ENTRY_DENIED</div>
+    <div class="mt-8 pt-8 border-t border-white/10 opacity-20 font-mono text-[10px] uppercase tracking-[0.4em]" aria-hidden="true">SYSTEM_ENTRY_DENIED</div>
   </div>
 
   <!-- Branch 2: Qualified -->
   <div id="icp-qualified" class="hidden animate-fade-in">
      <div class="mb-10 text-center">
-        <h3 class="text-white font-display font-black text-3xl uppercase tracking-tighter mb-4">{t('contact.qualified.title')}</h3>
-        <p class="text-brand font-mono text-[10px] uppercase tracking-[0.5em]">PRIORITY_LEAD_CHANNEL_OPEN</p>
+        <h2 class="text-white font-display font-black text-3xl uppercase tracking-tighter mb-4">{t('contact.qualified.title')}</h2>
+        <p class="text-corporate-green font-mono text-[10px] uppercase tracking-[0.5em]" aria-hidden="true">PRIORITY_LEAD_CHANNEL_OPEN</p>
      </div>
      <QualifiedForm employees="" spend="" />
   </div>
@@ -88,14 +88,14 @@ const t = useTranslations(lang);
   <!-- Branch 3: Borderline -->
   <div id="icp-borderline" class="hidden animate-fade-in">
      <div class="mb-10 text-center">
-        <h3 class="text-white font-display font-black text-3xl uppercase tracking-tighter mb-4">{t('contact.borderline.title')}</h3>
-        <p class="text-white/40 font-mono text-[10px] uppercase tracking-[0.5em]">ESTABLISHING_SEQUENCE</p>
+        <h2 class="text-white font-display font-black text-3xl uppercase tracking-tighter mb-4">{t('contact.borderline.title')}</h2>
+        <p class="text-white/40 font-mono text-[10px] uppercase tracking-[0.5em]" aria-hidden="true">ESTABLISHING_SEQUENCE</p>
      </div>
      <BorderlineForm employees="" spend="" />
   </div>
 
   <!-- Industrial Detail -->
-  <div class="absolute bottom-4 right-4 opacity-10 font-mono text-[8px] uppercase tracking-widest">ICP_ENGINE_v4</div>
+  <div class="icp-watermark absolute bottom-4 right-4 opacity-10 font-mono text-[8px] uppercase tracking-widest" aria-hidden="true">ICP_ENGINE_v4</div>
 </div>
 
 <script>

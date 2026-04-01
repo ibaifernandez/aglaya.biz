@@ -1,0 +1,159 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+
+const outputs = [
+  {
+    n: '01',
+    title: 'Process Map with Cost',
+    body: 'Every manual process you currently run, with its estimated monthly cost in time and money. Numbers on paper. No guesswork.',
+  },
+  {
+    n: '02',
+    title: 'Prioritization Tree',
+    body: 'What to automate first, what to automate second, and why. Ordered by ROI, not by what\'s most interesting to build.',
+  },
+  {
+    n: '03',
+    title: 'System Architecture',
+    body: 'High-level system design of the automation infrastructure. Tools, integrations, data flows — enough to build without ambiguity.',
+  },
+  {
+    n: '04',
+    title: 'Business Case',
+    body: 'Investment vs. projected monthly savings with explicit assumptions. If the math doesn\'t work, we say so before you spend anything.',
+  },
+];
+---
+
+<BaseLayout
+  title="ROI Audit — AGLAYA"
+  description="How much is what you're not automating costing you exactly? A 2-week working session that maps every manual process and produces a system design + business case."
+  lang="en"
+  alternateUrl={new URL('/es/roi-audit/', Astro.site).href}
+  alternateUrl={new URL('/es/roi-audit/', Astro.site).href}
+>
+  <Header />
+
+  <main id="main-content" class="flex flex-col">
+
+    <!-- Page Hero -->
+    <section class="max-w-7xl mx-auto px-6 w-full pt-40 pb-20 flex flex-col gap-6">
+      <span class="text-corporate-green font-mono text-[10px] font-black tracking-[0.4em] uppercase">Entry Protocol</span>
+      <h1 class="text-white font-display font-black text-5xl md:text-7xl lg:text-[8rem] tracking-tighter leading-[0.88] uppercase">
+        How much is<br/>what you're missing<br/>costing you?
+      </h1>
+      <p class="text-white/50 text-xl font-body leading-relaxed max-w-2xl mt-4">
+        Not a rough estimate. Not a slide deck. The exact number — with evidence.
+      </p>
+      <div class="w-24 h-1 bg-brand mt-4"></div>
+    </section>
+
+    <!-- What it is -->
+    <section class="bg-[#050505] border-t border-b border-white/5">
+      <div class="max-w-7xl mx-auto px-6 py-24 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+        <div class="flex flex-col gap-6">
+          <span class="text-corporate-green font-mono text-[10px] font-black tracking-[0.4em] uppercase">What It Is</span>
+          <h2 class="text-white font-display font-black text-4xl md:text-5xl tracking-tighter uppercase leading-tight">
+            A 2-week working session.<br/>Not a free diagnosis.
+          </h2>
+          <p class="text-white/60 font-body text-lg leading-relaxed">
+            The ROI Audit is the entry point to AGLAYA. We embed with your team for two weeks.
+            We interview, we observe, we map. The output is not a pretty PDF — it's a precise operational
+            diagnosis with a system architecture and a business case built on real numbers.
+          </p>
+          <p class="text-white/40 font-body text-base leading-relaxed">
+            The $1,500 price is intentional. A client who can't invest $1,500 to understand their
+            problem won't invest $8,000 to solve it. The audit is a filter as much as it is a deliverable.
+          </p>
+        </div>
+        <div class="flex flex-col gap-px bg-white/5 border border-white/5">
+          <div class="bg-[#080808] p-8 flex flex-col gap-2">
+            <span class="text-white/30 font-mono text-[9px] uppercase tracking-widest">Duration</span>
+            <span class="text-white font-body">2 weeks with your team</span>
+          </div>
+          <div class="bg-[#080808] p-8 flex flex-col gap-2">
+            <span class="text-white/30 font-mono text-[9px] uppercase tracking-widest">Format</span>
+            <span class="text-white font-body">Interviews + observation + document review</span>
+          </div>
+          <div class="bg-[#080808] p-8 flex flex-col gap-2">
+            <span class="text-white/30 font-mono text-[9px] uppercase tracking-widest">Price</span>
+            <span class="text-white font-body">$1,500 USD</span>
+          </div>
+          <div class="bg-[#080808] p-8 flex flex-col gap-2">
+            <span class="text-white/30 font-mono text-[9px] uppercase tracking-widest">Deductible</span>
+            <span class="text-white font-body">From first retainer month if contracted within 30 days</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Outputs -->
+    <section class="max-w-7xl mx-auto px-6 w-full py-32 flex flex-col gap-16">
+      <div class="flex flex-col gap-4">
+        <span class="text-corporate-green font-mono text-[10px] font-black tracking-[0.4em] uppercase">Deliverables</span>
+        <h2 class="text-white font-display font-black text-5xl md:text-6xl tracking-tighter uppercase">Four outputs.<br/>Zero fluff.</h2>
+        <div class="w-12 h-1 bg-brand mt-2"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/5 border border-white/5">
+        {outputs.map((o) => (
+          <div class="bg-[#080808] p-10 md:p-12 flex flex-col gap-6">
+            <div class="flex items-center gap-4">
+              <span class="text-corporate-green font-mono text-[8px] uppercase tracking-[0.5em]">{o.n}</span>
+              <div class="flex-1 h-px bg-white/5"></div>
+            </div>
+            <h3 class="text-white font-display font-black text-2xl uppercase tracking-tighter">{o.title}</h3>
+            <p class="text-white/50 font-body text-sm leading-relaxed">{o.body}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Honesty Clause -->
+    <section class="bg-[#050505] border-t border-white/5">
+      <div class="max-w-4xl mx-auto px-6 py-24 flex flex-col gap-8 items-center text-center">
+        <span class="text-corporate-green font-mono text-[10px] uppercase tracking-[0.5em]">THE HONESTY CLAUSE</span>
+        <blockquote class="text-white font-display font-black text-3xl md:text-5xl tracking-tighter uppercase leading-tight">
+          "If the audit doesn't find at least $15K/month in automatable work, we say so and don't pitch a retainer."
+        </blockquote>
+        <p class="text-white/40 font-body text-lg leading-relaxed max-w-2xl">
+          That honesty is not generosity — it's part of our proposition. We're not here to sell.
+          We're here to build systems that are worth building. If yours isn't ready yet, we tell you that upfront.
+        </p>
+        <div class="w-12 h-1 bg-brand"></div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="border-t border-white/5 py-32">
+      <div class="max-w-4xl mx-auto px-6 flex flex-col items-center gap-10 text-center">
+        <span class="text-corporate-green font-mono text-[10px] uppercase tracking-[0.5em]">START HERE</span>
+        <h2 class="text-white font-display font-black text-5xl md:text-6xl tracking-tighter uppercase">
+          Request the audit.
+        </h2>
+        <p class="text-white/50 font-body text-xl leading-relaxed max-w-xl">
+          Fill out the qualification protocol. We'll determine fit and confirm the engagement within 24 hours.
+        </p>
+        <a
+          href={translatePath('/contact')}
+          class="bg-brand hover:bg-brand-dark text-white px-16 py-6 font-display font-black text-xl uppercase tracking-widest transition-all transform hover:scale-[1.02]"
+        >
+          {t('nav.contact')} →
+        </a>
+        <p class="text-white/20 font-mono text-[9px] uppercase tracking-widest">
+          Requires passing the ICP qualification protocol · Response within 24H
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <Footer />
+</BaseLayout>

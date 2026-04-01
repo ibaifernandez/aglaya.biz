@@ -22,12 +22,15 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
 const { title, client, industry, challenge, results, solution_systems, date } = entry.data;
+const slug = Astro.params.slug;
 ---
 
-<BaseLayout 
-  title={`${title[lang]} — AGLAYA Evidencia`} 
+<BaseLayout
+  title={`${title[lang]} — AGLAYA Evidencia`}
   description={challenge[lang]}
+  ogType="article"
   lang={lang}
+  alternateUrl={new URL(`/proof/${slug}/`, Astro.site).href}
 >
   <Header />
   
@@ -37,14 +40,14 @@ const { title, client, industry, challenge, results, solution_systems, date } = 
       <!-- Detailed Header -->
       <header class="flex flex-col gap-10 border-l border-brand/40 pl-10">
         <div class="flex flex-col gap-4">
-          <span class="text-brand font-mono text-[10px] sm:text-xs font-black tracking-[0.4em] uppercase">{industry} / {client}</span>
+          <span class="text-corporate-green font-mono text-[10px] sm:text-xs font-black tracking-[0.4em] uppercase">{industry} / {client}</span>
           <h1 class="text-white font-display font-black text-4xl sm:text-7xl lg:text-8xl tracking-tighter leading-[0.9] uppercase">
             {title[lang]}
           </h1>
         </div>
         
         <div class="flex flex-col gap-4">
-          <span class="text-brand font-mono text-[8px] uppercase tracking-[0.5em]">{t('proof.detail.systems')}:</span>
+          <span class="text-corporate-green font-mono text-[8px] uppercase tracking-[0.5em]">{t('proof.detail.systems')}:</span>
           <div class="flex flex-wrap gap-2 text-white/40 font-mono text-[10px] uppercase tracking-widest leading-none">
             {solution_systems.map((s, i) => (
               <span>{s}{i < solution_systems.length - 1 ? ' /' : ''}</span>
@@ -55,7 +58,7 @@ const { title, client, industry, challenge, results, solution_systems, date } = 
 
       <!-- Challenge Statement -->
       <section class="max-w-2xl px-10 py-12 bg-[#050505] border-l-2 border-brand">
-        <span class="text-brand font-mono text-[8px] uppercase tracking-[0.5em] mb-4 block">{t('proof.detail.challenge')}</span>
+        <span class="text-corporate-green font-mono text-[8px] uppercase tracking-[0.5em] mb-4 block">{t('proof.detail.challenge')}</span>
         <p class="text-white/80 text-xl sm:text-2xl font-body leading-relaxed italic">
           "{challenge[lang]}"
         </p>
@@ -83,7 +86,7 @@ const { title, client, industry, challenge, results, solution_systems, date } = 
       <!-- Action -->
       <footer class="pt-24 border-t border-white/10 flex flex-col items-center gap-10">
          <div class="flex flex-col items-center gap-4 text-center">
-           <span class="text-brand font-mono text-[10px] uppercase tracking-widest">{t('proof.detail.check')}</span>
+           <span class="text-corporate-green font-mono text-[10px] uppercase tracking-widest">{t('proof.detail.check')}</span>
            <p class="text-white/40 font-body italic">"{t('proof.detail.quote')}"</p>
          </div>
          

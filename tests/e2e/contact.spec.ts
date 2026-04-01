@@ -1,11 +1,11 @@
 import { test, expect } from '@playwright/test';
-import AxeBuilder from 'axe-core';
+import AxeBuilder from '@axe-core/playwright';
 
 test.describe('Contact Page', () => {
   test('should render the contact page with ICP filter', async ({ page }) => {
     await page.goto('/contact/');
 
-    // Check page title and heading
+    // Check page title
     await expect(page).toHaveTitle('Request Proposal — AGLAYA');
 
     // Check that the ICP filter is present
@@ -46,11 +46,12 @@ test.describe('Contact Page', () => {
     // Check that qualified form is shown
     await expect(page.locator('#icp-qualified')).toBeVisible();
 
-    // Check that form has required fields
-    await expect(page.locator('input[name="name"]')).toBeVisible();
-    await expect(page.locator('input[name="email"]')).toBeVisible();
-    await expect(page.locator('input[name="company"]')).toBeVisible();
-    await expect(page.locator('input[name="inquiry_type"]')).toBeVisible();
+    // Check that qualified form fields are visible (scoped to avoid strict mode with borderline)
+    await expect(page.locator('#qualified-form input[name="name"]')).toBeVisible();
+    await expect(page.locator('#qualified-form input[name="email"]')).toBeVisible();
+    await expect(page.locator('#qualified-form input[name="company"]')).toBeVisible();
+    // inquiry_type is type="hidden" — verify it exists as a hidden input
+    await expect(page.locator('#qualified-form input[name="inquiry_type"]')).toBeHidden();
   });
 
   test('should show borderline form for borderline cases', async ({ page }) => {
@@ -66,19 +67,21 @@ test.describe('Contact Page', () => {
     // Check that borderline form is shown
     await expect(page.locator('#icp-borderline')).toBeVisible();
 
-    // Check that form has basic fields
-    await expect(page.locator('input[name="name"]')).toBeVisible();
-    await expect(page.locator('input[name="email"]')).toBeVisible();
+    // Check that borderline form fields are visible (scoped to avoid strict mode with qualified)
+    await expect(page.locator('#borderline-form input[name="name"]')).toBeVisible();
+    await expect(page.locator('#borderline-form input[name="email"]')).toBeVisible();
   });
 
   test('should pass axe-core accessibility checks', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/contact/');
 
-    // Run axe-core accessibility tests
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'best-practice'])
-      .exclude('.h-captcha')    // hCaptcha has low-contrast warning in non-prod
-      .exclude('.marquee-wrap')  // decorative, aria-hidden
+      .exclude('.h-captcha')         // hCaptcha has low-contrast warning in non-prod
+      .exclude('.marquee-container') // decorative scrolling text, aria-hidden
+      .exclude('.icp-watermark')     // opacity-10 design watermark, aria-hidden
+      .exclude('.deco-text')         // opacity-based decorative labels, aria-hidden
       .analyze();
 
     expect(results.violations).toHaveLength(0);
