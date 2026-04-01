@@ -1,7 +1,7 @@
 # CLAUDE.md — Project Instructions for AI Assistants
 
 ## Project Overview
-**AGLAYA** ("The Uncomfortable Agency") — bilingual (EN/ES) digital marketing agency website built with Astro, deployed on Netlify. Currently in "Coming Soon" phase transitioning to full site.
+**AGLAYA** ("The Uncomfortable Agency") — bilingual (EN/ES) digital marketing agency website built with Astro, deployed on Netlify.
 
 ## Tech Stack
 - **Framework**: Astro 6.x (SSR via Netlify adapter)
@@ -9,7 +9,6 @@
 - **Serverless**: Netlify Functions (`netlify/functions/`)
 - **Email**: Resend API
 - **Bot Protection**: hCaptcha
-- **Error Tracking**: Sentry (browser SDK)
 - **Monitoring**: UptimeRobot
 - **Testing**: Vitest (unit) + Playwright (E2E) + Axe-core (a11y)
 
@@ -70,6 +69,46 @@ docs/                # Project documentation
 | `PUBLIC_HCAPTCHA_SITE_KEY` | Client | hCaptcha site key (fallback hardcoded in ContactForm) |
 | `PUBLIC_SENTRY_DSN` | Client | Sentry project DSN |
 | `NOTIFY_EMAIL` | Server | Lead notification recipient |
+
+## Git Workflow
+
+The `main` branch has **branch protection rules** active on GitHub:
+- **"Require status checks to pass"** — 2 CI checks must pass before any ref can be updated.
+- **"Block force pushes"** — `git push --force` to `main` is forbidden.
+
+This means **direct pushes to `main` are rejected**. Always work in a feature branch:
+
+```bash
+# Start new work
+git checkout -b feat/my-feature
+
+# ... make changes, commit ...
+
+git push origin feat/my-feature
+# Then open a PR on GitHub — CI runs — merge when green
+```
+
+### Standard PR workflow
+1. `git checkout -b <branch>` — name it `feat/`, `fix/`, `chore/`, etc.
+2. Commit changes locally as usual.
+3. `git push origin <branch>`.
+4. Open PR on GitHub (or via `gh pr create` if CLI is installed).
+5. Wait for CI checks to pass (Playwright E2E + build).
+6. Merge PR → `main` auto-deploys to Netlify.
+7. `git checkout main && git pull` to sync locally.
+
+### Installing gh CLI (recommended)
+```bash
+brew install gh
+gh auth login   # authenticate with GitHub
+gh pr create    # create PR from current branch
+```
+
+### Environment note
+Node.js must be v23.4.0 (via nvm). Run before any npm/build commands:
+```bash
+export NVM_DIR="$HOME/.nvm" && source "$NVM_DIR/nvm.sh" && nvm use v23.4.0
+```
 
 ## Do NOT
 - Modify `astro.config.mjs` without understanding the Netlify adapter implications.
