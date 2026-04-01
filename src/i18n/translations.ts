@@ -35,6 +35,7 @@ export const ui = {
     'hero.subtext': 'Most teams don\'t need an agency. They need their own infrastructure. We build it. You own it. The system keeps running when we\'re not in the room.',
     'hero.cta': 'Request Proposal →',
     'hero.secondary': 'See the proof →',
+    'hero.label': 'COMING SOON',
 
     /* Problem */
     'problem.eyebrow': 'Why not a typical agency',
@@ -90,6 +91,7 @@ export const ui = {
     'contact.description': 'We don\'t do proposals. We do audits. Identify your leaks and discover the exact systemic infrastructure needed to bridge the gap between chaos and clockwork.',
     'contact.quote': 'Systems are not rented. They are owned.',
     'contact.eyebrow': 'The Protocol',
+    'contact.label': 'REQUEST PROPOSAL',
     'contact.qualify.eyebrow': 'Qualification Protocol',
     'contact.qualify.heading': 'DATA_CALIBRATION',
     'contact.qualify.button': 'EXECUTE_VALUATION',
@@ -159,6 +161,7 @@ export const ui = {
     'hero.subtext': 'La mayoría de equipos no necesitan una agencia. Necesitan su propia infraestructura. Nosotros la construimos. Tú la posees. El sistema sigue funcionando cuando no estamos.',
     'hero.cta': 'Inicializar Sistema',
     'hero.secondary': 'Ver la evidencia →',
+    'hero.label': 'PRÓXIMAMENTE',
 
     /* Problem */
     'problem.eyebrow': 'Por qué no somos una agencia típica',
@@ -212,6 +215,7 @@ export const ui = {
     /* Contact / ICP */
     'contact.heading': 'Antes de hablar — algunas preguntas honestas.',
     'contact.eyebrow': 'El Protocolo',
+    'contact.label': 'SOLICITAR PROPUESTA',
     'contact.qualify.eyebrow': 'Protocolo de Calificación',
     'contact.qualify.heading': 'CALIBRACIÓN_DE_DATOS',
     'contact.qualify.button': 'EJECUTAR_VALORACIÓN',
