@@ -240,9 +240,9 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background: radial-gradient(
-    circle 800px at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(232, 0, 61, 0.05),
-    transparent 80%
+    circle 900px at var(--mouse-x, 70%) var(--mouse-y, 30%),
+    rgba(232, 0, 61, 0.10),
+    transparent 75%
   );
   opacity: 0;
   transition: opacity 0.5s ease;
