@@ -1,186 +1,147 @@
-# CATÁLOGO DE SERVICIOS — AGLAYA Agenc·IA
+# SERVICE CATALOG — AGLAYA
 
-> Servicios pensados para PYMEs y emprendedores que quieren resultados de Agenc·IA grande con presupuesto de startup.
+> Arquitectura de servicios para el modelo de $8.000/mes.
+> No hay tiers. No hay paquetes. No hay planes. Hay sistemas.
+> **Fuente de verdad de marca:** `docs/BRAND-DNA.md`
 
 ---
 
 ## Filosofía de Servicios
 
-Cada servicio de AGLAYA sigue el modelo **H+IA**:
-- **IA ejecuta**: genera, automatiza, analiza, optimiza a escala y velocidad imposibles para un humano
-- **Humano supervisa**: da el contexto, la estrategia, el criterio y la corrección
+AGLAYA no vende servicios. Vende infraestructura. La distinción no es semántica: un servicio termina cuando el mes termina; la infraestructura sigue funcionando cuando no estás mirando.
 
-Esto nos permite entregar calidad de boutique a precio de herramienta.
+Cada engagement sigue el modelo **Narrative → System → Sovereignty**:
 
----
-
-## 1. AI Brand Strategy
-**"Tu marca, pensada con inteligencia artificial"**
-
-Analizamos tu mercado, competidores, audiencia y propuesta de valor usando IA para construir una estrategia de marca sólida, diferenciada y accionable.
-
-**Incluye:**
-- Análisis de competidores con IA (posicionamiento, mensajes, precios)
-- Definición de buyer persona basada en datos reales
-- Propuesta de valor única (UVP) y mensajes clave
-- Arquitectura de marca (nombre, tagline, personalidad, tono de voz)
-- Manual de marca (guidelines básicos)
-
-**Herramientas IA**: Perplexity, Claude, ChatGPT, Brandmark
-**Entregable**: Documento estratégico + presentación ejecutiva
-**Timeline**: 5–7 días hábiles
-**Precio desde**: $799 (one-time)
+1. **Narrative** — Identificamos y articulamos la verdad operativa del cliente.
+2. **System** — Construimos la arquitectura técnica que la hace operable y medible.
+3. **Sovereignty** — El cliente posee el sistema. AGLAYA lo sostiene y lo evoluciona.
 
 ---
 
-## 2. AI Content Engine
-**"Contenido que no para"**
+## Entrada al Engagement: ROI Audit
 
-Sistema de producción de contenido automatizado con IA, supervisado por estrategas humanos, para mantener tu marca activa en todos los canales sin que tengas que pensar en ello.
+**"Cuánto te está costando exactamente lo que no tienes automatizado."**
 
-**Incluye:**
-- Estrategia de contenido mensual (pilares, formatos, frecuencia)
-- Producción con IA: copies, posts, threads, newsletters, scripts
-- Revisión humana y adaptación al tono de marca
-- Programación y publicación
-- Reporte de rendimiento mensual
+El ROI Audit es el punto de entrada a AGLAYA. No es un diagnóstico gratuito de 24 horas. Es una sesión de trabajo de dos semanas con el equipo del cliente donde identificamos, cuantificamos y priorizamos los procesos que están drenando margen, velocidad y claridad.
 
-**Canales**: Instagram, LinkedIn, TikTok, Newsletters, X/Twitter
-**Entregable**: Calendario editorial + contenido publicado + reporte
-**Timeline**: Inicio en 72h tras onboarding
-**Precio desde**: $299/mes (plan Spark, 1 canal)
+**Output del ROI Audit:**
 
----
+- Mapa de procesos manuales con costo mensual estimado en tiempo y dinero
+- Árbol de priorización: qué automatizar primero y por qué
+- Arquitectura propuesta (system design de alto nivel)
+- Business case: inversión vs. ahorro mensual proyectado con supuestos explícitos
 
-## 3. AI-Powered Advertising
-**"Ads que aprenden y mejoran solos"**
+**Precio:** $1.500 USD (descontable del primer mes de retainer si se contrata en los 30 días siguientes)
 
-Gestión de campañas publicitarias con optimización asistida por IA. Segmentación inteligente, creativos generados con IA y ajuste continuo basado en datos.
-
-**Incluye:**
-- Setup de campañas (Meta Ads y/o Google Ads)
-- Creativos estáticos y en video generados con IA
-- Segmentación de audiencias con datos
-- Optimización semanal con IA
-- Dashboard de métricas en tiempo real
-- Recomendaciones de presupuesto basadas en ROAS
-
-**Plataformas**: Meta Ads, Google Ads, TikTok Ads
-**Budget mínimo del cliente**: $300 USD/mes en pauta
-**Precio de gestión desde**: $399/mes
+**Criterio de honestidad:** Si el audit no identifica al menos $15.000/mes en trabajo automatizable, lo decimos y no proponemos retainer. Esa honestidad no es generosidad — es parte de nuestra propuesta.
 
 ---
 
-## 4. Web Design & Development
-**"Un sitio que convierte, no que adorna"**
+## Core Service: System Retainer
 
-Diseño y desarrollo de sitios web ultrarrápidos, accesibles y orientados a la conversión, usando tecnologías modernas (Astro, Next.js) con IA en el proceso de diseño.
+**"La arquitectura que trabaja mientras duermes."**
 
-**Incluye:**
-- Diseño UI/UX con asistencia de IA
-- Desarrollo en Astro (estático) o Next.js (dinámico)
-- Integración de formularios, CRM y automatizaciones
-- SEO técnico desde el primer día
-- Versión bilingüe ES/EN (opcional)
-- Hosting y deploy en Netlify/Vercel
+El retainer mensual es el producto principal de AGLAYA. No es un "plan" ni un "paquete". Es una relación de arquitectura continua donde AGLAYA diseña, construye, mantiene y evoluciona la infraestructura digital del cliente.
 
-**Tipos**: Landing page, Coming Soon, Portfolio, Web corporativa
-**Precio desde**: $799 (landing page) | $1.999 (web corporativa)
+**Precio:** $8.000/mes (mínimo 3 meses de compromiso inicial)
 
----
+**Qué incluye:**
 
-## 5. Marketing Intelligence Dashboard
-**"Tus datos, organizados. Tus decisiones, informadas."**
+- Acceso directo al equipo de AGLAYA — no a un account manager, al arquitecto
+- Diseño y construcción de automatizaciones prioritarias (definidas en ROI Audit)
+- Mantenimiento, monitoreo y evolución continua de sistemas activos
+- Reunión semanal de avance (30–45 min) + updates async en tiempo real
+- Dashboard de métricas de impacto: tiempo ahorrado, conversiones generadas, coste reducido
+- Criterio estratégico continuo: no solo ejecutamos, diagnosticamos y recomendamos constantemente
 
-Implementación de un sistema de medición y analítica para que sepas exactamente qué está funcionando en tu marketing, sin necesitar un analista de datos.
+**Qué no incluye:**
 
-**Incluye:**
-- Setup de Google Analytics 4 + Search Console
-- Dashboard en Looker Studio / Notion con KPIs clave
-- Tracking de conversiones (leads, ventas, llamadas)
-- Informe mensual automatizado con IA
-- Alertas de anomalías (caídas de tráfico, picos de conversión)
+- Gestión de redes sociales como fin en sí mismo
+- Producción de contenido genérico desconectado de sistema
+- Soporte técnico 24/7 de plataformas de terceros que no construimos
 
-**Precio desde**: $299/mes (incluido en plan Growth y Scale)
+**Capacidad:** Máximo 2 retainers activos simultáneos. Esta restricción no es artificial — es la que garantiza la calidad de implicación que prometemos.
 
 ---
 
-## 6. AI Visual Identity
-**"Una marca que se ve como lo que quieres llegar a ser"**
+## Sistemas que Construimos Dentro del Retainer
 
-Creación de identidad visual completa usando IA generativa supervisada por diseñadores, a una fracción del precio de una Agenc·IA tradicional.
+Los sistemas caen en cinco categorías. En un engagement real, suelen combinarse.
 
-**Incluye:**
-- Logotipo principal + variantes
-- Paleta de colores + tipografía
-- Iconografía y elementos gráficos
-- Plantillas para redes sociales (Canva/Figma)
-- Manual de identidad visual (PDF)
+### 1. Systemic Alchemy — Automatización de Procesos
 
-**Herramientas IA**: Midjourney, Adobe Firefly, DALL-E
-**Precio desde**: $499 (one-time)
+Identificamos flujos de trabajo manuales y los convertimos en activos digitales autónomos que operan sin supervisión constante.
+
+**Casos de uso:** calificación automática de leads, generación de reportes, flujos de aprobación interna, onboarding de clientes, seguimiento post-venta, facturación y reconciliación automática, gestión de inventario.
+
+**Stack:** n8n, Make (Integromat), Zapier, Python, APIs propias, webhooks
 
 ---
 
-## 7. WhatsApp & Email Automation
-**"Tu equipo de ventas trabajando 24/7"**
+### 2. Narrative Delivery — Marketing con Sistema
 
-Implementación de flujos de automatización en WhatsApp Business y email para nutrir leads, responder preguntas frecuentes y cerrar ventas mientras duermes.
+Construimos el sistema técnico que ejecuta la narrativa de marca de forma coherente, escalable y medible — sin depender de la inspiración diaria de un equipo.
 
-**Incluye:**
-- Setup de WhatsApp Business API o WATI
-- Flujos de bienvenida, recuperación y cierre de venta
-- Secuencias de email automatizadas (onboarding, nurturing, reactivación)
-- Integración con CRM (HubSpot free, Notion, Airtable)
-- Chatbot de respuestas frecuentes con IA
+**Casos de uso:** CRM con scoring de leads, secuencias de email con lógica condicional, sistema de contenido semi-automatizado con voz de marca calibrada, funnel de conversión con atribución real, dashboard de marketing intelligence.
 
-**Precio desde**: $599 (setup one-time) + $199/mes (mantenimiento)
+**Stack:** Resend, HubSpot, Notion, Airtable, Astro, Next.js
 
 ---
 
-## 8. AI SEO
-**"Visibilidad orgánica con la velocidad de la IA"**
+### 3. Zero-Leak Architecture — Infraestructura Digital
 
-Estrategia y ejecución de SEO usando IA para identificar oportunidades, generar contenido optimizado y construir autoridad de dominio sistemáticamente.
+Diseñamos y construimos la base técnica que soporta todo lo demás: sin fuga de datos, sin deuda técnica acumulada, sin dependencias que el cliente no controla.
 
-**Incluye:**
-- Auditoría técnica SEO
-- Investigación de keywords con IA (intención de búsqueda)
-- Producción de artículos SEO con IA (4–8/mes)
-- Link building básico
-- Optimización de páginas existentes
-- Reporte mensual de posiciones
+**Casos de uso:** web de alta conversión, sistema de autenticación y gestión de usuarios, infraestructura de datos propia, integraciones de terceros sin vendor lock-in, arquitectura de APIs internas.
 
-**Precio desde**: $399/mes
+**Stack:** Astro, Next.js, Netlify, Vercel, PostgreSQL, Supabase, Cloudflare
 
 ---
 
-## Paquetes Todo-en-Uno
+### 4. AI Orchestration — Inteligencia Aplicada
 
-### Spark — $299/mes
-Para emprendedores y freelancers
-- 1 canal de contenido (20 posts/mes)
-- Reporte mensual
-- Soporte por WhatsApp
+Implementamos IA no como truco de marketing, sino como capa de inteligencia real sobre procesos existentes del negocio.
 
-### Ignite — $599/mes
-Para PYMEs en crecimiento
-- 3 canales de contenido
-- Gestión de ads (hasta $500 en pauta)
-- Dashboard básico
-- 1 reunión mensual de estrategia
+**Casos de uso:** agentes de atención al cliente con contexto real del negocio, análisis automático de datos con insights accionables, generación de contenido con voz de marca calibrada, clasificación y enrutamiento inteligente de leads, sistemas de recomendación interna.
 
-### Blaze — $999/mes
-Para negocios que quieren escalar
-- Todos los canales
-- Ads sin límite de pauta
-- Dashboard completo + alertas
-- SEO básico incluido
-- Reuniones semanales
+**Stack:** Claude API (Anthropic), OpenAI, LangChain, RAG sobre datos propios, bases vectoriales
 
-### Inferno — Cotización
-Para empresas medianas o con necesidades específicas
-- Estrategia personalizada
-- IA customizada para el negocio
-- Equipo dedicado
-- SLA definido
+---
+
+### 5. Productive Friction — Estrategia y Criterio
+
+Sesiones de auditoría donde confrontamos las suposiciones estratégicas del cliente hasta exponer la verdad operativa. No es consultoría genérica — es el Efecto AGLAYA: incomodidad productiva que fuerza evolución y elimina el autoengaño estratégico.
+
+**Casos de uso:** auditoría de posicionamiento y mensajes, revisión de funnel de ventas, análisis de coherencia narrativa marca-operación, sesión de priorización estratégica antes de construir.
+
+**Formato:** 1–3 sesiones intensivas (4 horas cada una) + deliverable escrito accionable
+
+---
+
+## Proyectos One-Time (Fuera de Retainer)
+
+Para clientes que no necesitan (aún) un retainer, AGLAYA acepta proyectos con alcance definido. El precio mínimo es una señal: un cliente que no puede invertir $1.500 en entender su problema no invertirá $8.000 en resolverlo.
+
+| Proyecto | Alcance | Precio desde |
+|---|---|---|
+| ROI Audit + roadmap de sistema | 2 semanas con el equipo cliente | $1.500 |
+| Web de alta conversión (Astro) | Diseño + desarrollo + SEO técnico + i18n | $5.000 |
+| Sistema de automatización (workflow único) | Discovery + build + documentación + handoff | $4.000 |
+| AI Orchestration setup | Agente personalizado + integración + calibración | $6.000 |
+| Productive Friction session | 1 día intensivo (4h) + informe escrito | $2.500 |
+
+---
+
+## Condiciones de Trabajo
+
+| Variable | Valor |
+|---|---|
+| Contrato mínimo | 3 meses en retainer |
+| Precio de retainer | $8.000/mes (USD). Sin descuentos. El precio es la señal. |
+| Capacidad máxima | 2 clientes en retainer simultáneo |
+| Forma de pago | Transferencia bancaria, Wise o equivalente. Primero del mes. |
+| Idioma de trabajo | Español o inglés según el cliente |
+| Herramientas de comunicación | Notion (documentación) + canal async + reunión semanal |
+| Criterio de entrada | ROI Audit previo o evidencia clara de fit estratégico |
+| Renovación | Automática mensualmente tras los 3 meses iniciales |
+| Salida del engagement | 30 días de preaviso. El cliente se queda con todo lo construido. |

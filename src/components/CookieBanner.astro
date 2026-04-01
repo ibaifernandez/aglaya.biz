@@ -1,12 +1,12 @@
 ---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
 import type { Lang } from '../i18n/translations';
-import { useTranslations } from '../i18n/translations';
 
 interface Props {
   lang?: Lang;
 }
 
-const { lang = 'en' } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
 const policyUrl = lang === 'es' ? '/es/cookies/' : '/cookies/';
@@ -170,11 +170,12 @@ const policyUrl = lang === 'es' ? '/es/cookies/' : '/cookies/';
   });
 
   function dismiss(value: string) {
+    if (!banner) return;
     localStorage.setItem(STORAGE_KEY, value);
     banner.classList.remove('is-visible');
     banner.addEventListener(
       'transitionend',
-      () => { banner.hidden = true; },
+      () => { if (banner) banner.hidden = true; },
       { once: true }
     );
   }

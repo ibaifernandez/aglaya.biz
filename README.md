@@ -8,6 +8,26 @@
 
 Bilingual website for **AGLAYA**, a digital marketing AI·gency. The Uncomfortable AI·gency — obsession, excellence, uncomfortable honesty.
 
+## Brand Identity
+
+**Primary Color**: `#e8003d` (brand red)
+**Secondary Color**: `#9FC243` (corporate green)
+**Background**: `#080808` (near-black)
+**Surface**: `#111111`
+**Typography**: Outfit (display/headings), Inter (body)
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | [Astro 6.x](https://astro.build) (SSR via Netlify) |
+| Styling | [Tailwind CSS v4](https://tailwindcss.com) |
+| Forms | [Netlify Functions](https://www.netlify.com/products/functions/) + [Resend](https://resend.com) |
+| Bot Protection | [hCaptcha](https://www.hcaptcha.com) |
+| Error Tracking | [Sentry](https://sentry.io) |
+| Monitoring | [UptimeRobot](https://uptimerobot.com) |
+| Testing | [Vitest](https://vitest.dev) + [Playwright](https://playwright.dev) + [Axe-core](https://www.deque.com/axe/) |
+
 ## Tech Stack
 
 | Layer | Technology |

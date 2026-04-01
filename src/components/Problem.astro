@@ -1,0 +1,39 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import SectionHeader from './SectionHeader.astro';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<section 
+  id="problem" 
+  class="px-6 py-20 sm:px-10 lg:px-20 border-t border-white/5 bg-black"
+>
+  <div class="max-w-7xl mx-auto flex flex-col gap-12">
+    <!-- Header -->
+    <div data-animate="fade-up">
+      <SectionHeader 
+        eyebrow={t('problem.eyebrow')} 
+        heading={t('problem.heading')}
+      />
+    </div>
+
+    <!-- Body -->
+    <div class="max-w-4xl" data-animate="fade-up">
+      <p class="text-white/60 font-body text-2xl sm:text-4xl lg:text-5xl leading-[1.2] italic tracking-tight">
+        {t('problem.body')}
+      </p>
+    </div>
+
+    <!-- Accent Detail -->
+    <div class="deco-text mt-10 opacity-20 font-mono text-[10px] uppercase tracking-[0.5em] text-white flex items-center gap-6" data-animate="fade-up" aria-hidden="true">
+      <span>REF_ID: 001_SOVEREIGNTY_LOGIC</span>
+      <div class="flex gap-1">
+        {[...Array(5)].map(() => (
+          <div class="w-1.5 h-1.5 bg-brand"></div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

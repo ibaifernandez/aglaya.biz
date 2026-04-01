@@ -41,15 +41,15 @@ const t = labels[lang];
 
 <!-- Define hCaptcha callbacks synchronously BEFORE the hCaptcha script loads -->
 <script is:inline>
-  window.onHCaptchaSuccess = function(token) {
+  window.onHCaptchaSuccessContact = function(token) {
     var btn = document.getElementById('contact-submit');
     if (btn) btn.disabled = false;
   };
-  window.onHCaptchaExpired = function() {
+  window.onHCaptchaExpiredContact = function() {
     var btn = document.getElementById('contact-submit');
     if (btn) btn.disabled = true;
   };
-  window.onHCaptchaError = function() {
+  window.onHCaptchaErrorContact = function() {
     var btn = document.getElementById('contact-submit');
     if (btn) btn.disabled = true;
   };
@@ -57,6 +57,7 @@ const t = labels[lang];
 <script src="https://js.hcaptcha.com/1/api.js" async defer is:inline></script>
 
 <form id="contact-form" class="cf-form" novalidate aria-label={lang === 'en' ? 'Contact form' : 'Formulario de contacto'} data-lang={lang}>
+  <input type="hidden" name="inquiry_type" value="GENERAL_LEAD" />
 
   <div class="cf-field">
     <label for="contact-name" class="sr-only">{t.nameLabel}</label>
@@ -104,9 +105,9 @@ const t = labels[lang];
       class="h-captcha"
       data-sitekey={hcaptchaSiteKey}
       data-theme="dark"
-      data-callback="onHCaptchaSuccess"
-      data-expired-callback="onHCaptchaExpired"
-      data-error-callback="onHCaptchaError"
+      data-callback="onHCaptchaSuccessContact"
+      data-expired-callback="onHCaptchaExpiredContact"
+      data-error-callback="onHCaptchaErrorContact"
       role="region"
       aria-label="Bot verification"
     ></div>

@@ -1,0 +1,103 @@
+---
+import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+
+const currentYear = new Date().getFullYear();
+
+const groups = [
+  {
+    title: t('nav.systems'),
+    links: [
+      { label: 'Alchemy', href: '#alchemy' },
+      { label: 'Narrative', href: '#narrative' },
+      { label: 'Demand', href: '#demand' },
+    ]
+  },
+  {
+    title: t('nav.resources'),
+    links: [
+      { label: t('nav.proof'), href: translatePath('/proof') },
+      { label: t('nav.economics'), href: '#economics' },
+      { label: t('nav.systems'), href: '#systems' },
+    ]
+  },
+  {
+    title: t('nav.legal'),
+    links: [
+      { label: t('nav.privacy'), href: '/privacy' },
+      { label: t('nav.terms'), href: '/terms' },
+      { label: t('nav.cookies'), href: '/cookies' },
+    ]
+  }
+];
+---
+
+<footer class="bg-black border-t border-white/5 pt-24 pb-12 overflow-hidden relative">
+  <!-- Decorative Grid Background (Subtle) -->
+  <div class="absolute inset-0 bg-grid opacity-20 pointer-events-none"></div>
+
+  <div class="max-w-7xl mx-auto px-6 relative z-10 flex flex-col gap-20">
+    
+    <!-- Top Part: Logo & Links -->
+    <div class="flex flex-col md:flex-row justify-between gap-16">
+      
+      <!-- Logo & Mission -->
+      <div class="flex flex-col gap-6 max-w-sm">
+        <a href={translatePath('/')} class="flex items-center gap-2 group w-fit">
+          <div class="w-10 h-10 bg-brand flex items-center justify-center">
+            <span class="text-black font-black text-2xl leading-none">A</span>
+          </div>
+          <span class="text-white font-display font-bold text-2xl tracking-tighter group-hover:text-brand transition-colors">AGLAYA</span>
+        </a>
+        <p class="text-muted text-sm leading-relaxed font-body">
+          {t('mission.statement')}
+        </p>
+      </div>
+
+      <!-- Links Grid (using Flexbox) -->
+      <div class="flex flex-wrap gap-x-20 gap-y-12">
+        {groups.map((group) => (
+          <div class="flex flex-col gap-6 min-w-[120px]">
+            <h3 class="text-white font-display font-black text-[10px] tracking-[0.2em] uppercase opacity-30">{group.title}</h3>
+            <ul class="flex flex-col gap-4">
+              {group.links.map((link) => (
+                <li>
+                  <a 
+                    href={link.href} 
+                    class="text-muted hover:text-brand text-xs font-bold tracking-widest uppercase transition-colors"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Bottom Part: Engineering Signature & Legal -->
+    <div class="border-t border-white/5 pt-12 flex flex-col md:flex-row justify-between items-center gap-8">
+      
+      <!-- Signature -->
+      <div class="flex items-center gap-4 text-[10px] font-mono tracking-tighter text-muted">
+        <span class="text-brand">STATUS: OPTIMIZED</span>
+        <span class="opacity-20">|</span>
+        <span>BUILD: v1.0.0-PROMAX</span>
+        <span class="opacity-20">|</span>
+        <span>LOC: LIMA / GLOBAL</span>
+      </div>
+
+      <!-- Copyright -->
+      <p class="text-[10px] font-display font-bold text-muted tracking-widest uppercase">
+        © {currentYear} AGLAYA SOLUTIONS. ALL RIGHTS RESERVED. <span class="text-brand font-black mx-1">/</span> SYSTEMIC SOVEREIGNTY.
+      </p>
+    </div>
+
+    <!-- Decorative Bottom Bar -->
+    <div class="h-1 bg-brand w-full mt-4 animate-line-grow"></div>
+  </div>
+</footer>

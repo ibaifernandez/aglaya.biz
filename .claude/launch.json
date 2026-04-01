@@ -2,9 +2,9 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "aglaya-dev",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["astro", "dev"],
+      "name": "aglaya-preview",
+      "runtimeExecutable": "/bin/bash",
+      "runtimeArgs": ["/Users/AGLAYA/Local Sites/aglaya.biz/.claude/serve-preview.sh"],
       "port": 4321
     }
   ]
