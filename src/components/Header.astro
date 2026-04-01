@@ -42,23 +42,15 @@ const navItems = [
 
     <!-- Actions -->
     <div class="flex items-center gap-6">
-      <!-- Language Switcher -->
-      <div class="hidden md:flex items-center gap-3 border-r border-white/10 pr-6">
+      <!-- Language Switcher (toggle: shows current flag, click switches) -->
+      <div class="hidden md:flex items-center border-r border-white/10 pr-6">
         <a
-          href="/"
-          class={`flex items-center justify-center w-5 h-5 rounded-full overflow-hidden transition-all ${lang === 'en' ? 'opacity-100 ring-1 ring-brand ring-offset-2 ring-offset-black' : 'opacity-40 hover:opacity-100 grayscale'}`}
-          aria-current={lang === 'en' ? 'page' : undefined}
-          title="English"
+          href={lang === 'en' ? '/es/' : '/'}
+          class="flex items-center justify-center w-5 h-5 rounded-full overflow-hidden ring-1 ring-brand ring-offset-2 ring-offset-black opacity-100 hover:opacity-80 transition-opacity"
+          aria-label={lang === 'en' ? 'Cambiar a Español' : 'Switch to English'}
+          title={lang === 'en' ? 'Cambiar a Español' : 'Switch to English'}
         >
-          <Fragment set:html={englishFlag} />
-        </a>
-        <a
-          href="/es/"
-          class={`flex items-center justify-center w-5 h-5 rounded-full overflow-hidden transition-all ${lang === 'es' ? 'opacity-100 ring-1 ring-brand ring-offset-2 ring-offset-black' : 'opacity-40 hover:opacity-100 grayscale'}`}
-          aria-current={lang === 'es' ? 'page' : undefined}
-          title="Español"
-        >
-          <Fragment set:html={spainFlag} />
+          <Fragment set:html={lang === 'en' ? englishFlag : spainFlag} />
         </a>
       </div>
 
@@ -123,20 +115,13 @@ const navItems = [
       ))}
       <!-- Language + CTA -->
       <div class="flex items-center justify-between pt-6 gap-4">
-        <div class="flex items-center gap-3">
-          <a
-            href="/"
-            class={`flex items-center justify-center w-6 h-6 rounded-full overflow-hidden transition-all ${lang === 'en' ? 'opacity-100 ring-2 ring-brand ring-offset-2 ring-offset-black' : 'opacity-40 hover:opacity-100 grayscale'}`}
-          >
-            <Fragment set:html={englishFlag} />
-          </a>
-          <a
-            href="/es/"
-            class={`flex items-center justify-center w-6 h-6 rounded-full overflow-hidden transition-all ${lang === 'es' ? 'opacity-100 ring-2 ring-brand ring-offset-2 ring-offset-black' : 'opacity-40 hover:opacity-100 grayscale'}`}
-          >
-            <Fragment set:html={spainFlag} />
-          </a>
-        </div>
+        <a
+          href={lang === 'en' ? '/es/' : '/'}
+          class="flex items-center justify-center w-6 h-6 rounded-full overflow-hidden ring-2 ring-brand ring-offset-2 ring-offset-black hover:opacity-80 transition-opacity"
+          aria-label={lang === 'en' ? 'Cambiar a Español' : 'Switch to English'}
+        >
+          <Fragment set:html={lang === 'en' ? englishFlag : spainFlag} />
+        </a>
         <div class="flex items-center gap-3">
           <a
             href="https://wa.me/573224288532"

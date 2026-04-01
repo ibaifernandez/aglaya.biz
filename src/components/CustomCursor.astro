@@ -1,90 +1,100 @@
 ---
-/* Custom Cursor component for AGLAYA */
+/* Custom Cursor — AGLAYA */
 ---
 
-<div id="custom-cursor" class="fixed pointer-events-none z-[9999] rounded-full mix-blend-difference bg-white transform -translate-x-1/2 -translate-y-1/2 opacity-0 hidden sm:block w-4 h-4 transition-opacity duration-300" aria-hidden="true"></div>
+<div id="custom-cursor" aria-hidden="true"></div>
 
 <script>
-  // Hide native cursor, show custom cursor if device supports hover
-  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  
-  if (!isTouchDevice) {
-    document.documentElement.classList.add('custom-cursor-enabled');
-    
-    const cursor = document.getElementById('custom-cursor');
-    let mouseX = 0, mouseY = 0;
-    let cursorX = 0, cursorY = 0;
-    let targetScale = 1;
-    let currentScale = 1;
-    let isActive = false;
+  // Only activate on hover-capable devices (not touch-primary)
+  if (!window.matchMedia('(hover: none)').matches) {
+    function initCursor() {
+      const cursor = document.getElementById('custom-cursor') as HTMLElement | null;
+      if (!cursor) return;
 
-    // Linear interpolation for smooth movement
-    const lerp = (start: number, end: number, factor: number) => {
-      return start + (end - start) * factor;
-    };
+      document.documentElement.classList.add('custom-cursor-enabled');
 
-    const animate = () => {
-      if (!isActive || !cursor) return;
-      
-      // Interpolate position and scale
-      cursorX = lerp(cursorX, mouseX, 0.2);
-      cursorY = lerp(cursorY, mouseY, 0.2);
-      currentScale = lerp(currentScale, targetScale, 0.15);
+      let mouseX = 0, mouseY = 0;
+      let cursorX = 0, cursorY = 0;
+      let targetScale = 1;
+      let currentScale = 1;
+      let active = false;
+      let raf: number | null = null;
 
-      cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%) scale(${currentScale})`;
-      
-      requestAnimationFrame(animate);
-    };
+      const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-    document.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      
-      if (!isActive && cursor) {
-        isActive = true;
-        cursor.style.opacity = '1';
-        cursorX = mouseX;
-        cursorY = mouseY;
-        requestAnimationFrame(animate);
-      }
-    }, { passive: true });
-    
-    // Hide cursor when leaving window
-    document.addEventListener('mouseleave', () => {
-      if (cursor) cursor.style.opacity = '0';
-    });
-    
-    document.addEventListener('mouseenter', () => {
-      if (cursor && isActive) cursor.style.opacity = '1';
-    });
-    
-    // Setup hover listeners using event delegation
-    document.addEventListener('mouseover', (e) => {
-      const target = e.target as HTMLElement;
-      if (target && (target.closest('a') || target.closest('button') || target.closest('input') || target.closest('textarea'))) {
-        targetScale = 2.5;
-      }
-    });
+      const tick = () => {
+        cursorX = lerp(cursorX, mouseX, 0.2);
+        cursorY = lerp(cursorY, mouseY, 0.2);
+        currentScale = lerp(currentScale, targetScale, 0.15);
+        cursor.style.transform = `translate3d(${cursorX}px,${cursorY}px,0) translate(-50%,-50%) scale(${currentScale})`;
+        raf = requestAnimationFrame(tick);
+      };
 
-    document.addEventListener('mouseout', (e) => {
-      const target = e.target as HTMLElement;
-      if (target && (target.closest('a') || target.closest('button') || target.closest('input') || target.closest('textarea'))) {
-        targetScale = 1;
-      }
-    });
-    
-    // Provide teardown function on client-side routing
-    document.addEventListener('astro:before-swap', () => {
-        isActive = false;
-    });
+      const onMove = (e: MouseEvent) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        if (!active) {
+          active = true;
+          cursor.style.opacity = '1';
+          cursorX = mouseX;
+          cursorY = mouseY;
+          raf = requestAnimationFrame(tick);
+        }
+      };
+
+      const onLeave = () => { cursor.style.opacity = '0'; };
+      const onEnter = () => { if (active) cursor.style.opacity = '1'; };
+
+      const onOver = (e: MouseEvent) => {
+        const t = e.target as HTMLElement;
+        if (t?.closest('a,button,input,textarea,select')) targetScale = 2.5;
+      };
+      const onOut = (e: MouseEvent) => {
+        const t = e.target as HTMLElement;
+        if (t?.closest('a,button,input,textarea,select')) targetScale = 1;
+      };
+
+      document.addEventListener('mousemove', onMove, { passive: true });
+      document.addEventListener('mouseleave', onLeave);
+      document.addEventListener('mouseenter', onEnter);
+      document.addEventListener('mouseover', onOver);
+      document.addEventListener('mouseout', onOut);
+
+      // Cleanup before View Transition swap
+      document.addEventListener('astro:before-swap', () => {
+        active = false;
+        if (raf) { cancelAnimationFrame(raf); raf = null; }
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseleave', onLeave);
+        document.removeEventListener('mouseenter', onEnter);
+        document.removeEventListener('mouseover', onOver);
+        document.removeEventListener('mouseout', onOut);
+      }, { once: true });
+    }
+
+    // astro:page-load fires on both initial load and every navigation
+    document.addEventListener('astro:page-load', initCursor);
   }
 </script>
 
 <style is:global>
+  #custom-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 16px;
+    height: 16px;
+    background: white;
+    mix-blend-mode: difference;
+    pointer-events: none;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    will-change: transform;
+  }
+
   html.custom-cursor-enabled,
-  html.custom-cursor-enabled *,
-  html.custom-cursor-enabled *::before,
-  html.custom-cursor-enabled *::after {
+  html.custom-cursor-enabled * {
     cursor: none !important;
   }
 </style>

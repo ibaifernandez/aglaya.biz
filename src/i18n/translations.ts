@@ -28,8 +28,11 @@ export const ui = {
 
     /* Cookie Banner */
     'cookie.message': 'We use cookies to maintain system integrity and analyze traffic patterns.',
-    'cookie.accept': 'Accept Protocol',
+    'cookie.accept': 'Accept All',
+    'cookie.essential': 'Essential Only',
     'cookie.reject': 'Decline',
+    'cookie.policy_link': 'Cookie Policy',
+    'cookie.privacy_link': 'Privacy Policy',
 
     /* Hero */
     'hero.eyebrow': 'We build systems that empower your business while you sleep',
@@ -155,8 +158,11 @@ export const ui = {
 
     /* Cookie Banner */
     'cookie.message': 'Utilizamos cookies para mantener la integridad del sistema y analizar patrones de tráfico.',
-    'cookie.accept': 'Aceptar Protocolo',
+    'cookie.accept': 'Aceptar Todo',
+    'cookie.essential': 'Solo Esenciales',
     'cookie.reject': 'Rechazar',
+    'cookie.policy_link': 'Política de Cookies',
+    'cookie.privacy_link': 'Política de Privacidad',
 
     /* Hero */
     'hero.eyebrow': 'Construimos sistemas que empoderan tu negocio mientras duermes',

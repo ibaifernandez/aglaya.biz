@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout
+  title="Privacy Policy — AGLAYA"
+  description="How AGLAYA handles personal data at aglaya.biz"
+  lang="en"
+  alternateUrl={new URL('/es/privacidad/', Astro.site).href}
+>
+  <Header />
+  <main id="main-content" class="max-w-7xl mx-auto px-6 sm:px-10 lg:px-20 py-40 flex flex-col gap-12">
+    <h1 class="font-display font-black text-4xl sm:text-6xl uppercase tracking-tighter text-white">Privacy Policy</h1>
+
+    <div class="max-w-2xl flex flex-col gap-6 text-white/70 font-body leading-relaxed">
+      <p>Last updated: April 2026</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Data We Collect</h2>
+      <p>When you submit a contact form, we collect your name, email address, and any information you provide. This data is used solely to respond to your inquiry and qualify the engagement.</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">How We Use It</h2>
+      <p>Contact form data is sent via Resend to our internal team. It is never sold, shared with third parties, or used for unsolicited marketing.</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Analytics</h2>
+      <p>If you accept all cookies, we collect anonymous usage data (page views, session duration) via Google Analytics. No personally identifiable information is included.</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Your Rights</h2>
+      <p>You may request access to, correction of, or deletion of any personal data we hold by contacting <a href="mailto:info@aglaya.biz" class="text-brand hover:text-brand-light underline underline-offset-2">info@aglaya.biz</a>.</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Cookies</h2>
+      <p>See our <a href="/cookies/" class="text-brand hover:text-brand-light underline underline-offset-2">Cookie Policy</a> for details on how we use cookies.</p>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>
