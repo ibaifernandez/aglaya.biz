@@ -9,7 +9,8 @@ interface Props {
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
-const policyUrl = lang === 'es' ? '/es/cookies/' : '/cookies/';
+const policyUrl  = lang === 'es' ? '/es/cookies/' : '/cookies/';
+const privacyUrl = lang === 'es' ? '/es/privacidad/' : '/privacy/';
 ---
 
 <div
@@ -26,15 +27,24 @@ const policyUrl = lang === 'es' ? '/es/cookies/' : '/cookies/';
   <div class="ck-inner">
     <div class="ck-text">
       <p class="ck-eyebrow">// COOKIES</p>
-      <p class="ck-message">{t('cookie.message')}</p>
+      <p class="ck-message">
+        {t('cookie.message')}
+        {' '}
+        <a href={policyUrl} class="ck-link">{t('cookie.policy_link')}</a>
+        {' · '}
+        <a href={privacyUrl} class="ck-link">{t('cookie.privacy_link')}</a>
+      </p>
     </div>
 
     <div class="ck-actions">
+      <button id="cookie-essential" class="ck-btn ck-btn--ghost" type="button">
+        {t('cookie.essential')}
+      </button>
       <button id="cookie-accept" class="ck-btn ck-btn--primary" type="button">
         {t('cookie.accept')}
       </button>
-      <button id="cookie-reject" class="ck-btn ck-btn--ghost" type="button">
-        {t('cookie.reject')}
+      <button id="cookie-reject" class="ck-btn ck-btn--muted" type="button" aria-label={t('cookie.reject')}>
+        ✕
       </button>
     </div>
   </div>
@@ -50,7 +60,6 @@ const policyUrl = lang === 'es' ? '/es/cookies/' : '/cookies/';
   background: #0d0d0d;
   border-top: 1px solid #1f1f1f;
   box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.6);
-  /* slide-up animation — starts below viewport */
   transform: translateY(100%);
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -69,7 +78,7 @@ const policyUrl = lang === 'es' ? '/es/cookies/' : '/cookies/';
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
-  max-width: 1200px;
+  max-width: 80rem; /* same as max-w-7xl */
   margin: 0 auto;
   padding: 1rem 1.5rem;
 }
@@ -95,8 +104,17 @@ const policyUrl = lang === 'es' ? '/es/cookies/' : '/cookies/';
   color: rgba(245, 245, 245, 0.6);
 }
 
+.ck-link {
+  color: rgba(245, 245, 245, 0.5);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.15s;
+}
+.ck-link:hover { color: #fff; }
+
 .ck-actions {
   display: flex;
+  align-items: center;
   gap: 0.75rem;
   flex-shrink: 0;
 }
@@ -108,7 +126,6 @@ const policyUrl = lang === 'es' ? '/es/cookies/' : '/cookies/';
   font-weight: 800;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  border-radius: 3px;
   border: none;
   cursor: pointer;
   transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
@@ -128,15 +145,26 @@ const policyUrl = lang === 'es' ? '/es/cookies/' : '/cookies/';
 
 .ck-btn--ghost {
   background: transparent;
-  color: rgba(245, 245, 245, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(245, 245, 245, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 .ck-btn--ghost:hover {
-  color: rgba(245, 245, 245, 0.85);
-  border-color: rgba(255, 255, 255, 0.25);
+  color: rgba(245, 245, 245, 0.9);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Responsive — stack on mobile */
+/* Reject X button */
+.ck-btn--muted {
+  background: transparent;
+  color: rgba(245, 245, 245, 0.3);
+  padding: 0.625rem 0.75rem;
+  font-size: 14px;
+  letter-spacing: 0;
+}
+.ck-btn--muted:hover {
+  color: rgba(245, 245, 245, 0.7);
+}
+
 @media (max-width: 640px) {
   .ck-inner {
     flex-direction: column;
@@ -147,7 +175,8 @@ const policyUrl = lang === 'es' ? '/es/cookies/' : '/cookies/';
   .ck-actions {
     width: 100%;
   }
-  .ck-btn {
+  .ck-btn--primary,
+  .ck-btn--ghost {
     flex: 1;
     text-align: center;
   }
@@ -160,10 +189,8 @@ const policyUrl = lang === 'es' ? '/es/cookies/' : '/cookies/';
   const banner = document.getElementById('cookie-banner');
   if (!banner) return;
 
-  // Already decided — stay silent
   if (localStorage.getItem(STORAGE_KEY)) return;
 
-  // Show after a short delay so the page settles first
   banner.hidden = false;
   requestAnimationFrame(() => {
     requestAnimationFrame(() => banner.classList.add('is-visible'));
@@ -181,6 +208,7 @@ const policyUrl = lang === 'es' ? '/es/cookies/' : '/cookies/';
   }
 
   document.getElementById('cookie-accept')?.addEventListener('click', () => dismiss('all'));
-  document.getElementById('cookie-reject')?.addEventListener('click', () => dismiss('essential'));
+  document.getElementById('cookie-essential')?.addEventListener('click', () => dismiss('essential'));
+  document.getElementById('cookie-reject')?.addEventListener('click', () => dismiss('rejected'));
 })();
 </script>
