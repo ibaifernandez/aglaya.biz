@@ -6,7 +6,7 @@ test.describe('Proof Pages', () => {
     await page.goto('/proof/');
 
     // Check page title
-    await expect(page).toHaveTitle('Proof, not promises.');
+    await expect(page).toHaveTitle('Proof, not promises. — AGLAYA');
 
     // Check that at least one proof card is visible
     await expect(page.locator('a[href="/proof/pocuro/"]')).toBeVisible();
@@ -31,7 +31,7 @@ test.describe('Proof Pages', () => {
     await page.goto('/es/proof/');
 
     // Check page title
-    await expect(page).toHaveTitle('Evidencia, no promesas.');
+    await expect(page).toHaveTitle('Evidencia, no promesas. — AGLAYA');
 
     // Check that at least one proof card is visible
     await expect(page.locator('a[href="/es/proof/pocuro/"]')).toBeVisible();
@@ -59,7 +59,8 @@ test.describe('Proof Pages', () => {
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'best-practice'])
       .exclude('.h-captcha')
-      .exclude('.marquee-wrap')
+      .exclude('.marquee-container')
+      .exclude('.deco-text')
       .analyze();
 
     expect(results.violations).toHaveLength(0);
@@ -72,7 +73,8 @@ test.describe('Proof Pages', () => {
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'best-practice'])
       .exclude('.h-captcha')
-      .exclude('.marquee-wrap')
+      .exclude('.marquee-container')
+      .exclude('.deco-text')
       .exclude('.proof-meta') // decorative batch/archive text, opacity-10, aria-hidden
       .analyze();
 

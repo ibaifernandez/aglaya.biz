@@ -2,82 +2,86 @@
 /* Custom Cursor component for AGLAYA */
 ---
 
-<div id="custom-cursor" class="fixed pointer-events-none z-[9999] rounded-full mix-blend-difference bg-white transform -translate-x-1/2 -translate-y-1/2 opacity-0 hidden sm:block w-4 h-4 transition-opacity duration-300" aria-hidden="true"></div>
+<div id="custom-cursor" class="fixed pointer-events-none z-[9999] mix-blend-difference bg-white -translate-x-1/2 -translate-y-1/2 opacity-0 w-4 h-4" aria-hidden="true"></div>
 
-<script>
-  // Hide native cursor, show custom cursor if device supports hover
-  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  
-  if (!isTouchDevice) {
-    document.documentElement.classList.add('custom-cursor-enabled');
-    
-    const cursor = document.getElementById('custom-cursor');
-    let mouseX = 0, mouseY = 0;
-    let cursorX = 0, cursorY = 0;
-    let targetScale = 1;
-    let currentScale = 1;
-    let isActive = false;
+<script is:inline>
+  (function () {
+    // Only activate on pointer devices (not touch-primary screens)
+    if (window.matchMedia('(hover: none)').matches) return;
 
-    // Linear interpolation for smooth movement
-    const lerp = (start: number, end: number, factor: number) => {
-      return start + (end - start) * factor;
-    };
+    function initCursor() {
+      var cursor = document.getElementById('custom-cursor');
+      if (!cursor) return;
 
-    const animate = () => {
-      if (!isActive || !cursor) return;
-      
-      // Interpolate position and scale
-      cursorX = lerp(cursorX, mouseX, 0.2);
-      cursorY = lerp(cursorY, mouseY, 0.2);
-      currentScale = lerp(currentScale, targetScale, 0.15);
+      document.documentElement.classList.add('custom-cursor-enabled');
 
-      cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%) scale(${currentScale})`;
-      
-      requestAnimationFrame(animate);
-    };
+      var mouseX = 0, mouseY = 0;
+      var cursorX = 0, cursorY = 0;
+      var targetScale = 1;
+      var currentScale = 1;
+      var isActive = false;
+      var rafId = null;
 
-    document.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      
-      if (!isActive && cursor) {
-        isActive = true;
-        cursor.style.opacity = '1';
-        cursorX = mouseX;
-        cursorY = mouseY;
-        requestAnimationFrame(animate);
+      function lerp(start, end, factor) {
+        return start + (end - start) * factor;
       }
-    }, { passive: true });
-    
-    // Hide cursor when leaving window
-    document.addEventListener('mouseleave', () => {
-      if (cursor) cursor.style.opacity = '0';
-    });
-    
-    document.addEventListener('mouseenter', () => {
-      if (cursor && isActive) cursor.style.opacity = '1';
-    });
-    
-    // Setup hover listeners using event delegation
-    document.addEventListener('mouseover', (e) => {
-      const target = e.target as HTMLElement;
-      if (target && (target.closest('a') || target.closest('button') || target.closest('input') || target.closest('textarea'))) {
-        targetScale = 2.5;
-      }
-    });
 
-    document.addEventListener('mouseout', (e) => {
-      const target = e.target as HTMLElement;
-      if (target && (target.closest('a') || target.closest('button') || target.closest('input') || target.closest('textarea'))) {
-        targetScale = 1;
+      function animate() {
+        if (!isActive) return;
+        cursorX = lerp(cursorX, mouseX, 0.2);
+        cursorY = lerp(cursorY, mouseY, 0.2);
+        currentScale = lerp(currentScale, targetScale, 0.15);
+        cursor.style.transform = 'translate3d(' + cursorX + 'px, ' + cursorY + 'px, 0) translate(-50%, -50%) scale(' + currentScale + ')';
+        rafId = requestAnimationFrame(animate);
       }
-    });
-    
-    // Provide teardown function on client-side routing
-    document.addEventListener('astro:before-swap', () => {
+
+      document.addEventListener('mousemove', function (e) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        if (!isActive) {
+          isActive = true;
+          cursor.style.opacity = '1';
+          cursorX = mouseX;
+          cursorY = mouseY;
+          rafId = requestAnimationFrame(animate);
+        }
+      }, { passive: true });
+
+      document.addEventListener('mouseleave', function () {
+        if (cursor) cursor.style.opacity = '0';
+      });
+
+      document.addEventListener('mouseenter', function () {
+        if (cursor && isActive) cursor.style.opacity = '1';
+      });
+
+      document.addEventListener('mouseover', function (e) {
+        var target = e.target;
+        if (target && (target.closest('a') || target.closest('button') || target.closest('input') || target.closest('textarea'))) {
+          targetScale = 2.5;
+        }
+      });
+
+      document.addEventListener('mouseout', function (e) {
+        var target = e.target;
+        if (target && (target.closest('a') || target.closest('button') || target.closest('input') || target.closest('textarea'))) {
+          targetScale = 1;
+        }
+      });
+
+      // Clean up on page transition
+      document.addEventListener('astro:before-swap', function () {
         isActive = false;
-    });
-  }
+        if (rafId) cancelAnimationFrame(rafId);
+      }, { once: true });
+    }
+
+    // Init on first load
+    initCursor();
+
+    // Re-init after View Transitions navigation
+    document.addEventListener('astro:page-load', initCursor);
+  })();
 </script>
 
 <style is:global>

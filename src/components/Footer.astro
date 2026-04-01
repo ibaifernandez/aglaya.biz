@@ -1,5 +1,6 @@
 ---
 import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
+import logoBlanco from '../assets/images/aglaya-logo-blanco.svg?raw';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -46,11 +47,13 @@ const groups = [
       
       <!-- Logo & Mission -->
       <div class="flex flex-col gap-6 max-w-sm">
-        <a href={translatePath('/')} class="flex items-center gap-2 group w-fit">
-          <div class="w-10 h-10 bg-brand flex items-center justify-center">
-            <span class="text-black font-black text-2xl leading-none">A</span>
+        <a href={translatePath('/')} class="flex flex-col gap-[3px] group w-fit" aria-label="AGLAYA Home">
+          <div class="h-6 w-auto group-hover:opacity-80 transition-opacity [&_svg]:h-6 [&_svg]:w-auto [&_.st0]:fill-white">
+            <Fragment set:html={logoBlanco} />
           </div>
-          <span class="text-white font-display font-bold text-2xl tracking-tighter group-hover:text-brand transition-colors">AGLAYA</span>
+          <span class="font-mono text-[7px] text-white/30 uppercase tracking-[0.18em] leading-none group-hover:text-white/50 transition-colors">
+            {lang === 'es' ? 'La Agenc·IA Incómoda' : 'The Uncomfortable AI·gency'}
+          </span>
         </a>
         <p class="text-muted text-sm leading-relaxed font-body">
           {t('mission.statement')}
