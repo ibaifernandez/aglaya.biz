@@ -62,7 +62,7 @@ const navItems = [
       <!-- Language Switcher (toggle: shows current flag, click switches) -->
       <div class="hidden md:flex items-center">
         <a
-          href="#"
+          href="javascript:void(0)"
           class="lang-switcher flex items-center justify-center w-5 h-5 rounded-full overflow-hidden opacity-100 hover:opacity-80 transition-opacity"
           aria-label={lang === 'en' ? 'Cambiar a Español' : 'Switch to English'}
           title={lang === 'en' ? 'Cambiar a Español' : 'Switch to English'}
@@ -134,7 +134,7 @@ const navItems = [
       <!-- Language + CTA -->
       <div class="flex items-center justify-between pt-6 gap-4">
         <a
-          href="#"
+          href="javascript:void(0)"
           class="lang-switcher flex items-center justify-center w-6 h-6 rounded-full overflow-hidden ring-2 ring-brand ring-offset-2 ring-offset-black hover:opacity-80 transition-opacity"
           aria-label={lang === 'en' ? 'Cambiar a Español' : 'Switch to English'}
           data-target-lang={lang === 'en' ? 'es' : 'en'}
@@ -165,7 +165,7 @@ const navItems = [
 </header>
 
 <script is:inline>
-  (function () {
+  document.addEventListener('DOMContentLoaded', function () {
     const toggle = document.getElementById('mobile-menu-toggle');
     const menu = document.getElementById('mobile-menu');
     const iconMenu = document.getElementById('icon-menu');
@@ -200,25 +200,36 @@ const navItems = [
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') closeMenu();
     });
+  });
 
-    // Update language switcher hrefs with current search and hash
-    function switchLang(path, targetLang) {
-      let newPath = path;
-      if (targetLang === 'en') {
-        newPath = path.replace(/^\/es(?=$|\/)/, '') || '/';
-      } else {
-        newPath = path.startsWith('/es') ? path : path === '/' ? '/es/' : `/es${path}`;
-      }
-      return newPath;
+  // Update language switcher hrefs with current search and hash
+  function switchLang(path, targetLang) {
+    let newPath = path;
+    if (targetLang === 'en') {
+      newPath = path.replace(/^\/es(?=$|\/)/, '') || '/';
+    } else {
+      newPath = path.startsWith('/es') ? path : path === '/' ? '/es/' : `/es${path}`;
     }
+    return newPath;
+  }
 
-    document.querySelectorAll('.lang-switcher').forEach(function (link) {
+  document.querySelectorAll('.lang-switcher').forEach(function (link) {
+    function computeHref() {
       const targetLang = link.dataset.targetLang;
       const currentPath = window.location.pathname;
       const newPath = switchLang(currentPath, targetLang);
-      link.href = `${newPath}${window.location.search}${window.location.hash}`;
+      const search = window.location.search;
+      const hash = window.location.hash;
+      return `${window.location.origin}${newPath}${search}${hash && hash.length > 1 ? hash : ''}`;
+    }
+
+    link.href = computeHref();
+
+    link.addEventListener('click', function (event) {
+      event.preventDefault();
+      window.location.assign(computeHref());
     });
-  })();
+  });
 </script>
 
 <style>

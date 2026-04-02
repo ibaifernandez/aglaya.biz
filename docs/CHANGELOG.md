@@ -7,11 +7,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Language switcher (#lang-switcher) on header now uses client-side recalculation + `window.location.assign(...)` to preserve pathname/search/hash and avoid stale `#` URLs after repeated toggles. This prevents repeat-click failures where the second switch redirected to a no-op or kept the old hash.
+
 ---
 
 ## [1.0.0] — 2026-03-17
 
 ### Added
+
 - GitHub Actions CI workflow (unit tests → E2E + axe-core, sequential)
 - Bilingual 404 page (`src/pages/404.astro`) with auto-detected lang
 - Skip link + `#main-content` landmark for WCAG 2.4.1
@@ -26,6 +31,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 - **Bilingual email flow**: confirmation email sent in the language the user submitted the form from (EN or ES); form passes `lang` to the serverless function; internal notification subject now includes `[EN]` or `[ES]` tag
 
 ### Changed
+
 - **Cloudflare Turnstile → hCaptcha**: Turnstile had an unresolvable error 300030 on proxied Cloudflare domains. Completely removed. hCaptcha integrated throughout: widget (`class="h-captcha"`, `data-sitekey`, `data-theme="dark"`), script (`https://js.hcaptcha.com/1/api.js`), verify URL (`https://api.hcaptcha.com/siteverify`), env vars renamed (`TURNSTILE_SECRET` → `HCAPTCHA_SECRET`, `PUBLIC_TURNSTILE_SITE_KEY` → `PUBLIC_HCAPTCHA_SITE_KEY`)
 - **Favicon**: was showing Astro logo (655 bytes) — replaced with correct AGLAYA red PNG favicon
 - **OG image**: replaced auto-generated image with real production screenshot at 1200×630
@@ -37,6 +43,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 - Resend API calls now check `res.ok` and throw on 4xx/5xx (previously silent on failure)
 
 ### Fixed
+
 - Form success message disappeared with form (was inside `<form>` tag; moved outside)
 - **hCaptcha IP parsing**: `x-forwarded-for` had comma-separated IPs; now uses `.split(",")[0].trim()` to extract the first (real) IP
 - **Turnstile race condition** (now moot — Turnstile removed): `window.onTurnstileSuccess` defined in Astro module script (deferred) could be called before module ran, leaving button permanently disabled. Documented for reference.
@@ -50,6 +57,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 ## [0.3.0] — 2026-03-16
 
 ### Added
+
 - **Strategic pivot documentation**: `docs/BRAND-STRATEGY.md`, `docs/MARKETING-STRATEGY.md`, `docs/SERVICES-AI.md`, `docs/PLATFORM-SETUP.md`
 - **AI·gency branding** (EN): "AI·gency" as the English expression of the pivot concept; "Agenc·IA" retained for ES
 - **New OG image** 1200×630: editorial layout matching current site design (AGLAYA wordmark, radial red glow, tagline, body copy, red bottom stripe). Generated with `sharp` from SVG template.
@@ -57,11 +65,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 - **Turnstile real site key** `0x4AAAAAACr7qLXpzOQqF7Ni` set as fallback in ContactForm; `TURNSTILE_SECRET` configured in Netlify env vars
 
 ### Changed
+
 - **Contact form**: removed inline icons from input fields — pure minimal inputs, consistent with editorial aesthetic
 - **Response time copy**: "4 hours" → "24 hours" in both EN and ES pages
 - **`.gitignore`**: expanded from 2 lines to full Node/Astro/macOS coverage (dist, node_modules, .env, .DS_Store, logs, editor files)
 
 ### Fixed
+
 - Merge conflict with remote history (remote had older design); resolved all add/add conflicts keeping local redesign
 
 ---
@@ -69,6 +79,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 ## [0.2.0] — 2026-03-16
 
 ### Added
+
 - Contact form with name, email, message fields (`ContactForm.astro`)
 - Netlify serverless function for form processing (`netlify/functions/contact.ts`)
 - Cloudflare Turnstile bot protection integration
@@ -80,6 +91,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 - Documentation: ARCHITECTURE.md, TESTING.md, SERVICES.md, WORKFLOW-SETUP.md
 
 ### Changed
+
 - Upgraded form from simple email capture to full contact form
 - Enhanced BaseLayout with complete SEO metadata suite
 
@@ -88,6 +100,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 ## [0.1.0] — 2026-03
 
 ### Added
+
 - Initial Astro 6.x project with Netlify adapter
 - Tailwind CSS v4 via Vite plugin
 - Bilingual support (EN/ES) with subdirectory routing
