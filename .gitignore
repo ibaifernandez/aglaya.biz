@@ -27,3 +27,7 @@ npm-debug.log*
 # Playwright test artifacts
 test-results/
 playwright-report/
+
+# Misc
+/docs/aglaya-full.png
+/docs/aglaya-full-2.png
