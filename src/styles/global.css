@@ -262,3 +262,15 @@ body.glow-active::before {
   }
   .animate-marquee { animation: none; }
 }
+
+/* Misc classes */
+.codetag {
+  font-family: var(--font-mono);
+  background: rgba(255, 255, 255, 0.5);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  color: #000000 !important;
+}
+/* =========================================================
+   End of AGLAYA Design System global styles
+   ========================================================= */

@@ -10,12 +10,12 @@ const { name, tagline, useCases, index } = Astro.props;
 ---
 
 <div 
-  class="group relative flex flex-col gap-6 p-10 bg-[#0c0c0c] border border-white/5 hover:border-brand/30 transition-all duration-500 overflow-hidden"
+  class="min-h-full group relative flex flex-col p-10 bg-[#0c0c0c] border border-white/5 hover:border-brand/30 transition-all duration-500 overflow-hidden"
   data-animate="fade-up"
 >
   <!-- Industrial Index -->
-  <span class="font-mono text-[10px] text-brand/40 uppercase tracking-[0.5em] mb-4">
-    SYSTEM_ARCH_00{index + 1}
+  <span class="font-mono text-[10px] text-brand uppercase tracking-[0.5em] mb-4">
+    ARCHITECTURE_PRINCIPLE_00{index + 1}
   </span>
 
   <!-- Title & Tagline -->
@@ -34,7 +34,7 @@ const { name, tagline, useCases, index } = Astro.props;
   <!-- Use Cases -->
   <div class="flex flex-col gap-4 mt-4">
     <span class="text-corporate-green font-mono text-[8px] uppercase tracking-[0.5em]">APPLIED_LOGIC:</span>
-    <ul class="flex flex-wrap gap-x-6 gap-y-3">
+    <ul class="flex flex-col flex-wrap gap-x-6 gap-y-3">
       {useCases.split(', ').map(useCase => (
         <li class="text-muted font-mono text-[11px] uppercase tracking-[0.1em] flex items-center gap-2 before:content-[''] before:w-1.5 before:h-1.5 before:bg-brand/40 before:shrink-0 before:hover:bg-brand transition-colors">
           {useCase}

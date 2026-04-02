@@ -8,6 +8,23 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const translatePath = useTranslatedPath(lang);
 
+function langSwitchPath(path: string, search: string, hash: string, targetLang: 'en' | 'es') {
+  let newPath = path;
+
+  if (targetLang === 'en') {
+    newPath = path.replace(/^\/es(?=$|\/)/, '') || '/';
+  } else {
+    // targetLang === 'es'
+    newPath = path.startsWith('/es') ? path : path === '/' ? '/es/' : `/es${path}`;
+  }
+
+  return `${newPath}${search || ''}${hash || ''}`;
+}
+
+const langLink = lang === 'en'
+  ? langSwitchPath(Astro.url.pathname, Astro.url.search, Astro.url.hash, 'es')
+  : langSwitchPath(Astro.url.pathname, Astro.url.search, Astro.url.hash, 'en');
+
 const navItems = [
   { href: translatePath('/#systems'), label: t('nav.systems') },
   { href: translatePath('/#proof'), label: t('nav.proof') },
@@ -16,14 +33,14 @@ const navItems = [
 ---
 
 <header id="site-header" class="fixed top-0 left-0 w-full z-50 transition-colors duration-300 border-b border-white/5 bg-black/80 backdrop-blur-xl">
-  <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between gap-8">
+  <div class="max-w-7xl mx-auto h-20 flex items-center justify-between gap-8">
 
     <!-- Logo -->
     <a href={translatePath('/')} class="flex flex-col gap-[3px] group shrink-0" aria-label="AGLAYA Home">
       <div class="h-6 w-auto group-hover:opacity-80 transition-opacity [&_svg]:h-6 [&_svg]:w-auto [&_.st0]:fill-white">
         <Fragment set:html={logoBlanco} />
       </div>
-      <span class="font-mono text-[7px] text-white/30 uppercase tracking-[0.18em] leading-none group-hover:text-white/50 transition-colors">
+      <span class="font-mono text-[6px] text-white uppercase tracking-[0.2em] group-hover:text-white/50 transition-colors text-center">
         {lang === 'es' ? 'La Agenc·IA Incómoda' : 'The Uncomfortable AI·gency'}
       </span>
     </a>
@@ -43,14 +60,15 @@ const navItems = [
     <!-- Actions -->
     <div class="flex items-center gap-6">
       <!-- Language Switcher (toggle: shows current flag, click switches) -->
-      <div class="hidden md:flex items-center border-r border-white/10 pr-6">
+      <div class="hidden md:flex items-center">
         <a
-          href={lang === 'en' ? '/es/' : '/'}
-          class="flex items-center justify-center w-5 h-5 rounded-full overflow-hidden ring-1 ring-brand ring-offset-2 ring-offset-black opacity-100 hover:opacity-80 transition-opacity"
+          href="#"
+          class="lang-switcher flex items-center justify-center w-5 h-5 rounded-full overflow-hidden opacity-100 hover:opacity-80 transition-opacity"
           aria-label={lang === 'en' ? 'Cambiar a Español' : 'Switch to English'}
           title={lang === 'en' ? 'Cambiar a Español' : 'Switch to English'}
+          data-target-lang={lang === 'en' ? 'es' : 'en'}
         >
-          <Fragment set:html={lang === 'en' ? englishFlag : spainFlag} />
+          <Fragment set:html={lang === 'en' ? spainFlag : englishFlag} />
         </a>
       </div>
 
@@ -116,9 +134,10 @@ const navItems = [
       <!-- Language + CTA -->
       <div class="flex items-center justify-between pt-6 gap-4">
         <a
-          href={lang === 'en' ? '/es/' : '/'}
-          class="flex items-center justify-center w-6 h-6 rounded-full overflow-hidden ring-2 ring-brand ring-offset-2 ring-offset-black hover:opacity-80 transition-opacity"
+          href="#"
+          class="lang-switcher flex items-center justify-center w-6 h-6 rounded-full overflow-hidden ring-2 ring-brand ring-offset-2 ring-offset-black hover:opacity-80 transition-opacity"
           aria-label={lang === 'en' ? 'Cambiar a Español' : 'Switch to English'}
+          data-target-lang={lang === 'en' ? 'es' : 'en'}
         >
           <Fragment set:html={lang === 'en' ? englishFlag : spainFlag} />
         </a>
@@ -180,6 +199,24 @@ const navItems = [
     // Close on Escape
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') closeMenu();
+    });
+
+    // Update language switcher hrefs with current search and hash
+    function switchLang(path, targetLang) {
+      let newPath = path;
+      if (targetLang === 'en') {
+        newPath = path.replace(/^\/es(?=$|\/)/, '') || '/';
+      } else {
+        newPath = path.startsWith('/es') ? path : path === '/' ? '/es/' : `/es${path}`;
+      }
+      return newPath;
+    }
+
+    document.querySelectorAll('.lang-switcher').forEach(function (link) {
+      const targetLang = link.dataset.targetLang;
+      const currentPath = window.location.pathname;
+      const newPath = switchLang(currentPath, targetLang);
+      link.href = `${newPath}${window.location.search}${window.location.hash}`;
     });
   })();
 </script>

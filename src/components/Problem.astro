@@ -12,26 +12,35 @@ const t = useTranslations(lang);
 >
   <div class="max-w-7xl mx-auto flex flex-col gap-12">
     <!-- Header -->
-    <div data-animate="fade-up">
-      <SectionHeader 
-        eyebrow={t('problem.eyebrow')} 
-        heading={t('problem.heading')}
-      />
+     <div class="flex items-center mt-20 gap-4 overflow-hidden" data-animate="fade-up">
+        <div class="w-8 h-[1px] bg-brand"></div>
+        <span class="text-corporate-green font-mono text-[10px] sm:text-xs font-black tracking-[0.5em] uppercase">
+            {t('problem.eyebrow')} 
+        </span>
+    </div>
+    <div class="flex align-center gap-4" data-animate="fade-up">
+        <div data-animate="fade-up">
+            <SectionHeader 
+            heading1={t('problem.heading1')}
+            heading2={t('problem.heading2')}
+            heading2Class="text-brand"
+            />
+        </div>
     </div>
 
     <!-- Body -->
-    <div class="max-w-4xl" data-animate="fade-up">
-      <p class="text-white/60 font-body text-2xl sm:text-4xl lg:text-5xl leading-[1.2] italic tracking-tight">
+    <div class="max-w-6xl" data-animate="fade-up ">
+      <p class="text-white/60 font-body text-2xl sm:text-4xl lg:text-3xl leading-[1.2] tracking-tight">
         {t('problem.body')}
       </p>
     </div>
 
     <!-- Accent Detail -->
-    <div class="deco-text mt-10 opacity-20 font-mono text-[10px] uppercase tracking-[0.5em] text-white flex items-center gap-6" data-animate="fade-up" aria-hidden="true">
-      <span>REF_ID: 001_SOVEREIGNTY_LOGIC</span>
+    <div class="deco-text my-20 opacity-50 font-mono text-[10px] uppercase tracking-[0.5em] text-white flex justify-end items-center gap-6" data-animate="fade-up" aria-hidden="true">
+      <span class="codetag">REF_ID: 001_SOVEREIGNTY_LOGIC</span>
       <div class="flex gap-1">
         {[...Array(5)].map(() => (
-          <div class="w-1.5 h-1.5 bg-brand"></div>
+          <div class="w-1.5 h-1.5 bg-corporate-green"></div>
         ))}
       </div>
     </div>

@@ -43,39 +43,50 @@ export const ui = {
     'hero.label': 'COMING SOON',
 
     /* Problem */
-    'problem.eyebrow': 'Why not a typical agency',
-    'problem.heading': 'Agencies sell hours.\nWe sell sovereignty.',
+    'problem.eyebrow': 'Not your typical agency',
+    'problem.heading1': 'Agencies sell hours.',
+    'problem.heading2': 'We sell sovereignty.',
     'problem.body': "When you leave an agency, you lose everything they built — the accounts, the automations, the knowledge. With AGLAYA, you own the infrastructure. The system keeps running when we're not in the room.",
 
     /* Systems */
     'systems.heading': 'Our Architecture',
+    'systems.eyebrow': 'Engineering principles guiding our system design',
+
     'systems.1.title': 'Systemic Alchemy',
-    'systems.1.tagline': 'Manual processes → autonomous digital assets',
-    'systems.1.cases': 'Lead qualification, Reporting, Internal approvals',
-    'systems.2.title': 'Narrative Delivery',
-    'systems.2.tagline': 'Marketing execution with system integrity',
-    'systems.2.cases': 'CRM scoring, Conditional email, Authority content',
+    'systems.1.tagline': 'Transforming operational chaos into autonomous digital assets.',
+    'systems.1.cases': 'Autonomous opportunity validation, Operational truth visualization, Automated consensus protocols',
+    
+    'systems.2.title': 'Inevitable Logical Flow',
+    'systems.2.tagline': 'Systems that execute the precise action based on user behavior.',
+    'systems.2.cases': 'Purchase intent synchronization, Reactive authority deployment, Progressive credibility assets',
+    
     'systems.3.title': 'Zero-Leak Architecture',
-    'systems.3.tagline': 'High-performance digital infrastructure',
-    'systems.3.cases': 'High-conversion web, Identity, Data integrity',
-    'systems.4.title': 'AI Orchestration',
-    'systems.4.tagline': 'Applied intelligence on core business',
-    'systems.4.cases': 'Contextual support, Data insights, AI-driven routing',
-    'systems.5.title': 'Productive Friction',
-    'systems.5.tagline': 'Strategic challenge to expose truth',
-    'systems.5.cases': 'Positioning audit, Funnel review, Hierarchy logic',
+    'systems.3.tagline': 'Infrastructure where data integrity and performance are non-negotiable.',
+    'systems.3.cases': 'Performance capture interfaces, Digital asset shielding, Real-time data consistency',
+    
+    'systems.4.title': 'Algorithmic Sovereignty',
+    'systems.4.tagline': 'Autonomous intelligence integrated into the core of business execution.',
+    'systems.4.cases': 'Corporate memory deployment, Critical intelligence extraction, Cognitive load distribution',
+    
+    'systems.5.title': 'Zero-Filter Diagnostics',
+    'systems.5.tagline': 'Eliminating operational lies to find the shortest path to profitability.',
+    'systems.5.cases': 'Market authority mapping, Operational leak deconstruction, Command and control structuring',
 
     /* How it Works */
-    'how.heading': 'The Engagement Model',
-    'how.1.title': 'Audit (Systems-first)',
-    'how.1.description': "We map every manual process costing you time and money. Exact numbers, no guesswork. If we don't find ROI, we don't sell.",
-    'how.2.title': 'Blueprint (No-fluff)',
-    'how.2.description': 'We design and build the automation architecture. You’re involved, not managed. We build for sovereignty, not dependency.',
-    'how.3.title': 'Orchestration (Scale)',
-    'how.3.description': "We maintain, evolve, and expand the system. Weekly syncs. You own everything — we're the architects on retainer.",
-
+    'how.heading': 'The Engagement Protocol',
+    
+    'how.1.title': 'Operational Truth Audit',
+    'how.1.description': "We deconstruct every operational inefficiency costing you time and capital. Exact numbers, no guesswork. If we don't find ROI, we don't sell.",
+    
+    'how.2.title': 'Sovereign Architecture Design',
+    'how.2.description': 'We engineer your proprietary automation architecture. You’re involved, not managed. We build for sovereignty, not dependency.',
+    
+    'how.3.title': 'System Execution & Evolution',
+    'how.3.description': "We ensure, evolve, and intensify the system's performance. Weekly syncs. You own everything — we're the architects on retainer.",
     /* Proof */
     'proof.heading': 'Proof, not promises.',
+    'proof.eyebrow': 'The evidence that endorses our practice',
+
     'proof.cta': 'Request the same ROI →',
 
     /* Anti-Client */
@@ -168,44 +179,49 @@ export const ui = {
     'hero.eyebrow': 'Construimos sistemas que empoderan tu negocio mientras duermes',
     'hero.heading': 'La agencia murió.\nQue viva el sistema.',
     'hero.subtext': 'La mayoría de equipos no necesitan una agencia. Necesitan su propia infraestructura. Nosotros la construimos. Tú la posees. El sistema sigue funcionando cuando no estamos.',
-    'hero.cta': 'Inicializar Sistema',
+    'hero.cta': 'Solicitar propuesta',
     'hero.secondary': 'Ver la evidencia →',
     'hero.label': 'PRÓXIMAMENTE',
 
     /* Problem */
-    'problem.eyebrow': 'Por qué no somos una agencia típica',
-    'problem.heading': 'Las agencias venden horas.\nNosotros vendemos soberanía.',
+    'problem.eyebrow': 'No somos tu típica agencia',
+    'problem.heading1': 'Las agencias venden horas.',
+    'problem.heading2': 'Nosotros vendemos soberanía.',
     'problem.body': 'Cuando dejas una agencia, pierdes todo lo que construyeron: las cuentas, las automatizaciones, el conocimiento. Con AGLAYA, tú eres el dueño de la infraestructura. El sistema sigue funcionando aunque no estemos presentes.',
 
     /* Systems */
     'systems.heading': 'Nuestra Arquitectura',
-    'systems.1.title': 'Systemic Alchemy',
-    'systems.1.tagline': 'Procesos manuales → activos digitales autónomos',
-    'systems.1.cases': 'Calificación de leads, Reportes, Aprobaciones internas',
-    'systems.2.title': 'Narrative Delivery',
-    'systems.2.tagline': 'Ejecución de marketing con integridad de sistema',
-    'systems.2.cases': 'Scoring en CRM, Email condicional, Contenido de autoridad',
-    'systems.3.title': 'Zero-Leak Architecture',
-    'systems.3.tagline': 'Infraestructura digital de alto rendimiento',
-    'systems.3.cases': 'Web de alta conversión, Identidad, Integridad de datos',
-    'systems.4.title': 'AI Orchestration',
-    'systems.4.tagline': 'Inteligencia aplicada al núcleo del negocio',
-    'systems.4.cases': 'Soporte contextual, Insights de datos, Enrutamiento por IA',
-    'systems.5.title': 'Productive Friction',
-    'systems.5.tagline': 'Desafío estratégico para exponer la verdad',
-    'systems.5.cases': 'Auditoría de posicionamiento, Revisión de funnel, Lógica de jerarquía',
+    'systems.eyebrow': 'Conoce los principios que guían nuestra ingeniería',
+    'systems.1.title': 'Alquimia sistémica',
+    'systems.1.tagline': 'Transformamos el caos operativo en activos digitales que trabajan solos.',
+    'systems.1.cases': 'Validación autónoma de oportunidades, Visualización de realidades operativas, Protocolos de consenso automatizado',
+    'systems.2.title': 'Flujo Lógico Inevitable',
+    'systems.2.tagline': 'Sistemas que ejecutan la acción correcta siempre según el comportamiento del cliente.',
+    'systems.2.cases': 'Sincronización de intención de compra, Despliegue de autoridad de marca, Creación de activos de credibilidad progresiva',
+    'systems.3.title': 'Arquitectura sin goteras',
+    'systems.3.tagline': 'Infraestructura donde hay dos máximas no negociables: la integridad de los datos y el rendimiento.',
+    'systems.3.cases': 'Interfaces de captura de rendimiento, Sistemas de identidad inmutable, Blindaje y consistencia de activos',
+    'systems.4.title': 'Soberanía algorítmica',
+    'systems.4.tagline': 'Inteligencia autónoma integrada en el núcleo de ejecución.',
+    'systems.4.cases': 'Despliegue de memoria corporativa, Extracción de inteligencia crítica, Distribución de carga cognitiva',
+    'systems.5.title': 'Diagnóstico sin filtro',
+    'systems.5.tagline': 'Eliminamos las mentiras operativas para encontrar el camino más corto hacia la rentabilidad.',
+    'systems.5.cases': 'Mapeo de autoridad de mercado, Deconstrucción de fugas operativas, Estructuración de mando y control',
 
     /* How it Works */
-    'how.heading': 'El Modelo de Trabajo',
-    'how.1.title': 'Auditoría (Sistemas-primero)',
-    'how.1.description': 'Mapeamos cada proceso manual que te quita tiempo y dinero. Números exactos, sin suposiciones. Si no hay ROI, no vendemos.',
-    'how.2.title': 'Blueprint (Sin relleno)',
-    'how.2.description': 'Diseñamos y construimos la arquitectura de automatización. Te involucras, no te gestionamos. Construimos para tu soberanía.',
-    'how.3.title': 'Orquestación (Escala)',
-    'how.3.description': 'Mantenemos, evolucionamos y expandimos el sistema. Sesiones semanales. Eres el dueño de todo.',
-
+    'how.heading': 'Protocolo de Ejecución',
+    
+    'how.1.title': 'Auditoría de Verdad Operativa',
+    'how.1.description': "Deconstruimos cada ineficiencia manual que consume capital y tiempo. Datos exactos, sin suposiciones. Si no detectamos ROI, no vendemos.",
+    
+    'how.2.title': 'Diseño de Arquitectura Soberana',
+    'how.2.description': 'Ingeniería de automatización propietaria. Estás involucrado, no gestionado. Construimos para tu soberanía, no para tu dependencia.',
+    
+    'how.3.title': 'Ejecución y Evolución del Sistema',
+    'how.3.description': "Aseguramos, evolucionamos e intensificamos el rendimiento de la arquitectura. Sincronización semanal. Tú eres el dueño de cada activo.",
     /* Proof */
     'proof.heading': 'Evidencia, no promesas.',
+    'proof.eyebrow': 'La evidencia que ampara nuestra praxis',
     'proof.cta': 'Solicitar el mismo ROI →',
 
     /* Anti-Client */

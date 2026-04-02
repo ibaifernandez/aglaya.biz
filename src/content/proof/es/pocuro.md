@@ -28,18 +28,23 @@ date: "2025-06"
 ---
 
 ## Contexto
+
 POCURO, líder en desarrollo inmobiliario, enfrentaba un cuello de botella crítico: una afluencia masiva de leads sin una forma automatizada de priorizarlos. Los equipos de ventas operaban en un "caos manual", perdiendo prospectos de alto valor en el ruido de consultas no calificadas.
 
 ## El Problema
+
 El equipo de ventas dedicaba el 70% de su capacidad semanal a calificar manualmente más de 200 leads. Sin un sistema de scoring unificado ni visibilidad en el CRM, la tasa de conversión sufría mientras el costo operativo de la "calificación humana" superaba los $18K mensuales.
 
 ## Qué Construimos
+
 Mediante **Systemic Alchemy** e **AI Orchestration**, AGLAYA desplegó un motor autónomo de calificación de leads:
+
 - **Inteligencia Calibrada**: Un agente impulsado por Claude que analiza 12 señales de comportamiento y demográficas en tiempo real.
 - **Filtrado Autónomo**: Los leads se califican instantáneamente al llegar y se enrutan a secuencias de CRM basadas en la intención detectada.
 - **Auto-Nurture**: Los leads descalificados se mueven automáticamente a un ciclo educativo, preservando la capacidad de ventas para señales de alta probabilidad.
 
 ## Los Resultados
+
 - **90% de reducción** en leads no calificados llegando al equipo de ventas.
 - **30 horas semanales** recuperadas para el equipo comercial principal.
 - **Soberanía Digital**: POCURO ahora posee una infraestructura escalable que funciona 24/7 sin intervención externa.
