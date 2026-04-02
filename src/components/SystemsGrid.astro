@@ -39,12 +39,14 @@ const systems = [
   id="systems" 
   class="relative px-6 py-20 sm:px-10 lg:px-20 bg-black overflow-hidden border-t border-white/5"
 >
-  <div class="max-w-7xl mx-auto flex flex-col gap-16">
+  <div class="max-w-7xl mx-auto flex flex-col">
     <!-- Header -->
     <div data-animate="fade-up">
       <SectionHeader 
-        eyebrow="The Architecture" 
-        heading={t('systems.heading')} 
+        eyebrow={t('systems.eyebrow')}
+        heading={t('systems.heading')}
+        spacing="mb-8"
+        gap="gap-0"
       />
     </div>
 
@@ -68,16 +70,16 @@ const systems = [
     <div class="marquee-content flex whitespace-nowrap gap-20">
       {[...Array(10)].map(() => (
         <div class="flex items-center gap-20 text-white/20 font-display font-black text-4xl uppercase tracking-tighter">
-          <span>Systemic Alchemy</span>
-          <span class="text-brand">/</span>
-          <span>Narrative Delivery</span>
-          <span class="text-brand">/</span>
-          <span>Zero-Leak Architecture</span>
-          <span class="text-brand">/</span>
-          <span>AI Orchestration</span>
-          <span class="text-brand">/</span>
-          <span>Productive Friction</span>
-          <span class="text-brand">/</span>
+            <span>Systemic Alchemy</span>
+            <span class="text-brand">/</span>
+            <span>Inevitable Logical Flow</span>
+            <span class="text-brand">/</span>
+            <span>Zero-Leak Architecture</span>
+            <span class="text-brand">/</span>
+            <span>Algorithmic Sovereignty</span>
+            <span class="text-brand">/</span>
+            <span>Zero-Filter Diagnostics</span>
+            <span class="text-brand">/</span>
         </div>
       ))}
     </div>

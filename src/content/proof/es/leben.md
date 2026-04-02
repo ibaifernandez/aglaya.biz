@@ -28,18 +28,23 @@ date: "2025-07"
 ---
 
 ## Contexto
+
 LEBEN, actor innovador en el sector inmobiliario, poseía una base de datos de alto valor que estaba efectivamente "en silencio". Sin un sistema técnico para entregar la narrativa adecuada en el momento preciso, los leads se filtraban en la mitad del embudo a una tasa insostenible.
 
 ## El Problema
+
 Una base de datos fragmentada sin segmentación significaba que todas las comunicaciones eran genéricas. Esta falta de relevancia resultó en una tasa de apertura ínfima del 8.68%. La cartera de prospectos era impredecible, oscilando entre la sequía y el desbordamiento sin una estructura automatizada que la sostuviera.
 
 ## Qué Construimos
+
 Aplicando **Narrative Delivery** e **Zero-Leak Architecture**, AGLAYA reconstruyó por completo el customer journey:
+
 - **Triggers por Comportamiento**: Implementamos lógica que monitorea la interacción con el catálogo y dispara secuencias narrativas específicas.
 - **Reconstrucción del Ciclo de Vida**: Construimos rutas de re-activación automatizadas para leads "fríos" basadas en su intención histórica.
 - **Integridad del Sistema**: Establecimos un flujo de datos sin fugas que garantiza que cada interacción sea registrada y procesada sin supervisión humana.
 
 ## Los Resultados
+
 - **357% de aumento** en la tasa de apertura, saltando del 8.68% al 39.63%.
 - **40% de la base de datos fría** re-activada con éxito en el pipeline activo.
 - **Soberanía**: LEBEN ahora opera un activo de comunicación permanente que genera conversión sin esfuerzo manual.

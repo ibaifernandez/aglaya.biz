@@ -26,16 +26,16 @@ const others = entries.filter(e => e.id !== featured.id).slice(0, 2);
     <!-- Header -->
     <div class="flex flex-col md:flex-row justify-between items-end gap-10" data-animate="fade-up">
       <SectionHeader
-        eyebrow="The Evidence"
+        eyebrow={t('proof.eyebrow')}
         heading={t('proof.heading')}
       />
       <a
         href={translatePath('/proof/')}
-        class="text-corporate-green font-mono text-xs uppercase tracking-[0.4em] hover:text-white transition-colors mb-4 flex items-center gap-4 group"
+        class="text-corporate-green font-mono text-xs uppercase tracking-[0.4em] hover:text-white transition-colors mb-4 flex items-center gap-4 group border py-5 px-5"
       >
-        <span>DISCOVER_FULL_INDEX</span>
-        <div class="w-8 h-[1px] bg-brand group-hover:w-12 transition-all"></div>
-      </a>
+        <span>DISCOVER_FULL_INDEX &gt;&gt;&gt;</span>
+        <!-- <div class="w-8 h-[1px] bg-brand group-hover:w-12 transition-all"></div> -->
+    </a>
     </div>
 
     <!-- Proof Layout (Flexbox) -->

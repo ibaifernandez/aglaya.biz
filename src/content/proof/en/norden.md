@@ -1,45 +1,43 @@
 ---
-title:
-  en: "Recovering Domain Authority & 200% Open Rate Increase"
-  es: "Recuperación de Autoridad de Dominio y 200% de Aumento en Open Rate"
-client: NORDEN
-industry: Real Estate
-challenge:
-  en: "High deliverability issues. CRM polluted with ghost leads, dragging Open Rate to 7.56% and risking domain reputation."
-  es: "Problemas graves de entregabilidad. CRM contaminado con leads fantasma, reduciendo el Open Rate al 7.56% y arriesgando la reputación."
+title: "Infrastructure & Sovereign BI"
+client: "NORDEN"
+industry: "Healthcare"
+challenge: "Operational blindness and domain sabotage. A polluted CRM dragging B2C delivery to 7.56% and masking real intent signals."
 solution_systems:
   - Zero-Leak Architecture
-  - Productive Friction
+  - Zero-Filter Diagnostics
+  - Algorithmic Sovereignty
 results:
-  - metric: "200%"
-    label:
-      en: "increase in Open Rate"
-      es: "de aumento en Tasa de Apertura"
-  - metric: "Clean"
-    label:
-      en: "domain reputation & inbox placement"
-      es: "reputación de dominio y entrega en bandeja"
-  - metric: "Real-time"
-    label:
-      en: "reporting layer for decisions"
-      es: "capa de reportes en tiempo real"
+  - metric: "23.30%"
+    label: "Verified B2C Open Rate (from 7.56%)"
+  - metric: "99%"
+    label: "Primary segment inbox placement"
+  - metric: "Proprietary"
+    label: "Local BI & Reporting Layer"
 featured: true
 date: "2025-08"
+client_logo: "../src/assets/images/norden.png"
+client_logo_dark: "../src/assets/images/norden-white.png"
 ---
 
 ## Context
-NORDEN, a sophisticated real estate developer, faced a silent threat: poor technical deliverability. Their digital communication was being penalized by filters, rendering their high-quality content invisible to their most valuable prospects.
+
+NORDEN operated in a state of **technical blindness**. Its communication infrastructure was centralized in a single undifferentiated flow, causing cross-contamination between its B2C and B2B segments. This wasn't a "marketing" issue; it was a critical failure in **systems design**.
 
 ## The Problem
-Years of list pollution and "ghost leads" had dragged the domain reputation into high-risk territory. An Open Rate of 7.56% was not just a marketing failure; it was a technical alarm signal. The business was losing its voice in the very channels it relied on for conversion.
+
+Years of manual chaos and "ghost leads" had turned their domain into a toxic asset. With a **7.56% Open Rate** in the B2C segment, the company had lost its voice. Worst of all: they had no way of measuring the real damage because they relied on opaque third-party metrics without a proprietary data layer to expose the operational truth.
 
 ## What We Built
-Applying **Zero-Leak Architecture** and **Productive Friction**, AGLAYA executed a technical recovery protocol:
-- **List Hygiene Protocol**: Executed a radical "burn-and-heal" strategy to eliminate 40% of the non-responding database, preserving only intent-rich signals.
-- **Infrastructure Decoupling**: Separated marketing automation noise from transactional and high-authority domain logic.
-- **Intelligence Layer**: Built a real-time reporting system that exposes deliverability health before campaigns are ever deployed.
+
+Applying **Zero-Leak Architecture** and **Zero-Filter Diagnostics**, AGLAYA executed an infrastructure recovery protocol:
+
+- **Architectural Decoupling**: We radically separated logic, targets, and metrics for B2B and B2C models to stop signal contamination and domain reputation sabotage.
+- **Proprietary BI Layer**: We built a local **Business Intelligence** system on top of the Brevo API. We developed an internal GUI that allows the client to own their own data snapshots and cohorts, eliminating platform dependency.
+- **Intent Signal Extraction**: We executed a technical sanitization strategy that preserved only intent-rich assets, cleaning the public data bundle and stopping domain sabotage.
 
 ## The Results
-- **200% increase** in Open Rate, jumping from 7.56% to 22.70% in 45 days.
-- **Recovered Domain Authority**: Inbox placement returned to 99% for primary segments.
-- **Sovereignty**: NORDEN now possesses a clean, high-authority communication asset that they control completely.
+
+- **Data Sovereignty**: The B2C segment increased its weighted trackable open rate from **7.56% to 23.30%** following the technical intervention.
+- **Intent Density**: In the latest tactical window, **66.36% of the active segment** interacted with the brand, validating the channel recovery.
+- **Command & Control**: NORDEN no longer depends on an external tool to understand its operational health; it now possesses a **proprietary reporting infrastructure** with real-time audit capabilities.
