@@ -23,16 +23,28 @@
       const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
       const tick = () => {
+        // Outer ring follows with easing
         cursorX = lerp(cursorX, mouseX, 0.2);
         cursorY = lerp(cursorY, mouseY, 0.2);
         currentScale = lerp(currentScale, targetScale, 0.15);
+        
         cursor.style.transform = `translate3d(${cursorX}px,${cursorY}px,0) translate(-50%,-50%) scale(${currentScale})`;
+        
+        // Inner dot follows instantly for precision (handled via CSS left/top or pseudo-element)
+        // Since we want the dot exactly at the pointer, we update its relative position if needed
+        // but here we are moving the whole container.
+        
         raf = requestAnimationFrame(tick);
       };
 
       const onMove = (e: MouseEvent) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
+        
+        // Update variables for the inner dot to stay pinned to pointer
+        cursor.style.setProperty('--mouse-x', `${mouseX}px`);
+        cursor.style.setProperty('--mouse-y', `${mouseY}px`);
+
         if (!active) {
           active = true;
           cursor.style.opacity = '1';
@@ -47,11 +59,17 @@
 
       const onOver = (e: MouseEvent) => {
         const t = e.target as HTMLElement;
-        if (t?.closest('a,button,input,textarea,select')) targetScale = 2.5;
+        if (t?.closest('a,button,input,textarea,select')) {
+          targetScale = 3;
+          cursor.classList.add('is-hovering');
+        }
       };
       const onOut = (e: MouseEvent) => {
         const t = e.target as HTMLElement;
-        if (t?.closest('a,button,input,textarea,select')) targetScale = 1;
+        if (t?.closest('a,button,input,textarea,select')) {
+          targetScale = 1;
+          cursor.classList.remove('is-hovering');
+        }
       };
 
       document.addEventListener('mousemove', onMove, { passive: true });
@@ -82,15 +100,41 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 16px;
-    height: 16px;
-    background: white;
+    width: 20px;
+    height: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: transparent;
     mix-blend-mode: difference;
     pointer-events: none;
     z-index: 10000;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease, border-color 0.3s ease, background 0.3s ease;
     will-change: transform;
+    border-radius: 50% !important;
+  }
+
+  /* The central dot */
+  #custom-cursor::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    background: white;
+    transform: translate(-50%, -50%);
+    border-radius: 50% !important;
+    transition: transform 0.3s ease;
+  }
+
+  /* Interaction states */
+  #custom-cursor.is-hovering {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  #custom-cursor.is-hovering::before {
+    transform: translate(-50%, -50%) scale(0.5);
   }
 
   html.custom-cursor-enabled,

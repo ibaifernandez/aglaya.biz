@@ -1,5 +1,18 @@
 # AGENTS.md — Agent Collaboration Guidelines
 
+## The main current problems
+
+Don't go any further, for here the main current problems lay:
+
+1. En https://aglaya.biz/ el toogle de idioma cambia 50 veces bien, que le des seguidas.
+2. Navega a https://aglaya.biz/#systems y también cambia 50 veces seguidas bien.
+3. Navega a https://aglaya.biz/contact e igualmente... cambia 50 veces bien.
+4. De ahí, navega a https://aglaya.biz/#proof (por ejemplo) y al darle al toogle de idioma... te devuelve a la página de inicio.
+
+WTF.
+
+Adicionalmente, el cursor ha pasado a ser un cudrado horrible en lugar del punto con un círculo a su alrededor que solía ser.
+
 ## Purpose
 This document defines how AI agents should interact with this codebase, what roles they serve, and how to coordinate multi-agent workflows.
 

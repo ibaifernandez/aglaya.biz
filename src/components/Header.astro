@@ -202,39 +202,42 @@ const navItems = [
     });
   });
 
-  // Update language switcher hrefs with current search and hash
-  function switchLang(path, targetLang) {
-    let newPath = path;
-    if (targetLang === 'en') {
-      newPath = path.replace(/^\/es(?=$|\/)/, '') || '/';
-    } else {
-      newPath = path.startsWith('/es') ? path : path === '/' ? '/es/' : `/es${path}`;
-    }
-    return newPath;
-  }
-
-  document.querySelectorAll('.lang-switcher').forEach(function (link) {
-    function computeHref() {
-      const targetLang = link.dataset.targetLang;
-      if (!targetLang) return link.href;
-
-      const currentPath = window.location.pathname;
-      const newPath = switchLang(currentPath, targetLang);
-      const search = window.location.search;
-      const hash = window.location.hash;
-      return `${window.location.origin}${newPath}${search}${hash && hash.length > 1 ? hash : ''}`;
-    }
-
-    // Keep the server-side `langLink` in place as fallback for no-script or early clicks
-    link.href = computeHref() || link.href;
-
-    link.addEventListener('click', function (event) {
-      event.preventDefault();
-      const href = computeHref();
-      if (!href || href === window.location.href) {
-        return;
+  // Handle language switcher with View Transitions
+  document.addEventListener('astro:page-load', function () {
+    const switchLang = (path, targetLang) => {
+      let newPath = path;
+      if (targetLang === 'en') {
+        newPath = path.replace(/^\/es(?=$|\/)/, '') || '/';
+      } else {
+        newPath = path.startsWith('/es') ? path : path === '/' ? '/es/' : `/es${path}`;
       }
-      window.location.assign(href);
+      return newPath;
+    };
+
+    document.querySelectorAll('.lang-switcher').forEach(function (link) {
+      const computeHref = () => {
+        const targetLang = link.dataset.targetLang;
+        if (!targetLang) return link.href;
+
+        const currentPath = window.location.pathname;
+        const newPath = switchLang(currentPath, targetLang);
+        const search = window.location.search;
+        const hash = window.location.hash;
+        return `${window.location.origin}${newPath}${search}${hash && hash.length > 1 ? hash : ''}`;
+      };
+
+      // Update the link's href immediately on load
+      link.href = computeHref() || link.href;
+
+      // Handle the click manually to ensure hash preservation
+      link.addEventListener('click', function (event) {
+        event.preventDefault();
+        const href = computeHref();
+        if (!href || href === window.location.href) {
+          return;
+        }
+        window.location.assign(href);
+      });
     });
   });
 </script>

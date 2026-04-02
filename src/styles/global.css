@@ -35,7 +35,13 @@
 *::before,
 *::after {
   box-sizing: border-box;
-  border-radius: 0 !important; /* Force zero border-radius for the industrial look */
+  /* Industrial look: no rounded corners, EXCEPT for the custom cursor */
+  border-radius: 0 !important;
+}
+
+#custom-cursor,
+#custom-cursor * {
+  border-radius: 50% !important;
 }
 
 html {
