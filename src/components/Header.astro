@@ -62,7 +62,7 @@ const navItems = [
       <!-- Language Switcher (toggle: shows current flag, click switches) -->
       <div class="hidden md:flex items-center">
         <a
-          href="javascript:void(0)"
+          href={langLink}
           class="lang-switcher flex items-center justify-center w-5 h-5 rounded-full overflow-hidden opacity-100 hover:opacity-80 transition-opacity"
           aria-label={lang === 'en' ? 'Cambiar a Español' : 'Switch to English'}
           title={lang === 'en' ? 'Cambiar a Español' : 'Switch to English'}
@@ -134,7 +134,7 @@ const navItems = [
       <!-- Language + CTA -->
       <div class="flex items-center justify-between pt-6 gap-4">
         <a
-          href="javascript:void(0)"
+          href={langLink}
           class="lang-switcher flex items-center justify-center w-6 h-6 rounded-full overflow-hidden ring-2 ring-brand ring-offset-2 ring-offset-black hover:opacity-80 transition-opacity"
           aria-label={lang === 'en' ? 'Cambiar a Español' : 'Switch to English'}
           data-target-lang={lang === 'en' ? 'es' : 'en'}
@@ -216,6 +216,8 @@ const navItems = [
   document.querySelectorAll('.lang-switcher').forEach(function (link) {
     function computeHref() {
       const targetLang = link.dataset.targetLang;
+      if (!targetLang) return link.href;
+
       const currentPath = window.location.pathname;
       const newPath = switchLang(currentPath, targetLang);
       const search = window.location.search;
@@ -223,11 +225,16 @@ const navItems = [
       return `${window.location.origin}${newPath}${search}${hash && hash.length > 1 ? hash : ''}`;
     }
 
-    link.href = computeHref();
+    // Keep the server-side `langLink` in place as fallback for no-script or early clicks
+    link.href = computeHref() || link.href;
 
     link.addEventListener('click', function (event) {
       event.preventDefault();
-      window.location.assign(computeHref());
+      const href = computeHref();
+      if (!href || href === window.location.href) {
+        return;
+      }
+      window.location.assign(href);
     });
   });
 </script>

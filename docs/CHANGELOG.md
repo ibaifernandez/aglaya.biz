@@ -9,7 +9,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ### Fixed
 
-- Language switcher (#lang-switcher) on header now uses client-side recalculation + `window.location.assign(...)` to preserve pathname/search/hash and avoid stale `#` URLs after repeated toggles. This prevents repeat-click failures where the second switch redirected to a no-op or kept the old hash.
+- Language switcher (#lang-switcher) on header now uses server-side `href` fallback plus client-side recalculation to preserve pathname/search/hash and avoid stale `#` URLs after repeated toggles. This prevents scenarios where `/contact/` reload did not activate first-click due script race conditions or hash inconsistencies.
+- Language switcher now supports non-JS fallback by setting `href` to `langLink` (previously `javascript:void(0)`), ensuring the toggle works even if client scripts fail.
 
 ---
 
