@@ -2,6 +2,18 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 test.describe('Contact Page', () => {
+  test('should switch language from contact page without breaking', async ({ page }) => {
+    await page.goto('/contact/');
+
+    // Toggle to ES (should navigate to /es/contact or /es/contact/)
+    await page.click('.lang-switcher');
+    await page.waitForURL(/\/es\/contact\/?$/);
+
+    // Toggle back to EN
+    await page.click('.lang-switcher');
+    await page.waitForURL(/\/contact\/?$/);
+  });
+
   test('should render the contact page with ICP filter', async ({ page }) => {
     await page.goto('/contact/');
 
