@@ -49,7 +49,7 @@ Bilingual website for **AGLAYA**, a digital marketing AI·gency. The Uncomfortab
 - **Accessible** — WCAG 2AA verified with Axe-core
 - **Tested** — 100% coverage on critical paths
 
-## Quick Start
+## Quick Start ✅
 
 ```bash
 npm install
