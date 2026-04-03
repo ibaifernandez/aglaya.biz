@@ -1,32 +1,45 @@
 ---
-title: "Desacople de Infraestructura de Comunicaciones & Integración de Panel BI"
+title:
+  en: "Infrastructure & Sovereign BI"
+  es: "Desacople de Infraestructura de Comunicaciones & Integración de Panel BI"
 client: "NORDEN"
 industry: "Salud"
-challenge: "Ceguera operativa y sabotaje de dominio. Un CRM contaminado reduciendo la entrega B2C al 7.56% y enmascarando las señales reales de intención."
+challenge:
+  en: "Operational blindness and domain sabotage. A polluted CRM dragging B2C delivery to 7.56% and masking real intent signals."
+  es: "Ceguera operativa y sabotaje de dominio. Un CRM contaminado reduciendo la entrega B2C al 7.56% y enmascarando las señales reales de intención."
+summary:
+  es: "Años de caos manual y \"leads fantasma\" habían convertido su dominio en un activo tóxico. Con un 7.56% de Open Rate en el tramo B2C, la empresa había perdido su capacidad de respuesta. Lo peor: no tenían forma de medir el daño real porque dependían de métricas opacas de terceros, sin una capa de datos propia que expusiera la verdad operativa."
+strategy:
+  en: "Separation of B2B/B2C logic and implementation of a proprietary BI layer on Brevo API."
+  es: "Separación de lógica B2B/B2C e implementación de una capa de BI propia sobre la API de Brevo."
+vision:
+  en: "Absolute data sovereignty and zero-filter operational visibility."
+  es: "Soberanía de datos absoluta y visibilidad operativa sin filtros registrados."
 solution_systems:
   - Zero-Leak Architecture
   - Zero-Filter Diagnostics
   - Algorithmic Sovereignty
 results:
   - metric: "23.30%"
-    label: "Open Rate B2C verificado (desde 7.56%)"
+    label:
+      en: "Verified B2C Open Rate (from 7.56%)"
+      es: "Open Rate B2C verificado (desde 7.56%)"
   - metric: "99%"
-    label: "Entrega en bandeja (Inbox placement)"
+    label:
+      en: "Primary segment inbox placement"
+      es: "Entrega en bandeja (Inbox placement)"
   - metric: "Proprietary"
-    label: "Capa de BI y Reporting Local"
+    label:
+      en: "Local BI & Reporting Layer"
+      es: "Capa de BI y Reporting Local"
 featured: true
 date: "2025-08"
 client_logo: "../src/assets/images/norden.png"
 client_logo_dark: "../src/assets/images/norden-white.png"
+heroImage: "/aglaya_processor_macro_1775170966453_png_1775170994680.png"
+thumbImage: "/aglaya_dashboard_gui_1775170966453_png_1775170982093.png"
+contentImage: "/aglaya_zero_leak_flow_1775170966453_png_1775171008612.png"
 ---
-
-## Contexto
-
-NORDEN operaba bajo un estado de **ceguera técnica**. Su infraestructura de comunicación estaba centralizada en un único flujo indiferenciado, lo que provocaba una contaminación cruzada entre sus segmentos B2C y B2B. No era un problema de "marketing", era un fallo crítico de **diseño de sistemas**.
-
-## El Problema
-
-Años de caos manual y "leads fantasma" habían convertido su dominio en un activo tóxico. Con un **7.56% de Open Rate** en el tramo B2C, la empresa había perdido su capacidad de respuesta. Lo peor: no tenían forma de medir el daño real porque dependían de métricas opacas de terceros, sin una capa de datos propia que expusiera la verdad operativa.
 
 ## Lo que Construimos
 

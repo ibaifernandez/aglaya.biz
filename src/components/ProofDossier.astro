@@ -1,0 +1,326 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+interface Props {
+  title: { en: string; es: string };
+  client: string;
+  industry: string;
+  challenge: { en: string; es: string };
+  strategy: { en: string; es: string };
+  vision: { en: string; es: string };
+  summary?: { en: string; es: string };
+  results: Array<{
+    metric: string;
+    label: { en: string; es: string };
+  }>;
+  solution_systems: string[];
+  date: string;
+  lang: 'en' | 'es';
+  id: string;
+  heroImage?: string;
+  thumbImage?: string;
+  contentImage?: string;
+}
+
+const { 
+  title, client, industry, challenge, 
+  strategy = { en: "...", es: "..." }, 
+  vision = { en: "...", es: "..." }, 
+  summary = { en: "", es: "" },
+  results, solution_systems, date, lang, id,
+  heroImage = "/aglaya_dashboard_gui_1775170966453_png_1775170982093.png",
+  thumbImage = "/aglaya_processor_macro_1775170966453_png_1775170994680.png",
+  contentImage
+} = Astro.props;
+
+const t = useTranslations(lang);
+
+const archivalId = id.toUpperCase().replace(/\//g, '_');
+const batchYear = date.split('-')[0] || '2026';
+
+// High-fidelity title highlighting: wrapping key terms in industrial brand red blocks
+const processedTitle = (input: string) => {
+  const highlights = [
+    'SOVEREIGN', 'SOBERANA', 'AUTOMATION', 'AUTOMATIZACIÓN', 
+    'LIFECYCLE', 'CICLO DE VIDA', 'INTEGRACIÓN', 'CRM'
+  ];
+  let output = input;
+  highlights.forEach(term => {
+    const regex = new RegExp(`(${term})`, 'gi');
+    output = output.replace(regex, `<span class="inline-block bg-brand text-white px-5 py-1 leading-none shadow-[4px_4px_0_rgba(0,0,0,1)] transform -rotate-1 mx-1 my-2">$1</span>`);
+  });
+  return output;
+};
+---
+
+<div class="dossier-root relative w-full bg-black text-white font-body selection:bg-corporate-green selection:text-black overflow-x-hidden pt-20">
+  <!-- Top Scanline Overlay -->
+  <div class="scanline fixed inset-0 pointer-events-none z-50 opacity-[0.03]"></div>
+
+  <!-- Global Dossier Header (Pinned below Main Header) -->
+  <div class="w-full border-b border-white/10 bg-[#020202] py-2 px-8 lg:px-12 flex items-center justify-between sticky top-20 z-40 backdrop-blur-md">
+    <div class="flex items-center gap-4">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 bg-corporate-green rounded-full animate-pulse shadow-[0_0_8px_rgba(159,194,67,0.6)]"></span>
+        <span class="text-white font-mono text-[9px] tracking-[0.3em] uppercase">SYSTEM_INTEGRITY // {t('status.system_ok')}</span>
+      </div>
+      <div class="h-3 w-px bg-white/10 hidden sm:block"></div>
+      <span class="text-corporate-green font-mono text-[9px] tracking-[0.3em] uppercase hidden sm:block">AGLAYA_OPERATIONAL_DOSSIER // {archivalId}</span>
+    </div>
+    <div class="flex items-center gap-6 font-mono text-[8px] text-white/30 tracking-widest">
+      <span class="hidden md:block">LOC: LIMA / GLOBAL</span>
+      <span>BATCH // {batchYear}</span>
+    </div>
+  </div>
+
+  <div class="max-w-[1600px] mx-auto min-h-screen flex flex-col lg:flex-row border-x border-white/5">
+    
+    <!-- COLUMN 1: THE DASHBOARD RAIL (33%) -->
+    <aside class="w-full lg:w-[33%] border-b lg:border-b-0 lg:border-r border-white/5 p-8 lg:p-12 flex flex-col justify-between order-2 lg:order-1 bg-[#020202]">
+      <div class="rail-header flex flex-col gap-12">
+        <!-- Client Branding -->
+        <div class="flex flex-col gap-3">
+          <span class="text-corporate-green font-mono text-[10px] tracking-[0.4em] uppercase">{t('nav.proof')}</span>
+          <span class="text-white font-display font-black text-3xl uppercase tracking-tighter">{client}</span>
+        </div>
+
+        <!-- RELOCATED METRICS -->
+        <div class="metrics-segment flex flex-col gap-10 border-b border-white/5 pb-12">
+          {results.map((result, i) => (
+            <div class="stat-card group animate-fade-up" style={`animation-delay: ${100 + i * 150}ms`}>
+              <div class="flex flex-col gap-1">
+                <span class="text-corporate-green font-display font-black text-5xl lg:text-7xl tracking-tighter leading-none transition-transform duration-500 group-hover:scale-[1.02] origin-left">
+                  {result.metric}
+                </span>
+                <div class="h-px bg-linear-to-r from-corporate-green to-transparent w-full opacity-60"></div>
+                <p class="text-white/50 font-display font-bold text-[9px] tracking-[0.2em] uppercase leading-tight mt-1">
+                  {result.label[lang]}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <!-- NEW: System Summary (Rail Paragraph) - Positioned above photos -->
+        {summary[lang] && (
+          <div class="summary-segment animate-fade-up animation-delay-500 border-b border-white/5 pb-10">
+            <span class="block text-corporate-green font-mono text-[9px] tracking-[0.4em] mb-4 uppercase">SYSTEM_SUMMARY // ANALYSIS</span>
+            <p class="text-white/80 font-body text-sm leading-relaxed tracking-wide italic">
+              "{summary[lang]}"
+            </p>
+          </div>
+        )}
+
+        <!-- NEW: Panel Photo (Hero) in Rail - Moved higher for density -->
+        {heroImage && (
+          <div class="relative group aspect-video border border-white/10 bg-surface overflow-hidden transition-all duration-1000 grayscale hover:grayscale-0">
+             <img src={heroImage} alt="System Interface" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+             <div class="absolute inset-0 bg-corporate-green/5"></div>
+             <div class="absolute top-2 left-2 px-2 py-1 bg-black/80 backdrop-blur-sm border border-white/10 flex items-center gap-2">
+                <div class="w-1.5 h-1.5 bg-corporate-green animate-pulse"></div>
+                <span class="font-mono text-[7px] text-white/50 tracking-widest uppercase">SYSTEM_INTERFACE_SCAN // 001</span>
+             </div>
+          </div>
+        )}
+
+        <!-- Client & Context Metadata -->
+        <div class="metadata-segment space-y-8 py-10 border-y border-white/5">
+          <div class="group">
+            <span class="block text-white/40 font-mono text-[9px] tracking-widest mb-1 uppercase">{t('proof.detail.client')}</span>
+            <span class="block text-white font-display font-bold text-xl uppercase tracking-tighter">{client}</span>
+          </div>
+          <div class="group">
+            <span class="block text-white/40 font-mono text-[9px] tracking-widest mb-1 uppercase">{t('proof.detail.industry')}</span>
+            <span class="block text-white font-display font-bold text-base uppercase tracking-tighter">{industry}</span>
+          </div>
+          <div class="group">
+            <span class="block text-corporate-green font-mono text-[9px] tracking-widest mb-1 uppercase">BATCH // ID</span>
+            <span class="block text-white font-mono text-[11px] tracking-widest leading-none">#{batchYear}_{archivalId}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rail Mid/Bottom: High Visual Density -->
+      <div class="rail-visuals mt-12 flex flex-col gap-10">
+        <!-- Diagnostic Capture in Rail -->
+        {contentImage && (
+          <div class="relative group aspect-square border border-white/10 bg-surface overflow-hidden transition-all duration-1000 grayscale hover:grayscale-0">
+             <img src={contentImage} alt="System Architecture visualization" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity" />
+             <div class="absolute inset-0 bg-corporate-green/5"></div>
+             <div class="absolute top-2 left-2 px-2 py-1 bg-black/80 backdrop-blur-sm border border-white/10 flex items-center gap-2">
+                <div class="w-1.5 h-1.5 bg-corporate-green animate-pulse"></div>
+                <span class="font-mono text-[7px] text-white/50 tracking-widest uppercase">DIAGNOSTIC_CAPTURE // 002</span>
+             </div>
+          </div>
+        )}
+
+        <!-- Bottom Preview (Thumb) -->
+        <div class="relative aspect-4/3 w-full bg-surface border border-white/10 overflow-hidden grayscale hover:grayscale-0 transition-all duration-1000 group">
+           <img src={thumbImage} alt="Technical analysis" class="w-full h-full object-cover opacity-40 group-hover:opacity-80 transition-opacity" />
+           <div class="absolute inset-0 bg-corporate-green/5 mix-blend-overlay"></div>
+           <div class="absolute bottom-3 right-3 font-mono text-[8px] text-white/30 tracking-[0.3em]">SECURE_LINK // ENCRYPTED</div>
+        </div>
+        
+        <!-- Systems Lock List -->
+        <div class="systems-tags flex flex-wrap gap-2 opacity-50">
+          {solution_systems.map(s => (
+            <span class="px-2 py-1 bg-white/5 text-white font-mono text-[8px] tracking-widest uppercase border border-white/10">{s}</span>
+          ))}
+        </div>
+      </div>
+    </aside>
+
+    <!-- COLUMN 2: THE CORE NARRATIVE (66%) -->
+    <main class="w-full lg:w-[66%] flex flex-col order-1 lg:order-2">
+      <!-- High-Impact Title -->
+      <section class="p-8 lg:p-16 border-b border-white/5 pt-16 lg:pt-32">
+        <div class="flex flex-col gap-6">
+          <div class="flex items-center gap-4">
+             <div class="h-px w-8 bg-corporate-green"></div>
+             <span class="text-white/30 font-mono text-[9px] tracking-[0.6em] uppercase">SYSTEM_NARRATIVE_STREAM // 001</span>
+          </div>
+          <h1 
+            class="text-white font-display font-black text-5xl sm:text-7xl lg:text-9xl tracking-tighter leading-[1.1] sm:leading-[0.85] uppercase max-w-4xl"
+            set:html={processedTitle(title[lang]) + '<span class="text-corporate-green">.</span>'}
+          />
+        </div>
+      </section>
+
+      <!-- The Carousel Card (Challenge / Strategy / Vision) -->
+      <section class="p-8 lg:p-16 border-b border-white/5 bg-[#050505]">
+        <div class="carousel-card relative bg-[#0a0a0a] border-l-10 border-corporate-green p-10 lg:p-16 min-h-[450px] flex flex-col justify-between shadow-2xl">
+          <div class="carousel-content relative overflow-hidden">
+            <!-- Slide: Challenge -->
+            <div id="slide-challenge" class="slide active transition-all duration-700 transform translate-x-0 opacity-100">
+              <span class="text-corporate-green font-mono text-[11px] font-bold tracking-[0.4em] mb-8 block uppercase">{t('proof.detail.challenge')}</span>
+              <p class="text-white font-body text-2xl lg:text-4xl leading-snug tracking-tight italic opacity-95">
+                "{challenge[lang]}"
+              </p>
+            </div>
+            <!-- Slide: Strategy -->
+            <div id="slide-strategy" class="slide absolute top-0 left-0 w-full transition-all duration-700 transform translate-x-12 opacity-0 pointer-events-none">
+              <span class="text-corporate-green font-mono text-[11px] font-bold tracking-[0.4em] mb-8 block uppercase">{t('proof.detail.strategy')}</span>
+              <p class="text-white font-body text-2xl lg:text-4xl leading-snug tracking-tight italic opacity-95">
+                "{strategy[lang]}"
+              </p>
+            </div>
+            <!-- Slide: Vision -->
+            <div id="slide-vision" class="slide absolute top-0 left-0 w-full transition-all duration-700 transform translate-x-12 opacity-0 pointer-events-none">
+              <span class="text-corporate-green font-mono text-[11px] font-bold tracking-[0.4em] mb-8 block uppercase">{t('proof.detail.vision')}</span>
+              <p class="text-white font-body text-2xl lg:text-4xl leading-snug tracking-tight italic opacity-95">
+                "{vision[lang]}"
+              </p>
+            </div>
+          </div>
+
+          <!-- Carousel Dots -->
+          <div class="carousel-nav flex gap-4 mt-16">
+            <button data-target="challenge" class="nav-dot w-5 h-5 bg-corporate-green border border-corporate-green transition-all hover:scale-110 active shadow-[0_0_15px_rgba(159,194,67,0.3)]" title="Challenge"></button>
+            <button data-target="strategy" class="nav-dot w-5 h-5 bg-white/10 border border-white/20 transition-all hover:scale-110" title="Strategy"></button>
+            <button data-target="vision" class="nav-dot w-5 h-5 bg-white/10 border border-white/20 transition-all hover:scale-110" title="Vision"></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Mid-Section Hero -->
+      <section class="flex flex-col">
+        <!-- Narrative Blocks (Less Mono) -->
+        <div class="p-8 lg:p-16 prose-dossier pb-32">
+          <slot />
+        </div>
+      </section>
+
+      <!-- Action Footer (Pinned to bottom of Right Col or inline) -->
+      <section class="p-8 lg:p-16 border-t border-white/5 mt-auto">
+        <a 
+          href="/contact" 
+          class="group relative inline-flex items-center gap-12 bg-brand text-white py-8 px-12 transition-all hover:bg-white hover:text-black overflow-hidden active:scale-95"
+        >
+          <span class="font-display font-black text-2xl lg:text-3xl uppercase tracking-widest relative z-10 transition-colors">{t('proof.detail.cta')}</span>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" class="relative z-10 transition-all group-hover:translate-x-4">
+             <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="round"/>
+          </svg>
+          <div class="absolute inset-0 bg-white -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
+        </a>
+      </section>
+    </main>
+
+  </div>
+</div>
+
+<script>
+  function initCarousel() {
+    const dots = document.querySelectorAll('.nav-dot');
+    const slides = document.querySelectorAll('.slide');
+
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        const target = dot.getAttribute('data-target');
+        
+        dots.forEach(d => {
+          d.classList.remove('bg-corporate-green', 'border-corporate-green', 'active', 'shadow-[0_0_15px_rgba(159,194,67,0.3)]');
+          d.classList.add('bg-white/10', 'border-white/20');
+        });
+        dot.classList.add('bg-corporate-green', 'border-corporate-green', 'active', 'shadow-[0_0_15px_rgba(159,194,67,0.3)]');
+        dot.classList.remove('bg-white/10', 'border-white/20');
+
+        slides.forEach((slide) => {
+          const htmlSlide = slide as HTMLElement;
+          htmlSlide.classList.remove('active', 'translate-x-0', 'opacity-100');
+          htmlSlide.classList.add('absolute', 'top-0', 'left-0', 'translate-x-12', 'opacity-0', 'pointer-events-none');
+
+          if (htmlSlide.id === `slide-${target}`) {
+            htmlSlide.classList.add('active', 'translate-x-0', 'opacity-100');
+            htmlSlide.classList.remove('absolute', 'top-0', 'left-0', 'translate-x-12', 'opacity-0', 'pointer-events-none');
+          }
+        });
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', initCarousel);
+  initCarousel();
+</script>
+
+<style is:global>
+  @reference "../styles/global.css";
+
+  .prose-dossier {
+    @apply text-white/50 text-xl leading-relaxed font-body;
+  }
+
+  /* Updated Headings: Less Mono, More Display, Corporate Green Accent */
+  .prose-dossier h2 {
+    @apply text-white font-display font-black text-4xl lg:text-5xl tracking-tighter mt-20 mb-8 uppercase border-l-8 border-corporate-green pl-8;
+  }
+
+  .prose-dossier p {
+    @apply mb-8 font-light tracking-wide;
+  }
+
+  .prose-dossier strong {
+    @apply text-white font-bold;
+  }
+
+  /* Reduced Mono in lists */
+  .prose-dossier ul {
+    @apply flex flex-col gap-6 mb-12 list-none pl-0;
+  }
+
+  .prose-dossier li {
+    @apply relative pl-16 py-3 text-white/80 font-body text-lg border-l border-white/10 transition-all hover:border-corporate-green;
+  }
+
+  .prose-dossier li::before {
+    content: "0" counter(list-item);
+    @apply absolute left-4 top-4 font-mono text-[9px] text-corporate-green tracking-widest opacity-50;
+  }
+
+  .scanline {
+    background: linear-gradient(
+      rgba(18, 16, 16, 0) 50%,
+      rgba(0, 0, 0, 0.15) 50%
+    );
+    background-size: 100% 4px;
+  }
+</style>

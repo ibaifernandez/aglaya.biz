@@ -139,7 +139,12 @@ export const ui = {
 
     /* Proof Details */
     'proof.detail.systems': 'SYSTEMS_DEPLOYED',
-    'proof.detail.challenge': 'THE_CHALLENGE',
+    'proof.detail.client': 'CLIENT',
+    'proof.detail.industry': 'INDUSTRY',
+    'status.system_ok': 'SYSTEM_INTEGRITY_OK',
+    'proof.detail.challenge': 'CHALLENGE',
+    'proof.detail.strategy': 'STRATEGY',
+    'proof.detail.vision': 'VISION',
     'proof.detail.check': 'SOVEREIGNTY_CHECK',
     'proof.detail.quote': "The system keeps running when we're not in the room.",
     'proof.detail.cta': 'REPLICATE RESULTS',
@@ -274,7 +279,12 @@ export const ui = {
 
     /* Proof Details */
     'proof.detail.systems': 'SISTEMAS_DESPLEGADOS',
-    'proof.detail.challenge': 'EL_RETO',
+    'proof.detail.client': 'CLIENTE',
+    'proof.detail.industry': 'INDUSTRIA',
+    'status.system_ok': 'INTEGRIDAD_SISTEMA_OK',
+    'proof.detail.challenge': 'RETO',
+    'proof.detail.strategy': 'ESTRATEGIA',
+    'proof.detail.vision': 'VISIÓN',
     'proof.detail.check': 'CONTROL_DE_SOBERANÍA',
     'proof.detail.quote': 'El sistema sigue funcionando aunque no estemos en la sala.',
     'proof.detail.cta': 'REPLICAR RESULTADOS',

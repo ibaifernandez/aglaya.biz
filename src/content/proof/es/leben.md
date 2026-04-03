@@ -7,6 +7,18 @@ industry: Real Estate
 challenge:
   en: "Fragmented database with zero segmentation. Generic communications led to 8.68% Open Rate and massive lead leakage."
   es: "Base de datos fragmentada sin segmentación. Comunicaciones genéricas con 8.68% de Open Rate y fuga masiva de leads."
+summary:
+  en: "LEBEN, an innovative player in the real estate sector, possessed a high-value database that was effectively 'silent'. Without a technical system to deliver the right narrative at the right time, leads were leaking mid-funnel at an unsustainable rate."
+  es: "LEBEN, actor innovador en el sector inmobiliario, poseía una base de datos de alto valor que estaba efectivamente 'en silencio'. Sin un sistema técnico para entregar la narrativa adecuada en el momento preciso, los leads se filtraban en la mitad del embudo a una tasa insostenible."
+strategy:
+  en: "Implement behavioral triggers and automated lifecycle routing to eliminate narrative gaps."
+  es: "Implementación de disparadores de comportamiento y enrutamiento automatizado para eliminar brechas narrativas."
+vision:
+  en: "Transform the silent database into a self-optimizing, permanent communication asset."
+  es: "Transformación de la base de datos silenciosa en un activo de comunicación permanente auto-optimizado."
+heroImage: "/aglaya_zero_leak_flow_1775170966453_png_1775171008612.png"
+thumbImage: "/aglaya_processor_macro_1775170966453_png_1775170994680.png"
+contentImage: "/aglaya_dashboard_gui_1775170966453_png_1775170982093.png"
 solution_systems:
   - Narrative Delivery
   - Zero-Leak Architecture
@@ -26,10 +38,6 @@ results:
 featured: true
 date: "2025-07"
 ---
-
-## Contexto
-
-LEBEN, actor innovador en el sector inmobiliario, poseía una base de datos de alto valor que estaba efectivamente "en silencio". Sin un sistema técnico para entregar la narrativa adecuada en el momento preciso, los leads se filtraban en la mitad del embudo a una tasa insostenible.
 
 ## El Problema
 
