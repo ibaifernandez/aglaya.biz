@@ -1,3 +1,14 @@
+---
+status: active
+domain: operations
+owner: operations
+source_of_truth: true
+supersedes: []
+superseded_by: []
+last_reviewed: 2026-04-03
+consumable_by_agents: true
+---
+
 # AGENTS.md — Agent Collaboration Guidelines
 
 ## Purpose
@@ -63,6 +74,12 @@ This document defines how AI agents should interact with this codebase, what rol
 | `netlify/functions/`                            | Code Agent          |
 | `tests/`                                        | QA Agent            |
 | `docs/`, `*.md` (root)                          | Documentation Agent |
+
+## Entry Point Protocol
+
+1. **Start Here**: Every session must begin by reading [AGENTS.md](file:///Users/AGLAYA/Local%20Sites/aglaya.biz/AGENTS.md) for role alignment.
+2. **The Map**: Proceed immediately to [docs/README.md](file:///Users/AGLAYA/Local%20Sites/aglaya.biz/docs/README.md) to understand the current corpus hierarchy and "Truth" locations.
+3. **The Root**: Consult the root [README.md](file:///Users/AGLAYA/Local%20Sites/aglaya.biz/README.md) for high-level project vision and human context.
 
 ## Quality Gates
 

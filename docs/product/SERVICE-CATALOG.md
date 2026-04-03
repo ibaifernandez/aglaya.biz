@@ -1,8 +1,19 @@
+---
+status: active
+domain: offer
+owner: offer
+source_of_truth: true
+supersedes: [SERVICES-AI.md]
+superseded_by: []
+last_reviewed: 2026-04-03
+consumable_by_agents: true
+---
+
 # SERVICE CATALOG — AGLAYA
 
 > Arquitectura de servicios para el modelo de $8.000/mes.
 > No hay tiers. No hay paquetes. No hay planes. Hay sistemas.
-> **Fuente de verdad de marca:** `docs/BRAND-DNA.md`
+> **Fuente de verdad de marca:** `docs/brand/dna/BRAND-FOUNDATION.md`
 
 ---
 

@@ -1,4 +1,15 @@
-# CHANGELOG
+---
+status: active
+domain: operations
+owner: operations
+source_of_truth: true
+supersedes: []
+superseded_by: []
+last_reviewed: 2026-04-03
+consumable_by_agents: true
+---
+
+# CHANGELOG — AGLAYA
 
 All notable changes to this project are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
@@ -59,7 +70,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ### Added
 
-- **Strategic pivot documentation**: `docs/BRAND-STRATEGY.md`, `docs/MARKETING-STRATEGY.md`, `docs/SERVICES-AI.md`, `docs/PLATFORM-SETUP.md`
+- **Strategic pivot documentation**: `docs/brand/dna/BRAND-FOUNDATION.md`, `docs/MARKETING-OPERATING-SYSTEM.md`, `docs/SERVICE-CATALOG.md`, `docs/PLATFORM-SETUP.md`
 - **AI·gency branding** (EN): "AI·gency" as the English expression of the pivot concept; "Agenc·IA" retained for ES
 - **New OG image** 1200×630: editorial layout matching current site design (AGLAYA wordmark, radial red glow, tagline, body copy, red bottom stripe). Generated with `sharp` from SVG template.
 - **Git repo initialized** and connected to `git@github.com:ibaifernandez/aglaya.biz.git` via SSH
@@ -89,7 +100,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 - Icon components (User, Mail, MessageSquare, MessageCircle, Languages, Send)
 - Unit tests for translations and contact function (Vitest)
 - E2E tests with accessibility audit (Playwright + Axe-core)
-- Documentation: ARCHITECTURE.md, TESTING.md, SERVICES.md, WORKFLOW-SETUP.md
+- Documentation: ARCHITECTURE.md, TESTING.md, PLATFORMS-CONFIG.md, WORKFLOW-SETUP.md
 
 ### Changed
 

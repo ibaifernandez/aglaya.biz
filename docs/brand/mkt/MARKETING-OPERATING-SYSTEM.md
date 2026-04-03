@@ -1,3 +1,14 @@
+---
+status: active
+domain: marketing
+owner: marketing
+source_of_truth: true
+supersedes: [MARKETING-STRATEGY.md]
+superseded_by: []
+last_reviewed: 2026-04-03
+consumable_by_agents: true
+---
+
 # MARKETING OPERATING SYSTEM — AGLAYA
 
 > Documento maestro de activación comercial.

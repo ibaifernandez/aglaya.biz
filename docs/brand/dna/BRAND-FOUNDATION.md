@@ -1,3 +1,14 @@
+---
+status: active
+domain: brand
+owner: brand
+source_of_truth: true
+supersedes: [BRAND-DNA.md, BRAND-STRATEGY.md]
+superseded_by: []
+last_reviewed: 2026-04-03
+consumable_by_agents: true
+---
+
 # BRAND FOUNDATION — AGLAYA
 
 > Documento maestro de identidad y posicionamiento.

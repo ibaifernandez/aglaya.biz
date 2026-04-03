@@ -71,7 +71,7 @@ Page
 ### Security Rules
 1. All user input must be validated server-side in Netlify Functions.
 2. Email format validation uses regex + trim + lowercase.
-3. Turnstile token verification is mandatory before processing forms.
+3. hCaptcha token verification is mandatory before processing forms.
 4. CORS is restricted to `https://aglaya.biz`.
 5. No user-provided data is rendered as raw HTML (XSS prevention).
 6. Environment variables with secrets are never prefixed with `PUBLIC_`.
@@ -80,5 +80,5 @@ Page
 1. No JavaScript frameworks (React, Vue, etc.) — Astro islands only when needed.
 2. Images must use Astro's `<Image>` component for optimization.
 3. Fonts are loaded with `display=swap` and preconnected.
-4. Third-party scripts (Turnstile, Sentry) loaded async/defer.
+4. Third-party scripts (hCaptcha, Sentry) loaded async/defer.
 5. Target: < 50KB total CSS, < 10KB JS (excluding third-party), LCP < 2s.

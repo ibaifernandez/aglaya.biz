@@ -1,3 +1,14 @@
+---
+status: active
+domain: visual
+owner: visual
+source_of_truth: true
+supersedes: []
+superseded_by: []
+last_reviewed: 2026-04-03
+consumable_by_agents: true
+---
+
 # AGLAYA VISUAL SYSTEM
 
 > Documento maestro de identidad verbal-visual.
