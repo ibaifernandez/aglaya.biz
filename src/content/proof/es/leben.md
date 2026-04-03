@@ -8,8 +8,8 @@ challenge:
   en: "Fragmented database with zero segmentation. Generic communications led to 8.68% Open Rate and massive lead leakage."
   es: "Base de datos fragmentada sin segmentación. Comunicaciones genéricas con 8.68% de Open Rate y fuga masiva de leads."
 summary:
-  en: "LEBEN, an innovative player in the real estate sector, possessed a high-value database that was effectively 'silent'. Without a technical system to deliver the right narrative at the right time, leads were leaking mid-funnel at an unsustainable rate."
-  es: "LEBEN, actor innovador en el sector inmobiliario, poseía una base de datos de alto valor que estaba efectivamente 'en silencio'. Sin un sistema técnico para entregar la narrativa adecuada en el momento preciso, los leads se filtraban en la mitad del embudo a una tasa insostenible."
+  en: "A fragmented database with zero segmentation meant that all communications were generic. This lack of relevance resulted in a dismal 8.68% Open Rate. The sales pipeline was unpredictable, oscillating between drought and overwhelm with no automated structure to sustain it."
+  es: "Una base de datos fragmentada sin segmentación significaba que todas las comunicaciones eran genéricas. Esta falta de relevancia resultó en una tasa de apertura ínfima del 8.68%. La cartera de prospectos era impredecible, oscilando entre la sequía y el desbordamiento sin una estructura automatizada que la sostuviera."
 strategy:
   en: "Implement behavioral triggers and automated lifecycle routing to eliminate narrative gaps."
   es: "Implementación de disparadores de comportamiento y enrutamiento automatizado para eliminar brechas narrativas."
@@ -39,16 +39,12 @@ featured: true
 date: "2025-07"
 ---
 
-## El Problema
-
-Una base de datos fragmentada sin segmentación significaba que todas las comunicaciones eran genéricas. Esta falta de relevancia resultó en una tasa de apertura ínfima del 8.68%. La cartera de prospectos era impredecible, oscilando entre la sequía y el desbordamiento sin una estructura automatizada que la sostuviera.
-
 ## Qué Construimos
 
-Aplicando **Narrative Delivery** e **Zero-Leak Architecture**, AGLAYA reconstruyó por completo el customer journey:
+Aplicando **Narrative Delivery** y **Zero-Leak Architecture**, AGLAYA reconstruyó por completo el customer journey:
 
 - **Triggers por Comportamiento**: Implementamos lógica que monitorea la interacción con el catálogo y dispara secuencias narrativas específicas.
-- **Reconstrucción del Ciclo de Vida**: Construimos rutas de re-activación automatizadas para leads "fríos" basadas en su intención histórica.
+- **Reconstrucción del Ciclo de Vida**: Construimos rutas de reactivación automatizadas para leads "fríos" basadas en su intención histórica.
 - **Integridad del Sistema**: Establecimos un flujo de datos sin fugas que garantiza que cada interacción sea registrada y procesada sin supervisión humana.
 
 ## Los Resultados

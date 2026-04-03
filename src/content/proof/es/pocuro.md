@@ -5,8 +5,8 @@ title:
 client: POCURO
 industry: Real Estate
 summary:
-  en: "POCURO faced the challenge of scale. Its exponential growth outpaced the capacity of its legacy communication systems, resulting in a 20.00% 'leak' of the active segment and a loss of narrative control."
-  es: "POCURO, líder en desarrollo inmobiliario, enfrentaba un cuello de botella crítico: una afluencia masiva de leads sin una forma automatizada de priorizarlos. Los equipos de ventas operaban en un 'caos manual', perdiendo prospectos de alto valor en el ruido de consultas no calificadas."
+  en: "The sales team was spending 70% of their weekly capacity manually qualifying over 200+ leads. Without a unified scoring system or CRM visibility, the conversion rate was suffering while the operational cost of 'human qualification' reached an estimated $18K/month."
+  es: "El equipo de ventas dedicaba el 70% de su capacidad semanal a calificar manualmente más de 200 leads. Sin un sistema de scoring unificado ni visibilidad en el CRM, la tasa de conversión sufría mientras el costo operativo de la 'calificación humana' superaba los $18K mensuales."
 challenge:
   en: "Sales team spending 70% of their time qualifying leads that would never convert. No system, no scoring, no visibility."
   es: "El equipo de ventas empleaba el 70% de su tiempo calificando leads que nunca iban a convertir. Sin sistema, sin scoring, sin visibilidad."
@@ -38,10 +38,6 @@ results:
 featured: true
 date: "2025-06"
 ---
-
-## El Problema
-
-El equipo de ventas dedicaba el 70% de su capacidad semanal a calificar manualmente más de 200 leads. Sin un sistema de scoring unificado ni visibilidad en el CRM, la tasa de conversión sufría mientras el costo operativo de la "calificación humana" superaba los $18K mensuales.
 
 ## Qué Construimos
 

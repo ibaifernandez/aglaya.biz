@@ -3,7 +3,7 @@
 > Mapa de navegación y jerarquía documental del proyecto.
 > Si no sabes por dónde empezar, empieza aquí.
 >
-> Este INDEX no solo lista archivos: define qué documento manda en cada dominio
+> Este INDEX define qué documento manda en cada dominio
 > y cuáles quedan como referencia, histórico o revisión.
 
 ---
@@ -43,13 +43,13 @@ Si dos documentos se contradicen, gana este orden:
 5. `docs/FASE1-WEBSITE-IMPLEMENTATION-BRIEF.md`
 6. `docs/IA-RULES.md`
 7. `docs/CHANGELOG.md`
-8. `docs/3rd-parties-config/PLATFORMS_CONFIG.md`
+8. `docs/3rd-parties-config/PLATFORMS-CONFIG.md`
 9. documentos `[REF]`
 10. documentos `[REV]` o `[HIST]`
 
 **Regla especial de estado técnico actual:**  
-Si una duda es sobre qué está implementado de verdad hoy, mandan `CHANGELOG.md` y los documentos de configuración activos de plataformas.  
-`PRD.md`, `ROADMAP.md` y `BACKLOG.md` no mandan sobre estado real hasta ser reconciliados.
+Si una duda es sobre qué está implementado de verdad hoy, mandan `docs/CHANGELOG.md` y los documentos de configuración activos de plataformas.  
+`docs/PRD.md`, `docs/ROADMAP.md` y `docs/BACKLOG.md` no mandan sobre estado real hasta ser reconciliados.
 
 ---
 
@@ -104,12 +104,12 @@ Si una duda es sobre qué está implementado de verdad hoy, mandan `CHANGELOG.md
 
 | Documento | Estado | Contenido |
 |---|---|---|
-| `docs/3rd-parties-config/GITHUB_CONFIG.md` | [RECTOR] | Configuración del repositorio GitHub, branch protection, CI y settings recomendados. |
-| `docs/3rd-parties-config/NETLIFY_CONFIG.md` | [RECTOR] | Configuración del proyecto en Netlify, env vars, dominio, headers y funciones. |
-| `docs/3rd-parties-config/PLATFORMS_CONFIG.md` | [RECTOR] | Estado actual de UptimeRobot, Sentry, Resend, hCaptcha y Migadu. |
+| `docs/3rd-parties-config/GITHUB-CONFIG.md` | [RECTOR] | Configuración del repositorio GitHub, branch protection, CI y settings recomendados. |
+| `docs/3rd-parties-config/NETLIFY-CONFIG.md` | [RECTOR] | Configuración del proyecto en Netlify, env vars, dominio, headers y funciones. |
+| `docs/3rd-parties-config/PLATFORMS-CONFIG.md` | [RECTOR] | Estado actual de UptimeRobot, Sentry, Resend, hCaptcha y Migadu. |
 | `docs/PLATFORM-SETUP.md` | [REV] | Guía de activación histórica. No usar como fuente de verdad sin reconciliación. |
+| `docs/SERVICES-SETUP.md` | [REV] | Setup legado de terceros. Fuera de lectura obligatoria hasta depuración. |
 | `docs/WORKFLOW-SETUP.md` | [HIST] | Historial de cómo se creó y conectó el proyecto. Referencia humana. |
-| `docs/SERVICES.md` o equivalente heredado | [REV] | Setup legado de terceros. Fuera de lectura obligatoria hasta depuración. |
 
 ---
 
@@ -122,41 +122,6 @@ Si una duda es sobre qué está implementado de verdad hoy, mandan `CHANGELOG.md
 
 ---
 
-### QA
-*Resultados de auditorías de calidad. Referencia para saber qué se ha verificado y qué no.*
-
-| Documento | Estado | Contenido |
-|---|---|---|
-| `docs/QA/QA-ACCESSIBILITY.csv` | [REF] | Resultados de auditoría automatizada de accesibilidad. |
-| `docs/QA/QA-ACCESSIBILITY-HUMAN-CHECKED.csv` | [REF] | Verificación humana de accesibilidad. |
-| `docs/QA/QA-EMAIL.csv` | [REF] | Pruebas de flujos de email. |
-| `docs/QA/QA-USABILITY.csv` | [REF] | Resultados de pruebas de usabilidad. |
-
----
-
-## Mapeo de nombres antiguos → nombres vigentes
-
-| Nombre antiguo en docs viejos | Documento vigente |
-|---|---|
-| `BRAND-DNA.md` | `docs/brand/dna/BRAND-FOUNDATION.md` |
-| `BRAND-STRATEGY.md` | `docs/MARKETING-OPERATING-SYSTEM.md` |
-| `SERVICES-AI.md` | `docs/SERVICE-CATALOG.md` |
-| `MARKETING-STRATEGY.md` | `docs/MARKETING-OPERATING-SYSTEM.md` |
-
----
-
-## Documentos pendientes de crear
-
-Estos documentos no existen aún y siguen siendo útiles para la siguiente capa del sistema:
-
-| Documento | Propósito | Prioridad |
-|---|---|---|
-| `docs/KICKOFF-CONTENT-STRATEGY.md` | Prompt de arranque autocontenido para planificar el contenido del sitio completo. | Alta |
-| `docs/CASE-STUDIES.md` | Documentación estructurada de casos de estudio con resultados y metodología. | Alta |
-| `docs/COPY-SITE.md` | Copy aprobado del sitio completo en EN + ES, organizado por página y sección. | Alta |
-
----
-
 ## Notas de mantenimiento
 
 - Este INDEX se actualiza cada vez que cambia el estado de un documento: rector, referencia, revisión o histórico.
@@ -165,14 +130,14 @@ Estos documentos no existen aún y siguen siendo útiles para la siguiente capa 
 - Si aparece una contradicción de marca, manda `docs/brand/dna/BRAND-FOUNDATION.md`.
 - Si aparece una contradicción sobre el sistema visual o verbal, manda `docs/AGLAYA-VISUAL-SYSTEM.md`.
 - Si aparece una contradicción sobre qué se vende o cómo entra un cliente, mandan `docs/MARKETING-OPERATING-SYSTEM.md` y `docs/SERVICE-CATALOG.md`.
-- Si aparece una contradicción sobre qué está implementado hoy, mandan `docs/CHANGELOG.md` y `docs/3rd-parties-config/PLATFORMS_CONFIG.md`.
+- Si aparece una contradicción sobre qué está implementado hoy, mandan `docs/CHANGELOG.md` y `docs/3rd-parties-config/PLATFORMS-CONFIG.md`.
 
 ---
 
 ## Estado de la depuración documental
 
 - **Fase 1 — congelación y jerarquía:** cerrada
-- **Fase 2 — normalización de nombres y rutas:** pendiente
+- **Fase 2 — normalización de nombres y rutas:** cerrada
 - **Fase 3 — depuración de obsolescencia:** pendiente
 - **Fase 4 — cabeceras de gobernanza por documento:** pendiente
 - **Fase 5 — reconciliación por dominio:** pendiente

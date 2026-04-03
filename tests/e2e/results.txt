@@ -1,0 +1,11 @@
+
+Running 6 tests using 1 worker
+
+  ✓  1 [chromium] › tests/e2e/proof.spec.ts:5:3 › Proof Pages › should render the proof index page (3.3s)
+  ✓  2 [chromium] › tests/e2e/proof.spec.ts:15:3 › Proof Pages › should render a proof detail page (934ms)
+  ✓  3 [chromium] › tests/e2e/proof.spec.ts:37:3 › Proof Pages › should render the Spanish proof index page (3.1s)
+  ✓  4 [chromium] › tests/e2e/proof.spec.ts:47:3 › Proof Pages › should render a Spanish proof detail page (718ms)
+  ✓  5 [chromium] › tests/e2e/proof.spec.ts:69:3 › Proof Pages › should pass axe-core accessibility checks on proof index (266ms)
+  ✓  6 [chromium] › tests/e2e/proof.spec.ts:81:3 › Proof Pages › should pass axe-core accessibility checks on proof detail (825ms)
+
+  6 passed (11.2s)

@@ -11,8 +11,8 @@ strategy:
   en: "Deploy an AI-orchestrated filtering engine to shield the sales team from low-intent noise."
   es: "Despliegue de un motor de filtrado orquestado por IA para proteger al equipo de ventas del ruido de baja intención."
 summary:
-  en: "POCURO, a leader in real estate development, faced a critical bottleneck: a massive influx of leads with no automated way to prioritize them. Sales teams were operating in manual chaos, losing high-value prospects."
-  es: "POCURO, líder en desarrollo inmobiliario, enfrentaba un cuello de botella crítico: una afluencia masiva de leads."
+  en: "The sales team was spending 70% of their weekly capacity manually qualifying over 200+ leads. Without a unified scoring system or CRM visibility, the conversion rate was suffering while the operational cost of 'human qualification' reached an estimated $18K/month."
+  es: "El equipo de ventas dedicaba el 70% de su capacidad semanal a calificar manualmente más de 200 leads. Sin un sistema de scoring unificado ni visibilidad en el CRM, la tasa de conversión sufría mientras el costo operativo de la 'calificación humana' superaba los $18K mensuales."
 vision:
   en: "Achieve autonomous qualification to maximize sales velocity and human focus on conversion."
   es: "Lograr una calificación autónoma para maximizar la velocidad de ventas y el enfoque humano en la conversión."
@@ -38,10 +38,6 @@ results:
 featured: true
 date: "2025-06"
 ---
-
-## The Problem
-
-The sales team was spending 70% of their weekly capacity manually qualifying over 200+ leads. Without a unified scoring system or CRM visibility, the conversion rate was suffering while the operational cost of "human qualification" reached an estimated $18K/month.
 
 ## What We Built
 
