@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Hero from '../../components/Hero.astro';
+import Problem from '../../components/Problem.astro';
+import HowItWorks from '../../components/HowItWorks.astro';
+import ProofGrid from '../../components/ProofGrid.astro';
+import SystemsGrid from '../../components/SystemsGrid.astro';
+import AntiClient from '../../components/AntiClient.astro';
+import Economics from '../../components/Economics.astro';
+import ICPFilter from '../../components/ICPFilter.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<BaseLayout
+  title={t('meta.title')}
+  description={t('meta.description')}
+  lang={lang}
+>
+  <Header />
+
+  <main id="main-content" class="flex flex-col">
+    <Hero />
+    <Problem />
+    <SystemsGrid />
+    <HowItWorks />
+    <ProofGrid />
+    <AntiClient />
+    <Economics />
+
+    <section id="contact" class="px-6 py-24 sm:px-10 lg:px-20 bg-black border-t border-white/5">
+      <div class="max-w-7xl mx-auto flex flex-col gap-16">
+        <div data-animate="fade-up">
+          <SectionHeader
+            eyebrow={t('contact.eyebrow')}
+            heading={t('final.heading')}
+          />
+          <p class="text-white/60 font-body text-xl max-w-2xl mt-4 italic">
+            {t('final.subtext')}
+          </p>
+        </div>
+        <div data-animate="fade-up">
+          <ICPFilter />
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>

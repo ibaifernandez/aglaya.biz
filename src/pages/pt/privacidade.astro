@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+---
+
+<BaseLayout
+  title="Política de Privacidade — AGLAYA"
+  description="Como a AGLAYA trata os dados pessoais em aglaya.biz"
+  lang="pt"
+  alternateUrlPt={new URL('/pt/privacidade/', Astro.site).href}
+>
+  <Header />
+  <main id="main-content" class="max-w-7xl mx-auto px-6 sm:px-10 lg:px-20 py-40 flex flex-col gap-12">
+    <h1 class="font-display font-black text-4xl sm:text-6xl uppercase tracking-tighter text-white">Política de Privacidade</h1>
+
+    <div class="max-w-2xl flex flex-col gap-6 text-white/70 font-body leading-relaxed">
+      <p>Última atualização: abril de 2026</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Dados que Coletamos</h2>
+      <p>Ao enviar um formulário de contato, coletamos seu nome, endereço de e-mail e as informações que você nos fornece. Esses dados são usados exclusivamente para responder à sua consulta e qualificar o engajamento.</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Como os Utilizamos</h2>
+      <p>Os dados do formulário de contato são enviados via Resend para nossa equipe interna. Nunca são vendidos, compartilhados com terceiros ou usados para marketing não solicitado.</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Análise</h2>
+      <p>Se você aceitar todos os cookies, coletamos dados de uso anônimos (páginas visitadas, duração da sessão) via Google Analytics. Nenhuma informação de identificação pessoal é incluída.</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Seus Direitos</h2>
+      <p>Você pode solicitar acesso, correção ou exclusão de quaisquer dados pessoais que mantenhamos entrando em contato com <a href="mailto:info@aglaya.biz" class="text-brand hover:text-brand-light underline underline-offset-2">info@aglaya.biz</a>.</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Cookies</h2>
+      <p>Consulte nossa <a href="/pt/cookies/" class="text-brand hover:text-brand-light underline underline-offset-2">Política de Cookies</a> para mais detalhes.</p>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>

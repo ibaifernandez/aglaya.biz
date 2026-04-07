@@ -1,0 +1,153 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getLangFromUrl, useTranslations, useTranslatedPath } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+
+const outputs = [
+  {
+    n: '01',
+    title: 'Mapa de Processos com Custo',
+    body: 'Cada processo manual que você executa atualmente, com seu custo mensal estimado em tempo e dinheiro. Números no papel. Sem suposições.',
+  },
+  {
+    n: '02',
+    title: 'Árvore de Priorização',
+    body: 'O que automatizar primeiro, o que automatizar em seguida, e por quê. Ordenado por ROI, não pelo que é mais interessante de construir.',
+  },
+  {
+    n: '03',
+    title: 'Arquitetura de Sistema',
+    body: 'Design de sistema de alto nível para a infraestrutura de automação. Ferramentas, integrações, fluxos de dados — suficiente para construir sem ambiguidade.',
+  },
+  {
+    n: '04',
+    title: 'Business Case',
+    body: 'Investimento vs. economia mensal projetada com premissas explícitas. Se a matemática não funcionar, dizemos isso antes de você gastar qualquer coisa.',
+  },
+];
+---
+
+<BaseLayout
+  title="ROI Audit — AGLAYA"
+  description="Quanto está custando exatamente o que você não tem automatizado? Uma sessão de trabalho de 2 semanas que mapeia cada processo manual e produz um design de sistema + business case."
+  lang="pt"
+  alternateUrl={new URL('/roi-audit/', Astro.site).href}
+>
+  <Header />
+
+  <main id="main-content" class="flex flex-col">
+
+    <section class="max-w-7xl mx-auto px-6 w-full pt-40 pb-20 flex flex-col gap-6">
+      <span class="text-corporate-green font-mono text-[10px] font-black tracking-[0.4em] uppercase">Protocolo de Entrada</span>
+      <h1 class="text-white font-display font-black text-5xl md:text-7xl lg:text-[8rem] tracking-tighter leading-[0.88] uppercase">
+        Quanto custa<br/>o que você não<br/>tem automatizado?
+      </h1>
+      <p class="text-white/50 text-xl font-body leading-relaxed max-w-2xl mt-4">
+        Não uma estimativa aproximada. Não uma apresentação de slides. O número exato — com evidência.
+      </p>
+      <div class="w-24 h-1 bg-brand mt-4"></div>
+    </section>
+
+    <section class="bg-[#050505] border-t border-b border-white/5">
+      <div class="max-w-7xl mx-auto px-6 py-24 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+        <div class="flex flex-col gap-6">
+          <span class="text-corporate-green font-mono text-[10px] font-black tracking-[0.4em] uppercase">O Que É</span>
+          <h2 class="text-white font-display font-black text-4xl md:text-5xl tracking-tighter uppercase leading-tight">
+            Uma sessão de trabalho<br/>de 2 semanas.<br/>Não um diagnóstico gratuito.
+          </h2>
+          <p class="text-white/60 font-body text-lg leading-relaxed">
+            O ROI Audit é o ponto de entrada da AGLAYA. Nos integramos com sua equipe durante duas semanas.
+            Entrevistamos, observamos, mapeamos. O output não é um PDF bonito — é um diagnóstico operacional
+            preciso com uma arquitetura de sistema e um business case construído sobre números reais.
+          </p>
+          <p class="text-white/40 font-body text-base leading-relaxed">
+            O preço de $1.500 é intencional. Um cliente que não pode investir $1.500 em entender seu problema
+            não investirá $8.000 em resolvê-lo. O audit é um filtro tanto quanto um deliverable.
+          </p>
+        </div>
+        <div class="flex flex-col gap-px bg-white/5 border border-white/5">
+          <div class="bg-[#080808] p-8 flex flex-col gap-2">
+            <span class="text-white/30 font-mono text-[9px] uppercase tracking-widest">Duração</span>
+            <span class="text-white font-body">2 semanas com sua equipe</span>
+          </div>
+          <div class="bg-[#080808] p-8 flex flex-col gap-2">
+            <span class="text-white/30 font-mono text-[9px] uppercase tracking-widest">Formato</span>
+            <span class="text-white font-body">Entrevistas + observação + revisão documental</span>
+          </div>
+          <div class="bg-[#080808] p-8 flex flex-col gap-2">
+            <span class="text-white/30 font-mono text-[9px] uppercase tracking-widest">Preço</span>
+            <span class="text-white font-body">$1.500 USD</span>
+          </div>
+          <div class="bg-[#080808] p-8 flex flex-col gap-2">
+            <span class="text-white/30 font-mono text-[9px] uppercase tracking-widest">Descontável</span>
+            <span class="text-white font-body">Do primeiro mês de retainer se contratado nos 30 dias seguintes</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="max-w-7xl mx-auto px-6 w-full py-32 flex flex-col gap-16">
+      <div class="flex flex-col gap-4">
+        <span class="text-corporate-green font-mono text-[10px] font-black tracking-[0.4em] uppercase">Entregáveis</span>
+        <h2 class="text-white font-display font-black text-5xl md:text-6xl tracking-tighter uppercase">Quatro outputs.<br/>Zero relleno.</h2>
+        <div class="w-12 h-1 bg-brand mt-2"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/5 border border-white/5">
+        {outputs.map((o) => (
+          <div class="bg-[#080808] p-10 md:p-12 flex flex-col gap-6">
+            <div class="flex items-center gap-4">
+              <span class="text-corporate-green font-mono text-[8px] uppercase tracking-[0.5em]">{o.n}</span>
+              <div class="flex-1 h-px bg-white/5"></div>
+            </div>
+            <h3 class="text-white font-display font-black text-2xl uppercase tracking-tighter">{o.title}</h3>
+            <p class="text-white/50 font-body text-sm leading-relaxed">{o.body}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="bg-[#050505] border-t border-white/5">
+      <div class="max-w-4xl mx-auto px-6 py-24 flex flex-col gap-8 items-center text-center">
+        <span class="text-corporate-green font-mono text-[10px] uppercase tracking-[0.5em]">A CLÁUSULA DE HONESTIDADE</span>
+        <blockquote class="text-white font-display font-black text-3xl md:text-5xl tracking-tighter uppercase leading-tight">
+          "Se o audit não identificar ao menos $15K/mês em trabalho automatizável, dizemos isso e não propomos retainer."
+        </blockquote>
+        <p class="text-white/40 font-body text-lg leading-relaxed max-w-2xl">
+          Essa honestidade não é generosidade — é parte da nossa proposta. Não estamos aqui para vender.
+          Estamos aqui para construir sistemas que valham a pena construir. Se o seu ainda não está pronto, dizemos de frente.
+        </p>
+        <div class="w-12 h-1 bg-brand"></div>
+      </div>
+    </section>
+
+    <section class="border-t border-white/5 py-32">
+      <div class="max-w-4xl mx-auto px-6 flex flex-col items-center gap-10 text-center">
+        <span class="text-corporate-green font-mono text-[10px] uppercase tracking-[0.5em]">COMECE AQUI</span>
+        <h2 class="text-white font-display font-black text-5xl md:text-6xl tracking-tighter uppercase">
+          Solicite a auditoria.
+        </h2>
+        <p class="text-white/50 font-body text-xl leading-relaxed max-w-xl">
+          Complete o protocolo de qualificação. Determinaremos o fit e confirmaremos o engajamento em 24 horas.
+        </p>
+        <a
+          href={translatePath('/contact')}
+          class="bg-brand hover:bg-brand-dark text-white px-16 py-6 font-display font-black text-xl uppercase tracking-widest transition-all transform hover:scale-[1.02]"
+        >
+          {t('nav.contact')} →
+        </a>
+        <p class="text-white/20 font-mono text-[9px] uppercase tracking-widest">
+          Requer passar pelo protocolo de qualificação ICP · Resposta em menos de 24H
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <Footer />
+</BaseLayout>

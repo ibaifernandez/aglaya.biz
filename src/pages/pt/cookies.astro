@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+---
+
+<BaseLayout
+  title="Política de Cookies — AGLAYA"
+  description="Como a AGLAYA utiliza cookies em aglaya.biz"
+  lang="pt"
+>
+  <Header />
+  <main id="main-content" class="max-w-7xl mx-auto px-6 sm:px-10 lg:px-20 py-40 flex flex-col gap-12">
+    <h1 class="font-display font-black text-4xl sm:text-6xl uppercase tracking-tighter text-white">Política de Cookies</h1>
+
+    <div class="max-w-2xl flex flex-col gap-6 text-white/70 font-body leading-relaxed">
+      <p>Última atualização: abril de 2026</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Cookies Essenciais</h2>
+      <p>Necessários para o funcionamento do site. Não podem ser desativados. Incluem gerenciamento de sessão e tokens de segurança. Nenhum dado pessoal é armazenado.</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Cookies de Análise</h2>
+      <p>Utilizados para entender como os visitantes interagem com o site (páginas visitadas, duração da sessão, fontes de tráfego). Dados agregados — sem rastreamento individual. Ativados apenas se você aceitar todos os cookies.</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Suas Opções</h2>
+      <p>Você pode alterar suas preferências a qualquer momento excluindo a chave <code>aglaya_cookie_consent</code> do <code>localStorage</code> do seu navegador e recarregando a página.</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Contato</h2>
+      <p>Dúvidas? <a href="mailto:info@aglaya.biz" class="text-brand hover:text-brand-light underline underline-offset-2">info@aglaya.biz</a></p>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>

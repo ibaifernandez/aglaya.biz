@@ -15,7 +15,7 @@ interface Props {
   }>;
   solution_systems: string[];
   date: string;
-  lang: 'en' | 'es';
+  lang: 'en' | 'es' | 'pt';
   id: string;
   heroImage?: string;
   thumbImage?: string;
@@ -232,8 +232,8 @@ const processedTitle = (input: string) => {
 
       <!-- Action Footer (Pinned to bottom of Right Col or inline) -->
       <section class="p-8 lg:p-16 border-t border-white/5 mt-auto">
-        <a 
-          href="/contact" 
+        <a
+          href={lang === 'es' ? '/es/contact' : lang === 'pt' ? '/pt/contact' : '/contact'}
           class="group relative inline-flex items-center gap-12 bg-brand text-white py-8 px-12 transition-all hover:bg-white hover:text-black overflow-hidden active:scale-95"
         >
           <span class="font-display font-black text-2xl lg:text-3xl uppercase tracking-widest relative z-10 transition-colors">{t('proof.detail.cta')}</span>

@@ -2,19 +2,24 @@
 title:
   en: "Infrastructure & Sovereign BI"
   es: "Desacople de Infraestructura de Comunicaciones & Integración de Panel BI"
+  pt: "Infraestrutura & BI Soberano"
 client: "NORDEN"
 industry: "Salud"
 challenge:
   en: "Operational blindness and domain sabotage. A polluted CRM dragging B2C delivery to 7.56% and masking real intent signals."
   es: "Ceguera operativa y sabotaje de dominio. Un CRM contaminado reduciendo la entrega B2C al 7.56% y enmascarando las señales reales de intención."
+  pt: "Cegueira operacional e sabotagem de domínio. Um CRM contaminado arrastando a entrega B2C a 7,56% e mascarando sinais reais de intenção."
 summary:
   es: "Años de caos manual y \"leads fantasma\" habían convertido su dominio en un activo tóxico. Con un 7.56% de Open Rate en el tramo B2C, la empresa había perdido su capacidad de respuesta. Lo peor: no tenían forma de medir el daño real porque dependían de métricas opacas de terceros, sin una capa de datos propia que expusiera la verdad operativa."
+  pt: "Anos de caos manual e 'leads fantasma' haviam transformado o domínio em um ativo tóxico. Com 7,56% de Open Rate no segmento B2C, a empresa havia perdido sua voz. O pior: não tinham como medir o dano real porque dependiam de métricas opacas de terceiros."
 strategy:
   en: "Separation of B2B/B2C logic and implementation of a proprietary BI layer on Brevo API."
   es: "Separación de lógica B2B/B2C e implementación de una capa de BI propia sobre la API de Brevo."
+  pt: "Separação da lógica B2B/B2C e implementação de uma camada de BI proprietária sobre a API do Brevo."
 vision:
   en: "Absolute data sovereignty and zero-filter operational visibility."
   es: "Soberanía de datos absoluta y visibilidad operativa sin filtros registrados."
+  pt: "Soberania de dados absoluta e visibilidade operacional sem filtros."
 solution_systems:
   - Zero-Leak Architecture
   - Zero-Filter Diagnostics
@@ -24,14 +29,17 @@ results:
     label:
       en: "Verified B2C Open Rate (from 7.56%)"
       es: "Open Rate B2C verificado (desde 7.56%)"
+      pt: "Open Rate B2C verificado (de 7,56%)"
   - metric: "99%"
     label:
       en: "Primary segment inbox placement"
       es: "Entrega en bandeja (Inbox placement)"
+      pt: "Entrega na caixa de entrada (segmento principal)"
   - metric: "Proprietary"
     label:
       en: "Local BI & Reporting Layer"
       es: "Capa de BI y Reporting Local"
+      pt: "Camada de BI & Reporting Local"
 featured: true
 date: "2025-08"
 client_logo: "../src/assets/images/norden.png"

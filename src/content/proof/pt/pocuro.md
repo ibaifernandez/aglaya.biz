@@ -33,12 +33,12 @@ results:
       en: "reduction in unqualified leads reaching sales"
       es: "reducción en leads no calificados llegando a ventas"
       pt: "redução em leads não qualificados chegando às vendas"
-  - metric: "60 days"
+  - metric: "60 dias"
     label:
       en: "to full system deployment"
       es: "hasta despliegue completo del sistema"
       pt: "até implantação completa do sistema"
-  - metric: "$18K/mo"
+  - metric: "$18K/mês"
     label:
       en: "estimated manual work eliminated"
       es: "trabajo manual eliminado estimado"
@@ -47,16 +47,16 @@ featured: true
 date: "2025-06"
 ---
 
-## What We Built
+## O Que Construímos
 
-Using **Systemic Alchemy** and **AI Orchestration**, AGLAYA deployed an autonomous lead scoring engine:
+Utilizando **Systemic Alchemy** e **AI Orchestration**, a AGLAYA implantou um motor autônomo de qualificação de leads:
 
-- **Calibrated Intelligence**: A Claude-powered agent that analyzes 12 behavioral and demographic signals in real-time.
-- **Autonomous Filtering**: Leads are scored instantly upon arrival and routed to CRM sequences based on intent.
-- **Auto-Nurture**: Disqualified leads are seamlessly moved to an automated educational cycle, preserving sales bandwidth for high-probability signals.
+- **Inteligência Calibrada**: Um agente alimentado pelo Claude que analisa 12 sinais comportamentais e demográficos em tempo real.
+- **Filtragem Autônoma**: Os leads são pontuados instantaneamente ao chegar e roteados para sequências de CRM com base na intenção detectada.
+- **Auto-Nurture**: Os leads desqualificados são movidos automaticamente para um ciclo educativo, preservando a capacidade de vendas para sinais de alta probabilidade.
 
-## The Results
+## Os Resultados
 
-- **90% reduction** in unqualified leads reaching the sales desk.
-- **30 hours/week** recovered for the core sales team.
-- **Digital Sovereignty**: POCURO now owns a scalable infrastructure that runs 24/7 without developer intervention.
+- **90% de redução** em leads não qualificados chegando à equipe de vendas.
+- **30 horas/semana** recuperadas para a equipe comercial principal.
+- **Soberania Digital**: A POCURO agora possui uma infraestrutura escalável que funciona 24/7 sem intervenção externa.

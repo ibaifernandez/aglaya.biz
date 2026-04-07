@@ -3,27 +3,33 @@ import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/util
 import logoBlanco from '../assets/images/aglaya-logo-blanco.svg?raw';
 import spainFlag from '../assets/images/spain.svg?raw';
 import englishFlag from '../assets/images/UK.svg?raw';
+import brazilFlag from '../assets/images/Brazil.svg?raw';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const translatePath = useTranslatedPath(lang);
 
-function langSwitchPath(path: string, search: string, hash: string, targetLang: 'en' | 'es') {
-  let newPath = path;
-
+function langSwitchPath(path: string, search: string, hash: string, targetLang: 'en' | 'es' | 'pt') {
+  const stripped = path.replace(/^\/(es|pt)(?=$|\/)/, '') || '/';
+  let newPath: string;
   if (targetLang === 'en') {
-    newPath = path.replace(/^\/es(?=$|\/)/, '') || '/';
+    newPath = stripped;
+  } else if (targetLang === 'es') {
+    newPath = stripped === '/' ? '/es/' : `/es${stripped}`;
   } else {
-    // targetLang === 'es'
-    newPath = path.startsWith('/es') ? path : path === '/' ? '/es/' : `/es${path}`;
+    newPath = stripped === '/' ? '/pt/' : `/pt${stripped}`;
   }
-
   return `${newPath}${search || ''}${hash || ''}`;
 }
 
-const langLink = lang === 'en'
-  ? langSwitchPath(Astro.url.pathname, Astro.url.search, Astro.url.hash, 'es')
-  : langSwitchPath(Astro.url.pathname, Astro.url.search, Astro.url.hash, 'en');
+// Build switcher links for the languages we're NOT currently on
+type LangOption = { code: 'en' | 'es' | 'pt'; flag: string; label: string; href: string };
+const allLangs: LangOption[] = [
+  { code: 'en', flag: englishFlag, label: 'Switch to English', href: langSwitchPath(Astro.url.pathname, Astro.url.search, Astro.url.hash, 'en') },
+  { code: 'es', flag: spainFlag,   label: 'Cambiar a Español', href: langSwitchPath(Astro.url.pathname, Astro.url.search, Astro.url.hash, 'es') },
+  { code: 'pt', flag: brazilFlag,  label: 'Mudar para Português', href: langSwitchPath(Astro.url.pathname, Astro.url.search, Astro.url.hash, 'pt') },
+];
+const otherLangs = allLangs.filter(l => l.code !== lang);
 
 const navItems = [
   { href: translatePath('/#systems'), label: t('nav.systems') },
@@ -59,17 +65,19 @@ const navItems = [
 
     <!-- Actions -->
     <div class="flex items-center gap-6">
-      <!-- Language Switcher (toggle: shows current flag, click switches) -->
-      <div class="hidden md:flex items-center">
-        <a
-          href={langLink}
-          class="lang-switcher flex items-center justify-center w-5 h-5 rounded-full overflow-hidden opacity-100 hover:opacity-80 transition-opacity"
-          aria-label={lang === 'en' ? 'Cambiar a Español' : 'Switch to English'}
-          title={lang === 'en' ? 'Cambiar a Español' : 'Switch to English'}
-          data-target-lang={lang === 'en' ? 'es' : 'en'}
-        >
-          <Fragment set:html={lang === 'en' ? spainFlag : englishFlag} />
-        </a>
+      <!-- Language Switcher (shows flags for all non-current languages) -->
+      <div class="hidden md:flex items-center gap-2">
+        {otherLangs.map(l => (
+          <a
+            href={l.href}
+            class="lang-switcher flex items-center justify-center w-5 h-5 rounded-full overflow-hidden opacity-70 hover:opacity-100 transition-opacity"
+            aria-label={l.label}
+            title={l.label}
+            data-target-lang={l.code}
+          >
+            <Fragment set:html={l.flag} />
+          </a>
+        ))}
       </div>
 
       <!-- WhatsApp (desktop) -->
@@ -133,14 +141,18 @@ const navItems = [
       ))}
       <!-- Language + CTA -->
       <div class="flex items-center justify-between pt-6 gap-4">
-        <a
-          href={langLink}
-          class="lang-switcher flex items-center justify-center w-6 h-6 rounded-full overflow-hidden ring-2 ring-brand ring-offset-2 ring-offset-black hover:opacity-80 transition-opacity"
-          aria-label={lang === 'en' ? 'Cambiar a Español' : 'Switch to English'}
-          data-target-lang={lang === 'en' ? 'es' : 'en'}
-        >
-          <Fragment set:html={lang === 'en' ? englishFlag : spainFlag} />
-        </a>
+        <div class="flex items-center gap-2">
+          {otherLangs.map(l => (
+            <a
+              href={l.href}
+              class="lang-switcher flex items-center justify-center w-6 h-6 rounded-full overflow-hidden ring-2 ring-brand ring-offset-2 ring-offset-black hover:opacity-80 transition-opacity"
+              aria-label={l.label}
+              data-target-lang={l.code}
+            >
+              <Fragment set:html={l.flag} />
+            </a>
+          ))}
+        </div>
         <div class="flex items-center gap-3">
           <a
             href="https://wa.me/573224288532"
@@ -205,13 +217,10 @@ const navItems = [
   // Handle language switcher with View Transitions
   document.addEventListener('astro:page-load', function () {
     const switchLang = (path, targetLang) => {
-      let newPath = path;
-      if (targetLang === 'en') {
-        newPath = path.replace(/^\/es(?=$|\/)/, '') || '/';
-      } else {
-        newPath = path.startsWith('/es') ? path : path === '/' ? '/es/' : `/es${path}`;
-      }
-      return newPath;
+      const stripped = path.replace(/^\/(es|pt)(?=$|\/)/, '') || '/';
+      if (targetLang === 'en') return stripped;
+      if (targetLang === 'es') return stripped === '/' ? '/es/' : `/es${stripped}`;
+      return stripped === '/' ? '/pt/' : `/pt${stripped}`;
     };
 
     document.querySelectorAll('.lang-switcher').forEach(function (link) {
