@@ -47,16 +47,16 @@ featured: true
 date: "2025-07"
 ---
 
-## What We Built
+## O Que Construímos
 
-Applying **Narrative Delivery** and **Zero-Leak Architecture**, AGLAYA reconstructed the entire customer journey:
+Aplicando **Narrative Delivery** e **Zero-Leak Architecture**, a AGLAYA reconstruiu toda a jornada do cliente:
 
-- **Behavioral Triggers**: Implemented logic that monitors catalog interaction and triggers specific narrative sequences.
-- **Lifecycle Reconstruction**: Built automated re-engagement paths for "cold" leads based on historical intent.
-- **System Integrity**: Established a zero-leak data flow ensuring that every interaction is recorded and acted upon without human oversight.
+- **Gatilhos Comportamentais**: Implementamos lógica que monitora a interação com o catálogo e dispara sequências narrativas específicas.
+- **Reconstrução do Ciclo de Vida**: Construímos caminhos de re-engajamento automatizados para leads "frios" com base em sua intenção histórica.
+- **Integridade do Sistema**: Estabelecemos um fluxo de dados sem vazamentos que garante que cada interação seja registrada e processada sem supervisão humana.
 
-## The Results
+## Os Resultados
 
-- **357% increase** in Open Rate, jumping from 8.68% to 39.63%.
-- **40% of the cold database** successfully re-engaged into active pipeline.
-- **Sovereignty**: LEBEN now operates a permanent communication asset that delivers conversion without manual effort.
+- **357% de aumento** na Taxa de Abertura, saltando de 8,68% para 39,63%.
+- **40% da base de dados fria** re-engajada com sucesso no pipeline ativo.
+- **Soberania**: A LEBEN agora opera um ativo de comunicação permanente que gera conversão sem esforço manual.

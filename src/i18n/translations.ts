@@ -1,6 +1,7 @@
 export const languages = {
   en: 'English',
   es: 'Español',
+  pt: 'Português',
 } as const;
 
 export type Lang = keyof typeof languages;
@@ -292,6 +293,151 @@ export const ui = {
     'final.heading': 'Protocolo de Entrada al Sistema',
     'final.subtext': 'Inicia la secuencia de calificación para determinar la compatibilidad con nuestros estándares arquitectónicos.',
     'mission.statement': 'La agencia murió. Que viva el sistema. Construimos arquitecturas de IA de alto rendimiento para líderes que exigen soberanía sobre sus operaciones.',
+  },
+  pt: {
+    /* Global */
+    'nav.proof': 'Evidência',
+    'nav.systems': 'Sistemas',
+    'nav.economics': 'Economia',
+    'nav.services': 'Serviços',
+    'nav.roi_audit': 'ROI Audit',
+    'nav.contact': 'Solicitar Proposta',
+    'nav.legal': 'Legal',
+    'nav.privacy': 'Privacidade',
+    'nav.resources': 'Recursos',
+    'nav.terms': 'Termos',
+    'nav.cookies': 'Cookies',
+
+    /* Meta */
+    'meta.title': 'AGLAYA — A Agência Desconfortável',
+    'meta.description': 'Construímos sistemas de IA de alto desempenho que substituem o caos manual por certeza automatizada. Recupere sua soberania operacional.',
+
+    /* Cookie Banner */
+    'cookie.message': 'Utilizamos cookies para manter a integridade do sistema e analisar padrões de tráfego.',
+    'cookie.accept': 'Aceitar Tudo',
+    'cookie.essential': 'Apenas Essenciais',
+    'cookie.reject': 'Recusar',
+    'cookie.policy_link': 'Política de Cookies',
+    'cookie.privacy_link': 'Política de Privacidade',
+
+    /* Hero */
+    'hero.eyebrow': 'Construímos sistemas que potencializam seu negócio enquanto você dorme',
+    'hero.heading': 'A agência morreu.\nViva o sistema.',
+    'hero.subtext': 'A maioria das equipes não precisa de uma agência. Precisa de sua própria infraestrutura. Nós construímos. Você possui. O sistema continua funcionando quando não estamos.',
+    'hero.cta': 'Solicitar proposta',
+    'hero.secondary': 'Ver a evidência →',
+    'hero.label': 'EM BREVE',
+
+    /* Problem */
+    'problem.eyebrow': 'Não somos sua agência típica',
+    'problem.heading1': 'Agências vendem horas.',
+    'problem.heading2': 'Nós vendemos soberania.',
+    'problem.body': 'Quando você sai de uma agência, perde tudo que construíram — as contas, as automações, o conhecimento. Com a AGLAYA, você é o dono da infraestrutura. O sistema continua funcionando mesmo quando não estamos presentes.',
+
+    /* Systems */
+    'systems.heading': 'Nossa Arquitetura',
+    'systems.eyebrow': 'Princípios de engenharia que guiam o design dos nossos sistemas',
+
+    'systems.1.title': 'Alquimia Sistêmica',
+    'systems.1.tagline': 'Transformando o caos operacional em ativos digitais autônomos.',
+    'systems.1.cases': 'Validação autônoma de oportunidades, Visualização da verdade operacional, Protocolos de consenso automatizado',
+
+    'systems.2.title': 'Fluxo Lógico Inevitável',
+    'systems.2.tagline': 'Sistemas que executam a ação precisa com base no comportamento do usuário.',
+    'systems.2.cases': 'Sincronização de intenção de compra, Implantação de autoridade reativa, Ativos progressivos de credibilidade',
+
+    'systems.3.title': 'Arquitetura Sem Vazamentos',
+    'systems.3.tagline': 'Infraestrutura onde integridade de dados e desempenho são inegociáveis.',
+    'systems.3.cases': 'Interfaces de captura de desempenho, Blindagem de ativos digitais, Consistência de dados em tempo real',
+
+    'systems.4.title': 'Soberania Algorítmica',
+    'systems.4.tagline': 'Inteligência autônoma integrada ao núcleo da execução empresarial.',
+    'systems.4.cases': 'Implantação de memória corporativa, Extração de inteligência crítica, Distribuição de carga cognitiva',
+
+    'systems.5.title': 'Diagnóstico Sem Filtros',
+    'systems.5.tagline': 'Eliminando as mentiras operacionais para encontrar o caminho mais curto para a lucratividade.',
+    'systems.5.cases': 'Mapeamento de autoridade de mercado, Desconstrução de vazamentos operacionais, Estruturação de comando e controle',
+
+    /* How it Works */
+    'how.heading': 'O Protocolo de Engajamento',
+
+    'how.1.title': 'Auditoria da Verdade Operacional',
+    'how.1.description': 'Desconstruímos cada ineficiência operacional que custa tempo e capital. Números exatos, sem suposições. Se não encontrarmos ROI, não vendemos.',
+
+    'how.2.title': 'Design de Arquitetura Soberana',
+    'how.2.description': 'Projetamos sua arquitetura de automação proprietária. Você está envolvido, não gerenciado. Construímos para soberania, não dependência.',
+
+    'how.3.title': 'Execução e Evolução do Sistema',
+    'how.3.description': 'Garantimos, evoluímos e intensificamos o desempenho do sistema. Sincronizações semanais. Você possui tudo — somos os arquitetos em retenção.',
+
+    /* Proof */
+    'proof.heading': 'Evidência, não promessas.',
+    'proof.eyebrow': 'A evidência que valida nossa prática',
+    'proof.cta': 'Solicitar o mesmo ROI →',
+
+    /* Anti-Client */
+    'anti.eyebrow': 'O Filtro',
+    'anti.heading': 'Não somos para todos.',
+    'anti.body': 'A AGLAYA foi construída para quem valoriza a integridade operacional acima do conforto estético. Se quer um espelho, compre um. Se quer um sistema, fale conosco.',
+    'anti.list.1': 'Orçamento < $8.000 / mês',
+    'anti.list.2': 'Buscando validação, não desafio',
+    'anti.list.3': 'Mentalidade manual-primeiro',
+
+    /* Economics */
+    'eco.eyebrow': 'A Matemática do ROI',
+    'eco.heading': 'Marketing é um gasto.\nSistemas são ativos.',
+    'eco.body': 'Um sistema que recupera 30 horas da capacidade semanal da sua equipe de vendas não é um custo. É um aumento permanente no valor da sua empresa.',
+
+    /* Contact / ICP */
+    'contact.heading': 'Antes de conversar — algumas perguntas honestas.',
+    'contact.description': 'Não fazemos propostas. Fazemos auditorias. Identificamos seus vazamentos e descobrimos a infraestrutura sistêmica exata para fechar a lacuna entre o caos e a certeza automatizada.',
+    'contact.quote': 'Sistemas não se alugam. Possuem-se.',
+    'contact.eyebrow': 'O Protocolo',
+    'contact.label': 'SOLICITAR PROPOSTA',
+    'contact.qualify.eyebrow': 'Protocolo de Qualificação',
+    'contact.qualify.heading': 'CALIBRAÇÃO_DE_DADOS',
+    'contact.qualify.button': 'EXECUTAR_AVALIAÇÃO',
+    'contact.qualify.emp_label': 'TAMANHO_DA_EQUIPE',
+    'contact.qualify.spend_label': 'DESPESA_OPERACIONAL_MENSAL',
+    'contact.qualify.emp_range_1': '1_SOLO',
+    'contact.qualify.emp_range_2': '150_MED',
+    'contact.qualify.emp_range_3': '300+_CORP',
+    'contact.qualify.spend_range_1': '$0_MÍN',
+    'contact.qualify.spend_range_2': '$25K_MED',
+    'contact.qualify.spend_range_3': '$50K+_MÁX',
+    'contact.disqualified.title': 'INCOMPATIBILIDADE_OPERACIONAL',
+    'contact.disqualified.msg': 'Sua escala operacional atual ainda não justifica a construção do sistema AGLAYA. Recomendamos estabilizar seu fluxo manual antes de introduzir automação. Esta é a resposta honesta.',
+    'contact.disqualified.message': 'Provavelmente não somos sua agência — ainda. Quando sua equipe atingir 20+ pessoas e você gastar >$5K/mês em trabalho manual, volte.',
+    'contact.borderline.title': 'ALINHAMENTO_PROVISIONAL',
+    'contact.borderline.msg': 'Você está em uma escala de transição. Capturamos seu sinal agora para coordenar uma sequência de implantação futura quando sua complexidade aumentar.',
+    'contact.borderline.message': 'Você pode ser um match no futuro. Deixe seus dados e entraremos em contato quando o momento for certo.',
+    'contact.qualified.title': 'COMPATIBILIDADE_CONFIRMADA',
+    'contact.qualified.submit': 'Agendar Auditoria ROI',
+    'contact.qualified.heading': 'Vamos Construir Seu Sistema',
+
+    'contact.form.name': 'Nome Completo',
+    'contact.form.email': 'E-mail Corporativo',
+    'contact.form.company': 'Nome da Empresa',
+    'contact.form.website': 'Site da Empresa',
+    'contact.form.message': 'Gargalos Operacionais',
+    'contact.form.submit': 'Transmitir Sinal →',
+    'contact.success': 'Sinal recebido e decifrado. Nossos arquitetos estão analisando seus dados operacionais. Aguarde uma resposta em um ciclo comercial.',
+
+    /* Proof Details */
+    'proof.detail.systems': 'SISTEMAS_IMPLANTADOS',
+    'proof.detail.client': 'CLIENTE',
+    'proof.detail.industry': 'INDÚSTRIA',
+    'status.system_ok': 'INTEGRIDADE_SISTEMA_OK',
+    'proof.detail.challenge': 'DESAFIO',
+    'proof.detail.strategy': 'ESTRATÉGIA',
+    'proof.detail.vision': 'VISÃO',
+    'proof.detail.check': 'VERIFICAÇÃO_DE_SOBERANIA',
+    'proof.detail.quote': 'O sistema continua funcionando quando não estamos na sala.',
+    'proof.detail.cta': 'REPLICAR RESULTADOS',
+    'proof.featured': 'CASO PRIORITÁRIO',
+    'final.heading': 'Protocolo de Entrada no Sistema',
+    'final.subtext': 'Inicie a sequência de qualificação para determinar a compatibilidade com nossos padrões arquitetônicos.',
+    'mission.statement': 'A agência morreu. Viva o sistema. Construímos arquiteturas de IA de alto desempenho para líderes que exigem soberania sobre suas operações.',
   },
 } as const;
 

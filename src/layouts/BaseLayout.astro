@@ -11,6 +11,7 @@ interface Props {
   ogType?: string;
   lang?: string;
   alternateUrl?: string;
+  alternateUrlPt?: string;
 }
 
 const {
@@ -20,18 +21,29 @@ const {
   ogType = 'website',
   lang = 'en',
   alternateUrl,
+  alternateUrlPt,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const altLang = lang === 'en' ? 'es' : 'en';
-const altUrl = alternateUrl ?? (lang === 'en'
-  ? new URL('/es/', Astro.site).href
-  : new URL('/', Astro.site).href);
 const ogImageAbsolute = ogImage.startsWith('http')
   ? ogImage
   : new URL(ogImage, Astro.site).href;
 
-const ogLocale = lang === 'en' ? 'en_US' : 'es_ES';
+// Derive EN path to compute alternate URLs
+const enUrl = lang === 'en'
+  ? canonicalURL.href
+  : (alternateUrl ?? new URL('/', Astro.site).href);
+const enPath = new URL(enUrl).pathname;
+
+const esUrl = lang === 'es'
+  ? canonicalURL.href
+  : new URL(enPath === '/' ? '/es/' : `/es${enPath}`, Astro.site).href;
+
+const ptUrl = lang === 'pt'
+  ? canonicalURL.href
+  : (alternateUrlPt ?? new URL(enPath === '/' ? '/pt/' : `/pt${enPath}`, Astro.site).href);
+
+const ogLocale = lang === 'pt' ? 'pt_BR' : lang === 'es' ? 'es_ES' : 'en_US';
 const fullTitle = title;
 
 // Organization LD+JSON structured data
@@ -67,9 +79,10 @@ const structuredData = {
     <meta name="theme-color" content="#e8003d" />
     <link rel="canonical" href={canonicalURL} />
 
-    <!-- hreflang — bilingual SEO, no duplicate content -->
-    <link rel="alternate" hreflang={lang} href={canonicalURL} />
-    <link rel="alternate" hreflang={altLang} href={altUrl} />
+    <!-- hreflang — trilingual SEO, no duplicate content -->
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="es" href={esUrl} />
+    <link rel="alternate" hreflang="pt-BR" href={ptUrl} />
     <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site).href} />
 
     <!-- Open Graph -->
@@ -116,10 +129,10 @@ const structuredData = {
   </head>
   <body class="bg-black text-white selection:bg-brand/30 selection:text-white overflow-x-hidden">
     <a href="#main-content" class="skip-link">
-      {lang === 'es' ? 'Saltar al contenido principal' : 'Skip to main content'}
+      {lang === 'es' ? 'Saltar al contenido principal' : lang === 'pt' ? 'Pular para o conteúdo principal' : 'Skip to main content'}
     </a>
     <slot />
-    <CookieBanner lang={lang as 'en' | 'es'} />
+    <CookieBanner lang={lang as 'en' | 'es' | 'pt'} />
     <CustomCursor />
 
     <script is:inline>

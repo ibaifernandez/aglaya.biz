@@ -1,0 +1,65 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import ProofDossier from '../../../components/ProofDossier.astro';
+import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('proof');
+  return entries
+    .filter(entry => entry.id.startsWith('pt/'))
+    .map(entry => ({
+      params: { slug: entry.id.replace('pt/', '') },
+      props: { entry },
+    }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const {
+  title, client, industry, challenge, strategy, vision,
+  summary, results, solution_systems, date,
+  heroImage, thumbImage, contentImage
+} = entry.data as any;
+const slug = Astro.params.slug;
+---
+
+<BaseLayout
+  title={`${title[lang]} — AGLAYA ${t('nav.proof')}`}
+  description={challenge[lang]}
+  ogType="article"
+  lang={lang}
+  alternateUrl={new URL(`/proof/${slug}/`, Astro.site).href}
+  alternateUrlPt={new URL(`/pt/proof/${slug}/`, Astro.site).href}
+>
+  <Header />
+
+  <main id="main-content" class="w-full">
+    <ProofDossier
+      title={title}
+      client={client}
+      industry={industry}
+      challenge={challenge}
+      strategy={strategy}
+      vision={vision}
+      summary={summary}
+      results={results}
+      solution_systems={solution_systems}
+      date={date}
+      lang={lang}
+      id={entry.id}
+      heroImage={heroImage}
+      thumbImage={thumbImage}
+      contentImage={contentImage}
+    >
+      <Content />
+    </ProofDossier>
+  </main>
+
+  <Footer />
+</BaseLayout>

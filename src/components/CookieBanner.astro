@@ -3,14 +3,14 @@ import { getLangFromUrl, useTranslations } from '../i18n/utils';
 import type { Lang } from '../i18n/translations';
 
 interface Props {
-  lang?: Lang;
+  lang?: Lang | 'pt';
 }
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
-const policyUrl  = lang === 'es' ? '/es/cookies/' : '/cookies/';
-const privacyUrl = lang === 'es' ? '/es/privacidad/' : '/privacy/';
+const policyUrl  = lang === 'es' ? '/es/cookies/' : lang === 'pt' ? '/pt/cookies/' : '/cookies/';
+const privacyUrl = lang === 'es' ? '/es/privacidad/' : lang === 'pt' ? '/pt/privacidade/' : '/privacy/';
 ---
 
 <div
