@@ -199,6 +199,7 @@ const privacyUrl = lang === 'es' ? '/es/privacidad/' : lang === 'pt' ? '/pt/priv
   function dismiss(value: string) {
     if (!banner) return;
     localStorage.setItem(STORAGE_KEY, value);
+    window.dispatchEvent(new CustomEvent('aglaya:consent-update', { detail: { consent: value } }));
     banner.classList.remove('is-visible');
     banner.addEventListener(
       'transitionend',
