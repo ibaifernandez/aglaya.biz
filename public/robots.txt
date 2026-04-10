@@ -1,0 +1,30 @@
+# AGLAYA robots.txt
+# Block crawlers from accessing legal pages
+User-agent: *
+Allow: /
+Disallow: /cookies/
+Disallow: /es/cookies/
+Disallow: /pt/cookies/
+Disallow: /privacy/
+Disallow: /es/privacidad/
+Disallow: /pt/privacidade/
+
+# Allow specific good bots
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Block bad bots and scrapers
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+# Sitemap
+Sitemap: https://aglaya.biz/sitemap-index.xml

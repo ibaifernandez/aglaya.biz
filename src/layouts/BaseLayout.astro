@@ -12,6 +12,7 @@ interface Props {
   lang?: string;
   alternateUrl?: string;
   alternateUrlPt?: string;
+  noindex?: boolean;
 }
 
 const {
@@ -22,6 +23,7 @@ const {
   lang = 'en',
   alternateUrl,
   alternateUrlPt,
+  noindex = false,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -95,7 +97,7 @@ const structuredData = {
     <!-- Primary SEO -->
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
     <meta name="theme-color" content="#e8003d" />
     <link rel="canonical" href={canonicalURL} />
 
