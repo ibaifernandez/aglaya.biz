@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [0.0.2] — 2026-04-10
 
 ### Added
 - **SEO**: Legal pages (cookies, privacy policies) now return `noindex, nofollow` meta robots to prevent Google indexation
@@ -17,3 +17,5 @@
 - Legal pages now emit `<meta name="robots" content="noindex, nofollow" />` in HTML head
 - `robots.txt` explicitly disallows crawlers from legal paths while allowing sitemap indexing
 - All tests passing (26 unit tests, 20 E2E tests)
+
+## [0.0.1] — Prior releases
