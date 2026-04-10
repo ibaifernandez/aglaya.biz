@@ -24,6 +24,9 @@ npm-debug.log*
 .vscode/
 .idea/
 
+# Claude
+.claude
+
 # Playwright test artifacts
 test-results/
 playwright-report/

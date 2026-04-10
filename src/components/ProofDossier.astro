@@ -20,6 +20,7 @@ interface Props {
   heroImage?: string;
   thumbImage?: string;
   contentImage?: string;
+  bodyHtml?: string;
 }
 
 const { 
@@ -30,7 +31,8 @@ const {
   results, solution_systems, date, lang, id,
   heroImage = "/aglaya_dashboard_gui_1775170966453_png_1775170982093.png",
   thumbImage = "/aglaya_processor_macro_1775170966453_png_1775170994680.png",
-  contentImage
+  contentImage,
+  bodyHtml = ''
 } = Astro.props;
 
 const t = useTranslations(lang);
@@ -225,9 +227,7 @@ const processedTitle = (input: string) => {
       <!-- Mid-Section Hero -->
       <section class="flex flex-col">
         <!-- Narrative Blocks (Less Mono) -->
-        <div class="p-8 lg:p-16 prose-dossier pb-32">
-          <slot />
-        </div>
+        <div class="p-8 lg:p-16 prose-dossier pb-32" set:html={bodyHtml} />
       </section>
 
       <!-- Action Footer (Pinned to bottom of Right Col or inline) -->

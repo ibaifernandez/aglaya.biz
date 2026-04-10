@@ -1,5 +1,6 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
+import { marked } from 'marked';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
@@ -8,23 +9,21 @@ import { getLangFromUrl, useTranslations } from '../../i18n/utils';
 
 export async function getStaticPaths() {
   const entries = await getCollection('proof');
-  return entries
-    .filter(entry => entry.id.startsWith('en/'))
-    .map(entry => ({
-      params: { slug: entry.id.replace('en/', '') },
-      props: { entry },
-    }));
+  return entries.map(entry => ({
+    params: { slug: entry.id.replace('.md', '') },
+    props: { entry },
+  }));
 }
 
 const { entry } = Astro.props;
-const { Content } = await render(entry);
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
-// Cast entry.data to access bilingual objects directly
 const data = entry.data as any;
 const { title, client, industry, challenge, strategy, vision, summary, results, solution_systems, date, heroImage, thumbImage, contentImage } = data;
 const slug = Astro.params.slug;
+
+const bodyContent = marked.parse(data[`body_${lang}`] || data.body_en || '');
 ---
 
 <BaseLayout
@@ -53,9 +52,8 @@ const slug = Astro.params.slug;
       heroImage={heroImage}
       thumbImage={thumbImage}
       contentImage={contentImage}
-    >
-      <Content />
-    </ProofDossier>
+      bodyHtml={bodyContent as string}
+    />
   </main>
 
   <Footer />

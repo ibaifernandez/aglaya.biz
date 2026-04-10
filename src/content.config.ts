@@ -14,11 +14,12 @@ const bilingualString = z.union([
 ]);
 
 const proofCollection = defineCollection({
-  loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/proof' }),
+  loader: glob({ pattern: '[^_]*.{md,mdx}', base: './src/content/proof' }),
   schema: z.object({
     title: bilingualString,
     client: z.string(),
     client_logo: z.string().optional(),
+    client_logo_dark: z.string().optional(),
     logo: z.string().optional(),
     industry: bilingualString,
     challenge: bilingualString,
@@ -36,6 +37,10 @@ const proofCollection = defineCollection({
     featured: z.boolean().default(false),
     date: z.string(), // YYYY-MM
     ogImage: z.string().optional(),
+    // Multilingual body content (replaces per-language MD files)
+    body_en: z.string().optional(),
+    body_es: z.string().optional(),
+    body_pt: z.string().optional(),
   }),
 });
 

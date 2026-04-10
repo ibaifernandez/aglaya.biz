@@ -8,10 +8,9 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const translatePath = useTranslatedPath(lang);
 
-// Get all proof entries for the current language
+// Get all proof entries (flat collection — no lang-prefix subdirectory)
 const allEntries = await getCollection('proof');
 const entries = allEntries
-  .filter(entry => entry.id.startsWith(`${lang}/`))
   .sort((a, b) => b.data.date.localeCompare(a.data.date));
 
 const featured = entries.find(e => e.data.featured) || entries[0];
@@ -29,12 +28,12 @@ const others = entries.filter(e => e.id !== featured.id).slice(0, 2);
         eyebrow={t('proof.eyebrow')}
         heading={t('proof.heading')}
       />
-      <a
+      <!-- <a
         href={translatePath('/proof/')}
-        class="text-corporate-green font-mono text-xs uppercase tracking-[0.4em] hover:text-white transition-colors mb-4 flex items-center gap-4 group border py-5 px-5"
+        class="text-corporate-green font-mono text-xs uppercase tracking-[0.4em] hover:text-white transition-colors mb-4 flex items-center gap-4 group border py-5 px-12"
       >
-        <span>DISCOVER_FULL_INDEX &gt;&gt;&gt;</span>
-        <!-- <div class="w-8 h-[1px] bg-brand group-hover:w-12 transition-all"></div> -->
+        <span style="display:block;width:280px;">DISCOVER_FULL_INDEX &gt;&gt;&gt;</span>
+        <div class="w-8 h-[1px] bg-brand group-hover:w-12 transition-all"></div> -->
     </a>
     </div>
 

@@ -226,7 +226,7 @@ export const ui = {
     'how.3.title': 'Ejecución y Evolución del Sistema',
     'how.3.description': "Aseguramos, evolucionamos e intensificamos el rendimiento de la arquitectura. Sincronización semanal. Tú eres el dueño de cada activo.",
     /* Proof */
-    'proof.heading': 'Evidencia, no promesas.',
+    'proof.heading': 'Evidencias, no promesas.',
     'proof.eyebrow': 'La evidencia que ampara nuestra praxis',
     'proof.cta': 'Solicitar el mismo ROI →',
 
@@ -371,7 +371,7 @@ export const ui = {
     'how.3.description': 'Garantimos, evoluímos e intensificamos o desempenho do sistema. Sincronizações semanais. Você possui tudo — somos os arquitetos em retenção.',
 
     /* Proof */
-    'proof.heading': 'Evidência, não promessas.',
+    'proof.heading': 'Evidências, não promessas.',
     'proof.eyebrow': 'A evidência que valida nossa prática',
     'proof.cta': 'Solicitar o mesmo ROI →',
 
