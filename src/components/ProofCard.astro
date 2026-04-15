@@ -1,6 +1,9 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
+import lebenLogo from '../assets/images/leben.png';
+import nordenLogo from '../assets/images/norden.png';
+import pocuroLogo from '../assets/images/pocuro.png';
 
 interface Props {
   entry: CollectionEntry<'proof'>;
@@ -22,7 +25,14 @@ const industryText = typeof industry === 'object'
   ? industry[lang] || industry['en'] || Object.values(industry)[0] || ''
   : industry || '';
 
-const clientLogoSrc = client_logo || logo || '';
+const rawClientLogoSrc = client_logo || logo || '';
+const logoFilename = rawClientLogoSrc.split('/').pop() || '';
+const proofLogoMap: Record<string, string> = {
+  'leben.png': lebenLogo.src,
+  'norden.png': nordenLogo.src,
+  'pocuro.png': pocuroLogo.src,
+};
+const clientLogoSrc = proofLogoMap[logoFilename] || rawClientLogoSrc || '';
 
 // Slug resolution: remove lang prefix if present in ID
 const cleanSlug = entry.id.replace(/^(en|es|pt)\//, '');
