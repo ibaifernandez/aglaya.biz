@@ -1,7 +1,7 @@
 # CLAUDE.md — Project Instructions for AI Assistants
 
 ## Project Overview
-**AGLAYA** ("The Uncomfortable Agency") — bilingual (EN/ES) digital marketing agency website built with Astro, deployed on Netlify.
+**AGLAYA** ("The Uncomfortable Agency") — trilingual (EN/ES/PT) digital marketing agency website built with Astro, deployed on Netlify.
 
 ## Tech Stack
 - **Framework**: Astro 6.x (SSR via Netlify adapter)
@@ -9,6 +9,7 @@
 - **Serverless**: Netlify Functions (`netlify/functions/`)
 - **Email**: Resend API
 - **Bot Protection**: hCaptcha
+- **Error Tracking**: Sentry (browser + Astro SSR + Netlify Functions when DSN is configured)
 - **Monitoring**: UptimeRobot
 - **Testing**: Vitest (unit) + Playwright (E2E) + Axe-core (a11y)
 
@@ -24,7 +25,7 @@ npm run test:e2e   # Playwright E2E + accessibility
 ## Project Structure
 ```
 src/
-├── pages/           # Astro pages (/ = EN, /es/ = ES)
+├── pages/           # Astro pages (/ = EN, /es/ = ES, /pt/ = PT)
 ├── layouts/         # BaseLayout.astro (SEO, meta, structured data)
 ├── components/      # ContactForm.astro, CookieBanner.astro, icons/
 ├── i18n/            # translations.ts (useTranslations helper)
@@ -37,8 +38,8 @@ docs/                # Project documentation
 ```
 
 ## Architecture Decisions
-- **i18n**: Subdirectory strategy (EN at `/`, ES at `/es/`). Full hreflang parity.
-- **Forms**: Client → hCaptcha validation → Netlify Function → Resend (dual email: confirmation + lead notification). Confirmation email is bilingual — rendered in the same language (`lang`) the form was submitted from.
+- **i18n**: Subdirectory strategy (EN at `/`, ES at `/es/`, PT at `/pt/`). Full hreflang parity.
+- **Forms**: Client → hCaptcha validation → Netlify Function → Resend/MailerLite. Contact and ROI flows send immediate confirmations plus internal notifications; footer dispatch captures subscribers in MailerLite when configured and sends a Resend confirmation. Confirmation email is rendered in the same language (`lang`) the form was submitted from.
 - **Cookie consent**: `CookieBanner.astro` rendered in `BaseLayout.astro`. Consent stored in `localStorage` (`aglaya_cookie_consent`: `all` | `essential`). No external CMP — first-party only.
 - **Styling**: Tailwind v4 via Vite plugin, NOT PostCSS. Design tokens defined in `@theme` block.
 - **Fonts**: Outfit (display/headings), Inter (body). Loaded via Google Fonts with preconnect.
@@ -54,7 +55,7 @@ docs/                # Project documentation
 - **Email tagline ES**: "La IA ejecuta. El humano estrategiza."
 
 ## Coding Conventions
-- All text must be bilingual (EN + ES). Use `src/i18n/translations.ts` for all user-facing strings.
+- All text must be trilingual (EN + ES + PT). Use `src/i18n/translations.ts` for all user-facing strings.
 - Semantic HTML with ARIA attributes. Every form field needs labels.
 - All pages must pass Axe-core WCAG 2AA audit.
 - Use Astro components (`.astro`) for static content; reserve `<script>` for client interactivity.
@@ -67,10 +68,24 @@ docs/                # Project documentation
 | `RESEND_API_KEY` | Server | Resend email API key |
 | `HCAPTCHA_SECRET` | Server | hCaptcha secret key |
 | `PUBLIC_HCAPTCHA_SITE_KEY` | Client | hCaptcha site key (fallback hardcoded in ContactForm) |
-| `PUBLIC_SENTRY_DSN` | Client | Sentry project DSN |
+| `PUBLIC_SENTRY_DSN` | Client | Sentry DSN shared with browser runtime and as server fallback |
+| `SENTRY_DSN` | Server | Optional server-only DSN override for Astro SSR and Netlify Functions |
+| `SENTRY_AUTH_TOKEN` | Build | Optional source-map upload token |
+| `SENTRY_ORG` | Build | Optional Sentry org slug for source-map upload |
+| `SENTRY_PROJECT` | Build | Optional Sentry project slug for source-map upload |
+| `PUBLIC_SENTRY_RELEASE` | Client | Optional browser-side release label |
 | `NOTIFY_EMAIL` | Server | Lead notification recipient |
-| `MAILERLITE_API_KEY` | Server | Optional MailerLite API key for footer dispatch subscriptions |
-| `MAILERLITE_GROUP_ID` | Server | Optional MailerLite group id for footer dispatch subscriptions |
+| `MAILERLITE_API_KEY` | Server | Optional MailerLite API key for dispatch/contact list sync |
+| `MAILERLITE_SUSCRIPCIONES_GROUP_ID` | Server | Optional MailerLite group id for footer dispatch subscriptions |
+| `MAILERLITE_NO_CUALIFICADOS_GROUP_ID` | Server | Optional MailerLite group id for blocked/open-channel and non-qualified contact leads |
+| `MAILERLITE_CUALIFICADOS_GROUP_ID` | Server | Optional MailerLite group id for qualified contact leads |
+| `MAILERLITE_BORDERLINE_GROUP_ID` | Server | Optional MailerLite group id for borderline contact leads |
+
+Sentry environment tagging is inferred from Netlify deploy context by default. Avoid setting a separate public environment label unless you intentionally need to override that behavior outside Netlify.
+| `MAILERLITE_CONTACTO_GROUP_ID` | Server | Legacy fallback MailerLite group id for contact leads |
+| `MAILERLITE_CONTACTO_QUALIFIED_GROUP_ID` | Server | Legacy fallback MailerLite group id for qualified contact leads |
+| `MAILERLITE_CONTACTO_BORDERLINE_GROUP_ID` | Server | Legacy fallback MailerLite group id for borderline contact leads |
+| `MAILERLITE_CONTACTO_BLOCKED_GROUP_ID` | Server | Legacy fallback MailerLite group id for blocked/open-channel contact leads |
 
 ## Git Workflow
 
@@ -121,19 +136,18 @@ export NVM_DIR="$HOME/.nvm" && source "$NVM_DIR/nvm.sh" && nvm use v23.4.0
 
 ## Known Gotchas & Hard-Won Lessons
 
-### Astro script modules are deferred — use `is:inline` for global callbacks
-Astro compiles `<script>` blocks as ES modules (`type="module"`), which the browser **defers** until after parsing. Any third-party `async` script (e.g. hCaptcha, Google Analytics) can fire before the module runs. If a third-party calls `window.someCallback`, define it in a **`<script is:inline>`** block placed *before* the third-party `<script src>` tag — inline scripts are synchronous and always run first.
+### Prefer bundled module scripts; reserve `is:inline` for true parse-time requirements
+Astro compiles plain `<script>` blocks as ES modules (`type="module"`). That is the default we prefer because it keeps CSP tighter and avoids scattering executable inline JS across the site. Only use `is:inline` when a third-party truly needs a parse-time global before the browser can even reach the deferred module phase.
 
 ```html
-<!-- ✅ Correct — inline runs before async hCaptcha -->
-<script is:inline>
-  window.onHCaptchaSuccess = function(token) { /* ... */ };
-</script>
-<script src="https://js.hcaptcha.com/1/api.js" async defer is:inline></script>
-
-<!-- ❌ Wrong — module is deferred; hCaptcha may fire callback first -->
+<!-- ✅ Preferred — bundled module keeps CSP stricter -->
 <script>
   window.onHCaptchaSuccess = (token) => { /* ... */ };
+</script>
+
+<!-- Use `is:inline` only if a provider provably breaks without synchronous parse-time globals -->
+<script is:inline>
+  window.someLegacyVendorCallback = function () { /* ... */ };
 </script>
 ```
 

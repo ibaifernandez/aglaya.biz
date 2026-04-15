@@ -10,3 +10,5 @@ E08,Email de confirmación en español,AGLAYA <info@aglaya.biz>,Email introducid
 E09,Notificación interna ES,AGLAYA <info@aglaya.biz>,NOTIFY_EMAIL,"📩 New Contact [ES]: {nombre}","Language: ES visible en el cuerpo",✅ Pasado,Language: ES visible ✅
 E10,Saludo sin nombre ES,AGLAYA <info@aglaya.biz>,Email introducido,Señal recibida — AGLAYA,"Saludo: 'Hola,' (sin nombre)",Pendiente,Nombre es opcional
 E11,Email diseño — mejoras pendientes,–,–,–,"Diseño actual funcional pero mejorable. Notificación interna sin branding. Revisión futura prevista.",Backlog,Ver BACKLOG — email redesign v2
+E12,Dispatch confirmation email,AGLAYA <info@aglaya.biz>,Email introducido en el footer,Dispatch confirmed — AGLAYA,"// DISPATCH CONFIRMED, headline correcto, copy según idioma, sin imágenes rotas",Pendiente,Validar EN/ES/PT
+E13,Copia de autorespuesta para QA humano,AGLAYA <info@aglaya.biz>,info@aglaya.biz,Copia BCC de la respuesta automática,"Info recibe copia del email de confirmación para validar contenido, links y render",Pendiente,Aplicable a contacto y dispatch

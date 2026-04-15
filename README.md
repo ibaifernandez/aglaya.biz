@@ -6,7 +6,7 @@
 ![Astro](https://img.shields.io/badge/Astro-6.x-FF5D01)
 ![Tailwind](https://img.shields.io/badge/Tailwind-v4-38BDF8)
 
-Bilingual website for **AGLAYA**, a digital marketing AI·gency. The Uncomfortable AI·gency — obsession, excellence, uncomfortable honesty.
+Trilingual website for **AGLAYA**, a digital marketing AI·gency. The Uncomfortable AI·gency — obsession, excellence, uncomfortable honesty.
 
 ## Brand Identity
 
@@ -42,10 +42,11 @@ Bilingual website for **AGLAYA**, a digital marketing AI·gency. The Uncomfortab
 
 ## Features
 
-- **Bilingual (EN/ES)** — subdirectory routing with full SEO parity and hreflang
+- **Trilingual (EN/ES/PT)** — subdirectory routing with full SEO parity and hreflang
 - **Complete Metadata** — OG, Twitter Cards, JSON-LD, canonical URLs
-- **Lead Capture** — contact form with hCaptcha + Resend dual notifications (bilingual)
-- **Error Tracking** — Sentry integration
+- **Lead Capture** — contact and dispatch forms with hCaptcha, Resend autoresponses, and MailerLite routing where configured
+- **Error Tracking** — Sentry in browser, Astro SSR, and Netlify form handlers when DSN is configured
+- **Security Headers** — canonical `_headers` file with CSP, HSTS, anti-framing, and isolation headers
 - **Accessible** — WCAG 2AA verified with Axe-core
 - **Tested** — 100% coverage on critical paths
 
@@ -75,8 +76,20 @@ Set in Netlify dashboard for production:
 | `RESEND_API_KEY`           | Server | Resend API key          |
 | `HCAPTCHA_SECRET`          | Server | hCaptcha secret key     |
 | `PUBLIC_HCAPTCHA_SITE_KEY` | Client | hCaptcha site key       |
-| `PUBLIC_SENTRY_DSN`        | Client | Sentry DSN              |
+| `PUBLIC_SENTRY_DSN`        | Client | Sentry DSN for browser + shared runtime config |
+| `SENTRY_DSN`               | Server | Optional server-only DSN override for Astro/Functions |
+| `SENTRY_AUTH_TOKEN`        | Build | Optional source-map upload token |
+| `SENTRY_ORG`               | Build | Optional Sentry org slug for source-map upload |
+| `SENTRY_PROJECT`           | Build | Optional Sentry project slug for source-map upload |
+| `PUBLIC_SENTRY_RELEASE`    | Client | Optional browser-side release identifier |
 | `NOTIFY_EMAIL`             | Server | Lead notification email |
+| `MAILERLITE_API_KEY`       | Server | MailerLite API key |
+| `MAILERLITE_SUSCRIPCIONES_GROUP_ID` | Server | Dispatch subscription group |
+| `MAILERLITE_NO_CUALIFICADOS_GROUP_ID` | Server | Non-qualified lead group |
+| `MAILERLITE_CUALIFICADOS_GROUP_ID` | Server | Qualified lead group |
+| `MAILERLITE_BORDERLINE_GROUP_ID` | Server | Borderline lead group |
+
+Sentry environment labels are derived automatically from Netlify deploy context (`production`, `deploy-preview`, `branch-deploy`, etc.), so no separate public environment variable is required for normal operation.
 
 ## Documentation
 
@@ -94,11 +107,15 @@ Set in Netlify dashboard for production:
 | [Workflow](./docs/WORKFLOW-SETUP.md)   | Dev workflow                |
 | [Changelog](./docs/CHANGELOG.md)       | Version history             |
 
+## Security Headers
+
+Netlify security headers are now sourced from [`public/_headers`](./public/_headers), not `netlify.toml`. That file is the single source of truth for CSP, HSTS, anti-framing, and related browser hardening.
+
 ## Project Structure
 
 ```
 src/
-├── pages/              # EN at /, ES at /es/
+├── pages/              # EN at /, ES at /es/, PT at /pt/
 ├── layouts/            # BaseLayout (SEO, meta)
 ├── components/         # ContactForm, icons
 ├── i18n/               # Translation system

@@ -3,6 +3,7 @@ import '../styles/global.css';
 import ClientRouter from 'astro/components/ClientRouter.astro';
 import CookieBanner from '../components/CookieBanner.astro';
 import CustomCursor from '../components/CustomCursor.astro';
+import sentryClientUrl from '../scripts/sentry-client.ts?url';
 
 interface Props {
   title: string;
@@ -47,6 +48,17 @@ const ptUrl = lang === 'pt'
 
 const ogLocale = lang === 'pt' ? 'pt_BR' : lang === 'es' ? 'es_ES' : 'en_US';
 const fullTitle = title;
+const sentryDsn = import.meta.env.PUBLIC_SENTRY_DSN || '';
+const sentryEnvironment =
+  process.env.CONTEXT ||
+  process.env.SENTRY_ENVIRONMENT ||
+  process.env.NODE_ENV ||
+  'production';
+const sentryRelease =
+  import.meta.env.PUBLIC_SENTRY_RELEASE ||
+  process.env.COMMIT_REF ||
+  process.env.DEPLOY_ID ||
+  '';
 
 // Organization LD+JSON structured data
 const structuredData = {
@@ -71,8 +83,22 @@ const structuredData = {
 <html lang={lang} class="dark">
   <head>
     <!-- Google Tag Manager — loads only when user has consented to 'all' cookies -->
-    <script is:inline>
+    <script>
       window.dataLayer = window.dataLayer || [];
+      if (!window.__aglayaAnalyticsBound) {
+        window.__aglayaAnalyticsBound = true;
+        window.addEventListener('aglaya:track', function(e) {
+          var detail = e && e.detail ? e.detail : {};
+          if (!detail.event) return;
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push(Object.assign({
+            event: detail.event,
+            page_path: window.location.pathname,
+            page_title: document.title,
+            page_language: document.documentElement.lang || 'en'
+          }, detail.payload || {}));
+        });
+      }
       function _loadGTM() {
         if (window.__gtmLoaded) return;
         window.__gtmLoaded = true;
@@ -146,6 +172,15 @@ const structuredData = {
     <!-- LD+JSON — Organization structured data -->
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
+    {sentryDsn && (
+      <>
+        <meta name="aglaya:sentry-dsn" content={sentryDsn} />
+        <meta name="aglaya:sentry-environment" content={sentryEnvironment} />
+        {sentryRelease && <meta name="aglaya:sentry-release" content={sentryRelease} />}
+        <script type="module" src={sentryClientUrl}></script>
+      </>
+    )}
+
     <!-- Client-side navigation (View Transitions API) -->
     <ClientRouter />
   </head>
@@ -161,7 +196,7 @@ const structuredData = {
     <CookieBanner lang={lang as 'en' | 'es' | 'pt'} />
     <CustomCursor />
 
-    <script is:inline>
+    <script>
       const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
@@ -205,11 +240,39 @@ const structuredData = {
         initGlow();
       }
 
+      function initSkipLink() {
+        const skipLink = document.querySelector('.skip-link');
+        const mainContent = document.getElementById('main-content');
+
+        if (!skipLink || !mainContent) return;
+
+        if (!mainContent.hasAttribute('tabindex')) {
+          mainContent.setAttribute('tabindex', '-1');
+        }
+
+        if (skipLink.dataset.bound === 'true') return;
+        skipLink.dataset.bound = 'true';
+
+        skipLink.addEventListener('click', (event) => {
+          event.preventDefault();
+
+          mainContent.scrollIntoView({ block: 'start', behavior: 'auto' });
+          mainContent.focus({ preventScroll: true });
+
+          const nextHash = '#main-content';
+          if (window.location.hash !== nextHash) {
+            window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}${nextHash}`);
+          }
+        });
+      }
+
       // Initial run
       initAnimations();
+      initSkipLink();
 
       // Ensure it works with View Transitions
       document.addEventListener('astro:page-load', initAnimations);
+      document.addEventListener('astro:page-load', initSkipLink);
     </script>
   </body>
 </html>

@@ -208,7 +208,7 @@ body {
 /* Skip link */
 .skip-link {
   position: absolute;
-  top: -100%;
+  top: 1rem;
   left: 1rem;
   z-index: 9999;
   padding: 0.5rem 1rem;
@@ -219,11 +219,21 @@ body {
   font-weight: 700;
   letter-spacing: 0.1em;
   text-decoration: none;
-  border-radius: 0 0 4px 4px;
-  transition: top 0.1s;
+  transform: translateY(-180%);
+  transition: transform 0.15s ease;
 }
-.skip-link:focus {
-  top: 0;
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+#main-content {
+  scroll-margin-top: 6rem;
+}
+
+main#main-content:focus-visible {
+  outline: 2px solid rgba(159, 194, 67, 0.9);
+  outline-offset: 0.35rem;
 }
 
 /* Global focus-visible ring */

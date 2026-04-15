@@ -34,6 +34,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 - Language switcher now supports non-JS fallback by setting `href` to `langLink` (previously `javascript:void(0)`), ensuring the toggle works even if client scripts fail.
 - Restore full ICP contact-path functionality by requiring a real message in the borderline branch, capturing the hCaptcha token in every branch form, and opening a sendable fallback channel for blocked states with state-aware messaging.
 - Replace the footer's broken `/terms` path and homepage-only hash links with working routes, and add a dedicated dispatch subscription function that uses MailerLite when configured with internal fallback capture when it is not.
+- Restore Portuguese parity across the active contact flows by localizing live submit states in the footer and ICP forms, translating bot-verification labels, and sending PT confirmation emails from the contact function instead of falling back to English.
+- Add GTM-friendly dataLayer instrumentation for the homepage funnel, including ICP evaluation/branch events plus dispatch and contact-form attempt/success/failure signals.
+- Make the global skip link land on a focusable `#main-content` target with real keyboard focus and visible main-landmark feedback, then cover it with E2E regression checks.
+- Route the footer dispatch form to the dedicated MailerLite subscriptions group with optional first-name capture, and add tier-aware MailerLite sync support for contact leads using the configured `cualificados`, `borderline`, and `no_cualificados` groups with backward-compatible legacy fallbacks.
+- Send an immediate personalized Resend confirmation email for every successful footer dispatch signup, and only report signup success once both capture and confirmation complete.
+- Turn the ROI Audit into a real request flow by routing `/roi-audit/` into contextualized contact forms, tagging submissions as `ROI_AUDIT_LEAD`, carrying `entry_point` and `service_interest` through the ICP flow, switching contact emails to ROI-specific copy, and updating the public/docs pricing language from fixed fee to scope-based quoting.
+- Enforce hCaptcha and explicit privacy consent across every active form, copy confirmation emails to `info@aglaya.biz` for human QA via BCC, and rewrite the privacy policy so it matches the live Resend, MailerLite, hCaptcha, and analytics flows in EN, ES, and PT.
+- Reinstate production-grade Sentry coverage across browser, Astro SSR, and Netlify form handlers; move hard security headers to `public/_headers`; tighten CSP around GTM, hCaptcha, fonts, and Sentry ingest; and align the docs/privacy copy with the live observability stack.
+- Scrub literal Sentry org/project references from repo docs, derive Sentry environment labels from Netlify deploy context, and mark the public browser DSN as an intentional secret-scan omission so production deploys do not fail on public runtime config.
 
 ---
 

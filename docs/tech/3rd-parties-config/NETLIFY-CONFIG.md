@@ -120,7 +120,7 @@ Ya configurados en `netlify.toml`:
 |---|---|---|
 | Netlify | ibaifernandez (Legacy Free) | Proyecto `aglaya` activo |
 | ~~Netlify AGLAYA~~ | ~~AGLAYA team~~ | ~~Eliminar — créditos agotados~~ |
-| Sentry | aglaya-s6 | Proyecto `javascript-astro` |
+| Sentry | Managed in dashboard | Observability project for browser + SSR/runtime errors |
 | Resend | info@aglaya.biz | 3.000 emails/mes gratis |
 | hCaptcha | ibaifernandez | Bot protection (reemplaza Turnstile) |
 | Cloudflare | ibaifernandez | DNS (proxy) |

@@ -42,7 +42,7 @@ El ROI Audit es el punto de entrada a AGLAYA. No es un diagnóstico gratuito de 
 - Arquitectura propuesta (system design de alto nivel)
 - Business case: inversión vs. ahorro mensual proyectado con supuestos explícitos
 
-**Precio:** $1.500 USD (descontable del primer mes de retainer si se contrata en los 30 días siguientes)
+**Precio:** variable según alcance, superficie operativa y complejidad sistémica. El audit se cotiza tras revisión manual; no existe checkout online.
 
 **Criterio de honestidad:** Si el audit no identifica al menos $15.000/mes en trabajo automatizable, lo decimos y no proponemos retainer. Esa honestidad no es generosidad — es parte de nuestra propuesta.
 
@@ -131,11 +131,11 @@ Sesiones de auditoría donde confrontamos las suposiciones estratégicas del cli
 
 ## Proyectos One-Time (Fuera de Retainer)
 
-Para clientes que no necesitan (aún) un retainer, AGLAYA acepta proyectos con alcance definido. El precio mínimo es una señal: un cliente que no puede invertir $1.500 en entender su problema no invertirá $8.000 en resolverlo.
+Para clientes que no necesitan (aún) un retainer, AGLAYA acepta proyectos con alcance definido. El ROI Audit no tiene precio fijo: se cotiza según el tamaño real de la operación a inspeccionar. La señal ya no es una tarifa plana, sino la disposición a pasar por una calificación seria antes de pedir alcance.
 
 | Proyecto | Alcance | Precio desde |
 |---|---|---|
-| ROI Audit + roadmap de sistema | 2 semanas con el equipo cliente | $1.500 |
+| ROI Audit + roadmap de sistema | 2 semanas con el equipo cliente | Variable según alcance |
 | Web de alta conversión (Astro) | Diseño + desarrollo + SEO técnico + i18n | $5.000 |
 | Sistema de automatización (workflow único) | Discovery + build + documentación + handoff | $4.000 |
 | AI Orchestration setup | Agente personalizado + integración + calibración | $6.000 |

@@ -4,8 +4,19 @@ import QualifiedForm from './QualifiedForm.astro';
 import BorderlineForm from './BorderlineForm.astro';
 import OpenChannelForm from './OpenChannelForm.astro';
 
+interface Props {
+  inquiryTypeOverride?: string;
+  entryPoint?: string;
+  serviceInterest?: string;
+}
+
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
+const {
+  inquiryTypeOverride = '',
+  entryPoint = '',
+  serviceInterest = '',
+}: Props = Astro.props;
 
 const dataOptions = [
   {
@@ -116,6 +127,7 @@ const icpUi = {
     },
   },
   forms: {
+    roiAuditPlaceholder: t('contact.form.message_placeholder.roi_audit'),
     blockedPlaceholders: {
       blocked_investment: t('contact.form.message_placeholder.blocked_investment'),
       blocked_data: t('contact.form.message_placeholder.blocked_data'),
@@ -129,8 +141,11 @@ const icpUi = {
   id="icp-container"
   class="mx-auto w-full bg-[#050505] border border-white/10 p-8 md:p-16 relative overflow-hidden lg:overflow-visible transition-all duration-700"
   data-state="incomplete"
+  data-inquiry-type-override={inquiryTypeOverride}
+  data-entry-point={entryPoint}
+  data-service-interest={serviceInterest}
 >
-  <script type="application/json" id="icp-copy" set:html={JSON.stringify(icpUi)}></script>
+  <div id="icp-copy" data-json={encodeURIComponent(JSON.stringify(icpUi))} hidden></div>
 
   <!-- Step 1: Stress Test -->
   <div id="icp-step-1" class="flex flex-col gap-12 transition-opacity duration-500">
@@ -340,6 +355,22 @@ const icpUi = {
 
 <script>
   const container = document.getElementById('icp-container');
+  const searchParams = new URLSearchParams(window.location.search);
+  const inquiryTypeOverride =
+    container?.dataset.inquiryTypeOverride?.trim() ||
+    (searchParams.get('type') === 'roi-audit' ? 'ROI_AUDIT_LEAD' : '');
+  const entryPoint =
+    container?.dataset.entryPoint?.trim() ||
+    searchParams.get('entry_point') ||
+    (searchParams.get('type') === 'roi-audit' ? 'roi_audit' : '');
+  const serviceInterest =
+    container?.dataset.serviceInterest?.trim() ||
+    searchParams.get('service_interest') ||
+    (searchParams.get('type') === 'roi-audit' ? 'roi_audit' : '');
+  const isRoiAuditFlow =
+    inquiryTypeOverride === 'ROI_AUDIT_LEAD' ||
+    entryPoint === 'roi_audit' ||
+    serviceInterest === 'roi_audit';
   const step1 = document.getElementById('icp-step-1');
   const evalBtn = document.getElementById('icp-evaluate');
   const auditPanel = document.getElementById('icp-audit-panel');
@@ -362,7 +393,14 @@ const icpUi = {
   const manualInput = document.getElementById('icp-manual') as HTMLInputElement | null;
   const manualVal = document.getElementById('manual-val');
   const copyEl = document.getElementById('icp-copy');
-  const copy = copyEl ? JSON.parse(copyEl.textContent || '{}') : {};
+  const copy = copyEl
+    ? JSON.parse(decodeURIComponent(copyEl.getAttribute('data-json') || '%7B%7D'))
+    : {};
+  const track = (eventName: string, payload: Record<string, unknown> = {}) => {
+    window.dispatchEvent(new CustomEvent('aglaya:track', {
+      detail: { event: eventName, payload },
+    }));
+  };
 
   const dataInputs = Array.from(document.querySelectorAll('input[name="data_infrastructure"]')) as HTMLInputElement[];
   const investmentInputs = Array.from(document.querySelectorAll('input[name="growth_investment"]')) as HTMLInputElement[];
@@ -531,6 +569,14 @@ const icpUi = {
 
     if (result.state === 'incomplete') return;
 
+    track('icp_evaluated', {
+      icp_state: result.state,
+      icp_score: result.score,
+      manual_execution: result.manual,
+      data_infrastructure: result.data ?? 'unset',
+      growth_investment: result.investment ?? 'unset',
+    });
+
     step1?.classList.add('opacity-0');
 
     setTimeout(() => {
@@ -549,6 +595,15 @@ const icpUi = {
 
       const branchEl = document.getElementById(branchId);
       branchEl?.classList.remove('hidden');
+
+      track('icp_branch_viewed', {
+        icp_state: result.state,
+        icp_branch: branchId.replace('icp-', ''),
+        icp_score: result.score,
+        manual_execution: result.manual,
+        data_infrastructure: result.data ?? 'unset',
+        growth_investment: result.investment ?? 'unset',
+      });
 
       const forms = branchEl?.querySelectorAll('form');
       forms?.forEach((formEl) => {
@@ -572,14 +627,32 @@ const icpUi = {
 
         const inquiryTypeInput = formEl.querySelector('[name="inquiry_type"]') as HTMLInputElement | null;
         if (inquiryTypeInput) {
-          inquiryTypeInput.value = result.state === 'qualified' ? 'QUALIFIED_LEAD' : result.state === 'borderline' ? 'BORDERLINE_LEAD' : `${result.state.toUpperCase()}_LEAD`;
+          inquiryTypeInput.value =
+            inquiryTypeOverride ||
+            (result.state === 'qualified'
+              ? 'QUALIFIED_LEAD'
+              : result.state === 'borderline'
+                ? 'BORDERLINE_LEAD'
+                : `${result.state.toUpperCase()}_LEAD`);
         }
 
-        if (branchId === 'icp-disqualified') {
-          const messageInput = formEl.querySelector('[name="message"]') as HTMLTextAreaElement | null;
-          if (messageInput) {
-            messageInput.placeholder = copy.forms?.blockedPlaceholders?.[result.state] ?? messageInput.placeholder;
-          }
+        const entryPointInput = formEl.querySelector('[name="entry_point"]') as HTMLInputElement | null;
+        if (entryPointInput) {
+          entryPointInput.value = entryPoint;
+        }
+
+        const serviceInterestInput = formEl.querySelector('[name="service_interest"]') as HTMLInputElement | null;
+        if (serviceInterestInput) {
+          serviceInterestInput.value = serviceInterest;
+        }
+
+        const messageInput = formEl.querySelector('[name="message"]') as HTMLTextAreaElement | null;
+        if (messageInput && branchId === 'icp-disqualified') {
+          messageInput.placeholder = copy.forms?.blockedPlaceholders?.[result.state] ?? messageInput.placeholder;
+        }
+
+        if (messageInput && isRoiAuditFlow && branchId !== 'icp-disqualified') {
+          messageInput.placeholder = copy.forms?.roiAuditPlaceholder ?? messageInput.placeholder;
         }
       });
 

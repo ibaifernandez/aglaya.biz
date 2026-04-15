@@ -7,6 +7,14 @@ import { getLangFromUrl, useTranslations } from '../../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
+const isRoiAuditFlow =
+  Astro.url.searchParams.get('type') === 'roi-audit' ||
+  Astro.url.searchParams.get('entry_point') === 'roi_audit' ||
+  Astro.url.searchParams.get('service_interest') === 'roi_audit';
+
+const inquiryTypeOverride = isRoiAuditFlow ? 'ROI_AUDIT_LEAD' : '';
+const entryPoint = isRoiAuditFlow ? 'roi_audit' : (Astro.url.searchParams.get('entry_point') ?? '');
+const serviceInterest = isRoiAuditFlow ? 'roi_audit' : (Astro.url.searchParams.get('service_interest') ?? '');
 ---
 
 <BaseLayout
@@ -19,18 +27,52 @@ const t = useTranslations(lang);
   <main id="main-content" class="flex flex-col pt-32 min-h-screen">
     <section class="max-w-7xl mx-auto px-6 w-full flex flex-col items-center gap-12 py-20">
       <div class="flex flex-col items-center text-center gap-6 max-w-3xl">
-        <span class="text-corporate-green font-mono text-[10px] font-black tracking-[0.4em] uppercase">
-          {t('nav.contact')}
+        <span
+          id="contact-context-eyebrow"
+          data-roi-label={t('contact.roi_audit.eyebrow')}
+          class="text-corporate-green font-mono text-[10px] font-black tracking-[0.4em] uppercase"
+        >
+          {isRoiAuditFlow ? t('contact.roi_audit.eyebrow') : t('nav.contact')}
         </span>
-        <h1 class="text-white font-display font-black text-5xl md:text-7xl tracking-tighter leading-none">
-          {t('contact.heading')}
+        <h1
+          id="contact-context-heading"
+          data-roi-label={t('contact.roi_audit.heading')}
+          class="text-white font-display font-black text-5xl md:text-7xl tracking-tighter leading-none"
+        >
+          {isRoiAuditFlow ? t('contact.roi_audit.heading') : t('contact.heading')}
         </h1>
-        <p class="text-muted text-lg font-body leading-relaxed max-w-2xl">
-          {t('contact.description')}
+        <p
+          id="contact-context-description"
+          data-roi-label={t('contact.roi_audit.description')}
+          class="text-muted text-lg font-body leading-relaxed max-w-2xl"
+        >
+          {isRoiAuditFlow ? t('contact.roi_audit.description') : t('contact.description')}
         </p>
       </div>
-      <ICPFilter />
+      <ICPFilter
+        inquiryTypeOverride={inquiryTypeOverride}
+        entryPoint={entryPoint}
+        serviceInterest={serviceInterest}
+      />
     </section>
+
+    <script>
+      const contactSearchParams = new URLSearchParams(window.location.search);
+      const isRoiAuditContext =
+        contactSearchParams.get('type') === 'roi-audit' ||
+        contactSearchParams.get('entry_point') === 'roi_audit' ||
+        contactSearchParams.get('service_interest') === 'roi_audit';
+
+      if (isRoiAuditContext) {
+        const eyebrow = document.getElementById('contact-context-eyebrow');
+        const heading = document.getElementById('contact-context-heading');
+        const description = document.getElementById('contact-context-description');
+
+        if (eyebrow?.dataset.roiLabel) eyebrow.textContent = eyebrow.dataset.roiLabel;
+        if (heading?.dataset.roiLabel) heading.textContent = heading.dataset.roiLabel;
+        if (description?.dataset.roiLabel) description.textContent = description.dataset.roiLabel;
+      }
+    </script>
 
     <section class="bg-surface/30 py-20 border-t border-white/5">
       <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-12">

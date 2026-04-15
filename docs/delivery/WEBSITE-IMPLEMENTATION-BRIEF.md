@@ -80,7 +80,7 @@ src/
 
 ### Files to Preserve
 
-- `src/layouts/BaseLayout.astro` — Keep as-is. SEO, meta, Sentry, fonts all correct.
+- `src/layouts/BaseLayout.astro` — Preserve SEO/meta correctness while keeping the runtime hooks in sync with GTM consent, client-side Sentry bootstrapping, fonts, and hreflang metadata.
 - `src/components/CookieBanner.astro` — Keep.
 - `netlify/functions/contact.ts` — Keep. No changes.
 - `astro.config.mjs` — Keep. Do not touch.
@@ -267,9 +267,10 @@ interface Props {
 **3 steps:**
 
 ```
-Step 1: ROI Audit ($1,500)
+Step 1: ROI Audit (scope-priced)
 "We map every manual process costing you time and money. Exact numbers, no guesswork.
- If we don't find $15K/month to automate, we tell you — and we don't sell you a retainer."
+ If we don't find $15K/month to automate, we tell you — and we don't sell you a retainer.
+ The audit is quoted manually according to scope. No fixed online checkout."
 
 Step 2: System Build
 "We design and build the automation architecture defined in the audit. You're involved,
@@ -344,12 +345,12 @@ that's $10,500/month recovered.
 At $8,000/month, you're net positive from month one.
 
 The ROI Audit tells you exactly what you're leaving on the table.
-It costs $1,500. If we don't find $15K/month to automate, you don't pay for a retainer.
+It is priced according to scope after manual review. If we don't find $15K/month to automate, you don't pay for a retainer.
 ```
 
 **ES:** translate. Keep the math as-is (USD).
 
-**CTA:** "Start with the ROI Audit →" → `/contact/?type=roi-audit` (pre-selects inquiry type in form)
+**CTA:** "Start with the ROI Audit →" → `/contact/?type=roi-audit&entry_point=roi_audit&service_interest=roi_audit` (marks the lead as `ROI_AUDIT_LEAD` and preserves origin context)
 
 **Design:** Centered, large typographic treatment. The math should feel like an equation, not a pitch.
 
@@ -464,7 +465,7 @@ Fields:
 - Company name (required)
 - What are you looking to solve? (textarea, required)
 - How did you hear about us? (optional)
-- Inquiry type (hidden field, pre-populated if arriving from `?type=roi-audit`)
+- Inquiry type (hidden field, pre-populated as `ROI_AUDIT_LEAD` if arriving from `?type=roi-audit&entry_point=roi_audit&service_interest=roi_audit`)
 
 **Form behavior:** Same as current — POST to `/.netlify/functions/contact`, hCaptcha validation, Resend confirmation.
 
@@ -472,7 +473,7 @@ Fields:
 
 ### Qualification URL parameter
 
-If arriving at `/contact/?type=roi-audit`, pre-select "ROI Audit" in the inquiry type field.
+If arriving at `/contact/?type=roi-audit&entry_point=roi_audit&service_interest=roi_audit`, set `inquiry_type=ROI_AUDIT_LEAD` and preserve the extra context fields through submission.
 
 ---
 

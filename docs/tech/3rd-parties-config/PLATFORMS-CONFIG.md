@@ -41,14 +41,14 @@ Estado de configuración de todas las plataformas integradas.
 ## 2. Sentry
 
 **URL:** https://sentry.io
-**Org:** `aglaya-s6`
-**Proyecto:** `javascript-astro`
+**Org:** Managed in Sentry dashboard
+**Proyecto:** Managed in Sentry dashboard
 **Plan:** Free (5K errores/mes, 30 días retención)
 
-### DSN (ya configurado en código)
-```
-https://d1d3347073dadf16d4c7d7625ee28190@o4511058994724864.ingest.us.sentry.io/4511058996101120
-```
+### Runtime configuration
+- `PUBLIC_SENTRY_DSN`: habilita la captura en browser y sirve como fallback compartido para runtime server-side.
+- `SENTRY_DSN`: override opcional server-only para Astro SSR y Netlify Functions.
+- `SENTRY_AUTH_TOKEN` + `SENTRY_ORG` + `SENTRY_PROJECT`: habilitan source maps durante el build.
 
 ### Variables de entorno en Netlify (ya configuradas)
 | Variable | Descripción |
@@ -69,15 +69,17 @@ https://d1d3347073dadf16d4c7d7625ee28190@o4511058994724864.ingest.us.sentry.io/4
 | Error spike | >10 events in 1h | Email a `info@aglaya.biz` |
 
 ### Nota sobre el filtro `beforeSend()` y Turnstile
-El código original incluía un filtro `beforeSend()` en `sentry.client.config.js` para descartar errores de tipo `TurnstileError` (ruido generado por el widget de Cloudflare en URLs no autorizadas). Ese filtro fue **eliminado** cuando se migró a hCaptcha — no porque Sentry esté filtrando el ruido, sino porque **el ruido ya no existe**: hCaptcha no genera ese tipo de error. El resultado es idéntico (Sentry limpio), pero por una razón diferente.
+El setup legacy incluía un filtro `beforeSend()` en la capa browser de Sentry para descartar errores de tipo `TurnstileError` (ruido generado por el widget de Cloudflare en URLs no autorizadas). Ese filtro fue **eliminado** cuando se migró a hCaptcha — no porque Sentry esté filtrando el ruido, sino porque **el ruido ya no existe**: hCaptcha no genera ese tipo de error. El resultado es idéntico (Sentry limpio), pero por una razón diferente.
 
 > ⚠️ Si en el futuro se reintegra Cloudflare Turnstile o cualquier widget de terceros que genere errores esperados, habrá que restaurar un filtro `beforeSend()` adecuado.
 
 ### Estado actual
-- [x] DSN configurado en `sentry.client.config.js`
-- [x] DSN configurado en `sentry.server.config.js`
-- [x] `SENTRY_AUTH_TOKEN` en Netlify
+- [x] Configuración server-side en `sentry.server.config.js`
+- [x] Runtime browser desacoplado del layout mediante `src/scripts/sentry-client.ts`
+- [x] Netlify Functions protegidas con `netlify/functions/_sentry.ts`
 - [x] `beforeSend()` TurnstileError filter eliminado — ya no necesario (ver nota arriba)
+- [ ] `PUBLIC_SENTRY_DSN` confirmado en Netlify
+- [ ] `SENTRY_AUTH_TOKEN` + `SENTRY_ORG` + `SENTRY_PROJECT` confirmados en Netlify si se quieren source maps
 - [ ] Alertas de email configuradas
 
 ---

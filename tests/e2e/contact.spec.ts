@@ -1,11 +1,14 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-async function gotoContact(page: Parameters<typeof test>[0]['page']) {
+async function gotoContact(
+  page: Parameters<typeof test>[0]['page'],
+  path = '/contact/',
+) {
   await page.addInitScript(() => {
     window.localStorage.setItem('aglaya_cookie_consent', 'essential');
   });
-  await page.goto('/contact/');
+  await page.goto(path);
 }
 
 async function setRangeValue(
@@ -59,6 +62,9 @@ test.describe('Contact Page', () => {
     await expect(page.locator('#icp-audit-panel')).toBeVisible();
     await expect(page.locator('#icp-evaluate')).toBeVisible();
     await expect(page.locator('#icp-evaluate')).toContainText(/complete signal input/i);
+    await expect(page.locator('#qualified-form #q-privacy-consent')).toBeAttached();
+    await expect(page.locator('#borderline-form #b-privacy-consent')).toBeAttached();
+    await expect(page.locator('#open-channel-form #oc-privacy-consent')).toBeAttached();
   });
 
   test('should surface a blocked state and keep an open contact channel for weak signals', async ({ page }) => {
@@ -97,6 +103,96 @@ test.describe('Contact Page', () => {
     await expect(page.locator('#qualified-form input[name="inquiry_type"]')).toBeHidden();
     await expect(page.locator('#qualified-form input[name="manual_execution"]')).toHaveValue('80');
     await expect(page.locator('#qualified-form input[name="data_infrastructure"]')).toHaveValue('crm');
+  });
+
+  test('should preserve ROI audit context through the qualification flow', async ({ page }) => {
+    await gotoContact(
+      page,
+      '/contact/?type=roi-audit&entry_point=roi_audit&service_interest=roi_audit',
+    );
+
+    await expect(page.locator('main h1')).toContainText(/request the roi audit/i);
+
+    await setRangeValue(page, '#icp-manual', '80');
+    await checkHiddenOption(page, '#icp-data-crm');
+    await checkHiddenOption(page, '#icp-investment-2');
+    await page.locator('#icp-evaluate').click();
+
+    await expect(page.locator('#icp-qualified')).toBeVisible();
+    await expect(page.locator('#qualified-form input[name="inquiry_type"]')).toHaveValue('ROI_AUDIT_LEAD');
+    await expect(page.locator('#qualified-form input[name="entry_point"]')).toHaveValue('roi_audit');
+    await expect(page.locator('#qualified-form input[name="service_interest"]')).toHaveValue('roi_audit');
+  });
+
+  test('should push analytics events for ICP evaluation and qualified-form success', async ({ page }) => {
+    await page.route('**/.netlify/functions/contact', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ success: true }),
+      });
+    });
+
+    await gotoContact(page);
+
+    await setRangeValue(page, '#icp-manual', '80');
+    await checkHiddenOption(page, '#icp-data-crm');
+    await checkHiddenOption(page, '#icp-investment-2');
+    await page.locator('#icp-evaluate').click();
+
+    await expect(page.locator('#icp-qualified')).toBeVisible();
+
+    await page.locator('#q-name').fill('Aglaya Signal');
+    await page.locator('#q-email').fill('signal@example.com');
+    await page.locator('#q-company').fill('AGLAYA');
+    await page.locator('#q-message').fill('Audit the current operating system.');
+    await page.locator('#q-privacy-consent').check({ force: true });
+    await page.evaluate(() => {
+      (window as any).onHCaptchaSuccessQualified('test_token');
+    });
+    await page.locator('#q-submit').click();
+
+    await expect(page.locator('#q-success')).toBeVisible();
+
+    const events = await page.evaluate(() =>
+      (window as any).dataLayer
+        .filter((entry: any) =>
+          [
+            'icp_evaluated',
+            'icp_branch_viewed',
+            'contact_form_submit_attempted',
+            'contact_form_submit_succeeded',
+          ].includes(entry.event),
+        )
+        .map((entry: any) => ({
+          event: entry.event,
+          icp_state: entry.icp_state ?? entry.icp_primary_state,
+          form_type: entry.form_type ?? null,
+        })),
+    );
+
+    expect(events).toEqual([
+      {
+        event: 'icp_evaluated',
+        icp_state: 'qualified',
+        form_type: null,
+      },
+      {
+        event: 'icp_branch_viewed',
+        icp_state: 'qualified',
+        form_type: null,
+      },
+      {
+        event: 'contact_form_submit_attempted',
+        icp_state: 'qualified',
+        form_type: 'qualified',
+      },
+      {
+        event: 'contact_form_submit_succeeded',
+        icp_state: 'qualified',
+        form_type: 'qualified',
+      },
+    ]);
   });
 
   test('should show borderline form for transitional cases', async ({ page }) => {

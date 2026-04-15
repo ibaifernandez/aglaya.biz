@@ -51,8 +51,11 @@ Cualquier cambio en secrets, reglas de rama o configuración de servicios debe r
 | `HCAPTCHA_SECRET` | All | Verificación server-side de hCaptcha (Sensitive) |
 | `PUBLIC_HCAPTCHA_SITE_KEY` | All | Site key para el widget hCaptcha |
 | `NOTIFY_EMAIL` | All | Destinatario de leads (`info@aglaya.biz`) |
-| `SENTRY_AUTH_TOKEN` | All | Subida de source maps durante el build |
-| `PUBLIC_SENTRY_DSN` | All | DSN del proyecto en Sentry |
+| `PUBLIC_SENTRY_DSN` | All | DSN público para browser y fallback compartido de runtime |
+| `SENTRY_DSN` | All | DSN opcional server-only para Astro SSR y Netlify Functions |
+| `SENTRY_AUTH_TOKEN` | Build | Subida de source maps durante el build |
+| `SENTRY_ORG` | Build | Slug de la organización en Sentry para source maps |
+| `SENTRY_PROJECT` | Build | Slug del proyecto en Sentry para source maps |
 
 ---
 
@@ -68,9 +71,14 @@ Cualquier cambio en secrets, reglas de rama o configuración de servicios debe r
 - **Validation:** Server-side en Netlify Functions contra `https://api.hcaptcha.com/siteverify`.
 
 ### 🐞 Sentry (Error Tracking)
-- **Org/Project:** `aglaya-s6` / `javascript-astro`.
-- **Status:** ✅ Captura activa en producción.
-- **Filtering:** Errores de ruido externo descartados.
+- **Org/Project:** Managed in Sentry dashboard. Do not hardcode literal slugs in repo docs because Netlify secrets scanning can treat build-time env values as sensitive.
+- **Status:** ✅ SDK preparado para browser, Astro SSR y Netlify Functions cuando el DSN está configurado.
+- **Source maps:** opcionales; requieren `SENTRY_AUTH_TOKEN` + `SENTRY_ORG` + `SENTRY_PROJECT`.
+- **Filtering:** `sendDefaultPii: false` en browser, Astro SSR y Functions.
+
+### 🔐 Security Headers
+- **Source of truth:** `public/_headers`
+- **Coverage:** CSP, HSTS, anti-framing, opener/resource policy, permissions policy y cache rules para `/_astro/*` y `/assets/*`
 
 ### ⏱️ UptimeRobot (Monitoring)
 - **Monitors:**
@@ -90,3 +98,4 @@ Cualquier cambio en secrets, reglas de rama o configuración de servicios debe r
 - [ ] Email de confirmación recibido por el usuario.
 - [ ] Lead notificado en `info@aglaya.biz`.
 - [ ] Sentry libre de fallos críticos.
+- [ ] `_headers` desplegado y CSP sin bloqueos inesperados en GTM, hCaptcha o fuentes.

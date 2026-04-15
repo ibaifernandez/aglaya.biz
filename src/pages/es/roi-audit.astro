@@ -7,6 +7,7 @@ import { getLangFromUrl, useTranslations, useTranslatedPath } from '../../i18n/u
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const translatePath = useTranslatedPath(lang);
+const roiAuditContactPath = `${translatePath('/contact')}?type=roi-audit&entry_point=roi_audit&service_interest=roi_audit`;
 
 const outputs = [
   {
@@ -34,7 +35,7 @@ const outputs = [
 
 <BaseLayout
   title="ROI Audit — AGLAYA"
-  description="¿Cuánto te está costando exactamente lo que no tienes automatizado? Una sesión de trabajo de 2 semanas que mapea cada proceso manual y produce un diseño de sistema + business case."
+  description="¿Cuánto te está costando exactamente lo que no tienes automatizado? Una sesión de trabajo con precio variable por alcance que mapea cada proceso manual y produce un diseño de sistema + business case."
   lang="es"
   alternateUrl={new URL('/roi-audit/', Astro.site).href}
 >
@@ -68,8 +69,8 @@ const outputs = [
             preciso con una arquitectura de sistema y un business case construido sobre números reales.
           </p>
           <p class="text-white/40 font-body text-base leading-relaxed">
-            El precio de $1.500 es intencional. Un cliente que no puede invertir $1.500 en entender su problema
-            no invertirá $8.000 en resolverlo. El audit es un filtro tanto como un deliverable.
+            La inversión del audit es variable según alcance. La calibramos tras revisar superficie operativa,
+            carga de stakeholders y complejidad sistémica. Por eso el proceso empieza con una solicitud, no con un checkout.
           </p>
         </div>
         <div class="flex flex-col gap-px bg-white/5 border border-white/5">
@@ -82,12 +83,12 @@ const outputs = [
             <span class="text-white font-body">Entrevistas + observación + revisión documental</span>
           </div>
           <div class="bg-[#080808] p-8 flex flex-col gap-2">
-            <span class="text-white/30 font-mono text-[9px] uppercase tracking-widest">Precio</span>
-            <span class="text-white font-body">$1.500 USD</span>
+            <span class="text-white/30 font-mono text-[9px] uppercase tracking-widest">Inversión</span>
+            <span class="text-white font-body">Variable según alcance y superficie operativa</span>
           </div>
           <div class="bg-[#080808] p-8 flex flex-col gap-2">
-            <span class="text-white/30 font-mono text-[9px] uppercase tracking-widest">Descontable</span>
-            <span class="text-white font-body">Del primer mes de retainer si se contrata en los 30 días siguientes</span>
+            <span class="text-white/30 font-mono text-[9px] uppercase tracking-widest">Modelo comercial</span>
+            <span class="text-white font-body">Se cotiza tras revisión manual de alcance. No hay pago online.</span>
           </div>
         </div>
       </div>
@@ -138,16 +139,16 @@ const outputs = [
           Solicita la auditoría.
         </h2>
         <p class="text-white/50 font-body text-xl leading-relaxed max-w-xl">
-          Completa el protocolo de calificación. Determinaremos el fit y confirmaremos el engagement en 24 horas.
+          Completa el protocolo de calificación. Revisaremos el fit, el alcance y el rango del audit en menos de 24 horas.
         </p>
         <a
-          href={translatePath('/contact')}
+          href={roiAuditContactPath}
           class="bg-brand hover:bg-brand-dark text-white px-16 py-6 font-display font-black text-xl uppercase tracking-widest transition-all transform hover:scale-[1.02]"
         >
           {t('nav.contact')} →
         </a>
         <p class="text-white/20 font-mono text-[9px] uppercase tracking-widest">
-          Requiere pasar el protocolo de calificación ICP · Respuesta en menos de 24H
+          Sin precio fijo. Sin checkout online. Alcance confirmado manualmente en menos de 24H.
         </p>
       </div>
     </section>

@@ -38,7 +38,7 @@ Vendemos implicación profunda, precisión estratégica y ejecución técnica co
 | Retainer mensual | $8.000 por cliente |
 | MRR objetivo | $16.000 |
 | Entrada mínima | ROI Audit |
-| Precio de entrada | $1.500 |
+| Precio de entrada | Variable según alcance |
 | Condición de calificación | gasto relevante en trabajo manual automatizable |
 | Tesis de retorno | impacto positivo desde el mes 1 |
 

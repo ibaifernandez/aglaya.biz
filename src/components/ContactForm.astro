@@ -40,7 +40,7 @@ const t = labels[lang];
 ---
 
 <!-- Define hCaptcha callbacks synchronously BEFORE the hCaptcha script loads -->
-<script is:inline>
+<script>
   window.onHCaptchaSuccessContact = function(token) {
     var btn = document.getElementById('contact-submit');
     if (btn) btn.disabled = false;

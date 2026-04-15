@@ -145,45 +145,40 @@ El widget de hCaptcha debe aparecer en el formulario con tema oscuro. El botón 
 ### Paso 1 — Cuenta y proyecto
 1. Ve a **https://sentry.io** → **"Sign up"** (plan gratuito: 5.000 errores/mes)
 2. Durante el onboarding, elige:
-   - **Platform**: JavaScript → Browser
-   - **Project name**: `aglaya-biz`
+   - **Platform**: JavaScript → Astro
+   - **Project name**: usa el slug que quieras mantener en producción (ej. `<your-sentry-project-slug>`)
 
 ### Paso 2 — Obtener el DSN
-1. Sentry → tu proyecto `aglaya-biz` → **Settings → Client Keys (DSN)**
-2. Copia el DSN. Formato: `https://abc123@o123456.ingest.sentry.io/789`
+1. Sentry → tu proyecto → **Settings → Client Keys (DSN)**
+2. Copia el DSN. Formato: `https://<public-key>@o<org-id>.ingest.us.sentry.io/<project-id>`
 
-### Paso 3 — Variable en Netlify
+### Paso 3 — Variables en Netlify
 ```
-PUBLIC_SENTRY_DSN = https://abc123@o123456.ingest.sentry.io/789
+PUBLIC_SENTRY_DSN = https://<public-key>@o<org-id>.ingest.us.sentry.io/<project-id>
 ```
 
-### Paso 4 — Corregir el snippet en BaseLayout.astro
-El archivo `src/layouts/BaseLayout.astro` actualmente tiene un placeholder. Necesita actualizarse para usar el SDK de `@sentry/browser` que ya está instalado.
+Opcional, pero recomendado para stack traces legibles en producción:
 
-Abre `src/layouts/BaseLayout.astro` y reemplaza el bloque de Sentry (líneas ~109–120) por:
-
-```astro
-{PUBLIC_SENTRY_DSN && (
-  <script is:inline define:vars={{ PUBLIC_SENTRY_DSN }}>
-    import('https://browser.sentry-cdn.com/8.0.0/bundle.min.js').then(() => {
-      if (typeof Sentry !== 'undefined') {
-        Sentry.init({
-          dsn: PUBLIC_SENTRY_DSN,
-          environment: 'production',
-          tracesSampleRate: 0.1,
-        });
-      }
-    });
-  </script>
-)}
 ```
+SENTRY_AUTH_TOKEN = <personal-token-with-project-releases-scope>
+SENTRY_ORG = <your-sentry-org-slug>
+SENTRY_PROJECT = <your-sentry-project-slug>
+```
+
+### Paso 4 — Confirmar archivos de integración
+El setup actual usa:
+
+- `astro.config.mjs` → integración oficial `@sentry/astro` para SSR
+- `sentry.server.config.js` → init server-side
+- `src/scripts/sentry-client.ts` → init browser-side sin depender de inline JS
+- `netlify/functions/_sentry.ts` → captura de excepciones en Functions
 
 ### Verificación
 1. Despliega en Netlify
 2. En Sentry → **Issues** — deberías ver el proyecto activo
 3. Para forzar un error de prueba, abre la consola del navegador en producción y ejecuta:
    ```js
-   Sentry.captureException(new Error('Test error from AGLAYA'))
+   window.dispatchEvent(new ErrorEvent('error', { error: new Error('Test error from AGLAYA') }))
    ```
 4. Aparecerá en Sentry → Issues en ~30 segundos
 
