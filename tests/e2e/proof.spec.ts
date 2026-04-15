@@ -15,13 +15,13 @@ test.describe('Proof Pages', () => {
   test('should render a proof detail page', async ({ page }) => {
     await page.goto('/proof/pocuro/');
 
-    // Check page title matches actual content (Note the em dash —)
+    // Check page title matches current proof content (Note the em dash —)
     await expect(page).toHaveTitle(
-      'How POCURO Cut Unqualified Leads by 90% in 60 Days — AGLAYA Proof'
+      'AI Orchestration & Lead Scoring — AGLAYA Proof'
     );
 
-    // Check h1 contains key part of the title
-    await expect(page.locator('h1')).toContainText('How POCURO Cut Unqualified Leads');
+    // Check h1 contains the current proof title
+    await expect(page.locator('h1')).toContainText('AI Orchestration & Lead Scoring');
 
     // Check System Integrity header is present
     await expect(page.locator('text=/SYSTEM_INTEGRITY/')).toBeVisible();
@@ -47,13 +47,13 @@ test.describe('Proof Pages', () => {
   test('should render a Spanish proof detail page', async ({ page }) => {
     await page.goto('/es/proof/pocuro/');
 
-    // Check page title matches actual ES content (Note the em dash —)
+    // Check page title matches current ES proof content (Note the em dash —)
     await expect(page).toHaveTitle(
-      'Cómo POCURO redujo los leads no calificados un 90% en 60 días — AGLAYA Evidencia'
+      'Orquestación de IA & Scoring de Leads — AGLAYA Evidencia'
     );
 
-    // Check h1 contains key part of the ES title
-    await expect(page.locator('h1')).toContainText('Cómo POCURO redujo');
+    // Check h1 contains the current ES proof title
+    await expect(page.locator('h1')).toContainText('Orquestación de IA & Scoring de Leads');
 
     // Check System Integrity header (Spanish uses INTEGRIDAD_SISTEMA)
     await expect(page.locator('text=/INTEGRIDAD_SISTEMA/')).toBeVisible();

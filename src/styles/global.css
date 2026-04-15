@@ -272,7 +272,23 @@ body.glow-active::before {
 /* Misc classes */
 .codetag {
   font-family: var(--font-mono);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  color: #000000 !important;
+}
+
+.codetag-50 {
+  font-family: var(--font-mono);
   background: rgba(255, 255, 255, 0.5);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  color: #000000 !important;
+}
+
+.codetag-25 {
+  font-family: var(--font-mono);
+  background: rgba(255, 255, 255, 0.25);
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   color: #000000 !important;

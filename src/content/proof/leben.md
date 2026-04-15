@@ -1,8 +1,8 @@
 ---
 title:
-  en: "357% Increase in Open Rate via Lifecycle Automation"
-  es: "Aumento del 357% en Tasa de Apertura mediante Automatización de Ciclo de Vida"
-  pt: "Aumento de 357% na Taxa de Abertura via Automação de Ciclo de Vida"
+  en: "Lifecycle & Narrative Routing"
+  es: "Enrutamiento Narrativo y Ciclo de Vida"
+  pt: "Roteamento Narrativo e Ciclo de Vida"
 client: LEBEN
 industry: Real Estate
 challenge:
@@ -45,6 +45,8 @@ results:
       pt: "intervenção manual no fluxo do pipeline"
 featured: true
 date: "2025-07"
+client_logo: "../src/assets/images/leben.png"
+client_logo_dark: "../src/assets/images/leben-white.png"
 body_en: |
   ## What We Built
 

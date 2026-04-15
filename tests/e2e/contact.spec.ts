@@ -1,9 +1,36 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
+async function gotoContact(page: Parameters<typeof test>[0]['page']) {
+  await page.addInitScript(() => {
+    window.localStorage.setItem('aglaya_cookie_consent', 'essential');
+  });
+  await page.goto('/contact/');
+}
+
+async function setRangeValue(
+  page: Parameters<typeof test>[0]['page'],
+  selector: string,
+  value: string,
+) {
+  await page.locator(selector).evaluate((element, nextValue) => {
+    const input = element as HTMLInputElement;
+    input.value = nextValue;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  }, value);
+}
+
+async function checkHiddenOption(
+  page: Parameters<typeof test>[0]['page'],
+  selector: string,
+) {
+  await page.locator(selector).check({ force: true });
+}
+
 test.describe('Contact Page', () => {
   test('should switch language from contact page without breaking', async ({ page }) => {
-    await page.goto('/contact/');
+    await gotoContact(page);
 
     // Toggle to ES (should navigate to /es/contact or /es/contact/)
     await page.click('.lang-switcher');
@@ -15,7 +42,7 @@ test.describe('Contact Page', () => {
   });
 
   test('should render the contact page with ICP filter', async ({ page }) => {
-    await page.goto('/contact/');
+    await gotoContact(page);
 
     // Check page title
     await expect(page).toHaveTitle('Request Proposal — AGLAYA');
@@ -24,69 +51,75 @@ test.describe('Contact Page', () => {
     await expect(page.locator('#icp-container')).toBeVisible();
 
     // Check that initial inputs are present
-    await expect(page.locator('#icp-employees')).toBeVisible();
-    await expect(page.locator('#icp-spend')).toBeVisible();
+    await expect(page.locator('#icp-manual')).toBeVisible();
+    await expect(page.locator('#icp-data-none')).toBeAttached();
+    await expect(page.locator('#icp-investment-0')).toBeAttached();
 
-    // Check that the evaluate button is present
+    // Check that the live audit and evaluate button are present
+    await expect(page.locator('#icp-audit-panel')).toBeVisible();
     await expect(page.locator('#icp-evaluate')).toBeVisible();
+    await expect(page.locator('#icp-evaluate')).toContainText(/complete signal input/i);
   });
 
-  test('should show disqualified message for small teams', async ({ page }) => {
-    await page.goto('/contact/');
+  test('should surface a blocked state and keep an open contact channel for weak signals', async ({ page }) => {
+    await gotoContact(page);
 
-    // Set employees to 10 (less than 20) and spend to $2000 (less than $5K)
-    await page.locator('#icp-employees').fill('10');
-    await page.locator('#icp-spend').fill('2000');
+    await setRangeValue(page, '#icp-manual', '20');
+    await checkHiddenOption(page, '#icp-data-none');
+    await checkHiddenOption(page, '#icp-investment-0');
 
-    // Click evaluate
+    await expect(page.locator('#icp-evaluate')).toContainText(/critical mass not reached/i);
+
     await page.locator('#icp-evaluate').click();
 
-    // Check that disqualified message is shown
     await expect(page.locator('#icp-disqualified')).toBeVisible();
+    await expect(page.locator('#open-channel-form input[name="name"]')).toBeVisible();
+    await expect(page.locator('#open-channel-form textarea[name="message"]')).toBeVisible();
+    await expect(page.locator('#open-channel-form input[name="icp_primary_state"]')).toHaveValue('blocked_investment');
+    await expect(page.locator('#open-channel-form input[name="inquiry_type"]')).toHaveValue('BLOCKED_INVESTMENT_LEAD');
   });
 
-  test('should show qualified form for large teams', async ({ page }) => {
-    await page.goto('/contact/');
+  test('should show qualified form for strong operational signals', async ({ page }) => {
+    await gotoContact(page);
 
-    // Set employees to 50 (more than 20) and spend to $20000 (more than $15K)
-    await page.locator('#icp-employees').fill('50');
-    await page.locator('#icp-spend').fill('20000');
+    await setRangeValue(page, '#icp-manual', '80');
+    await checkHiddenOption(page, '#icp-data-crm');
+    await checkHiddenOption(page, '#icp-investment-2');
 
-    // Click evaluate
+    await expect(page.locator('#icp-evaluate')).toContainText(/execute stress test/i);
     await page.locator('#icp-evaluate').click();
 
-    // Check that qualified form is shown
     await expect(page.locator('#icp-qualified')).toBeVisible();
 
-    // Check that qualified form fields are visible (scoped to avoid strict mode with borderline)
     await expect(page.locator('#qualified-form input[name="name"]')).toBeVisible();
     await expect(page.locator('#qualified-form input[name="email"]')).toBeVisible();
     await expect(page.locator('#qualified-form input[name="company"]')).toBeVisible();
-    // inquiry_type is type="hidden" — verify it exists as a hidden input
     await expect(page.locator('#qualified-form input[name="inquiry_type"]')).toBeHidden();
+    await expect(page.locator('#qualified-form input[name="manual_execution"]')).toHaveValue('80');
+    await expect(page.locator('#qualified-form input[name="data_infrastructure"]')).toHaveValue('crm');
   });
 
-  test('should show borderline form for borderline cases', async ({ page }) => {
-    await page.goto('/contact/');
+  test('should show borderline form for transitional cases', async ({ page }) => {
+    await gotoContact(page);
 
-    // Set employees to 250 (more than 20) and spend to $10000 (between $5K and $15K)
-    await page.locator('#icp-employees').fill('250');
-    await page.locator('#icp-spend').fill('10000');
+    await setRangeValue(page, '#icp-manual', '55');
+    await checkHiddenOption(page, '#icp-data-sheet');
+    await checkHiddenOption(page, '#icp-investment-1');
 
-    // Click evaluate
+    await expect(page.locator('#icp-evaluate')).toContainText(/review transitional state/i);
     await page.locator('#icp-evaluate').click();
 
-    // Check that borderline form is shown
     await expect(page.locator('#icp-borderline')).toBeVisible();
 
-    // Check that borderline form fields are visible (scoped to avoid strict mode with qualified)
     await expect(page.locator('#borderline-form input[name="name"]')).toBeVisible();
     await expect(page.locator('#borderline-form input[name="email"]')).toBeVisible();
+    await expect(page.locator('#borderline-form textarea[name="message"]')).toBeVisible();
+    await expect(page.locator('#borderline-form input[name="growth_investment"]')).toHaveValue('between_5_15');
   });
 
   test('should pass axe-core accessibility checks', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/contact/');
+    await gotoContact(page);
 
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'best-practice'])

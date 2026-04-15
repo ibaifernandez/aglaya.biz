@@ -1,8 +1,8 @@
 ---
 title:
-  en: "How POCURO Cut Unqualified Leads by 90% in 60 Days"
-  es: "Cómo POCURO redujo los leads no calificados un 90% en 60 días"
-  pt: "Como a POCURO Reduziu os Leads Não Qualificados em 90% em 60 Dias"
+  en: "AI Orchestration & Lead Scoring"
+  es: "Orquestación de IA & Scoring de Leads"
+  pt: "Orquestação de IA & Scoring de Leads"
 client: POCURO
 industry: Real Estate
 challenge:
@@ -45,6 +45,8 @@ results:
       pt: "trabalho manual eliminado estimado"
 featured: true
 date: "2025-06"
+client_logo: "../src/assets/images/pocuro.png"
+client_logo_dark: "../src/assets/images/pocuro-white.png"
 body_en: |
   ## What We Built
 

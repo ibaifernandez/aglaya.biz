@@ -2,12 +2,6 @@
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
 import Send from './icons/Send.astro';
 
-interface Props {
-  employees: string;
-  spend: string;
-}
-
-const { employees, spend } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
@@ -15,17 +9,33 @@ const hcaptchaSiteKey = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY || 'a772dbf8-f0
 ---
 
 <script is:inline>
-  window.onHCaptchaSuccessQualified = function() {
-    document.getElementById('q-submit').removeAttribute('disabled');
+  window.onHCaptchaSuccessQualified = function(token) {
+    const tokenInput = document.querySelector('#qualified-form [name="token"]');
+    if (tokenInput) tokenInput.value = token;
+    document.getElementById('q-submit')?.removeAttribute('disabled');
+  };
+  window.onHCaptchaExpiredQualified = function() {
+    const tokenInput = document.querySelector('#qualified-form [name="token"]');
+    if (tokenInput) tokenInput.value = '';
+    document.getElementById('q-submit')?.setAttribute('disabled', 'true');
+  };
+  window.onHCaptchaErrorQualified = function() {
+    const tokenInput = document.querySelector('#qualified-form [name="token"]');
+    if (tokenInput) tokenInput.value = '';
+    document.getElementById('q-submit')?.setAttribute('disabled', 'true');
   };
 </script>
 <script src="https://js.hcaptcha.com/1/api.js" async defer is:inline></script>
 
 <form id="qualified-form" class="flex flex-col gap-6" data-lang={lang}>
   <input type="hidden" name="icp_status" value="QUALIFIED" />
-  <input type="hidden" name="employees" value={employees} />
-  <input type="hidden" name="monthly_spend" value={spend} />
   <input type="hidden" name="inquiry_type" value="QUALIFIED_LEAD" />
+  <input type="hidden" name="manual_execution" value="" />
+  <input type="hidden" name="data_infrastructure" value="" />
+  <input type="hidden" name="growth_investment" value="" />
+  <input type="hidden" name="icp_signal_score" value="" />
+  <input type="hidden" name="icp_primary_state" value="" />
+  <input type="hidden" name="token" value="" />
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <div class="flex flex-col gap-2">
@@ -51,7 +61,7 @@ const hcaptchaSiteKey = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY || 'a772dbf8-f0
 
   <div class="flex flex-col gap-2">
     <label for="q-message" class="font-mono text-[10px] text-white/60 uppercase tracking-widest">{t('contact.form.message')}</label>
-    <textarea id="q-message" name="message" rows="5" required class="bg-white/5 border border-white/10 px-6 py-4 text-white font-body outline-none focus:border-brand transition-colors resize-none"></textarea>
+    <textarea id="q-message" name="message" rows="5" required placeholder={t('contact.form.message_placeholder.qualified')} class="bg-white/5 border border-white/10 px-6 py-4 text-white font-body outline-none focus:border-brand transition-colors resize-none"></textarea>
   </div>
 
   <div class="flex flex-col sm:flex-row items-center justify-between gap-8 mt-4">
@@ -60,6 +70,8 @@ const hcaptchaSiteKey = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY || 'a772dbf8-f0
       data-sitekey={hcaptchaSiteKey}
       data-theme="dark"
       data-callback="onHCaptchaSuccessQualified"
+      data-expired-callback="onHCaptchaExpiredQualified"
+      data-error-callback="onHCaptchaErrorQualified"
       role="region"
       aria-label="Bot verification"
     ></div>
@@ -94,13 +106,16 @@ const hcaptchaSiteKey = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY || 'a772dbf8-f0
   const form = document.querySelector('#qualified-form') as HTMLFormElement;
   const success = document.querySelector('#q-success');
   const error = document.querySelector('#q-error');
+  const submitButton = form?.querySelector('button') as HTMLButtonElement | null;
+  const submitLabel = submitButton?.querySelector('span');
 
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const btn = form.querySelector('button');
-    if (btn) {
-      btn.disabled = true;
-      btn.textContent = 'SYNCHRONIZING...';
+    if (submitButton) {
+      submitButton.disabled = true;
+    }
+    if (submitLabel) {
+      submitLabel.textContent = 'SYNCHRONIZING...';
     }
     
     const formData = new FormData(form);
@@ -122,9 +137,11 @@ const hcaptchaSiteKey = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY || 'a772dbf8-f0
       }
     } catch (err) {
       error?.classList.remove('hidden');
-      if (btn) {
-        btn.disabled = false;
-        btn.textContent = 'REATTEMPT_SYNC';
+      if (submitButton) {
+        submitButton.disabled = false;
+      }
+      if (submitLabel) {
+        submitLabel.textContent = 'REATTEMPT_SYNC';
       }
     }
   });
