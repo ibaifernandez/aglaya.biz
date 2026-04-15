@@ -44,6 +44,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 - Reinstate production-grade Sentry coverage across browser, Astro SSR, and Netlify form handlers; move hard security headers to `public/_headers`; tighten CSP around GTM, hCaptcha, fonts, and Sentry ingest; and align the docs/privacy copy with the live observability stack.
 - Scrub literal Sentry org/project references from repo docs, derive Sentry environment labels from Netlify deploy context, and mark the public browser DSN as an intentional secret-scan omission so production deploys do not fail on public runtime config.
 - Relax the production CSP script policy enough to restore Astro inline runtime, cookie consent, GTM gating, hCaptcha callbacks, and Cloudflare Insights, while forcing the browser Sentry bootstrap to emit as a real asset URL instead of an inlined `data:` script.
+- Rename the browser Sentry bootstrap asset from `.ts` to `.js` so Netlify serves it with a valid JavaScript module MIME type in production.
 
 ---
 
