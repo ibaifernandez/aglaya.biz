@@ -4,80 +4,167 @@ import SectionHeader from './SectionHeader.astro';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
+
+const traditionalRows = [
+  {
+    label: t('eco.traditional.decay.label'),
+    value: t('eco.traditional.decay.value'),
+  },
+  {
+    label: t('eco.traditional.ownership.label'),
+    value: t('eco.traditional.ownership.value'),
+  },
+  {
+    label: t('eco.traditional.scale.label'),
+    value: t('eco.traditional.scale.value'),
+  },
+];
+
+const systemicRows = [
+  {
+    label: t('eco.systemic.decay.label'),
+    value: t('eco.systemic.decay.value'),
+  },
+  {
+    label: t('eco.systemic.ownership.label'),
+    value: t('eco.systemic.ownership.value'),
+  },
+  {
+    label: t('eco.systemic.scale.label'),
+    value: t('eco.systemic.scale.value'),
+  },
+];
+
+const auditItems = [
+  {
+    label: t('eco.list.item_1.label'),
+    value: t('eco.list.item_1.value'),
+  },
+  {
+    label: t('eco.list.item_2.label'),
+    value: t('eco.list.item_2.value'),
+  },
+  {
+    label: t('eco.list.item_3.label'),
+    value: t('eco.list.item_3.value'),
+  },
+  {
+    label: t('eco.list.item_4.label'),
+    value: t('eco.list.item_4.value'),
+  },
+  {
+    label: t('eco.list.item_5.label'),
+    value: t('eco.list.item_5.value'),
+  },
+];
 ---
 
 <section id="economics" class="bg-black py-24 border-t border-white/5 relative overflow-hidden group">
-  
-  <!-- Massive Background Accent -->
   <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-brand/5 blur-[150px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
 
-  <div class="max-w-7xl mx-auto px-6 relative z-10 flex flex-col gap-24">
-    
-    <!-- Header -->
-    <div data-animate="fade-up">
-      <SectionHeader 
-        eyebrow={t('eco.eyebrow')} 
-        heading={t('eco.heading')} 
+  <div class="max-w-7xl mx-auto px-6 relative z-10 flex flex-col gap-20">
+    <div class="flex flex-col gap-8" data-animate="fade-up">
+      <SectionHeader
+        eyebrow={t('eco.eyebrow')}
+        heading={t('eco.heading')}
         align="center"
+        spacing="mb-0"
       />
+      <p class="max-w-4xl mx-auto text-center text-white/65 text-lg md:text-xl leading-relaxed">
+        {t('eco.intro')}
+      </p>
     </div>
 
-    <!-- The Economic Formula -->
-    <div 
-      class="max-w-5xl mx-auto w-full bg-[#050505] border border-white/10 p-12 lg:p-24 flex flex-col items-center gap-16 relative group/formula hover:border-brand/40 transition-all duration-700"
+    <div
+      class="max-w-6xl mx-auto w-full bg-[#050505] border border-white/10 p-8 md:p-12 lg:p-16 flex flex-col gap-10 relative hover:border-brand/40 transition-all duration-700"
       data-animate="fade-up"
     >
-      <!-- Industrial Meta -->
-      <div class="deco-text absolute top-6 left-6 font-mono text-[8px] text-white/20 uppercase tracking-[0.5em]" aria-hidden="true">
-        ASSET_VALUATION_PROJECTION_v4.2
+      <div class="deco-text absolute top-6 left-6 font-mono text-[8px] text-white/25 uppercase tracking-[0.5em]" aria-hidden="true">
+        CAPITAL_MODEL_AUDIT_v2
       </div>
-      <div class="absolute top-6 right-6 flex gap-2">
-        <div class="w-2 h-2 bg-brand/20 group-hover/formula:bg-brand transition-colors"></div>
-        <div class="w-10 h-2 bg-white/5 group-hover/formula:bg-white/10 transition-colors"></div>
+      <div class="absolute top-6 right-6 flex gap-2" aria-hidden="true">
+        <div class="w-2 h-2 bg-brand/25"></div>
+        <div class="w-10 h-2 bg-white/6"></div>
       </div>
 
-      <!-- Main Equation -->
-      <div class="flex flex-col md:flex-row items-center justify-center gap-12 w-full">
-        <!-- Input -->
-        <div class="flex flex-col items-center gap-4 text-center">
-          <span class="text-white font-display font-black text-3xl sm:text-4xl uppercase tracking-tighter">AGLAYA SYSTEM</span>
-          <span class="px-3 py-1 bg-brand/20 text-corporate-green font-mono text-[10px] uppercase tracking-widest">FIXED_ASSET</span>
-        </div>
-
-        <!-- Operator -->
-        <div class="text-brand font-display font-black text-6xl opacity-40">>></div>
-
-        <!-- Output -->
-        <div class="flex flex-col items-center gap-4 text-center">
-          <div class="flex flex-col">
-            <span class="text-white font-display font-black text-3xl sm:text-4xl uppercase tracking-tighter">12X MANUAL ROI</span>
-            <span class="text-brand font-display font-black text-2xl uppercase tracking-widest">+ SOVEREIGNTY</span>
+      <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-stretch">
+        <article class="border border-white/10 bg-white/[0.02] p-6 md:p-8 flex flex-col gap-6">
+          <div class="flex flex-col gap-3">
+            <span class="self-start px-3 py-1 border border-white/10 bg-white/[0.03] text-white/60 font-mono text-[10px] uppercase tracking-[0.3em]">
+              {t('eco.traditional.tag')}
+            </span>
+            <h3 class="text-white font-display font-black text-2xl md:text-3xl uppercase tracking-tight">
+              {t('eco.traditional.title')}
+            </h3>
           </div>
-          <span class="px-3 py-1 bg-white/5 text-white/60 font-mono text-[10px] uppercase tracking-widest">NET_GAIN_RECOVERY</span>
-        </div>
+
+          <dl class="flex flex-col gap-4">
+            {traditionalRows.map((row) => (
+              <div class="border-t border-white/8 pt-4 flex flex-col gap-2">
+                <dt class="text-white/50 font-mono text-[10px] uppercase tracking-[0.32em]">{row.label}</dt>
+                <dd class="text-white/85 font-body text-lg leading-snug">{row.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </article>
+
+        <article class="border border-brand/30 bg-brand/[0.05] p-6 md:p-8 flex flex-col gap-6 shadow-[0_0_0_1px_rgba(232,0,61,0.08)]">
+          <div class="flex flex-col gap-3">
+            <span class="self-start px-3 py-1 border border-brand/20 bg-brand/10 text-corporate-green font-mono text-[10px] uppercase tracking-[0.3em]">
+              {t('eco.systemic.tag')}
+            </span>
+            <h3 class="text-white font-display font-black text-2xl md:text-3xl uppercase tracking-tight">
+              {t('eco.systemic.title')}
+            </h3>
+          </div>
+
+          <dl class="flex flex-col gap-4">
+            {systemicRows.map((row) => (
+              <div class="border-t border-white/8 pt-4 flex flex-col gap-2">
+                <dt class="text-white/50 font-mono text-[10px] uppercase tracking-[0.32em]">{row.label}</dt>
+                <dd class="text-white font-body text-lg leading-snug">{row.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </article>
       </div>
 
-      <!-- Narrative -->
-      <div class="max-w-2xl text-center">
-        <p class="text-white/60 text-xl sm:text-2xl font-body leading-relaxed italic">
-          "{t('eco.body')}"
-        </p>
-      </div>
+      <div class="grid gap-8 lg:grid-cols-2 items-stretch">
+        <article class="border border-white/10 bg-black/70 p-6 md:p-8 flex flex-col gap-6 h-full">
+          <span class="text-corporate-green font-mono text-[10px] uppercase tracking-[0.42em]">
+            [{t('eco.list.label')}]
+          </span>
 
-      <!-- Signature Line -->
-      <div class="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-      
-      <div class="deco-text font-mono text-[9px] uppercase tracking-[0.4em] text-white/20 flex items-center gap-8" aria-hidden="true">
-        <span>STRATEGIC_ASSET: TRUE</span>
-        <span>RECURRING_FEES: 0.00</span>
-        <span>HUMAN_DEPENDENCY: ELIMINATED</span>
+          <ul class="flex flex-col flex-1">
+            {auditItems.map((item) => (
+              <li class="flex-1 border-t border-white/8 py-4 md:py-5 flex flex-col justify-center gap-2 first:border-t-0 first:pt-0 last:pb-0">
+                <span class="text-white/60 font-mono text-[10px] uppercase tracking-[0.32em]">{item.label}</span>
+                <p class="text-white/90 font-body text-lg leading-snug">{item.value}</p>
+              </li>
+            ))}
+          </ul>
+
+          <p class="text-corporate-green font-mono text-[11px] uppercase tracking-[0.32em] pt-2 border-t border-brand/10">
+            {t('eco.log.result')}
+          </p>
+        </article>
+
+        <blockquote class="border-l-2 border-brand pl-6 md:pl-8 flex flex-col justify-between gap-8 h-full">
+          <p class="text-white/90 text-xl md:text-2xl font-body leading-relaxed">
+            {t('eco.quote')}
+          </p>
+          <p class="text-white/55 text-sm md:text-base font-body leading-relaxed">
+            {t('eco.note')}
+          </p>
+        </blockquote>
       </div>
     </div>
 
-    <!-- Final Small Proof -->
-    <div class="deco-text flex flex-col items-center gap-6 opacity-30 group-hover:opacity-60 transition-opacity" data-animate="fade-up" aria-hidden="true">
-       <div class="w-px h-16 bg-brand"></div>
-       <p class="font-mono text-[10px] uppercase tracking-[0.5em] text-white">Marketing is an expense. Systems are infrastructure.</p>
+    <div class="flex flex-col items-center gap-6" data-animate="fade-up">
+      <div class="w-px h-16 bg-brand"></div>
+      <p class="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.5em] text-white/60 text-center">
+        {t('eco.footer')}
+      </p>
     </div>
   </div>
 </section>

@@ -17,6 +17,9 @@ test.describe('Homepage', () => {
     await expect(page.locator('section#anti-client')).toBeVisible();
     await expect(page.locator('section#economics')).toBeVisible();
     await expect(page.locator('section#contact')).toBeVisible();
+    await expect(page.locator('footer')).toBeVisible();
+    await expect(page.locator('#dispatch-form')).toBeVisible();
+    await expect(page.locator('#dispatch-email')).toBeVisible();
   });
 
   test('should have working navigation links', async ({ page }) => {

@@ -69,6 +69,8 @@ docs/                # Project documentation
 | `PUBLIC_HCAPTCHA_SITE_KEY` | Client | hCaptcha site key (fallback hardcoded in ContactForm) |
 | `PUBLIC_SENTRY_DSN` | Client | Sentry project DSN |
 | `NOTIFY_EMAIL` | Server | Lead notification recipient |
+| `MAILERLITE_API_KEY` | Server | Optional MailerLite API key for footer dispatch subscriptions |
+| `MAILERLITE_GROUP_ID` | Server | Optional MailerLite group id for footer dispatch subscriptions |
 
 ## Git Workflow
 

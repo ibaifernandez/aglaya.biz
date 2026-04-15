@@ -9,28 +9,28 @@ const hcaptchaSiteKey = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY || 'a772dbf8-f0
 ---
 
 <script is:inline>
-  window.onHCaptchaSuccessBorderline = function(token) {
-    const tokenInput = document.querySelector('#borderline-form [name="token"]');
+  window.onHCaptchaSuccessOpenChannel = function(token) {
+    const tokenInput = document.querySelector('#open-channel-form [name="token"]');
     if (tokenInput) tokenInput.value = token;
-    document.getElementById('b-submit')?.removeAttribute('disabled');
+    document.getElementById('oc-submit')?.removeAttribute('disabled');
   };
-  window.onHCaptchaExpiredBorderline = function() {
-    const tokenInput = document.querySelector('#borderline-form [name="token"]');
+  window.onHCaptchaExpiredOpenChannel = function() {
+    const tokenInput = document.querySelector('#open-channel-form [name="token"]');
     if (tokenInput) tokenInput.value = '';
-    document.getElementById('b-submit')?.setAttribute('disabled', 'true');
+    document.getElementById('oc-submit')?.setAttribute('disabled', 'true');
   };
-  window.onHCaptchaErrorBorderline = function() {
-    const tokenInput = document.querySelector('#borderline-form [name="token"]');
+  window.onHCaptchaErrorOpenChannel = function() {
+    const tokenInput = document.querySelector('#open-channel-form [name="token"]');
     if (tokenInput) tokenInput.value = '';
-    document.getElementById('b-submit')?.setAttribute('disabled', 'true');
+    document.getElementById('oc-submit')?.setAttribute('disabled', 'true');
   };
 </script>
 <script src="https://js.hcaptcha.com/1/api.js" async defer is:inline></script>
 
-<form id="borderline-form" class="flex flex-col gap-6" data-lang={lang}>
-  <input type="hidden" name="icp_status" value="BORDERLINE" />
+<form id="open-channel-form" class="flex flex-col gap-6" data-lang={lang}>
+  <input type="hidden" name="icp_status" value="OPEN_CHANNEL" />
   <input type="hidden" name="company" value="" />
-  <input type="hidden" name="inquiry_type" value="BORDERLINE_LEAD" />
+  <input type="hidden" name="inquiry_type" value="OPEN_CHANNEL_LEAD" />
   <input type="hidden" name="manual_execution" value="" />
   <input type="hidden" name="data_infrastructure" value="" />
   <input type="hidden" name="growth_investment" value="" />
@@ -38,31 +38,25 @@ const hcaptchaSiteKey = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY || 'a772dbf8-f0
   <input type="hidden" name="icp_primary_state" value="" />
   <input type="hidden" name="token" value="" />
 
-  <div class="flex flex-col gap-8 text-center max-w-lg mx-auto">
-    <p class="text-white/60 font-body text-lg leading-relaxed italic">
-      {t('contact.borderline.msg')}
-    </p>
-  </div>
-
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <div class="flex flex-col gap-2">
-      <label for="b-name" class="font-mono text-[10px] text-white/60 uppercase tracking-widest">{t('contact.form.name')}</label>
-      <input type="text" id="b-name" name="name" required autocomplete="name" class="bg-white/5 border border-white/10 px-6 py-4 text-white font-body outline-none focus:border-brand transition-colors" />
+      <label for="oc-name" class="font-mono text-[10px] text-white/60 uppercase tracking-widest">{t('contact.form.name')}</label>
+      <input type="text" id="oc-name" name="name" required autocomplete="name" class="bg-white/5 border border-white/10 px-6 py-4 text-white font-body outline-none focus:border-brand transition-colors" />
     </div>
     <div class="flex flex-col gap-2">
-      <label for="b-email" class="font-mono text-[10px] text-white/60 uppercase tracking-widest">{t('contact.form.email')}</label>
-      <input type="email" id="b-email" name="email" required autocomplete="email" class="bg-white/5 border border-white/10 px-6 py-4 text-white font-body outline-none focus:border-brand transition-colors" />
+      <label for="oc-email" class="font-mono text-[10px] text-white/60 uppercase tracking-widest">{t('contact.form.email')}</label>
+      <input type="email" id="oc-email" name="email" required autocomplete="email" class="bg-white/5 border border-white/10 px-6 py-4 text-white font-body outline-none focus:border-brand transition-colors" />
     </div>
   </div>
 
   <div class="flex flex-col gap-2">
-    <label for="b-website" class="font-mono text-[10px] text-white/60 uppercase tracking-widest">{t('contact.form.website')}</label>
-    <input type="url" id="b-website" name="website" placeholder="https://" autocomplete="url" class="bg-white/5 border border-white/10 px-6 py-4 text-white font-body outline-none focus:border-brand transition-colors" />
+    <label for="oc-website" class="font-mono text-[10px] text-white/60 uppercase tracking-widest">{t('contact.form.website')}</label>
+    <input type="url" id="oc-website" name="website" placeholder="https://" autocomplete="url" class="bg-white/5 border border-white/10 px-6 py-4 text-white font-body outline-none focus:border-brand transition-colors" />
   </div>
 
   <div class="flex flex-col gap-2">
-    <label for="b-message" class="font-mono text-[10px] text-white/60 uppercase tracking-widest">{t('contact.form.message')}</label>
-    <textarea id="b-message" name="message" rows="5" required placeholder={t('contact.form.message_placeholder.borderline')} class="bg-white/5 border border-white/10 px-6 py-4 text-white font-body outline-none focus:border-brand transition-colors resize-none"></textarea>
+    <label for="oc-message" class="font-mono text-[10px] text-white/60 uppercase tracking-widest">{t('contact.form.message')}</label>
+    <textarea id="oc-message" name="message" rows="5" required placeholder={t('contact.form.message_placeholder.blocked_investment')} class="bg-white/5 border border-white/10 px-6 py-4 text-white font-body outline-none focus:border-brand transition-colors resize-none"></textarea>
   </div>
 
   <div class="flex flex-col sm:flex-row items-center justify-between gap-8 mt-4">
@@ -70,16 +64,16 @@ const hcaptchaSiteKey = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY || 'a772dbf8-f0
       class="h-captcha"
       data-sitekey={hcaptchaSiteKey}
       data-theme="dark"
-      data-callback="onHCaptchaSuccessBorderline"
-      data-expired-callback="onHCaptchaExpiredBorderline"
-      data-error-callback="onHCaptchaErrorBorderline"
+      data-callback="onHCaptchaSuccessOpenChannel"
+      data-expired-callback="onHCaptchaExpiredOpenChannel"
+      data-error-callback="onHCaptchaErrorOpenChannel"
       role="region"
       aria-label="Bot verification"
     ></div>
-    
-    <button 
-      type="submit" 
-      id="b-submit" 
+
+    <button
+      type="submit"
+      id="oc-submit"
       disabled
       class="bg-brand text-white px-12 py-5 font-display font-black uppercase tracking-widest flex items-center gap-4 hover:bg-brand-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
     >
@@ -88,25 +82,25 @@ const hcaptchaSiteKey = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY || 'a772dbf8-f0
     </button>
   </div>
 
-  <div id="b-error" class="hidden text-brand font-mono text-xs uppercase tracking-widest border border-brand/20 p-4 bg-brand/5" role="alert" aria-live="assertive">
+  <div id="oc-error" class="hidden text-brand font-mono text-xs uppercase tracking-widest border border-brand/20 p-4 bg-brand/5" role="alert" aria-live="assertive">
     ERROR_DURING_TRANSMISSION. REATTEMPT_REQUIRED.
   </div>
 </form>
 
-<div id="b-success" class="hidden flex flex-col items-center gap-8 py-20 border border-white/10 bg-[#050505]">
+<div id="oc-success" class="hidden flex flex-col items-center gap-8 py-20 border border-white/10 bg-[#050505]">
   <div class="w-16 h-16 border-2 border-brand flex items-center justify-center">
     <div class="w-8 h-8 bg-brand animate-pulse"></div>
   </div>
   <h3 class="text-white font-display font-black text-3xl uppercase tracking-tighter">DATA_SYNCHRONIZED</h3>
   <p class="text-white/60 font-body text-center max-w-sm italic">
-     {t('contact.success')}
+    {t('contact.success')}
   </p>
 </div>
 
 <script>
-  const form = document.querySelector('#borderline-form') as HTMLFormElement;
-  const success = document.querySelector('#b-success');
-  const error = document.querySelector('#b-error');
+  const form = document.querySelector('#open-channel-form') as HTMLFormElement;
+  const success = document.querySelector('#oc-success');
+  const error = document.querySelector('#oc-error');
   const submitButton = form?.querySelector('button') as HTMLButtonElement | null;
   const submitLabel = submitButton?.querySelector('span');
 
@@ -118,7 +112,7 @@ const hcaptchaSiteKey = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY || 'a772dbf8-f0
     if (submitLabel) {
       submitLabel.textContent = 'SYNCHRONIZING...';
     }
-    
+
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
     const lang = form.dataset.lang;

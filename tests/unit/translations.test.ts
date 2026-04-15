@@ -12,6 +12,8 @@ const REQUIRED_KEYS = [
   'hero.subtext',
   'nav.contact',
   'contact.label',
+  'footer.dispatch.heading',
+  'footer.dispatch.submit',
 ] as const;
 
 describe('useTranslations — EN', () => {

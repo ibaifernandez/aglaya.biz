@@ -28,11 +28,41 @@ const t = useTranslations(lang);
         </div>
     </div>
 
-    <!-- Body -->
-    <div class="max-w-6xl" data-animate="fade-up ">
-      <p class="text-white/60 font-body text-2xl sm:text-4xl lg:text-3xl leading-[1.2] tracking-tight">
-        {t('problem.body')}
-      </p>
+    <!-- Grid of Problem Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+      {[1, 2, 3, 4, 5, 6].map((i) => (
+        <div 
+          class="group relative flex flex-col p-8 bg-[#0c0c0c] border border-white/5 hover:border-brand/40 transition-all duration-500 overflow-hidden"
+          data-animate="fade-up"
+          style={`animation-delay: ${i * 100}ms`}
+        >
+          <!-- Card Index/ID -->
+          <div class="flex justify-between items-start mb-6">
+            <span class="font-mono text-[9px] text-corporate-green uppercase tracking-[0.4em] opacity-70">
+              LOGIC_NODE_00{i}
+            </span>
+            <div class="w-1 h-1 bg-brand/40 group-hover:bg-brand transition-colors"></div>
+          </div>
+
+          <!-- Card Content -->
+          <h3 class="text-white font-display font-black text-xl sm:text-2xl tracking-tighter uppercase mb-4 group-hover:text-brand transition-colors duration-300">
+            {t(`problem.grid.${i}.title`)}
+          </h3>
+          
+          <p class="text-white/40 font-body text-sm sm:text-base leading-relaxed group-hover:text-white/70 transition-colors duration-500">
+            {t(`problem.grid.${i}.body`)}
+          </p>
+
+          <!-- Decorative Line -->
+          <div class="mt-8 w-8 h-[1px] bg-white/10 group-hover:w-full group-hover:bg-brand/20 transition-all duration-700"></div>
+
+          <!-- Background Subtle Scanline (Premium Detail) -->
+          <div class="absolute inset-0 opacity-[0.02] pointer-events-none group-hover:opacity-[0.05] transition-opacity duration-700">
+            <div class="absolute inset-0 bg-gradient-to-br from-brand/20 to-transparent"></div>
+            <div class="h-full w-full bg-[size:100%_2px] bg-[linear-gradient(rgba(232,0,61,0.1)_50%,rgba(0,0,0,0)_50%)]"></div>
+          </div>
+        </div>
+      ))}
     </div>
 
     <!-- Accent Detail -->

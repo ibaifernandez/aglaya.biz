@@ -1,22 +1,22 @@
 ---
 title:
   en: "Infrastructure & Sovereign BI"
-  es: "Desacople de Infraestructura de Comunicaciones & Integración de Panel BI"
+  es: "Infrestructura & BI Soberana"
   pt: "Infraestrutura & BI Soberano"
 client: "NORDEN"
-industry: "Healthcare"
+industry: "Healthcare (Dental)"
 challenge:
   en: "Operational blindness and domain sabotage. A polluted CRM dragging B2C delivery to 7.56% and masking real intent signals."
   es: "Ceguera operativa y sabotaje de dominio. Un CRM contaminado reduciendo la entrega B2C al 7.56% y enmascarando las señales reales de intención."
   pt: "Cegueira operacional e sabotagem de domínio. Um CRM contaminado arrastando a entrega B2C a 7,56% e mascarando sinais reais de intenção."
 summary:
-  en: "Years of manual chaos and \"ghost leads\" had turned their domain into a toxic asset. With a 7.56% Open Rate in the B2C segment, the company had lost its voice. Worst of all: they had no way of measuring the real damage because they relied on opaque third-party metrics without a proprietary data layer to expose the operational truth."
-  es: "NORDEN operaba bajo un estado de ceguera técnica. Su infraestructura de comunicación estaba centralizada en un único flujo indiferenciado, lo que provocaba una contaminación cruzada entre sus segmentos B2C y B2B. Esto no era un problema de \"marketing\"; era un fallo crítico en el diseño de sistemas."
+  en: 'Years of manual chaos and "ghost leads" had turned their domain into a toxic asset. With a 7.56% Open Rate in the B2C segment, the company had lost its voice. Worst of all: they had no way of measuring the real damage because they relied on opaque third-party metrics without a proprietary data layer to expose the operational truth.'
+  es: "NORDEN operaba bajo un estado de ceguera técnica. Su infraestructura de comunicación estaba centralizada en un único flujo indiferenciado, lo que provocaba una contaminación cruzada entre sus segmentos B2C y B2B. Esto no era un problema de marketing; era un fallo crítico en el diseño de sistemas."
   pt: "Anos de caos manual e 'leads fantasma' haviam transformado o domínio em um ativo tóxico. Com 7,56% de Open Rate no segmento B2C, a empresa havia perdido sua voz. O pior: não tinham como medir o dano real porque dependiam de métricas opacas de terceiros, sem uma camada de dados própria que expusesse a verdade operacional."
 strategy:
-  en: "Separation of B2B/B2C logic and implementation of a proprietary BI layer on Brevo API."
-  es: "Separación de lógica B2B/B2C e implementación de una capa de BI propia sobre la API de Brevo."
-  pt: "Separação da lógica B2B/B2C e implementação de uma camada de BI proprietária sobre a API do Brevo."
+  en: "Separation of B2B/B2C logic and implementation of a proprietary BI layer on Brevo API MCP."
+  es: "Separación de lógica B2B/B2C e implementación de una capa de BI propia sobre API MCP de Brevo."
+  pt: "Separação da lógica B2B/B2C e implementação de uma camada de BI proprietária sobre API MCP do Brevo."
 vision:
   en: "Absolute data sovereignty and zero-filter operational visibility."
   es: "Soberanía de datos absoluta y visibilidad operativa sin filtros registrados."
@@ -37,11 +37,11 @@ results:
       en: "Primary segment inbox placement"
       es: "Entrega en bandeja (Inbox placement)"
       pt: "Entrega na caixa de entrada (segmento principal)"
-  - metric: "Proprietary"
+  - metric: "Proprietary Software"
     label:
-      en: "Local BI & Reporting Layer"
-      es: "Capa de BI y Reporting Local"
-      pt: "Camada de BI & Reporting Local"
+      en: "Hybrid Decision Engine (Deterministic & AI)"
+      es: "Hybrid Decision Engine (Deterministic & AI)"
+      pt: "Hybrid Decision Engine (Deterministic & AI)"
 featured: true
 date: "2025-08"
 client_logo: "../src/assets/images/norden.png"
@@ -65,15 +65,15 @@ body_es: |
 
   Aplicando **Zero-Leak Architecture** y **Zero-Filter Diagnostics**, AGLAYA ejecutó un protocolo de recuperación de infraestructura:
 
-  - **Desacople Arquitectónico**: Separamos radicalmente la lógica, los objetivos y las métricas de los modelos B2B y B2C para detener la contaminación de señales y el sabotaje de la reputación del dominio.
-  - **Capa de BI Propia**: Construimos un sistema local de **Business Intelligence** sobre la API de Brevo. Desarrollamos una GUI interna que permite al cliente poseer sus propias instantáneas de datos y cohortes, eliminando la dependencia de la plataforma.
-  - **Extracción de Señales de Intención**: Ejecutamos una estrategia de saneamiento técnico que preservó solo los activos ricos en intención, limpiando el paquete de datos públicos y deteniendo el sabotaje del dominio.
+  - **Desacople arquitectónico**: separamos radicalmente la lógica, los objetivos y las métricas de los modelos B2B y B2C para detener la contaminación de señales y el sabotaje de la reputación del dominio.
+  - **Capa de BI propia**: construimos un sistema local de **Business Intelligence** sobre API MCP de Brevo. Desarrollamos una GUI interna que permite al cliente poseer sus propias instantáneas de datos y cohortes, eliminando la dependencia de la plataforma.
+  - **Extracción de señales de intención**: ejecutamos una estrategia de saneamiento técnico que preservó solo los activos ricos en intención, limpiando el paquete de datos públicos y deteniendo el sabotaje del dominio.
 
   ## Los Resultados
 
-  - **Soberanía de Datos**: El segmento B2C aumentó su tasa de apertura rastreable ponderada de **7.56% a 23.30%** tras la intervención técnica.
-  - **Densidad de Intención**: En la última ventana táctica, **el 66.36% del segmento activo** interactuó con la marca, validando la recuperación del canal.
-  - **Mando y Control**: NORDEN ya no depende de una herramienta externa para comprender su salud operativa; ahora posee una **infraestructura de reporting propia** con capacidades de auditoría en tiempo real.
+  - **Soberanía de datos**: el segmento B2C aumentó su tasa de apertura rastreable ponderada de **7.56% a 23.30%** tras la intervención técnica.
+  - **Densidad de intención**: en la última ventana táctica, **el 66.36% del segmento activo** interactuó con la marca, validando la recuperación del canal.
+  - **Mando y control**: NORDEN ya no depende de una herramienta externa para comprender su salud operativa; ahora posee una **infraestructura de reporting propia** con capacidades de auditoría en tiempo real.
 body_pt: |
   ## O Que Construímos
 

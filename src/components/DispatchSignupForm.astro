@@ -1,0 +1,116 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import Send from './icons/Send.astro';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<form
+  id="dispatch-form"
+  class="flex flex-col gap-4"
+  data-lang={lang}
+  aria-label={t('footer.dispatch.eyebrow')}
+>
+  <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
+    <div class="flex flex-col gap-2">
+      <label for="dispatch-email" class="font-mono text-[10px] uppercase tracking-[0.28em] text-white/45">
+        {t('footer.dispatch.email_label')}
+      </label>
+      <input
+        id="dispatch-email"
+        type="email"
+        name="email"
+        required
+        autocomplete="email"
+        placeholder={t('footer.dispatch.email_placeholder')}
+        class="w-full border border-white/10 bg-white/[0.03] px-5 py-4 text-white font-body text-sm outline-none transition-colors placeholder:text-white/28 focus:border-brand"
+      />
+    </div>
+
+    <button
+      type="submit"
+      id="dispatch-submit"
+      class="mt-[1.5rem] inline-flex items-center justify-center gap-3 border border-brand bg-brand px-6 py-4 text-white font-display text-[11px] font-black uppercase tracking-[0.2em] transition-all hover:bg-brand-dark hover:border-brand-dark disabled:cursor-not-allowed disabled:opacity-45"
+    >
+      <span id="dispatch-submit-text">{t('footer.dispatch.submit')}</span>
+      <Send class="h-4 w-4" />
+    </button>
+  </div>
+
+  <input
+    type="text"
+    name="company"
+    tabindex="-1"
+    autocomplete="off"
+    class="sr-only"
+    aria-hidden="true"
+  />
+
+  <p class="text-white/45 font-body text-sm leading-relaxed">
+    {t('footer.dispatch.note')}
+  </p>
+
+  <div
+    id="dispatch-error"
+    class="hidden border border-brand/20 bg-brand/5 px-4 py-3 text-brand-light font-mono text-[10px] uppercase tracking-[0.18em]"
+    role="alert"
+    aria-live="assertive"
+  >
+    {t('footer.dispatch.error')}
+  </div>
+
+  <div
+    id="dispatch-success"
+    class="hidden border border-corporate-green/25 bg-corporate-green/8 px-4 py-3 text-corporate-green font-mono text-[10px] uppercase tracking-[0.18em]"
+    role="status"
+    aria-live="polite"
+  >
+    {t('footer.dispatch.success')}
+  </div>
+</form>
+
+<script>
+  const form = document.querySelector('#dispatch-form') as HTMLFormElement | null;
+  const error = document.querySelector('#dispatch-error');
+  const success = document.querySelector('#dispatch-success');
+  const submitButton = document.querySelector('#dispatch-submit') as HTMLButtonElement | null;
+  const submitText = document.querySelector('#dispatch-submit-text');
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    error?.classList.add('hidden');
+    success?.classList.add('hidden');
+
+    if (!submitButton || !submitText) return;
+
+    submitButton.disabled = true;
+    submitText.textContent = 'SYNCING...';
+
+    const formData = new FormData(form);
+    const payload = Object.fromEntries(formData.entries());
+
+    try {
+      const response = await fetch('/.netlify/functions/dispatch-subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...payload,
+          lang: form.dataset.lang,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Dispatch signup failed');
+      }
+
+      form.reset();
+      success?.classList.remove('hidden');
+      submitText.textContent = 'SYNCED';
+    } catch (signupError) {
+      error?.classList.remove('hidden');
+      submitButton.disabled = false;
+      submitText.textContent = 'RETRY_SYNC';
+    }
+  });
+</script>

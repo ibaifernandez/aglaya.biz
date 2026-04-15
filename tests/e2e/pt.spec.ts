@@ -21,10 +21,10 @@ test.describe('PT-BR Pages', () => {
     await page.goto('/pt/proof/pocuro/');
 
     await expect(page).toHaveTitle(
-      'Como a POCURO Reduziu os Leads Não Qualificados em 90% em 60 Dias — AGLAYA Evidência'
+      'Orquestação de IA & Scoring de Leads — AGLAYA Evidência'
     );
 
-    await expect(page.locator('h1')).toContainText('Como a POCURO Reduziu');
+    await expect(page.locator('h1')).toContainText('Orquestação de IA & Scoring de Leads');
 
     await expect(page.locator('text=/INTEGRIDADE_SISTEMA/')).toBeVisible();
 

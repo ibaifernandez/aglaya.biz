@@ -18,10 +18,22 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Changed
+
+- Replace the AntiClient exclusion cards with five expanded exclusion principles, each with localized title/body copy in English, Spanish, and Portuguese.
+- Reframe the ICP filter as a JTBD-based admission stress test with live audit feedback, stronger qualifying signals, and a stricter branch logic.
+- Rebalance the ICP filter into a 66/33 diagnostic layout with a compact left-side input console, a sticky audit HUD, and stronger hover/focus feedback while preserving the dark console aesthetic.
+- Rebuild the Economics section as a capital-model comparison with explicit client ownership, platform-fee clarity, and valuation-focused messaging instead of abstract ROI claims.
+- Refactor the footer into a dispatch-signup conversion block with a single high-value email action, reduced navigation noise, and cleaner legal routing across EN, ES, and PT.
+
 ### Fixed
 
+- Refresh proof E2E title assertions so they match the current localized POCURO case-study content.
+- Relax hero headline clipping so uppercase diacritics render cleanly across English, Spanish, and Portuguese on the homepage.
 - Language switcher (#lang-switcher) on header now uses server-side `href` fallback plus client-side recalculation to preserve pathname/search/hash and avoid stale `#` URLs after repeated toggles. This prevents scenarios where `/contact/` reload did not activate first-click due script race conditions or hash inconsistencies.
 - Language switcher now supports non-JS fallback by setting `href` to `langLink` (previously `javascript:void(0)`), ensuring the toggle works even if client scripts fail.
+- Restore full ICP contact-path functionality by requiring a real message in the borderline branch, capturing the hCaptcha token in every branch form, and opening a sendable fallback channel for blocked states with state-aware messaging.
+- Replace the footer's broken `/terms` path and homepage-only hash links with working routes, and add a dedicated dispatch subscription function that uses MailerLite when configured with internal fallback capture when it is not.
 
 ---
 

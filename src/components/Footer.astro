@@ -1,106 +1,125 @@
 ---
 import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
 import logoBlanco from '../assets/images/aglaya-logo-blanco.svg?raw';
+import DispatchSignupForm from './DispatchSignupForm.astro';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const translatePath = useTranslatedPath(lang);
-
 const currentYear = new Date().getFullYear();
 
-const groups = [
+const privacyPath =
+  lang === 'es' ? '/es/privacidad' : lang === 'pt' ? '/pt/privacidade' : '/privacy';
+const cookiesPath = translatePath('/cookies');
+
+const primaryLinks = [
   {
-    title: t('nav.systems'),
-    links: [
-      { label: 'Alchemy', href: '#alchemy' },
-      { label: 'Narrative', href: '#narrative' },
-      { label: 'Demand', href: '#demand' },
-    ]
+    href: translatePath('/proof'),
+    label: t('nav.proof'),
+    description: t('footer.links.proof'),
   },
   {
-    title: t('nav.resources'),
-    links: [
-      { label: t('nav.proof'), href: translatePath('/proof') },
-      { label: t('nav.economics'), href: '#economics' },
-      { label: t('nav.systems'), href: '#systems' },
-    ]
+    href: translatePath('/services'),
+    label: t('nav.services'),
+    description: t('footer.links.services'),
   },
   {
-    title: t('nav.legal'),
-    links: [
-      { label: t('nav.privacy'), href: '/privacy' },
-      { label: t('nav.terms'), href: '/terms' },
-      { label: t('nav.cookies'), href: '/cookies' },
-    ]
-  }
+    href: translatePath('/contact'),
+    label: t('nav.contact'),
+    description: t('footer.links.contact'),
+  },
 ];
 ---
 
-<footer class="bg-black border-t border-white/5 pt-24 pb-12 overflow-hidden relative">
-  <!-- Decorative Grid Background (Subtle) -->
-  <div class="absolute inset-0 bg-grid opacity-20 pointer-events-none"></div>
+<footer class="relative overflow-hidden border-t border-white/8 bg-[#040404] pt-20 pb-10">
+  <div class="absolute inset-0 bg-grid opacity-15 pointer-events-none"></div>
+  <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent pointer-events-none"></div>
 
-  <div class="max-w-7xl mx-auto px-6 relative z-10 flex flex-col gap-20">
-    
-    <!-- Top Part: Logo & Links -->
-    <div class="flex flex-col md:flex-row justify-between gap-16">
-      
-      <!-- Logo & Mission -->
-      <div class="flex flex-col gap-6 max-w-sm">
-        <a href={translatePath('/')} class="flex flex-col gap-[3px] group w-fit" aria-label="AGLAYA Home">
-          <div class="h-6 w-auto group-hover:opacity-80 transition-opacity [&_svg]:h-6 [&_svg]:w-auto [&_.st0]:fill-white">
-            <Fragment set:html={logoBlanco} />
+  <div class="relative z-10 mx-auto flex max-w-7xl flex-col gap-16 px-6 sm:px-10 lg:px-20">
+    <div class="grid gap-12 xl:grid-cols-[minmax(0,1.55fr)_minmax(320px,0.9fr)] xl:gap-16 items-start">
+      <div class="flex flex-col gap-8">
+        <div class="flex flex-col gap-6 max-w-3xl">
+          <a href={translatePath('/')} class="flex w-fit flex-col gap-[3px] group" aria-label="AGLAYA Home">
+            <div class="h-6 w-auto transition-opacity group-hover:opacity-80 [&_svg]:h-6 [&_svg]:w-auto [&_.st0]:fill-white">
+              <Fragment set:html={logoBlanco} />
+            </div>
+          </a>
+
+          <div class="flex flex-col gap-4">
+            <span class="font-mono text-[10px] uppercase tracking-[0.42em] text-corporate-green">
+              {t('footer.dispatch.eyebrow')}
+            </span>
+            <h2 class="max-w-3xl text-white font-display text-4xl md:text-5xl font-black uppercase tracking-tight leading-[0.92]">
+              {t('footer.dispatch.heading')}
+            </h2>
+            <p class="max-w-2xl text-white/62 font-body text-lg leading-relaxed">
+              {t('footer.dispatch.body')}
+            </p>
           </div>
-          <span class="font-mono text-[7px] text-white/30 uppercase tracking-[0.18em] leading-none group-hover:text-white/50 transition-colors">
-            {lang === 'es' ? 'La Agenc·IA Incómoda' : 'The Uncomfortable AI·gency'}
-          </span>
-        </a>
-        <p class="text-muted text-sm leading-relaxed font-body">
-          {t('mission.statement')}
-        </p>
+        </div>
+
+        <div class="max-w-2xl border border-white/10 bg-white/[0.025] p-6 md:p-8">
+          <DispatchSignupForm />
+        </div>
+
+        <div class="flex flex-wrap gap-x-8 gap-y-3 border-t border-white/8 pt-5 text-white/36 font-mono text-[10px] uppercase tracking-[0.28em]">
+          <span>{t('footer.dispatch.meta_1')}</span>
+          <span>{t('footer.dispatch.meta_2')}</span>
+          <span>{t('footer.dispatch.meta_3')}</span>
+        </div>
       </div>
 
-      <!-- Links Grid (using Flexbox) -->
-      <div class="flex flex-wrap gap-x-20 gap-y-12">
-        {groups.map((group) => (
-          <div class="flex flex-col gap-6 min-w-[120px]">
-            <h3 class="text-white font-display font-black text-[10px] tracking-[0.2em] uppercase opacity-30">{group.title}</h3>
-            <ul class="flex flex-col gap-4">
-              {group.links.map((link) => (
-                <li>
-                  <a 
-                    href={link.href} 
-                    class="text-muted hover:text-brand text-xs font-bold tracking-widest uppercase transition-colors"
-                  >
+      <div class="border border-white/10 bg-white/[0.02] p-6 md:p-8">
+        <div class="flex flex-col gap-6">
+          <div class="flex flex-col gap-3">
+            <span class="font-mono text-[10px] uppercase tracking-[0.38em] text-white/35">
+              {t('footer.links.eyebrow')}
+            </span>
+            <p class="max-w-sm text-white/52 font-body text-sm leading-relaxed">
+              {t('footer.links.body')}
+            </p>
+          </div>
+
+          <div class="flex flex-col divide-y divide-white/8 border-y border-white/8">
+            {primaryLinks.map((link) => (
+              <a
+                href={link.href}
+                class="group flex items-start justify-between gap-5 py-5 transition-colors hover:text-white focus-visible:outline-none"
+              >
+                <div class="flex min-w-0 flex-col gap-2">
+                  <span class="text-white font-display text-lg font-black uppercase tracking-[0.04em] transition-colors group-hover:text-brand-light">
                     {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
+                  </span>
+                  <span class="text-white/46 font-body text-sm leading-relaxed transition-colors group-hover:text-white/62">
+                    {link.description}
+                  </span>
+                </div>
+                <span class="mt-1 shrink-0 text-white/26 font-mono text-xs uppercase tracking-[0.28em] transition-colors group-hover:text-brand-light">
+                  [GO]
+                </span>
+              </a>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
     </div>
 
-    <!-- Bottom Part: Engineering Signature & Legal -->
-    <div class="border-t border-white/5 pt-12 flex flex-col md:flex-row justify-between items-center gap-8">
-      
-      <!-- Signature -->
-      <div class="flex items-center gap-4 text-[10px] font-mono tracking-tighter text-muted">
-        <span class="text-brand">STATUS: OPTIMIZED</span>
-        <span class="opacity-20">|</span>
-        <span>BUILD: v1.0.0-PROMAX</span>
-        <span class="opacity-20">|</span>
-        <span>LOC: LIMA / GLOBAL</span>
-      </div>
-
-      <!-- Copyright -->
-      <p class="text-[10px] font-display font-bold text-muted tracking-widest uppercase">
-        © {currentYear} AGLAYA SOLUTIONS. ALL RIGHTS RESERVED. <span class="text-brand font-black mx-1">/</span> SYSTEMIC SOVEREIGNTY.
+    <div class="flex flex-col gap-6 border-t border-white/8 pt-6 md:flex-row md:items-center md:justify-between">
+      <p class="text-white/34 font-mono text-[10px] uppercase tracking-[0.24em] leading-relaxed">
+        {t('footer.bottom')}
       </p>
-    </div>
 
-    <!-- Decorative Bottom Bar -->
-    <div class="h-1 bg-brand w-full mt-4 animate-line-grow"></div>
+      <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
+        <a href={privacyPath} class="text-white/42 hover:text-white font-display text-[11px] font-bold uppercase tracking-[0.18em] transition-colors">
+          {t('nav.privacy')}
+        </a>
+        <a href={cookiesPath} class="text-white/42 hover:text-white font-display text-[11px] font-bold uppercase tracking-[0.18em] transition-colors">
+          {t('nav.cookies')}
+        </a>
+        <span class="text-white/22 font-mono text-[10px] uppercase tracking-[0.2em]">
+          © {currentYear} AGLAYA
+        </span>
+      </div>
+    </div>
   </div>
 </footer>
