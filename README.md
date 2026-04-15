@@ -28,24 +28,13 @@ Trilingual website for **AGLAYA**, a digital marketing AI·gency. The Uncomforta
 | Monitoring     | [UptimeRobot](https://uptimerobot.com)                                                                       |
 | Testing        | [Vitest](https://vitest.dev) + [Playwright](https://playwright.dev) + [Axe-core](https://www.deque.com/axe/) |
 
-## Tech Stack
-
-| Layer          | Technology                                                                                                   |
-| -------------- | ------------------------------------------------------------------------------------------------------------ |
-| Framework      | [Astro 6.x](https://astro.build) (SSR via Netlify)                                                           |
-| Styling        | [Tailwind CSS v4](https://tailwindcss.com)                                                                   |
-| Forms          | [Netlify Functions](https://www.netlify.com/products/functions/) + [Resend](https://resend.com)              |
-| Bot Protection | [hCaptcha](https://www.hcaptcha.com)                                                                         |
-| Error Tracking | [Sentry](https://sentry.io)                                                                                  |
-| Monitoring     | [UptimeRobot](https://uptimerobot.com)                                                                       |
-| Testing        | [Vitest](https://vitest.dev) + [Playwright](https://playwright.dev) + [Axe-core](https://www.deque.com/axe/) |
-
 ## Features
 
 - **Trilingual (EN/ES/PT)** — subdirectory routing with full SEO parity and hreflang
 - **Complete Metadata** — OG, Twitter Cards, JSON-LD, canonical URLs
-- **Lead Capture** — contact and dispatch forms with hCaptcha, Resend autoresponses, and MailerLite routing where configured
+- **Lead Capture** — admission-gated contact flows and footer dispatch with hCaptcha, Resend autoresponses, and MailerLite routing where configured
 - **Error Tracking** — Sentry in browser, Astro SSR, and Netlify form handlers when DSN is configured
+- **Consent-Gated Analytics** — GTM loads only after explicit cookie consent
 - **Security Headers** — canonical `_headers` file with CSP, HSTS, anti-framing, and isolation headers
 - **Accessible** — WCAG 2AA verified with Axe-core
 - **Tested** — 100% coverage on critical paths
@@ -81,7 +70,6 @@ Set in Netlify dashboard for production:
 | `SENTRY_AUTH_TOKEN`        | Build | Optional source-map upload token |
 | `SENTRY_ORG`               | Build | Optional Sentry org slug for source-map upload |
 | `SENTRY_PROJECT`           | Build | Optional Sentry project slug for source-map upload |
-| `PUBLIC_SENTRY_RELEASE`    | Client | Optional browser-side release identifier |
 | `NOTIFY_EMAIL`             | Server | Lead notification email |
 | `MAILERLITE_API_KEY`       | Server | MailerLite API key |
 | `MAILERLITE_SUSCRIPCIONES_GROUP_ID` | Server | Dispatch subscription group |
@@ -89,23 +77,23 @@ Set in Netlify dashboard for production:
 | `MAILERLITE_CUALIFICADOS_GROUP_ID` | Server | Qualified lead group |
 | `MAILERLITE_BORDERLINE_GROUP_ID` | Server | Borderline lead group |
 
-Sentry environment labels are derived automatically from Netlify deploy context (`production`, `deploy-preview`, `branch-deploy`, etc.), so no separate public environment variable is required for normal operation.
+Sentry environment labels are derived automatically from Netlify deploy context (`production`, `deploy-preview`, `branch-deploy`, `preview`, `development`), so no separate public environment variable is required for normal operation.
 
 ## Documentation
 
-| Document                               | Description                 |
-| -------------------------------------- | --------------------------- |
-| [CLAUDE.md](./CLAUDE.md)               | AI assistant instructions   |
-| [AGENTS.md](./AGENTS.md)               | Multi-agent guidelines      |
-| [Architecture](./docs/ARCHITECTURE.md) | System architecture         |
-| [PRD](./docs/PRD.md)                   | Product requirements        |
-| [Backlog](./docs/BACKLOG.md)           | Prioritized tasks           |
-| [Roadmap](./docs/ROADMAP.md)           | Timeline and milestones     |
-| [IA Rules](./docs/IA-RULES.md)         | IA and AI interaction rules |
-| [Services](./docs/SERVICES.md)         | Third-party setup           |
-| [Testing](./docs/TESTING.md)           | Testing strategy            |
-| [Workflow](./docs/WORKFLOW-SETUP.md)   | Dev workflow                |
-| [Changelog](./docs/CHANGELOG.md)       | Version history             |
+| Document | Description |
+| --- | --- |
+| [CLAUDE.md](./CLAUDE.md) | AI assistant instructions |
+| [AGENTS.md](./AGENTS.md) | Multi-agent guidelines |
+| [docs/README.md](./docs/README.md) | Master map of the documentation corpus |
+| [docs/tech/ARCHITECTURE.md](./docs/tech/ARCHITECTURE.md) | Current system architecture |
+| [docs/tech/3RD-PARTIES-CONFIG.md](./docs/tech/3RD-PARTIES-CONFIG.md) | Master third-party/service configuration guide |
+| [docs/delivery/TESTING.md](./docs/delivery/TESTING.md) | Automated and manual testing strategy |
+| [docs/ops/PRODUCTION-VALIDATION.md](./docs/ops/PRODUCTION-VALIDATION.md) | Smoke tests, blockers, and production-readiness checks |
+| [docs/delivery/WEBSITE-IMPLEMENTATION-BRIEF.md](./docs/delivery/WEBSITE-IMPLEMENTATION-BRIEF.md) | Website implementation brief |
+| [docs/tech/DEVELOPMENT-WORKFLOW.md](./docs/tech/DEVELOPMENT-WORKFLOW.md) | Development workflow |
+| [docs/tech/IA-RULES.md](./docs/tech/IA-RULES.md) | IA and AI interaction rules |
+| [docs/ops/CHANGELOG.md](./docs/ops/CHANGELOG.md) | Version history |
 
 ## Security Headers
 
@@ -117,11 +105,11 @@ Netlify security headers are now sourced from [`public/_headers`](./public/_head
 src/
 ├── pages/              # EN at /, ES at /es/, PT at /pt/
 ├── layouts/            # BaseLayout (SEO, meta)
-├── components/         # ContactForm, icons
+├── components/         # ICP filter, proof, footer, form branches
 ├── i18n/               # Translation system
 ├── styles/             # Tailwind v4 + tokens
 └── assets/images/      # SVG brand assets
-netlify/functions/      # Serverless handler
+netlify/functions/      # Serverless handlers
 public/                 # Static assets
 tests/                  # E2E + unit tests
 docs/                   # Documentation

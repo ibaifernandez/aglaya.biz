@@ -1,42 +1,35 @@
-# AGLAYA v2 — Services Setup Guide
+---
+status: superseded
+domain: architecture
+owner: engineering
+source_of_truth: false
+supersedes: []
+superseded_by:
+  - docs/tech/3RD-PARTIES-CONFIG.md
+  - docs/tech/3rd-parties-config/PLATFORMS-CONFIG.md
+last_reviewed: 2026-04-15
+consumable_by_agents: true
+---
 
-This guide details the third-party services used for the AGLAYA Coming Soon page.
+# SERVICES-SETUP — Superseded
 
-## 1. Resend (Email API)
-- **Purpose**: Handles contact capture and automated confirmation emails.
-- **Setup**:
-  1. Create account on [Resend](https://resend.com).
-  2. Verify your domain (`aglaya.biz`) in the Domains tab.
-  3. Create an API Key in the API Keys tab.
-  4. (Optional) Create an Audience in the Audiences tab and copy the `Audience ID`.
-- **Environment Variables**:
-  - `RESEND_API_KEY`: Your API key starting with `re_`.
-  - `RESEND_AUDIENCE_ID`: (Optional) If provided, contacts will be saved to this list.
+This file described the original “coming soon” service stack and is no longer authoritative.
 
-## 2. Cloudflare Turnstile (Bot Protection)
-- **Purpose**: Invisible bot protection for the signup form.
-- **Setup**:
-  1. Go to the [Cloudflare Turnstile Dashboard](https://dash.cloudflare.com/?to=/:account/turnstile).
-  2. Add a new site for `aglaya.biz`.
-  3. Choose "Invisible" or "Managed" widget type.
-  4. Copy the `Site Key` and `Secret Key`.
-- **Environment Variables**:
-  - `PUBLIC_TURNSTILE_SITE_KEY`: The public site key.
-  - `TURNSTILE_SECRET`: The private secret key.
+Do **not** use this document to configure production.
 
-## 3. Sentry (Error Tracking)
-- **Purpose**: Real-time frontend error monitoring.
-- **Setup**:
-  1. Create a "Browser JavaScript" project in [Sentry](https://sentry.io).
-  2. Copy the `DSN`.
-- **Environment Variables**:
-  - `PUBLIC_SENTRY_DSN`: The Sentry project DSN.
+Use these instead:
 
-## 4. UptimeRobot (Availability Monitoring)
-- **Purpose**: Alerts you if the site goes down or the serverless function fails.
-- **Setup**:
-  1. Add a new Monitor in [UptimeRobot](https://uptimerobot.com).
-  2. Type: `HTTP(s)`.
-  3. URL: `https://aglaya.biz`.
-  4. Friendly Name: `AGLAYA Main`.
-  5. Repeat for `/es/`.
+- `docs/tech/3RD-PARTIES-CONFIG.md` — master third-party source of truth
+- `docs/tech/3rd-parties-config/PLATFORMS-CONFIG.md` — current platform status
+- `docs/tech/3rd-parties-config/NETLIFY-CONFIG.md` — Netlify runtime/build setup
+- `docs/ops/PRODUCTION-VALIDATION.md` — smoke tests and release criteria
+
+## Why this file was superseded
+
+The original version of this document referenced an obsolete stack, including:
+
+- Cloudflare Turnstile instead of hCaptcha
+- the old “coming soon” contact model
+- incomplete Sentry and email-routing assumptions
+
+Those instructions are intentionally retired to protect the single source of truth.

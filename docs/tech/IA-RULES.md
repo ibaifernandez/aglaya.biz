@@ -6,11 +6,10 @@
 ```
 https://aglaya.biz/              → English (default locale)
 https://aglaya.biz/es/           → Spanish
-https://aglaya.biz/services/     → (Phase 2) Services
-https://aglaya.biz/es/servicios/ → (Phase 2) Services in Spanish
-https://aglaya.biz/portfolio/    → (Phase 2) Portfolio
-https://aglaya.biz/blog/         → (Phase 2) Blog
-https://aglaya.biz/contact/      → (Phase 2) Contact
+https://aglaya.biz/pt/           → Portuguese
+https://aglaya.biz/contact/      → Contact / admission flow
+https://aglaya.biz/roi-audit/    → ROI Audit service entry
+https://aglaya.biz/proof/        → Proof index
 ```
 
 ### SEO Hierarchy
@@ -26,14 +25,16 @@ Every page must implement:
 ### Content Model
 ```
 Page
-├── lang: 'en' | 'es'
+├── lang: 'en' | 'es' | 'pt'
 ├── title: string
 ├── description: string
 ├── ogImage: string (1200x630)
 ├── sections: Section[]
 │   ├── hero: { heading, subtext, cta }
-│   ├── features: { items[] }
-│   ├── form: { ContactForm }
+│   ├── proof: { entries[] }
+│   ├── economics: { comparison, quote, matrix }
+│   ├── admission: { ICPFilter, branchForms }
+│   ├── footer: { DispatchSignupForm }
 │   └── marquee: { items[] }
 └── metadata: { canonical, hreflang[], structuredData }
 ```
@@ -66,7 +67,7 @@ Page
 1. Every new page must have E2E coverage in `tests/`.
 2. Every new serverless function must have unit tests.
 3. Accessibility audit (Axe-core) is mandatory for all page tests.
-4. Translation keys must be tested for EN/ES parity.
+4. Translation keys must be tested for EN/ES/PT parity.
 
 ### Security Rules
 1. All user input must be validated server-side in Netlify Functions.
@@ -80,5 +81,5 @@ Page
 1. No JavaScript frameworks (React, Vue, etc.) — Astro islands only when needed.
 2. Images must use Astro's `<Image>` component for optimization.
 3. Fonts are loaded with `display=swap` and preconnected.
-4. Third-party scripts (hCaptcha, Sentry) loaded async/defer.
+4. Third-party runtime must respect consent/security gates (GTM), CSP policy, and production error capture (Sentry).
 5. Target: < 50KB total CSS, < 10KB JS (excluding third-party), LCP < 2s.

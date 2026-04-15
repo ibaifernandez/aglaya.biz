@@ -28,6 +28,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ### Fixed
 
+- Add a production validation source-of-truth document, expand the testing/manual smoke-test documentation, and refresh master technical docs so they reflect the live GTM consent gate, Sentry runtime, hCaptcha, MailerLite routing, ROI Audit lead tagging, and current Netlify/security-header architecture.
 - Refresh proof E2E title assertions so they match the current localized POCURO case-study content.
 - Relax hero headline clipping so uppercase diacritics render cleanly across English, Spanish, and Portuguese on the homepage.
 - Language switcher (#lang-switcher) on header now uses server-side `href` fallback plus client-side recalculation to preserve pathname/search/hash and avoid stale `#` URLs after repeated toggles. This prevents scenarios where `/contact/` reload did not activate first-click due script race conditions or hash inconsistencies.

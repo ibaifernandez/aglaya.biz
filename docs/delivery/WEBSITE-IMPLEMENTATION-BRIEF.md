@@ -67,13 +67,16 @@ src/
 │       ├── leben.md
 │       └── norden.md
 ├── components/
-│   ├── ContactForm.astro        ← UPDATE (ICP filter integration)
+│   ├── ICPFilter.astro          ← NEW (admission console; see spec below)
+│   ├── QualifiedForm.astro      ← NEW (qualified branch)
+│   ├── BorderlineForm.astro     ← NEW (borderline branch)
+│   ├── OpenChannelForm.astro    ← NEW (blocked/open channel branch)
+│   ├── DispatchSignupForm.astro ← NEW (footer dispatch capture)
 │   ├── ProofCard.astro          ← NEW
 │   ├── ProofGrid.astro          ← NEW
 │   ├── SystemCard.astro         ← NEW
-│   ├── ICPFilter.astro          ← NEW (see spec below)
 │   ├── SectionHeader.astro      ← NEW (reusable section title block)
-│   └── [existing components]   ← KEEP unchanged unless specified
+│   └── [existing components]    ← KEEP unchanged unless specified
 └── i18n/
     └── translations.ts          ← UPDATE (all new strings)
 ```
@@ -82,7 +85,7 @@ src/
 
 - `src/layouts/BaseLayout.astro` — Preserve SEO/meta correctness while keeping the runtime hooks in sync with GTM consent, client-side Sentry bootstrapping, fonts, and hreflang metadata.
 - `src/components/CookieBanner.astro` — Keep.
-- `netlify/functions/contact.ts` — Keep. No changes.
+- `netlify/functions/contact.ts` — Keep as the canonical contact endpoint; extend it to support ICP branches and contextual routing.
 - `astro.config.mjs` — Keep. Do not touch.
 - `src/styles/global.css` — Extend (add new utility classes/sections). Do not remove existing tokens.
 - `src/pages/404.astro` — Keep.

@@ -6,11 +6,11 @@ Dominio primario: https://aglaya.biz
 
 ---
 
-## 1. Variables de Entorno
+## 1. Environment Variables
 
 > Site settings → Environment variables
 
-Todas deben estar configuradas en **All scopes** (Production, Deploy Previews, Branch deploys).
+All runtime variables should be configured for the scopes they actually need.
 
 | Variable | Scope | Descripción | Valor ejemplo |
 |---|---|---|---|
@@ -18,10 +18,21 @@ Todas deben estar configuradas en **All scopes** (Production, Deploy Previews, B
 | `HCAPTCHA_SECRET` | Builds, Functions, Runtime | Secret key de hCaptcha (server-side) (**Sensitive**) | `ES_xxxxxxxx...` |
 | `PUBLIC_HCAPTCHA_SITE_KEY` | All scopes | Site key de hCaptcha (client-side) | `a772dbf8-f0da-4658-a4be-5b0848440ac8` |
 | `NOTIFY_EMAIL` | All scopes | Email destinatario de notificaciones de leads | `info@aglaya.biz` |
-| `SENTRY_AUTH_TOKEN` | Builds, Functions, Runtime | Auth token de Sentry para subir source maps | `sntrys_xxxxx` |
+| `MAILERLITE_API_KEY` | Builds, Functions, Runtime | MailerLite API auth (**Sensitive**) | `ml_xxxxxxxx` |
+| `MAILERLITE_SUSCRIPCIONES_GROUP_ID` | All scopes | Footer dispatch group | `<group-id>` |
+| `MAILERLITE_NO_CUALIFICADOS_GROUP_ID` | All scopes | Non-qualified lead group | `<group-id>` |
+| `MAILERLITE_BORDERLINE_GROUP_ID` | All scopes | Borderline lead group | `<group-id>` |
+| `MAILERLITE_CUALIFICADOS_GROUP_ID` | All scopes | Qualified lead group | `<group-id>` |
+| `PUBLIC_SENTRY_DSN` | All scopes | Public DSN for browser capture | `https://...` |
+| `SENTRY_DSN` | Builds, Functions, Runtime | Optional server-only DSN override | `https://...` |
+| `SENTRY_AUTH_TOKEN` | Builds | Auth token de Sentry para subir source maps | `sntrys_xxxxx` |
+| `SENTRY_ORG` | Builds | Sentry org slug for source-map upload | `<org-slug>` |
+| `SENTRY_PROJECT` | Builds | Sentry project slug for source-map upload | `<project-slug>` |
 | `NODE_VERSION` | All scopes | Versión de Node.js para el build | `22` |
 
-> ⚠️ **CRÍTICO:** `RESEND_API_KEY` y `HCAPTCHA_SECRET` deben marcarse como **Sensitive** (no visibles en los logs).
+> ⚠️ `PUBLIC_SENTRY_ENVIRONMENT` is not required. Environment labels are derived from Netlify deploy context.
+>
+> ⚠️ `PUBLIC_SENTRY_DSN` is intentionally omitted from Netlify secret scanning via `SECRETS_SCAN_OMIT_KEYS` in `netlify.toml`.
 
 ---
 
@@ -68,7 +79,8 @@ Las Netlify Functions están en `netlify/functions/`. Se despliegan automáticam
 
 | Función | Endpoint | Descripción |
 |---|---|---|
-| `contact.ts` | `/.netlify/functions/contact` | Gestiona el formulario de contacto: verifica hCaptcha + envía emails bilingües vía Resend |
+| `contact.ts` | `/.netlify/functions/contact` | Handles all ICP/contact branches and ROI Audit context |
+| `dispatch-subscribe.ts` | `/.netlify/functions/dispatch-subscribe` | Handles footer dispatch capture + autoresponse |
 
 ---
 
@@ -82,21 +94,20 @@ Recomendado activar:
 
 ---
 
-## 6. Headers de Seguridad (netlify.toml)
+## 6. Security Headers
 
-Ya configurados en `netlify.toml`:
-```toml
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "SAMEORIGIN"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
-    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
-```
+Security headers are no longer sourced from `netlify.toml`.
 
-> **Pendiente Fase 2:** Content-Security-Policy (CSP) — requiere configurar nonces en Astro.
+**Source of truth:** `public/_headers`
+
+That file controls:
+
+- CSP
+- HSTS
+- anti-framing
+- permissions policy
+- COOP / CORP
+- immutable cache rules for `/_astro/*` and `/assets/*`
 
 ---
 
@@ -133,8 +144,11 @@ Ya configurados en `netlify.toml`:
 Después de cada deploy a producción:
 - [ ] https://aglaya.biz/ carga correctamente
 - [ ] https://aglaya.biz/es/ carga correctamente
-- [ ] Formulario de contacto completa el flujo (hCaptcha → envío → mensaje de éxito)
-- [ ] Email de confirmación llega al remitente (EN o ES según idioma del formulario)
-- [ ] Email de notificación llega a `info@aglaya.biz`
-- [ ] Sentry no registra errores nuevos
+- [ ] https://aglaya.biz/pt/ carga correctamente
+- [ ] Cookie banner aparece al resetear consentimiento
+- [ ] GTM solo carga tras `Accept all`
+- [ ] Dispatch footer completa el flujo (consent + hCaptcha + success + email)
+- [ ] Contact flow completa el flujo en al menos una rama
+- [ ] ROI Audit preserva su contexto
+- [ ] Sentry smoke test de browser entra en producción
 - [ ] UptimeRobot muestra ambos monitores en verde

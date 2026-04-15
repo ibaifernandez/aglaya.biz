@@ -170,7 +170,7 @@ El setup actual usa:
 
 - `astro.config.mjs` → integración oficial `@sentry/astro` para SSR
 - `sentry.server.config.js` → init server-side
-- `src/scripts/sentry-client.ts` → init browser-side sin depender de inline JS
+- `src/components/SentryBrowser.astro` → browser-side init bundleado por Astro
 - `netlify/functions/_sentry.ts` → captura de excepciones en Functions
 
 ### Verificación

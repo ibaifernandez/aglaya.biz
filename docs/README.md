@@ -3,7 +3,7 @@ status: active
 domain: operations
 owner: operations
 source_of_truth: true
-last_reviewed: 2026-04-03
+last_reviewed: 2026-04-15
 consumable_by_agents: true
 ---
 
@@ -36,10 +36,11 @@ graph TD
 | **Visual/Verbal** | `AGLAYA-VISUAL-SYSTEM.md` | `docs/brand/visual-id/AGLAYA-VISUAL-SYSTEM.md` |
 | **Marketing** | `MARKETING-OPERATING-SYSTEM.md` | `docs/brand/mkt/MARKETING-OPERATING-SYSTEM.md` |
 | **Oferta** | `SERVICE-CATALOG.md` | `docs/product/SERVICE-CATALOG.md` |
-| **Alcance Web** | `WEBSITE-INSTALLATION-BRIEF.md` | `docs/delivery/WEBSITE-INSTALLATION-BRIEF.md` |
+| **Alcance Web** | `WEBSITE-IMPLEMENTATION-BRIEF.md` | `docs/delivery/WEBSITE-IMPLEMENTATION-BRIEF.md` |
 | **Ingeniería** | `3RD-PARTIES-CONFIG.md` | `docs/tech/3RD-PARTIES-CONFIG.md` |
 | **Workflow** | `DEVELOPMENT-WORKFLOW.md` | `docs/tech/DEVELOPMENT-WORKFLOW.md` |
 | **Operaciones** | `IA-RULES.md` | `docs/tech/IA-RULES.md` |
+| **Validación de Producción** | `PRODUCTION-VALIDATION.md` | `docs/ops/PRODUCTION-VALIDATION.md` |
 | **Logs** | `CHANGELOG.md` | `docs/ops/CHANGELOG.md` |
 
 ---
@@ -52,6 +53,16 @@ graph TD
 - **Fase 4 — cabeceras de gobernanza por documento:** cerrada (✅ VERIFIED)
 - **Fase 5 — reconciliación por dominio:** cerrada (✅ VERIFIED)
 - **Fase 6 — índice maestro final para agentes:** completada (✅ VERIFIED)
+- **Production stabilization — CSP / Sentry / GTM / asset routing:** completed (✅ VERIFIED)
+
+---
+
+## ✅ Current Production Snapshot
+
+- Trilingual routes (`EN`, `ES`, `PT`) are live.
+- Admission/contact flows, footer dispatch, ROI Audit context, hCaptcha, Resend, and MailerLite routing are active.
+- Sentry, GTM consent gating, and security headers are documented against the live runtime.
+- Production smoke-test protocol lives in `docs/ops/PRODUCTION-VALIDATION.md`.
 
 ---
 

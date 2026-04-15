@@ -1,24 +1,57 @@
-# AGLAYA v2 — Testing Strategy
+# AGLAYA — Testing Strategy
 
-We maintain 100% test coverage for critical paths to ensure "open-heart surgery" precision.
+This document defines the current automated and manual validation model for `aglaya.biz`.
 
-## 1. Unit Testing (Vitest)
-Used for logic that doesn't require a browser.
-- **Coverage**: i18n translation keys, serverless function validation logic.
-- **Run**: `npm run test:unit`
+## 1. Automated Checks
 
-## 2. E2E Testing (Playwright)
-Simulates real user behavior in a headless browser.
-- **Coverage**:
-  - Visual consistency across EN/ES.
-  - Link integrity (Contact, WhatsApp).
-  - SEO tagging (Meta, OG, Twitter).
-  - Accessibility (axe-core audit).
-  - Form rendering (hCaptcha widget + disabled button state).
-- **Run**: `npm run test:e2e`
+### Build
 
-### Cookie Banner in E2E
-E2E tests pre-set cookie consent via `localStorage` before page navigation to avoid banner interference with other test assertions:
+Used to validate Astro compilation, routing, content collections, and production bundling.
+
+- **Command**: `npm run build`
+- **Use before**:
+  - every production push
+  - any layout/component refactor
+  - any observability/CSP/security-header change
+
+### Unit Testing (Vitest)
+
+Used for logic that does not require a browser.
+
+- **Command**: `npm run test:unit`
+- **Current coverage includes**:
+  - Netlify Function validation and branching logic
+  - MailerLite routing
+  - dispatch/contact email orchestration guards
+  - i18n-critical logic where applicable
+
+### E2E Testing (Playwright + axe-core)
+
+Used to validate real user behavior in a browser.
+
+- **Command**: `npm run test:e2e`
+- **Current coverage includes**:
+  - homepage rendering
+  - contact/ICP flow transitions
+  - proof page routing/content assertions
+  - accessibility scans on key routes
+  - metadata/SEO checks
+  - dispatch/contact success states where practical
+
+### Full local suite
+
+- **Command**: `npm test`
+
+This runs:
+
+1. `npm run test:unit`
+2. `npm run test:e2e`
+
+## 2. Cookie Consent Behavior In Tests
+
+Many E2E tests pre-seed consent to keep the cookie banner from interfering with assertions unrelated to analytics or consent itself.
+
+Example:
 
 ```js
 await page.addInitScript(() => {
@@ -26,18 +59,85 @@ await page.addInitScript(() => {
 });
 ```
 
-The `#cookie-banner` element is excluded from axe-core scans in tests that focus on other page areas, since the banner's own a11y is tested separately.
+This is intentional. Consent-specific behavior must still be tested manually in production and/or in dedicated scenarios.
 
-## 3. Accessibility (A11y)
-Automated WCAG compliance checks integrated into the Playwright suite.
-- **Checks**: Color contrast, ARIA labels, semantic roles, heading order.
-- `page.emulateMedia({ reducedMotion: 'reduce' })` is called before `page.goto()` to prevent animated elements being scanned at `opacity:0`, which would cause false color-contrast failures.
+## 3. Accessibility Strategy
 
-## 4. Manual Verification
-Always perform these checks before a major release:
-- Language toggle behavior and state persistence.
-- Form responsive layout on mobile vs desktop.
-- Confirmation email formatting (live test — check EN and ES versions).
-- Cookie banner appears on first visit (incognito), dismissed state persists in `localStorage` (`aglaya_cookie_consent`).
-- Cookie banner does not reappear after a decision (reload test).
-- Cookie banner ES version shows correct Spanish strings on `/es/`.
+Axe-core is integrated into the Playwright suite.
+
+Automated accessibility checks cover:
+
+- semantic roles
+- landmark structure
+- heading order
+- contrast issues detectable by axe
+- common ARIA misuse
+
+To reduce false positives caused by entrance animations, tests that depend on stable visual states should emulate reduced motion before navigation when required.
+
+## 4. Production Smoke Tests
+
+The authoritative smoke-test protocol now lives in:
+
+- `docs/ops/PRODUCTION-VALIDATION.md`
+
+That document defines:
+
+- release blockers
+- accepted non-blocking console noise
+- browser Sentry smoke test
+- GTM/cookie-consent smoke test
+- dispatch/contact/ROI-Audit live checks
+
+## 5. Manual Release Certification
+
+Before calling a production deploy healthy, manually verify:
+
+### Routing and localization
+
+- `/`, `/es/`, `/pt/`
+- `/contact/`, `/es/contact/`, `/pt/contact/`
+- `/roi-audit/`, `/es/roi-audit/`, `/pt/roi-audit/`
+
+### Consent and analytics
+
+- banner appears when `aglaya_cookie_consent` is absent
+- GTM does not load before consent
+- GTM loads after `Accept all`
+- Tag Assistant detects the live container
+
+### Forms
+
+- footer dispatch
+- qualified contact branch
+- borderline contact branch
+- open channel / blocked branch
+- ROI Audit entry into contact
+
+### Emails
+
+- immediate user-facing confirmation
+- BCC copy to `info@aglaya.biz`
+- correct locale
+- correct contextual copy
+
+### Observability
+
+- browser Sentry smoke test lands in the production project
+- no critical fresh issues after deploy
+
+## 6. Console Policy
+
+The following are **blockers**:
+
+- CSP violations
+- unresolved module-import errors
+- failed Sentry bootstrap
+- asset 404s on key journeys
+- GTM/consent runtime failures
+
+The following are **not blockers by default**:
+
+- `non-passive event listener` warnings with no observable user-impact
+
+If those warnings become correlated with real jank, they should be promoted to a performance issue and investigated.

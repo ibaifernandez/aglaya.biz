@@ -1,6 +1,6 @@
 # Platform Configuration Guide — AGLAYA.BIZ
 
-Estado de configuración de todas las plataformas integradas.
+Operational status of every live third-party platform used by `aglaya.biz`.
 
 ---
 
@@ -25,7 +25,7 @@ Estado de configuración de todas las plataformas integradas.
 6. Alert contacts: añadir `info@aglaya.biz`
 7. Repetir para `/es/`
 
-### Qué monitoriza
+### What it monitors
 - HTTP 200 en ambas URLs
 - Tiempo de respuesta
 - Alerta por email si el sitio cae
@@ -41,8 +41,8 @@ Estado de configuración de todas las plataformas integradas.
 ## 2. Sentry
 
 **URL:** https://sentry.io
-**Org:** Managed in Sentry dashboard
-**Proyecto:** Managed in Sentry dashboard
+**Org:** Managed in Sentry dashboard  
+**Project:** Managed in Sentry dashboard
 **Plan:** Free (5K errores/mes, 30 días retención)
 
 ### Runtime configuration
@@ -50,15 +50,20 @@ Estado de configuración de todas las plataformas integradas.
 - `SENTRY_DSN`: override opcional server-only para Astro SSR y Netlify Functions.
 - `SENTRY_AUTH_TOKEN` + `SENTRY_ORG` + `SENTRY_PROJECT`: habilitan source maps durante el build.
 
-### Variables de entorno en Netlify (ya configuradas)
+### Netlify variables
 | Variable | Descripción |
 |---|---|
-| `SENTRY_AUTH_TOKEN` | Para subir source maps durante el build |
+| `PUBLIC_SENTRY_DSN` | Browser DSN + shared runtime fallback |
+| `SENTRY_DSN` | Optional server-only DSN |
+| `SENTRY_AUTH_TOKEN` | Optional source-map upload token |
+| `SENTRY_ORG` | Optional org slug for source-map upload |
+| `SENTRY_PROJECT` | Optional project slug for source-map upload |
 
-### Qué captura
-- Errores JavaScript en el browser (producción únicamente)
-- Errores en Netlify Functions (serverless)
-- Source maps: stack traces con código fuente legible
+### What it captures
+- browser runtime errors
+- Astro SSR errors
+- Netlify Function exceptions
+- source-mapped stack traces when build credentials are present
 
 ### Alertas recomendadas
 > Sentry → Project Settings → Alerts → Create Alert
@@ -68,19 +73,18 @@ Estado de configuración de todas las plataformas integradas.
 | New issue | First seen | Email a `info@aglaya.biz` |
 | Error spike | >10 events in 1h | Email a `info@aglaya.biz` |
 
-### Nota sobre el filtro `beforeSend()` y Turnstile
-El setup legacy incluía un filtro `beforeSend()` en la capa browser de Sentry para descartar errores de tipo `TurnstileError` (ruido generado por el widget de Cloudflare en URLs no autorizadas). Ese filtro fue **eliminado** cuando se migró a hCaptcha — no porque Sentry esté filtrando el ruido, sino porque **el ruido ya no existe**: hCaptcha no genera ese tipo de error. El resultado es idéntico (Sentry limpio), pero por una razón diferente.
-
-> ⚠️ Si en el futuro se reintegra Cloudflare Turnstile o cualquier widget de terceros que genere errores esperados, habrá que restaurar un filtro `beforeSend()` adecuado.
+### Architecture notes
+- Browser bootstrap is rendered through `src/components/SentryBrowser.astro`
+- Astro SSR is configured through `astro.config.mjs`
+- Function capture uses `netlify/functions/_sentry.ts`
+- `PUBLIC_SENTRY_ENVIRONMENT` is intentionally not used; environment labels are derived from Netlify deploy context
 
 ### Estado actual
-- [x] Configuración server-side en `sentry.server.config.js`
-- [x] Runtime browser desacoplado del layout mediante `src/scripts/sentry-client.ts`
-- [x] Netlify Functions protegidas con `netlify/functions/_sentry.ts`
-- [x] `beforeSend()` TurnstileError filter eliminado — ya no necesario (ver nota arriba)
-- [ ] `PUBLIC_SENTRY_DSN` confirmado en Netlify
-- [ ] `SENTRY_AUTH_TOKEN` + `SENTRY_ORG` + `SENTRY_PROJECT` confirmados en Netlify si se quieren source maps
-- [ ] Alertas de email configuradas
+- [x] Browser capture wired
+- [x] SSR capture wired
+- [x] Functions capture wired
+- [x] Production project renamed and aligned in Sentry
+- [ ] Alert rules reviewed in dashboard
 
 ---
 
@@ -101,11 +105,11 @@ El setup legacy incluía un filtro `beforeSend()` en la capa browser de Sentry p
 | `RESEND_API_KEY` | API key de autenticación |
 | `NOTIFY_EMAIL` | Destinatario de notificaciones de leads (`info@aglaya.biz`) |
 
-### Flujo de emails del formulario
-1. Usuario envía formulario → Netlify Function verifica hCaptcha
-2. Función detecta idioma del formulario (`lang: "en"` o `lang: "es"`)
-3. **Email de confirmación** → al remitente, en el idioma del formulario (EN: `Signal received — AGLAYA` / ES: `Señal recibida — AGLAYA`), diseño branded con barra roja, eyebrow monospace, titular en negrita y bloque de mensaje con borde rojo izquierdo
-4. **Email de notificación de lead** → a `NOTIFY_EMAIL` con tag `[EN]` o `[ES]` en el asunto
+### Runtime role
+- user-facing confirmation emails for contact and dispatch
+- internal notifications / BCC to `info@aglaya.biz`
+- localized copy for EN / ES / PT
+- ROI Audit-specific copy path
 
 ### Verificar que funciona
 1. Ir a https://aglaya.biz/
@@ -144,24 +148,53 @@ El setup legacy incluía un filtro `beforeSend()` en la capa browser de Sentry p
 
 - `aglaya.biz` ✅
 
-### Cómo funciona en el sitio
-1. Widget se carga en el formulario de contacto (`class="h-captcha"`, `data-theme="dark"`)
-2. Usuario completa el challenge
-3. hCaptcha emite un token → se habilita el botón "Send Message"
-4. El token se envía al backend con el formulario
-5. Netlify Function verifica el token contra `https://api.hcaptcha.com/siteverify` con `HCAPTCHA_SECRET`
-6. Si válido → se detecta el idioma y se procesan y envían los emails
+### Where it runs
+- footer dispatch
+- qualified contact branch
+- borderline contact branch
+- open channel branch
 
 ### Estado actual
-- [x] Site key en código fuente (`ContactForm.astro`)
+- [x] Site key in active forms
 - [x] Site key en Netlify env vars (`PUBLIC_HCAPTCHA_SITE_KEY`)
 - [x] Secret key en Netlify env vars (`HCAPTCHA_SECRET`)
 - [x] Dominio `aglaya.biz` autorizado en hCaptcha dashboard
-- [x] **1 prueba end-to-end exitosa** — 2 adicionales pendientes
+- [ ] Full human QA matrix complete
 
 ---
 
-## 5. Migadu (Email)
+## 5. Google Tag Manager
+
+**Container:** `GTM-5BVC9C5C`
+
+### Consent rule
+
+GTM loads only after `CookieBanner.astro` dispatches `aglaya:consent-update` with `consent = all`.
+
+### Status
+
+- [x] Tag Assistant detects the live container after consent
+- [x] GTM stays suppressed before consent
+- [ ] Manual event-by-event audit completed in GA/GTM dashboards
+
+## 6. MailerLite
+
+### Group model
+
+- `MAILERLITE_SUSCRIPCIONES_GROUP_ID`
+- `MAILERLITE_NO_CUALIFICADOS_GROUP_ID`
+- `MAILERLITE_BORDERLINE_GROUP_ID`
+- `MAILERLITE_CUALIFICADOS_GROUP_ID`
+
+### Status
+
+- [x] Dispatch path wired
+- [x] Contact tier routing wired
+- [ ] Live dashboard verification completed after latest deploy
+
+---
+
+## 7. Migadu (Email)
 
 **URL:** https://admin.migadu.com
 **Plan:** Micro (cuota anual)
@@ -197,7 +230,9 @@ El setup legacy incluía un filtro `beforeSend()` en la capa browser de Sentry p
 | Netlify | ✅ | ✅ |
 | GitHub Actions | ✅ | ✅ CI verde consistente |
 | Sentry | ✅ | ✅ (captura activa) |
-| Resend | ✅ | ✅ (2/3 pruebas — EN + ES) |
-| hCaptcha | ✅ | ✅ (2/3 pruebas — EN + ES) |
+| Resend | ✅ | ✅ |
+| hCaptcha | ✅ | ✅ |
+| GTM | ✅ | ✅ (consent-gated) |
+| MailerLite | ✅ | ✅ (code path) |
 | UptimeRobot | ✅ | ✅ 2 monitores activos |
 | Migadu | ✅ | ✅ |
