@@ -47,4 +47,5 @@ results:
 featured: true
 date: "2026-04"
 externalUrl: "https://ley-21719-chile.aglaya.biz/"
+client_logo: "../src/assets/images/chile-flag-round-circle-icon.svg"
 ---

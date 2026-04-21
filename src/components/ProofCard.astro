@@ -4,6 +4,7 @@ import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/util
 import lebenLogo from '../assets/images/leben.png';
 import nordenLogo from '../assets/images/norden.png';
 import pocuroLogo from '../assets/images/pocuro.png';
+import chileFlagLogo from '../assets/images/chile-flag-round-circle-icon.svg';
 
 interface Props {
   entry: CollectionEntry<'proof'>;
@@ -31,6 +32,7 @@ const proofLogoMap: Record<string, string> = {
   'leben.png': lebenLogo.src,
   'norden.png': nordenLogo.src,
   'pocuro.png': pocuroLogo.src,
+  'chile-flag-round-circle-icon.svg': typeof chileFlagLogo === 'string' ? chileFlagLogo : (chileFlagLogo as any).src,
 };
 const clientLogoSrc = proofLogoMap[logoFilename] || rawClientLogoSrc || '';
 
