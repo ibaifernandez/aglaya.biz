@@ -564,6 +564,11 @@ const processedTitle = (input: string) => {
     @apply my-10;
   }
 
+  /* ── Inline links ── */
+  .prose-dossier a {
+    @apply text-corporate-green underline underline-offset-4 decoration-corporate-green/40 hover:decoration-corporate-green transition-all font-semibold;
+  }
+
   .scanline {
     background: linear-gradient(
       rgba(18, 16, 16, 0) 50%,
