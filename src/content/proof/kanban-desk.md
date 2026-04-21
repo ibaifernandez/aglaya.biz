@@ -116,12 +116,10 @@ body_es: |
 
   ### Arquitectura
 
-  ```
-  React 18 (Vite) ←── JWT / HTTPS ──→ Express 4 (Node.js)
-                                             │
-                                        Supabase
-                                 (PostgreSQL + RLS + Auth
-                                  + Storage + Admin API)
+  ```mermaid
+  flowchart LR
+    A["React 18 · Vite\nNetlify"] <-->|JWT / HTTPS| B["Express 4 · Node.js\nRailway"]
+    B --> C["Supabase\nPostgreSQL + RLS\nAuth + Storage + Admin API"]
   ```
 
   **Jerarquía de datos:** Organización → Workspace → Tablero → Columna → Tarjeta. Cada nivel hereda las restricciones de visibilidad del nivel superior.

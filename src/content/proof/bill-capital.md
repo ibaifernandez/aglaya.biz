@@ -101,6 +101,14 @@ body_es: |
 
   Entregaron 1.155 contactos en bruto. Sin segmentación. Sin contexto. Sin estrategia. Presupuesto en herramientas externas: **$0**.
 
+  ```mermaid
+  flowchart TD
+    A["1.155 registros brutos"] --> B["BBDD Cleaner\n−314 duplicados · −1 sintaxis · −2 DNS"]
+    B --> C["838 contactos válidos"]
+    C --> D["Clasificación IA · Python\nScore A / B / C / D"]
+    D --> E1["326 · Score A\nFactoring independiente"] & E2["246 · Score B\nBanca comercial"] & E3["142 · Score C\nOperaciones y riesgo"] & E4["124 · Score D\nCanal referidos"]
+  ```
+
   ### Paso 1 — Auditoría de la Base de Datos (BBDD Cleaner propio)
 
   Antes de escribir una sola línea de copy, la base cruda pasó por una herramienta de auditoría propia:

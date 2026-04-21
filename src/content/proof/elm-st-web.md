@@ -64,14 +64,12 @@ body_en: |
 
   Nothing reaches `main` without passing every gate. The pipeline runs on push, manually on demand, and on a **weekly schedule every Monday at 13:00 UTC**:
 
-  1. **HTML · JS · CSS Lint** — syntax and style validation
-  2. **Netlify config** — netlify.toml structural check
-  3. **External links** — broken link detection
-  4. **Playwright E2E** — critical routes and contact form under real browser
-  5. **axe-core Accessibility** — WCAG 2AA with zero exclusions (score: 97)
-  6. **Visual regression** — desktop + mobile with versioned baselines
-  7. **Lighthouse CI** — all 10 routes audited in both languages (SEO: 100 · A11y: 97)
-  8. **Performance budgets** — per-route JSON thresholds, blocking on breach
+  ```mermaid
+  flowchart LR
+    A[Lint\nHTML·JS·CSS] --> B[Netlify\nConfig] --> C[External\nLinks] --> D[Playwright\nE2E] --> E[axe-core\nA11y] --> F[Visual\nRegression] --> G[Lighthouse\nCI] --> H[Perf\nBudgets]
+    style A fill:#111,stroke:#9FC243,color:#fff
+    style H fill:#111,stroke:#9FC243,color:#fff
+  ```
 
   ### Observability
 
