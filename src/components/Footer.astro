@@ -19,9 +19,9 @@ const cookiesPath = translatePath('/cookies');
 
 const primaryLinks = [
   {
-    href: translatePath('/proof'),
-    label: t('nav.proof'),
-    description: t('footer.links.proof'),
+    href: translatePath('/roi-audit/'),
+    label: t('nav.roi_audit'),
+    description: t('footer.links.roi_audit'),
   },
   {
     href: translatePath('/services'),
@@ -67,11 +67,6 @@ const primaryLinks = [
           <DispatchSignupForm />
         </div>
 
-        <div class="flex flex-wrap gap-x-8 gap-y-3 border-t border-white/8 pt-5 text-white/36 font-mono text-[10px] uppercase tracking-[0.28em]">
-          <span>{t('footer.dispatch.meta_1')}</span>
-          <span>{t('footer.dispatch.meta_2')}</span>
-          <span>{t('footer.dispatch.meta_3')}</span>
-        </div>
       </div>
 
       <div class="border border-white/10 bg-white/[0.02] p-6 md:p-8">
