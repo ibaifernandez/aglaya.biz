@@ -4,7 +4,7 @@ import { getLangFromUrl, useTranslations } from "../i18n/utils";
 interface Props {
   title: { en: string; es: string };
   client: string;
-  industry: string;
+  industry: string | { en: string; es: string; pt?: string };
   challenge: { en: string; es: string };
   strategy: { en: string; es: string };
   vision: { en: string; es: string };
@@ -202,7 +202,7 @@ const processedTitle = (input: string) => {
             >
             <span
               class="block text-white font-display font-bold text-base uppercase tracking-tighter"
-              >{industry}</span
+              >{typeof industry === 'object' ? (industry as any)[lang] ?? (industry as any).en : industry}</span
             >
           </div>
           <div class="group">
@@ -508,6 +508,10 @@ const processedTitle = (input: string) => {
     @apply text-white font-display font-black text-4xl lg:text-5xl tracking-tighter mt-20 mb-8 uppercase border-l-8 border-corporate-green pl-8;
   }
 
+  .prose-dossier h3 {
+    @apply text-white font-display font-black text-xl lg:text-2xl tracking-tighter mt-12 mb-4 uppercase border-l-4 border-corporate-green/60 pl-6;
+  }
+
   .prose-dossier p {
     @apply mb-8 font-light tracking-wide;
   }
@@ -518,7 +522,7 @@ const processedTitle = (input: string) => {
 
   /* Reduced Mono in lists */
   .prose-dossier ul {
-    @apply flex flex-col gap-6 mb-12 list-none pl-0;
+    @apply flex flex-col mb-12 list-none pl-0;
   }
 
   .prose-dossier li {
@@ -553,6 +557,11 @@ const processedTitle = (input: string) => {
 
   .prose-dossier tbody td:first-child {
     @apply font-display font-black text-white text-base tracking-tight whitespace-nowrap;
+  }
+
+  /* ── Mermaid diagrams ── */
+  .prose-dossier .mermaid {
+    @apply my-10;
   }
 
   .scanline {
