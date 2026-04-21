@@ -9,7 +9,7 @@ test.describe('Proof Pages', () => {
     await expect(page).toHaveTitle('AGLAYA — The Uncomfortable Agency');
 
     // Check that at least one proof card is visible
-    await expect(page.locator('a[href="/proof/norden/"]')).toBeVisible();
+    await expect(page.locator('a[href="/proof/bill-capital/"]')).toBeVisible();
   });
 
   test('should render a proof detail page', async ({ page }) => {
@@ -41,7 +41,7 @@ test.describe('Proof Pages', () => {
     await expect(page).toHaveTitle('AGLAYA — La Agencia Incómoda');
 
     // Check that at least one proof card is visible
-    await expect(page.locator('a[href="/es/proof/norden/"]')).toBeVisible();
+    await expect(page.locator('a[href="/es/proof/bill-capital/"]')).toBeVisible();
   });
 
   test('should render a Spanish proof detail page', async ({ page }) => {

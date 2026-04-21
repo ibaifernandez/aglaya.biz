@@ -14,7 +14,7 @@ test.describe('PT-BR Pages', () => {
     await page.goto('/pt/proof/');
 
     await expect(page).toHaveTitle('AGLAYA — A Agência Desconfortável');
-    await expect(page.locator('a[href="/pt/proof/norden/"]')).toBeVisible();
+    await expect(page.locator('a[href="/pt/proof/bill-capital/"]')).toBeVisible();
   });
 
   test('should render a PT proof detail page', async ({ page }) => {
