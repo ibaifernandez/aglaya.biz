@@ -14,7 +14,7 @@ const entries = allEntries
   .sort((a, b) => b.data.date.localeCompare(a.data.date));
 
 const featured = entries.find(e => e.data.featured) || entries[0];
-const others = entries.filter(e => e.id !== featured.id).slice(0, 2);
+const others = entries.filter(e => e.id !== featured.id).slice(0, 3);
 ---
 
 <section
