@@ -46,5 +46,118 @@ results:
 featured: false
 date: "2026-03"
 client_logo: "../src/assets/images/elm-st.svg"
-externalUrl: "https://elmst.ibaifernandez.com"
+body_en: |
+  ## What We Built
+
+  **elm-st-web** is the corporate website for **Elm St.**, an audiovisual production company in Bogotá, Colombia. The site is visually restrained — and technically uncompromising.
+
+  The premise: *a static HTML/CSS/JS site has no excuse to be technically fragile.*
+
+  ### Architecture
+
+  - Static HTML/CSS/JS deployed on Netlify with **Netlify Functions** for server-side form validation (Turnstile invisible CAPTCHA + honeypot + optional Resend)
+  - Bilingual **ES/EN** with hreflang, canonical tags, and parallel routes for every page
+  - Hardened headers: CSP, HSTS, X-Frame-Options, anti mixed-content controls
+  - Runtime config served securely — zero credentials hardcoded in the repository
+
+  ### CI/CD Pipeline — 8 Blocking Steps
+
+  Nothing reaches `main` without passing every gate. The pipeline runs on push, manually on demand, and on a **weekly schedule every Monday at 13:00 UTC**:
+
+  1. **HTML · JS · CSS Lint** — syntax and style validation
+  2. **Netlify config** — netlify.toml structural check
+  3. **External links** — broken link detection
+  4. **Playwright E2E** — critical routes and contact form under real browser
+  5. **axe-core Accessibility** — WCAG 2AA with zero exclusions (score: 97)
+  6. **Visual regression** — desktop + mobile with versioned baselines
+  7. **Lighthouse CI** — all 10 routes audited in both languages (SEO: 100 · A11y: 97)
+  8. **Performance budgets** — per-route JSON thresholds, blocking on breach
+
+  ### Observability
+
+  - **Sentry** — frontend error capture by environment, DSN via runtime config (never hardcoded)
+  - **UptimeRobot** — 24/7 HTTP uptime monitoring with a P1/P2/P3 alert runbook
+  - **Google Search Console + Bing Webmaster Tools** — active indexation layer, sitemap submitted
+
+  ## The Results
+
+  A site that looks simple and is anything but. **100 on SEO. 97 on Accessibility.** On every route, in both languages, verified on every deploy.
+
+  The lesson AGLAYA applies to every project: enterprise engineering discipline is a practice, not a framework. Any stack can be built to last.
+body_es: |
+  ## Qué Construimos
+
+  **elm-st-web** es la web corporativa de **Elm St.**, productora audiovisual con sede en Bogotá, Colombia. El sitio es sobrio visualmente — e implacable técnicamente.
+
+  La premisa: *un sitio estático HTML/CSS/JS no tiene excusa para ser técnicamente frágil.*
+
+  ### Arquitectura
+
+  - HTML/CSS/JS estático desplegado en Netlify con **Netlify Functions** para validación de formulario server-side (Turnstile CAPTCHA invisible + honeypot + Resend opcional)
+  - Bilingüe **ES/EN** con hreflang, canonicals y rutas paralelas para cada página
+  - Cabeceras de seguridad: CSP, HSTS, X-Frame-Options, controles anti mixed-content
+  - Runtime config servida de forma segura — cero credenciales hardcodeadas en el repositorio
+
+  ### Pipeline CI/CD — 8 Pasos Bloqueantes
+
+  Nada llega a `main` sin pasar todos los gates. El pipeline corre en cada push, manualmente bajo demanda, y en un **schedule semanal automático cada lunes a las 13:00 UTC**:
+
+  1. **Lint HTML · JS · CSS** — validación de sintaxis y estilo
+  2. **Netlify config** — comprobación estructural de netlify.toml
+  3. **Links externos** — detección de enlaces rotos
+  4. **Playwright E2E** — rutas críticas y formulario de contacto en navegador real
+  5. **axe-core Accesibilidad** — WCAG 2AA sin exclusiones (score: 97)
+  6. **Regresión visual** — desktop + mobile con baselines versionados
+  7. **Lighthouse CI** — 10 rutas auditadas en ambos idiomas (SEO: 100 · A11y: 97)
+  8. **Performance budgets** — umbrales JSON por ruta, bloqueante si se supera
+
+  ### Observabilidad
+
+  - **Sentry** — captura de errores frontend por entorno, DSN vía runtime config (nunca hardcodeado)
+  - **UptimeRobot** — monitoreo HTTP 24/7 con runbook de alertas P1/P2/P3
+  - **Google Search Console + Bing Webmaster Tools** — capa de indexación activa, sitemap enviado
+
+  ## Los Resultados
+
+  Un sitio que parece simple y no lo es. **100 en SEO. 97 en Accesibilidad.** En cada ruta, en ambos idiomas, verificado en cada deploy.
+
+  La lección que AGLAYA aplica en cada proyecto: la disciplina de ingeniería enterprise es una práctica, no un framework. Cualquier stack puede construirse para durar.
+body_pt: |
+  ## O Que Construímos
+
+  **elm-st-web** é o site corporativo da **Elm St.**, produtora audiovisual sediada em Bogotá, Colômbia. O site é visualmente contido — e tecnicamente implacável.
+
+  A premissa: *um site estático HTML/CSS/JS não tem desculpa para ser tecnicamente frágil.*
+
+  ### Arquitetura
+
+  - HTML/CSS/JS estático implantado no Netlify com **Netlify Functions** para validação de formulário server-side (Turnstile CAPTCHA invisível + honeypot + Resend opcional)
+  - Bilíngue **ES/EN** com hreflang, canonicals e rotas paralelas para cada página
+  - Cabeçalhos de segurança: CSP, HSTS, X-Frame-Options, controles anti mixed-content
+  - Runtime config servida com segurança — zero credenciais hardcoded no repositório
+
+  ### Pipeline CI/CD — 8 Passos Bloqueantes
+
+  Nada chega ao `main` sem passar por todos os gates. O pipeline roda a cada push, manualmente sob demanda, e em um **schedule semanal automático toda segunda-feira às 13:00 UTC**:
+
+  1. **Lint HTML · JS · CSS** — validação de sintaxe e estilo
+  2. **Netlify config** — verificação estrutural do netlify.toml
+  3. **Links externos** — detecção de links quebrados
+  4. **Playwright E2E** — rotas críticas e formulário de contato em navegador real
+  5. **axe-core Acessibilidade** — WCAG 2AA sem exclusões (score: 97)
+  6. **Regressão visual** — desktop + mobile com baselines versionados
+  7. **Lighthouse CI** — 10 rotas auditadas em ambos os idiomas (SEO: 100 · A11y: 97)
+  8. **Performance budgets** — limites JSON por rota, bloqueante se ultrapassado
+
+  ### Observabilidade
+
+  - **Sentry** — captura de erros frontend por ambiente, DSN via runtime config (nunca hardcoded)
+  - **UptimeRobot** — monitoramento HTTP 24/7 com runbook de alertas P1/P2/P3
+  - **Google Search Console + Bing Webmaster Tools** — camada de indexação ativa, sitemap enviado
+
+  ## Os Resultados
+
+  Um site que parece simples e não é. **100 em SEO. 97 em Acessibilidade.** Em cada rota, nos dois idiomas, verificado a cada deploy.
+
+  A lição que a AGLAYA aplica em cada projeto: disciplina de engenharia enterprise é uma prática, não um framework. Qualquer stack pode ser construído para durar.
 ---
