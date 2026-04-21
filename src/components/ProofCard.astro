@@ -4,6 +4,7 @@ import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/util
 import lebenLogo from '../assets/images/leben.png';
 import nordenLogo from '../assets/images/norden.png';
 import pocuroLogo from '../assets/images/pocuro.png';
+import chileFlagLogo from '../assets/images/chile-flag-round-circle-icon.svg';
 
 interface Props {
   entry: CollectionEntry<'proof'>;
@@ -15,7 +16,7 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const translatePath = useTranslatedPath(lang);
 
-const { title, client, client_logo, logo, industry, results, solution_systems } = entry.data;
+const { title, client, client_logo, logo, industry, results, solution_systems, externalUrl } = entry.data;
 
 const titleText = typeof title === 'object'
   ? title[lang] || title['en'] || Object.values(title)[0] || ''
@@ -31,6 +32,7 @@ const proofLogoMap: Record<string, string> = {
   'leben.png': lebenLogo.src,
   'norden.png': nordenLogo.src,
   'pocuro.png': pocuroLogo.src,
+  'chile-flag-round-circle-icon.svg': typeof chileFlagLogo === 'string' ? chileFlagLogo : (chileFlagLogo as any).src,
 };
 const clientLogoSrc = proofLogoMap[logoFilename] || rawClientLogoSrc || '';
 
@@ -40,7 +42,8 @@ const cleanSlug = entry.id.replace(/^(en|es|pt)\//, '');
 ---
 
 <a
-  href={translatePath(`/proof/${cleanSlug}/`)}
+  href={externalUrl ?? translatePath(`/proof/${cleanSlug}/`)}
+  {...externalUrl ? { target: '_blank', rel: 'noopener noreferrer' } : {}}
   class={`group relative flex ${featured ? 'flex-col lg:flex-row' : 'flex-col'} bg-[#eaeaea]/10 border border-white/5 hover:border-brand/40 transition-all duration-500 overflow-hidden`}
   data-animate="fade-up"
 >
