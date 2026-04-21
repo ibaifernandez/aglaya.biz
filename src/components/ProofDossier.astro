@@ -406,12 +406,12 @@ const processedTitle = (input: string) => {
   </div>
 </div>
 
-<script type="module">
-  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+<script>
+  import mermaid from 'mermaid';
 
   // Transform marked's <pre><code class="language-mermaid"> into <div class="mermaid">
   document.querySelectorAll('pre > code.language-mermaid').forEach(el => {
-    const pre = el.parentElement;
+    const pre = el.parentElement!;
     const div = document.createElement('div');
     div.className = 'mermaid';
     div.textContent = el.textContent;
@@ -422,16 +422,16 @@ const processedTitle = (input: string) => {
     startOnLoad: false,
     theme: 'base',
     themeVariables: {
-      background:       '#050505',
-      primaryColor:     '#111',
-      primaryTextColor: '#ffffff',
-      primaryBorderColor: '#9FC243',
-      lineColor:        '#9FC243',
-      secondaryColor:   '#1a1a1a',
-      tertiaryColor:    '#0a0a0a',
-      edgeLabelBackground: '#000',
-      fontFamily:       'monospace',
-      fontSize:         '13px',
+      background:          '#050505',
+      primaryColor:        '#111111',
+      primaryTextColor:    '#ffffff',
+      primaryBorderColor:  '#9FC243',
+      lineColor:           '#9FC243',
+      secondaryColor:      '#1a1a1a',
+      tertiaryColor:       '#0a0a0a',
+      edgeLabelBackground: '#000000',
+      fontFamily:          'monospace',
+      fontSize:            '13px',
     },
   });
 
