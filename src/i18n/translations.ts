@@ -209,7 +209,7 @@ export const ui = {
     'contact.qualify.data_caption': 'Which layer currently captures and structures your operational signal?',
     'contact.qualify.data_option_none': 'None',
     'contact.qualify.data_option_none_hint': 'No durable signal layer exists',
-    'contact.qualify.data_option_sheet': 'Spreadsheet',
+    'contact.qualify.data_option_sheet': 'Data Sheet',
     'contact.qualify.data_option_sheet_hint': 'Fragile records maintained by humans',
     'contact.qualify.data_option_crm': 'CRM',
     'contact.qualify.data_option_crm_hint': 'Structured commercial signal',
