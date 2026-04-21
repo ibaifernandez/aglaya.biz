@@ -3,6 +3,11 @@ import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/util
 import logoBlanco from '../assets/images/aglaya-logo-blanco.svg?raw';
 import DispatchSignupForm from './DispatchSignupForm.astro';
 
+interface Props {
+  wide?: boolean;
+}
+const { wide = false } = Astro.props;
+
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const translatePath = useTranslatedPath(lang);
@@ -35,7 +40,7 @@ const primaryLinks = [
   <div class="absolute inset-0 bg-grid opacity-15 pointer-events-none"></div>
   <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent pointer-events-none"></div>
 
-  <div class="relative z-10 mx-auto flex max-w-7xl flex-col gap-16 px-6 sm:px-10 lg:px-20">
+  <div class={`relative z-10 mx-auto flex flex-col gap-16 px-6 sm:px-10 lg:px-20 ${wide ? 'max-w-[1600px]' : 'max-w-7xl'}`}>
     <div class="grid gap-12 xl:grid-cols-[minmax(0,1.55fr)_minmax(320px,0.9fr)] xl:gap-16 items-start">
       <div class="flex flex-col gap-8">
         <div class="flex flex-col gap-6 max-w-3xl">
