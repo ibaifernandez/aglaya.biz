@@ -14,7 +14,9 @@ const entries = allEntries
   .sort((a, b) => b.data.date.localeCompare(a.data.date));
 
 const featured = entries.find(e => e.data.featured) || entries[0];
-const others = entries.filter(e => e.id !== featured.id).slice(0, 3);
+// Whitelist: only show cards ready for production. Add IDs here as they're built.
+const GRID_IDS = ['elm-st-web', 'norden'];
+const others = entries.filter(e => GRID_IDS.includes(e.id)).slice(0, 2);
 ---
 
 <section
