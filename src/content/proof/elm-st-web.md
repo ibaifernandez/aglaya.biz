@@ -28,21 +28,21 @@ solution_systems:
   - Zero-Leak Architecture
   - Systemic Alchemy
 results:
-  - metric: "≥90"
+  - metric: "97"
     label:
-      en: "Lighthouse Performance · all routes"
-      es: "Lighthouse Performance · todas las rutas"
-      pt: "Lighthouse Performance · todas as rotas"
+      en: "Lighthouse Accessibility · desktop + mobile"
+      es: "Lighthouse Accessibility · desktop + mobile"
+      pt: "Lighthouse Accessibility · desktop + mobile"
+  - metric: "100"
+    label:
+      en: "Lighthouse SEO · desktop + mobile"
+      es: "Lighthouse SEO · desktop + mobile"
+      pt: "Lighthouse SEO · desktop + mobile"
   - metric: "10/10"
     label:
       en: "Routes under blocking quality gate"
       es: "Rutas bajo quality gate bloqueante"
       pt: "Rotas sob quality gate bloqueante"
-  - metric: "24/7"
-    label:
-      en: "Uptime monitoring + Sentry error tracking"
-      es: "Monitoreo de uptime + Sentry"
-      pt: "Monitoramento de uptime + Sentry"
 featured: false
 date: "2026-03"
 client_logo: "../src/assets/images/elm-st.png"
