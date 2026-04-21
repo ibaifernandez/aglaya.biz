@@ -82,6 +82,8 @@ body_en: |
   A site that looks simple and is anything but. **100 on SEO. 97 on Accessibility.** On every route, in both languages, verified on every deploy.
 
   The lesson AGLAYA applies to every project: enterprise engineering discipline is a practice, not a framework. Any stack can be built to last.
+
+  [Visit the site →](https://elmst.ibaifernandez.com)
 body_es: |
   ## Qué Construimos
 
@@ -120,6 +122,8 @@ body_es: |
   Un sitio que parece simple y no lo es. **100 en SEO. 97 en Accesibilidad.** En cada ruta, en ambos idiomas, verificado en cada deploy.
 
   La lección que AGLAYA aplica en cada proyecto: la disciplina de ingeniería enterprise es una práctica, no un framework. Cualquier stack puede construirse para durar.
+
+  [Ver el sitio →](https://elmst.ibaifernandez.com)
 body_pt: |
   ## O Que Construímos
 
@@ -158,4 +162,6 @@ body_pt: |
   Um site que parece simples e não é. **100 em SEO. 97 em Acessibilidade.** Em cada rota, nos dois idiomas, verificado a cada deploy.
 
   A lição que a AGLAYA aplica em cada projeto: disciplina de engenharia enterprise é uma prática, não um framework. Qualquer stack pode ser construído para durar.
+
+  [Visitar o site →](https://elmst.ibaifernandez.com)
 ---

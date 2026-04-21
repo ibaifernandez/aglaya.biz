@@ -103,6 +103,8 @@ body_en: |
   ## The Results
 
   A production-grade multi-tenant Kanban in continuous operation. Not a demo, not a prototype — the same tool used internally at AGLAYA to manage client projects. The proof that the engineering behind it works under real conditions, every day.
+
+  [Access the sandbox →](#) *(Coming soon)*
 body_es: |
   ## Qué Construimos
 
@@ -159,6 +161,8 @@ body_es: |
   ## Los Resultados
 
   Un Kanban multi-tenant de nivel productivo en operación continua. No un demo, no un prototipo — la misma herramienta que usa AGLAYA internamente para gestionar proyectos de clientes. La prueba de que la ingeniería que hay detrás funciona bajo condiciones reales, cada día.
+
+  [Acceder al sandbox →](#) *(Próximamente)*
 body_pt: |
   ## O Que Construímos
 
@@ -217,4 +221,6 @@ body_pt: |
   ## Os Resultados
 
   Um Kanban multi-tenant de nível produtivo em operação contínua. Não um demo, não um protótipo — a mesma ferramenta usada internamente pela AGLAYA para gerenciar projetos de clientes. A prova de que a engenharia por trás funciona sob condições reais, todos os dias.
+
+  [Acessar o sandbox →](#) *(Em breve)*
 ---
