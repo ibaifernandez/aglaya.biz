@@ -45,6 +45,6 @@ results:
       pt: "Rotas sob quality gate bloqueante"
 featured: false
 date: "2026-03"
-client_logo: "../src/assets/images/elm-st.png"
+client_logo: "../src/assets/images/elm-st.svg"
 externalUrl: "https://elmst.ibaifernandez.com"
 ---
