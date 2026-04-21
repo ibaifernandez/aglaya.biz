@@ -45,4 +45,5 @@ results:
       pt: "Emails · 4 fluxos de automação HubSpot"
 featured: false
 date: "2026-02"
+client_logo: "../src/assets/images/logo-bill-capital.png"
 ---

@@ -45,5 +45,4 @@ results:
       pt: "Row Level Security · isolamento total de dados"
 featured: false
 date: "2026-01"
-externalUrl: "https://kanban.aglaya.biz"
 ---

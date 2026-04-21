@@ -5,6 +5,7 @@ import lebenLogo from '../assets/images/leben.png';
 import nordenLogo from '../assets/images/norden.png';
 import pocuroLogo from '../assets/images/pocuro.png';
 import elmStLogo from '../assets/images/elm-st.svg';
+import billCapitalLogo from '../assets/images/logo-bill-capital.png';
 import chileFlagLogo from '../assets/images/chile-flag-round-circle-icon.svg';
 
 interface Props {
@@ -34,6 +35,7 @@ const proofLogoMap: Record<string, string> = {
   'norden.png': nordenLogo.src,
   'pocuro.png': pocuroLogo.src,
   'elm-st.svg': typeof elmStLogo === 'string' ? elmStLogo : (elmStLogo as any).src,
+  'logo-bill-capital.png': billCapitalLogo.src,
   'chile-flag-round-circle-icon.svg': typeof chileFlagLogo === 'string' ? chileFlagLogo : (chileFlagLogo as any).src,
 };
 const clientLogoSrc = proofLogoMap[logoFilename] || rawClientLogoSrc || '';
