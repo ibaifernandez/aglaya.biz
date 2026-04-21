@@ -44,6 +44,7 @@ results:
       es: "intervención manual en el flujo del pipeline"
       pt: "intervenção manual no fluxo do pipeline"
 featured: true
+noindex: true
 date: "2025-07"
 client_logo: "../src/assets/images/leben.png"
 client_logo_dark: "../src/assets/images/leben-white.png"

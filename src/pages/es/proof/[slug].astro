@@ -19,10 +19,10 @@ const { entry } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
-const { 
-  title, client, industry, challenge, strategy, vision, 
-  summary, results, solution_systems, date, 
-  heroImage, thumbImage, contentImage 
+const {
+  title, client, industry, challenge, strategy, vision,
+  summary, results, solution_systems, date,
+  heroImage, thumbImage, contentImage, noindex
 } = entry.data as any;
 const slug = Astro.params.slug;
 
@@ -35,6 +35,7 @@ const bodyContent = marked.parse((entry.data as any)[`body_${lang}`] || (entry.d
   ogType="article"
   lang={lang}
   alternateUrl={new URL(`/proof/${slug}/`, Astro.site).href}
+  noindex={noindex ?? false}
 >
   <Header />
   

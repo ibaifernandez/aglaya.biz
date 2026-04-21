@@ -20,7 +20,7 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
 const data = entry.data as any;
-const { title, client, industry, challenge, strategy, vision, summary, results, solution_systems, date, heroImage, thumbImage, contentImage } = data;
+const { title, client, industry, challenge, strategy, vision, summary, results, solution_systems, date, heroImage, thumbImage, contentImage, noindex } = data;
 const slug = Astro.params.slug;
 
 const bodyContent = marked.parse(data[`body_${lang}`] || data.body_en || '');
@@ -32,6 +32,7 @@ const bodyContent = marked.parse(data[`body_${lang}`] || data.body_en || '');
   ogType="article"
   lang={lang}
   alternateUrl={new URL(`/es/proof/${slug}/`, Astro.site).href}
+  noindex={noindex ?? false}
 >
   <Header />
   

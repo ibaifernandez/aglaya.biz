@@ -16,7 +16,22 @@ export default defineConfig({
   site: 'https://aglaya.biz',
   adapter: netlify(),
   integrations: [
-    sitemap(),
+    sitemap({
+      filter: (page) => {
+        const noindex = [
+          // Proof index (redirects to /#proof)
+          '/proof/', '/es/proof/', '/pt/proof/',
+          // Legacy proof entries (kept in repo but not published)
+          '/proof/leben/', '/es/proof/leben/', '/pt/proof/leben/',
+          '/proof/norden/', '/es/proof/norden/', '/pt/proof/norden/',
+          '/proof/pocuro/', '/es/proof/pocuro/', '/pt/proof/pocuro/',
+          // Legal/util pages — no SEO value
+          '/privacy/', '/es/privacidad/', '/pt/privacidade/',
+          '/cookies/', '/es/cookies/', '/pt/cookies/',
+        ];
+        return !noindex.some(path => page.endsWith(path));
+      },
+    }),
     sentry({
       enabled: {
         client: false,

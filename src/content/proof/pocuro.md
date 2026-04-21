@@ -44,6 +44,7 @@ results:
       es: "trabajo manual eliminado estimado"
       pt: "trabalho manual eliminado estimado"
 featured: true
+noindex: true
 date: "2025-06"
 client_logo: "../src/assets/images/pocuro.png"
 client_logo_dark: "../src/assets/images/pocuro-white.png"

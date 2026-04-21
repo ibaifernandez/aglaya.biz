@@ -18,6 +18,7 @@ return Astro.redirect(lang === 'es' ? '/es/#proof' : '/#proof');
   description={metaDescription}
   lang={lang}
   alternateUrl={new URL('/es/proof/', Astro.site).href}
+  noindex={true}
 >
   <Header />
   <main id="main-content" class="flex flex-col">

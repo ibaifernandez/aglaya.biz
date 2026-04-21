@@ -43,6 +43,7 @@ results:
       es: "Hybrid Decision Engine (Deterministic & AI)"
       pt: "Hybrid Decision Engine (Deterministic & AI)"
 featured: false
+noindex: true
 date: "2025-08"
 client_logo: "../src/assets/images/norden.png"
 client_logo_dark: "../src/assets/images/norden-white.png"
