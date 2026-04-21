@@ -58,12 +58,10 @@ body_en: |
 
   ### Architecture
 
-  ```
-  React 18 (Vite) ←── JWT / HTTPS ──→ Express 4 (Node.js)
-                                             │
-                                        Supabase
-                                 (PostgreSQL + RLS + Auth
-                                  + Storage + Admin API)
+  ```mermaid
+  flowchart LR
+    A["React 18 · Vite\nNetlify"] <-->|JWT / HTTPS| B["Express 4 · Node.js\nRailway"]
+    B --> C["Supabase\nPostgreSQL + RLS\nAuth + Storage + Admin API"]
   ```
 
   **Data hierarchy:** Organization → Workspace → Board → Column → Card. Every level inherits visibility restrictions from the level above.
@@ -176,12 +174,10 @@ body_pt: |
 
   ### Arquitetura
 
-  ```
-  React 18 (Vite) ←── JWT / HTTPS ──→ Express 4 (Node.js)
-                                             │
-                                        Supabase
-                                 (PostgreSQL + RLS + Auth
-                                  + Storage + Admin API)
+  ```mermaid
+  flowchart LR
+    A["React 18 · Vite\nNetlify"] <-->|JWT / HTTPS| B["Express 4 · Node.js\nRailway"]
+    B --> C["Supabase\nPostgreSQL + RLS\nAuth + Storage + Admin API"]
   ```
 
   **Hierarquia de dados:** Organização → Workspace → Board → Coluna → Card. Cada nível herda as restrições de visibilidade do nível superior.
