@@ -3,7 +3,7 @@ status: active
 domain: operations
 owner: operations
 source_of_truth: true
-last_reviewed: 2026-04-15
+last_reviewed: 2026-04-28
 consumable_by_agents: true
 ---
 
@@ -42,6 +42,7 @@ graph TD
 | **Operaciones** | `IA-RULES.md` | `docs/tech/IA-RULES.md` |
 | **Validación de Producción** | `PRODUCTION-VALIDATION.md` | `docs/ops/PRODUCTION-VALIDATION.md` |
 | **Logs** | `CHANGELOG.md` | `docs/ops/CHANGELOG.md` |
+| **Estrategia de crecimiento** | `OUTREACH-STRATEGY.md` | `docs/OUTREACH-STRATEGY.md` |
 
 ---
 
@@ -63,6 +64,11 @@ graph TD
 - Admission/contact flows, footer dispatch, ROI Audit context, hCaptcha, Resend, and MailerLite routing are active.
 - Sentry, GTM consent gating, and security headers are documented against the live runtime.
 - Production smoke-test protocol lives in `docs/ops/PRODUCTION-VALIDATION.md`.
+- Main navigation includes: Systems · Proof · Economics · Services · ROI Audit.
+- Active proof entries: `bill-capital`, `elm-st-web`, `kanban-desk`. Legacy entries (`leben`, `norden`, `pocuro`) are noindexed and excluded from sitemap.
+- Bill Capital client showcase live at `/bill-capital/` (self-contained, CSP-compliant, PII-anonymized).
+- Design system v0.0.0.1 generated at `aglaya-design-system/` (external repo) — tokens, fonts, specimen cards, React components, Claude-invocable skill.
+- 12 growth lines documented in `docs/OUTREACH-STRATEGY.md`.
 
 ---
 

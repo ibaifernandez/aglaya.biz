@@ -5,7 +5,7 @@ owner: operations
 source_of_truth: true
 supersedes: []
 superseded_by: []
-last_reviewed: 2026-04-03
+last_reviewed: 2026-04-28
 consumable_by_agents: true
 ---
 
@@ -17,6 +17,28 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 ---
 
 ## [Unreleased]
+
+### Added
+
+- **Bill Capital client showcase** deployed at `/bill-capital/` — self-contained HTML with Chart.js 4.4.0 bundled locally (CDN was blocked by CSP), PDF button disabled in AGLAYA version, onclick drawers/popups restored via `/bill-capital/*` CSP override (`script-src-attr 'unsafe-inline'`).
+- **Navigation:** Services and ROI Audit added to main nav (`Header.astro`). ROI Audit replaces Proof in footer right-panel links. Footer dispatch meta tags removed.
+- **Proof content:** Showcase links added after The Results paragraph in `bill-capital.md`, `elm-st-web.md`, and `kanban-desk.md` (all three languages). `heroImage` field added to `bill-capital.md` frontmatter.
+- **ProofDossier styles:** `h3` heading styles, `.mermaid` vertical spacing, and inline `<a>` link styles added to `prose-dossier` CSS scope. `ul` gap removed.
+- **SEO architecture:** `noindex: true` on leben, norden, pocuro (legacy entries kept for recovery), proof index, privacy, and cookies. `@astrojs/sitemap` filter excludes all noindexed paths. Net indexable pages: 11 unique × 3 locales = 33.
+- **`OUTREACH-STRATEGY.md`** added to `/docs` — 12 growth lines across product, content, ops, and distribution with status table.
+- **Design system v0.0.0.1** generated externally at `aglaya-design-system/`: CSS token file, 31 local font files (Outfit / Inter / Space Mono), 20+ specimen cards in `preview/`, 6 React components for home sections, `SKILL.md` entry point for Claude invocation.
+
+### Changed
+
+- Footer dispatch name placeholder: `Aglaya` → `AGLAYA`.
+- Contact form data option (EN): `Spreadsheet` → `Data Sheet` (prevents card overflow).
+- Bill Capital showcase finale: LFi → AGLAYA, `Mail Marketing & Automatización` → `AI Systems & Automation`, `lfi.la` → `aglaya.biz`.
+- `industry` field in `ProofDossier.astro` widened to accept `string | { en, es, pt? }` — fixes `[object Object]` on bill-capital.
+- Mermaid architecture diagrams in `kanban-desk.md`: EN and PT bodies migrated from plain code fences to `\`\`\`mermaid` blocks so all three locales render SVG diagrams.
+
+### Security / Privacy
+
+- PII in Bill Capital anatomy popup replaced with synthetic data within the AGLAYA repo. Original `bill-capital-campaign` repo untouched.
 
 ### Changed
 
