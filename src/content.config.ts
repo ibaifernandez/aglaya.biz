@@ -38,6 +38,7 @@ const proofCollection = defineCollection({
     date: z.string(), // YYYY-MM
     ogImage: z.string().optional(),
     externalUrl: z.string().url().optional(), // when set, card links directly to external URL
+    noindex: z.boolean().optional(),
     // Multilingual body content (replaces per-language MD files)
     body_en: z.string().optional(),
     body_es: z.string().optional(),

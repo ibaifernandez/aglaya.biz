@@ -4,6 +4,7 @@ interface MailerLiteSubscriberInput {
   ip?: string;
   name?: string;
   company?: string;
+  language?: 'en' | 'es' | 'pt';
 }
 
 function getTimestamp(): string {
@@ -64,6 +65,7 @@ export async function upsertMailerLiteSubscriber({
   ip,
   name,
   company,
+  language,
 }: MailerLiteSubscriberInput): Promise<boolean> {
   const apiKey = process.env.MAILERLITE_API_KEY ?? '';
   const normalizedGroups = uniqueGroups(groups);
@@ -75,6 +77,7 @@ export async function upsertMailerLiteSubscriber({
   const fields: Record<string, string> = {};
   if (name?.trim()) fields.name = name.trim();
   if (company?.trim()) fields.company = company.trim();
+  if (language) fields.language = language;
 
   const now = getTimestamp();
   const response = await fetch('https://connect.mailerlite.com/api/subscribers', {
