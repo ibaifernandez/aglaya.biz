@@ -96,7 +96,7 @@ Publicar algo pequeño y útil como producto independiente: calculador de ROI, g
 | # | Línea | Estado |
 |---|---|---|
 | 01 | Kanban Sandbox | `PENDIENTE` |
-| 02 | Automatizaciones Mailerlite | `PENDIENTE` |
+| 02 | Automatizaciones Mailerlite | `EN CURSO` |
 | 03 | Estrategia Redes Sociales | `PENDIENTE` |
 | 04 | ROI Audit Interactivo | `PENDIENTE` |
 | 05 | AI Chatbot Cualificación | `PENDIENTE` |
@@ -110,4 +110,4 @@ Publicar algo pequeño y útil como producto independiente: calculador de ROI, g
 
 ---
 
-*Última actualización: 2026-04-21*
+*Última actualización: 2026-04-28*

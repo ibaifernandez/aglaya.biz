@@ -109,11 +109,12 @@ function buildDispatchConfirmationHtml(name: string, lang: 'en' | 'es' | 'pt'): 
 </html>`;
 }
 
-async function subscribeViaMailerLite(email: string, ip: string, name?: string): Promise<boolean> {
+async function subscribeViaMailerLite(email: string, ip: string, lang: 'en' | 'es' | 'pt', name?: string): Promise<boolean> {
   return upsertMailerLiteSubscriber({
     email,
     ip,
     name,
+    language: lang,
     groups: [getDispatchGroupId()],
   });
 }
@@ -258,7 +259,7 @@ export const handler: Handler = async (event) => {
 
   try {
     let mode: 'mailerlite' | 'fallback' | null = null;
-    const mailerLiteCaptured = await subscribeViaMailerLite(email, ip, name);
+    const mailerLiteCaptured = await subscribeViaMailerLite(email, ip, lang, name);
     if (mailerLiteCaptured) {
       mode = 'mailerlite';
     }

@@ -14,9 +14,25 @@ consumable_by_agents: true
 All notable changes to this project are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+> **Versioning policy:** this project uses **dates, not semver**. Releases are tagged by date (e.g. `2026-04-28`). The `[Unreleased]` section accumulates work until a deploy milestone is named.
+
 ---
 
 ## [Unreleased]
+
+### Added
+
+- **MailerLite env vars pushed to Netlify production** via CLI — `MAILERLITE_API_KEY`, `MAILERLITE_SUSCRIPCIONES_GROUP_ID`, `MAILERLITE_NO_CUALIFICADOS_GROUP_ID`, `MAILERLITE_CUALIFICADOS_GROUP_ID`, `MAILERLITE_BORDERLINE_GROUP_ID`. Previously only existed in `.env` local; production was silently falling back to Resend notify on every subscription.
+- **Language segmentation in MailerLite**: `language` custom field created in MailerLite account via API (field key: `language`, type: `text`). `upsertMailerLiteSubscriber()` now accepts and writes `language` as a custom field. `dispatch-subscribe` passes normalized lang (`en` | `es` | `pt`) to MailerLite on every subscription.
+
+### Fixed
+
+- `noindex: z.boolean().optional()` added to `proofCollection` schema in `src/content.config.ts` — field was read via `as any` cast, now fully type-safe.
+
+### Docs
+
+- Versioning policy note added to `CHANGELOG.md` header: this project uses dates, not semver.
+- `OUTREACH-STRATEGY.md` line 02 (Automatizaciones MailerLite) updated from `PENDIENTE` to `EN CURSO` (started 2026-04-28).
 
 ### Added
 
