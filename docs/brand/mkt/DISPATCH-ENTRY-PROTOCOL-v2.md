@@ -5,7 +5,7 @@ owner: marketing
 source_of_truth: true
 supersedes: []
 superseded_by: []
-last_reviewed: 2026-04-28
+last_reviewed: 2026-04-29
 consumable_by_agents: true
 ---
 
@@ -28,9 +28,9 @@ consumable_by_agents: true
 
 Mientras un suscriptor esté en el Dispatch Entry Protocol (días 0–9), debe quedar excluido de cualquier envío de Dispatch que salga durante ese período.
 
-En MailerLite: al crear un envío de Dispatch, excluir el segmento `En entrada` (subscribers con el campo `onboarding_active = true`).
+En MailerLite: al crear un envío de Dispatch, excluir el segmento `En entrada` (subscribers con el campo `onboarding_active = 1`).
 
-El campo `onboarding_active` se establece en `true` al inicio de la automation y se resetea a `false` al completar el Email 3 (día 9). Este mecanismo es más robusto que filtrar por fecha de suscripción: resiste retrasos, pausas, reentradas y segmentaciones relativas.
+El campo `onboarding_active` (tipo: `number`, ID MailerLite: `1248508`) se establece en `1` al inicio de la automation y se resetea a `0` al completar el Email 3 (día 9). MailerLite no soporta tipo booleano nativo — `1`/`0` es el equivalente funcional. Este mecanismo es más robusto que filtrar por fecha de suscripción: resiste retrasos, pausas, reentradas y segmentaciones relativas.
 
 ## Language Routing
 
@@ -232,7 +232,7 @@ AGLAYA
 
 ## EMAIL 3 — Day 9
 
-> **Purpose:** Abrir la puerta. Una vez. Sin presión. El ROI Audit presentado como diagnóstico, no como call de ventas.
+> **Purpose:** Abrir la puerta. Una vez. Sin presión. El ROI Audit presentado como lo que es: un proyecto de trabajo de dos semanas, no gratuito, con inversión cotizada manualmente. Sin subprometer el coste ni la fricción de entrada.
 
 ---
 

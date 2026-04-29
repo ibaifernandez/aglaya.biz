@@ -20,7 +20,31 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
-### Added
+### Added — 2026-04-29
+
+- **`onboarding_active` field created in MailerLite** via API (ID: `1248508`, type: `number`). Used to control Dispatch Entry Protocol exclusion rule — set to `1` at automation start, reset to `0` after Email 3. More robust than time-based segment filtering.
+- **Dispatch Entry Protocol (v2)** — doc renamed from `DISPATCH-WELCOME-SEQUENCE.md` to `DISPATCH-ENTRY-PROTOCOL-v2.md`. Prohibits "welcome sequence" and "nurture" language internally.
+
+### Changed — 2026-04-29
+
+- **Email 3 (EN/ES/PT)** rewritten to clearly frame ROI Audit as a paid two-week working engagement — not a free diagnostic, not a call. Added explicit scoping/quoting language to close gap between email copy and landing page.
+- **Form consent copy (EN/ES/PT)** — `footer.dispatch.consent_note` now explicitly covers the Dispatch Entry Protocol sequence, resolving the semantic contradiction between "sparse by design" promise and 3-email onboarding.
+- **Exclusion rule in docs** updated from time-based segment ("last 10 days") to `onboarding_active = 1` boolean-equivalent field.
+
+### Fixed — 2026-04-29
+
+- `Zero relleno` (Spanish text) on `/pt/roi-audit/` corrected to `Zero enchimento` (Portuguese).
+- Unit test `dispatch-subscribe.test.ts` updated to expect `{ name, language }` in MailerLite `fields` payload — was asserting old shape `{ name }` before language segmentation was added.
+
+### Docs — 2026-04-29
+
+- `OUTREACH-STRATEGY.md` line 06 (Automatización Dispatch) updated from `PENDIENTE` to `EN CURSO`.
+- `DISPATCH-ENTRY-PROTOCOL-v2.md` `last_reviewed` updated to 2026-04-29.
+- GitHub repo description updated from "Coming soon page" to current site description.
+
+---
+
+### Added — 2026-04-28
 
 - **MailerLite env vars pushed to Netlify production** via CLI — `MAILERLITE_API_KEY`, `MAILERLITE_SUSCRIPCIONES_GROUP_ID`, `MAILERLITE_NO_CUALIFICADOS_GROUP_ID`, `MAILERLITE_CUALIFICADOS_GROUP_ID`, `MAILERLITE_BORDERLINE_GROUP_ID`. Previously only existed in `.env` local; production was silently falling back to Resend notify on every subscription.
 - **Language segmentation in MailerLite**: `language` custom field created in MailerLite account via API (field key: `language`, type: `text`). `upsertMailerLiteSubscriber()` now accepts and writes `language` as a custom field. `dispatch-subscribe` passes normalized lang (`en` | `es` | `pt`) to MailerLite on every subscription.
