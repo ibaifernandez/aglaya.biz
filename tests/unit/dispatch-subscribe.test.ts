@@ -80,7 +80,7 @@ describe('dispatch-subscribe function', () => {
     const request = (global.fetch as ReturnType<typeof vi.fn>).mock.calls[1]?.[1];
     const payload = JSON.parse(String(request?.body));
     expect(payload.groups).toEqual(['group_123']);
-    expect(payload.fields).toEqual({ name: 'John' });
+    expect(payload.fields).toEqual({ name: 'John', language: 'en' });
 
     const confirmationRequest = (global.fetch as ReturnType<typeof vi.fn>).mock.calls[2]?.[1];
     const confirmationPayload = JSON.parse(String(confirmationRequest?.body));
