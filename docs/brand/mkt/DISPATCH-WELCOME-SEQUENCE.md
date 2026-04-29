@@ -9,9 +9,10 @@ last_reviewed: 2026-04-28
 consumable_by_agents: true
 ---
 
-# AGLAYA DISPATCH — Welcome Sequence
+# AGLAYA DISPATCH — Dispatch Entry Protocol
 
-> Secuencia de bienvenida para nuevos suscriptores del AGLAYA Dispatch.
+> Secuencia de entrada para nuevos suscriptores del AGLAYA Dispatch.
+> Nombre interno: **Dispatch Entry Protocol**. No usar "welcome sequence" ni "nurture" en ningún contexto de marca.
 > Se ejecuta en MailerLite como automation disparada por "subscriber joins group: Suscripciones".
 
 ---
@@ -25,9 +26,11 @@ consumable_by_agents: true
 
 ## Exclusion Rule
 
-Mientras un suscriptor esté en la secuencia de bienvenida (días 0–9), debe quedar excluido de cualquier envío de Dispatch que salga durante ese período.
+Mientras un suscriptor esté en el Dispatch Entry Protocol (días 0–9), debe quedar excluido de cualquier envío de Dispatch que salga durante ese período.
 
-En MailerLite: al crear un envío de Dispatch, excluir el segmento `En bienvenida` (subscribers que entraron en los últimos 10 días o que tienen el campo `onboarding_active = true`).
+En MailerLite: al crear un envío de Dispatch, excluir el segmento `En entrada` (subscribers con el campo `onboarding_active = true`).
+
+El campo `onboarding_active` se establece en `true` al inicio de la automation y se resetea a `false` al completar el Email 3 (día 9). Este mecanismo es más robusto que filtrar por fecha de suscripción: resiste retrasos, pausas, reentradas y segmentaciones relativas.
 
 ## Language Routing
 
@@ -251,10 +254,11 @@ If the last two emails described something real in your operation — not a vagu
 
 It's called the ROI Audit.
 
-It's a diagnostic. We map your operational friction. We calculate what it's costing you. We tell you honestly whether the investment in fixing it produces a return worth making.
+It's a two-week working engagement. Not a call. Not a presentation. Not free. We integrate with your team, map your operational surface, and deliver a system architecture and a business case built on real numbers.
 
-If it does, we discuss working together.
-If it doesn't, you leave with a diagnosis that's worth having regardless.
+The investment is scoped and quoted manually after we review your request. We set the number before you commit to anything. If the math doesn't justify the audit, we'll tell you before you spend a dollar.
+
+If it does, we discuss what comes next.
 
 No sales script. No discovery call theatre.
 
@@ -284,10 +288,11 @@ Si los dos últimos correos describían algo real en tu operación — no una as
 
 Se llama ROI Audit.
 
-Es un diagnóstico. Mapeamos tu fricción operativa. Calculamos lo que te está costando. Te decimos honestamente si la inversión en resolverlo produce un retorno que merece la pena.
+Es un proyecto de trabajo de dos semanas. No una llamada. No una presentación. No es gratuito. Nos integramos con tu equipo, mapeamos tu superficie operativa y entregamos una arquitectura de sistema y un business case construido sobre números reales.
 
-Si lo produce, hablamos de trabajar juntos.
-Si no, te vas con un diagnóstico que vale la pena tener de todas formas.
+La inversión se define y cotiza manualmente después de revisar tu solicitud. Fijamos el número antes de que te comprometas a nada. Si los números no justifican el audit, te lo decimos antes de que gastes un euro.
+
+Si lo justifican, hablamos de lo que viene después.
 
 Sin guión de ventas. Sin teatro de discovery call.
 
@@ -317,10 +322,11 @@ Se os dois últimos e-mails descreveram algo real na sua operação — não uma
 
 Chama-se ROI Audit.
 
-É um diagnóstico. Mapeamos seu atrito operacional. Calculamos o que ele está custando. Dizemos honestamente se o investimento em corrigi-lo produz um retorno que vale a pena fazer.
+É um projeto de trabalho de duas semanas. Não uma call. Não uma apresentação. Não é gratuito. Nos integramos com sua equipe, mapeamos sua superfície operacional e entregamos uma arquitetura de sistema e um business case construído sobre números reais.
 
-Se produz, conversamos sobre trabalhar juntos.
-Se não produz, você sai com um diagnóstico que vale a pena ter de qualquer forma.
+O investimento é definido e cotado manualmente após revisarmos sua solicitação. Definimos o valor antes de você se comprometer com qualquer coisa. Se os números não justificarem o audit, dizemos isso antes de você gastar um real.
+
+Se justificarem, conversamos sobre o que vem a seguir.
 
 Sem roteiro de vendas. Sem teatro de discovery call.
 
