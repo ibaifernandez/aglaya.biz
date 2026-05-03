@@ -32,6 +32,7 @@ const bodyContent = marked.parse(entry.data[bodyKey] || entry.data.body_en || ''
   ogType="article"
   lang={lang}
   alternateUrl={new URL(`/es/proof/${slug}/`, Astro.site).href}
+  alternateUrlPt={new URL(`/pt/proof/${slug}/`, Astro.site).href}
   noindex={noindex ?? false}
 >
   <Header />
