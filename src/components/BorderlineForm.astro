@@ -55,6 +55,8 @@ const hcaptchaSiteKey = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY || 'a772dbf8-f0
   <input type="hidden" name="entry_point" value="" />
   <input type="hidden" name="service_interest" value="" />
   <input type="hidden" name="token" value="" />
+  <!-- Honeypot: invisible to humans, bots fill it → silent drop -->
+  <input type="text" name="company_honeypot" value="" class="hidden" aria-hidden="true" tabindex="-1" autocomplete="off" />
 
   <div class="flex flex-col gap-8 text-center max-w-lg mx-auto">
     <p class="text-white/60 font-body text-lg leading-relaxed italic">
