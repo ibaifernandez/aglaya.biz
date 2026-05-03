@@ -63,14 +63,10 @@ const ADDON_PRICES = {
             <span class="text-brand font-mono font-black text-lg whitespace-nowrap">${price.toLocaleString('en-US')}</span>
           </div>
           <!-- Complexity note — always present so all cards have same height -->
-          <p class={`font-mono text-[10px] leading-relaxed px-3 py-2 border-l-2 flex-1 ${isHighComplexity ? 'border-brand/50 bg-brand/5' : 'text-white/30 border-white/10'}`}
+          <p class={`font-mono text-[10px] leading-relaxed px-3 py-2 border-l-2 flex-1 ${isHighComplexity ? 'border-brand/50 bg-brand/5' : 'text-white/50 border-white/10'}`}
              style={isHighComplexity ? 'color:#ff4d70' : ''}>
             {complexityText}
           </p>
-          <!-- Radio indicator always at bottom -->
-          <div class="w-4 h-4 border border-white/20 rounded-full flex items-center justify-center product-radio-indicator">
-            <div class="w-2 h-2 rounded-full bg-brand opacity-0 product-radio-dot transition-opacity"></div>
-          </div>
         </label>
         );
       })}
