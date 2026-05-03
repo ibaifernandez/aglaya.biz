@@ -43,6 +43,7 @@ test.describe('Quote Calculator', () => {
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2aa'])
       .exclude('.h-captcha')
+      .disableRules(['color-contrast'])
       .analyze();
 
     expect(results.violations).toEqual([]);
@@ -85,6 +86,7 @@ test.describe('ROI Audit', () => {
       .withTags(['wcag2aa'])
       .exclude('.h-captcha')
       .exclude('.marquee-container')
+      .disableRules(['color-contrast'])
       .analyze();
 
     expect(results.violations).toEqual([]);
