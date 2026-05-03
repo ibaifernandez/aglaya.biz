@@ -9,6 +9,9 @@ interface Props {
 
 const { lang, contactPath } = Astro.props;
 const t = useTranslations(lang);
+// Dynamic i18n keys (product/addon/delivery names built at runtime) can't be
+// statically typed without a full overload — single escape hatch here.
+const tDynamic = (key: string) => t(key as Parameters<typeof t>[0]);
 
 const BASE_PRICES = {
   landing: 2900,
@@ -43,7 +46,7 @@ const ADDON_PRICES = {
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-px bg-white/5 border border-white/5" role="radiogroup" aria-label={t('quote.step1.label')}>
       {Object.entries(BASE_PRICES).map(([key, price]) => {
-        const complexityText = t(`quote.product.${key}.complexity` as any);
+        const complexityText = tDynamic(`quote.product.${key}.complexity`);
         const isHighComplexity = key === 'product';
         return (
         <label class="product-card bg-[#080808] p-8 flex flex-col gap-5 cursor-pointer transition-all hover:bg-[#111] has-[:checked]:bg-[#0f0005] has-[:checked]:border-l-2 has-[:checked]:border-l-brand">
@@ -57,8 +60,8 @@ const ADDON_PRICES = {
           <!-- Name + price -->
           <div class="flex items-start justify-between gap-4">
             <div class="flex flex-col gap-1">
-              <span class="text-white font-display font-black text-xl uppercase tracking-tight">{t(`quote.product.${key}.name` as any)}</span>
-              <span class="text-white/40 font-body text-sm">{t(`quote.product.${key}.desc` as any)}</span>
+              <span class="text-white font-display font-black text-xl uppercase tracking-tight">{tDynamic(`quote.product.${key}.name`)}</span>
+              <span class="text-white/40 font-body text-sm">{tDynamic(`quote.product.${key}.desc`)}</span>
             </div>
             <span class="text-brand font-mono font-black text-lg whitespace-nowrap">${price.toLocaleString('en-US')}</span>
           </div>
@@ -85,8 +88,8 @@ const ADDON_PRICES = {
       {(['blog', 'cms', 'animations', 'integration', 'infra_setup'] as const).map((key) => (
         <label class="addon-toggle bg-[#080808] p-6 flex items-center justify-between gap-6 cursor-pointer hover:bg-[#111] transition-all">
           <div class="flex flex-col gap-1">
-            <span class="text-white font-body font-semibold text-sm">{t(`quote.addon.${key}.name` as any)}</span>
-            <span class="text-white/40 font-body text-xs">{t(`quote.addon.${key}.desc` as any)}</span>
+            <span class="text-white font-body font-semibold text-sm">{tDynamic(`quote.addon.${key}.name`)}</span>
+            <span class="text-white/40 font-body text-xs">{tDynamic(`quote.addon.${key}.desc`)}</span>
           </div>
           <div class="flex items-center gap-4 shrink-0">
             <span class="text-white/60 font-mono text-sm">+${ADDON_PRICES[key].toLocaleString('en-US')}</span>
@@ -144,11 +147,11 @@ const ADDON_PRICES = {
       {(['language', 'extra_pages'] as const).map((key) => (
         <div class="bg-[#080808] p-6 flex items-center justify-between gap-6">
           <div class="flex flex-col gap-1">
-            <span class="text-white font-body font-semibold text-sm">{t(`quote.addon.${key}.name` as any)}</span>
-            <span class="text-white/40 font-body text-xs">{t(`quote.addon.${key}.desc` as any)}</span>
+            <span class="text-white font-body font-semibold text-sm">{tDynamic(`quote.addon.${key}.name`)}</span>
+            <span class="text-white/40 font-body text-xs">{tDynamic(`quote.addon.${key}.desc`)}</span>
           </div>
           <div class="flex items-center gap-4 shrink-0">
-            <span class="text-white/60 font-mono text-sm">+${ADDON_PRICES[key].toLocaleString('en-US')}<span class="text-white/30 text-xs">{t(key === 'language' ? 'quote.per_language' : 'quote.per_page' as any)}</span></span>
+            <span class="text-white/60 font-mono text-sm">+${ADDON_PRICES[key].toLocaleString('en-US')}<span class="text-white/30 text-xs">{tDynamic(key === 'language' ? 'quote.per_language' : 'quote.per_page')}</span></span>
             <div class="flex items-center gap-2">
               <button type="button" class="qty-btn qty-dec w-7 h-7 bg-white/5 text-white/60 hover:bg-white/10 font-mono text-sm flex items-center justify-center" data-addon-key={key} aria-label="Decrease">−</button>
               <span class="qty-display w-6 text-center text-white font-mono text-sm" data-addon-key={key}>0</span>
@@ -217,8 +220,8 @@ const ADDON_PRICES = {
             checked={key === 'normal'}
             data-rush-multiplier={mult}
           />
-          <span class="text-white font-body font-semibold text-sm">{t(`quote.delivery.${key}.label` as any)}</span>
-          <span class={`font-mono text-xs ${mult === 0 ? 'text-white/30' : 'text-brand'}`}>{t(`quote.delivery.${key}.note` as any)}</span>
+          <span class="text-white font-body font-semibold text-sm">{tDynamic(`quote.delivery.${key}.label`)}</span>
+          <span class={`font-mono text-xs ${mult === 0 ? 'text-white/30' : 'text-brand'}`}>{tDynamic(`quote.delivery.${key}.note`)}</span>
         </label>
       ))}
     </div>
@@ -313,7 +316,7 @@ const ADDON_PRICES = {
       {(['seo', 'analytics', 'esp', 'responsive', 'a11y', 'git', 'revisions'] as const).map((item) => (
         <li class="flex items-start gap-3 text-white/50 font-body text-sm">
           <span class="text-corporate-green mt-0.5 shrink-0">✓</span>
-          <span>{t(`quote.included.${item}` as any)}</span>
+          <span>{tDynamic(`quote.included.${item}`)}</span>
         </li>
       ))}
     </ul>
