@@ -44,7 +44,7 @@ Widget en la web conectado a la API de Claude. Hace las preguntas del formulario
 ### 06 — Automatización del Dispatch
 **Tipo:** Contenido · Ops  
 
-El Dispatch tiene estructura (footer, formulario, placeholder). Falta el sistema editorial detrás: plantilla branded, secuencia de bienvenida, cadencia mensual o quincenal. Complementario a `02` pero ejecutable por separado como producción de contenido.
+El Dispatch Entry Protocol (v2) está documentado y listo para carga en MailerLite (`docs/brand/mkt/DISPATCH-ENTRY-PROTOCOL-v2.md`): 3 emails × 3 idiomas, arquitectura Day 0/2/5/9, regla de exclusión vía `onboarding_active`, ruteo por campo `language`. Pendiente: configurar la automation en la UI de MailerLite (trigger, branches por idioma, delays, set/reset de `onboarding_active`).
 
 ---
 
@@ -100,7 +100,7 @@ Publicar algo pequeño y útil como producto independiente: calculador de ROI, g
 | 03 | Estrategia Redes Sociales | `PENDIENTE` |
 | 04 | ROI Audit Interactivo | `PENDIENTE` |
 | 05 | AI Chatbot Cualificación | `PENDIENTE` |
-| 06 | Automatización Dispatch | `PENDIENTE` |
+| 06 | Automatización Dispatch | `EN CURSO` |
 | 07 | Recuperar Norden | `PENDIENTE` |
 | 08 | Playbook Descargable | `PENDIENTE` |
 | 09 | Video Proof | `PENDIENTE` |
@@ -110,4 +110,4 @@ Publicar algo pequeño y útil como producto independiente: calculador de ROI, g
 
 ---
 
-*Última actualización: 2026-04-28*
+*Última actualización: 2026-04-29*

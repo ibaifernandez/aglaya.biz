@@ -66,7 +66,7 @@ describe('dispatch-subscribe function', () => {
 
     expect(result.statusCode).toBe(200);
     expect(JSON.parse(result.body)).toEqual({ success: true, mode: 'mailerlite' });
-    expect(global.fetch).toHaveBeenCalledTimes(3);
+    expect(global.fetch).toHaveBeenCalledTimes(2); // hcaptcha + mailerlite
     expect(global.fetch).toHaveBeenCalledWith(
       'https://connect.mailerlite.com/api/subscribers',
       expect.objectContaining({
@@ -80,14 +80,7 @@ describe('dispatch-subscribe function', () => {
     const request = (global.fetch as ReturnType<typeof vi.fn>).mock.calls[1]?.[1];
     const payload = JSON.parse(String(request?.body));
     expect(payload.groups).toEqual(['group_123']);
-    expect(payload.fields).toEqual({ name: 'John' });
-
-    const confirmationRequest = (global.fetch as ReturnType<typeof vi.fn>).mock.calls[2]?.[1];
-    const confirmationPayload = JSON.parse(String(confirmationRequest?.body));
-    expect(confirmationPayload.to).toEqual(['john@example.com']);
-    expect(confirmationPayload.bcc).toEqual(['info@aglaya.biz']);
-    expect(confirmationPayload.subject).toBe('Dispatch confirmed — AGLAYA');
-    expect(confirmationPayload.html).toContain("You're in.");
+    expect(payload.fields).toEqual({ name: 'John', language: 'en' });
   });
 
   it('falls back to internal notification when MailerLite is unavailable', async () => {
@@ -102,7 +95,7 @@ describe('dispatch-subscribe function', () => {
 
     expect(result.statusCode).toBe(200);
     expect(JSON.parse(result.body)).toEqual({ success: true, mode: 'fallback' });
-    expect(global.fetch).toHaveBeenCalledTimes(3);
+    expect(global.fetch).toHaveBeenCalledTimes(2); // hcaptcha + resend fallback
     expect(global.fetch).toHaveBeenCalledWith(
       'https://api.resend.com/emails',
       expect.objectContaining({
@@ -111,23 +104,10 @@ describe('dispatch-subscribe function', () => {
     );
   });
 
-  it('fails when the dispatch confirmation email cannot be sent', async () => {
-    global.fetch = vi
-      .fn()
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({ success: true }),
-        text: () => Promise.resolve('ok'),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({ success: true }),
-        text: () => Promise.resolve('ok'),
-      })
-      .mockResolvedValueOnce({
-        ok: false,
-        text: () => Promise.resolve('resend error'),
-      });
+  it('returns 500 when both MailerLite and fallback fail', async () => {
+    vi.stubEnv('MAILERLITE_API_KEY', '');
+    vi.stubEnv('MAILERLITE_SUSCRIPCIONES_GROUP_ID', '');
+    vi.stubEnv('NOTIFY_EMAIL', '');
 
     const result = await dispatchSubscribe.handler({
       httpMethod: 'POST',

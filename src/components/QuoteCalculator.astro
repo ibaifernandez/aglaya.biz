@@ -1,0 +1,493 @@
+---
+import { useTranslations } from '../i18n/utils';
+import type { Lang } from '../i18n/translations';
+
+interface Props {
+  lang: Lang;
+  contactPath: string;
+}
+
+const { lang, contactPath } = Astro.props;
+const t = useTranslations(lang);
+
+const BASE_PRICES = {
+  landing: 2900,
+  corporate: 4500,
+  product: 7500,
+  ecommerce: 9500,
+};
+
+const ADDON_PRICES = {
+  language: 600,
+  blog: 500,
+  cms: 900,
+  copywriting: 200,
+  animations: 800,
+  integration: 400,
+  analytics: 500,
+  extra_pages: 250,
+  infra_setup: 300,
+  infra_monthly: 80,
+  revisions: 200,
+};
+---
+
+<section class="quote-calculator max-w-4xl mx-auto px-6 w-full py-16 flex flex-col gap-16">
+
+  <!-- Step 1: Base Product -->
+  <div class="flex flex-col gap-8">
+    <div class="flex flex-col gap-2">
+      <span class="text-corporate-green font-mono text-[10px] font-black tracking-[0.4em] uppercase">{t('quote.step1.label')}</span>
+      <div class="w-12 h-px bg-white/10"></div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-px bg-white/5 border border-white/5" role="radiogroup" aria-label={t('quote.step1.label')}>
+      {Object.entries(BASE_PRICES).map(([key, price]) => (
+        <label class="product-card bg-[#080808] p-8 flex flex-col gap-4 cursor-pointer transition-all hover:bg-[#111] has-[:checked]:bg-[#0f0005] has-[:checked]:border-l-2 has-[:checked]:border-l-brand">
+          <input
+            type="radio"
+            name="base_product"
+            value={key}
+            class="sr-only"
+            data-base-price={price}
+          />
+          <div class="flex items-start justify-between gap-4">
+            <div class="flex flex-col gap-1">
+              <span class="text-white font-display font-black text-xl uppercase tracking-tight">{t(`quote.product.${key}.name` as any)}</span>
+              <span class="text-white/40 font-body text-sm">{t(`quote.product.${key}.desc` as any)}</span>
+            </div>
+            <span class="text-brand font-mono font-black text-lg whitespace-nowrap">${price.toLocaleString('en-US')}</span>
+          </div>
+          <div class="w-4 h-4 border border-white/20 rounded-full flex items-center justify-center product-radio-indicator">
+            <div class="w-2 h-2 rounded-full bg-brand opacity-0 product-radio-dot transition-opacity"></div>
+          </div>
+        </label>
+      ))}
+    </div>
+  </div>
+
+  <!-- Step 2: Add-ons -->
+  <div class="flex flex-col gap-8">
+    <div class="flex flex-col gap-2">
+      <span class="text-corporate-green font-mono text-[10px] font-black tracking-[0.4em] uppercase">{t('quote.step2.label')}</span>
+      <div class="w-12 h-px bg-white/10"></div>
+    </div>
+
+    <div class="flex flex-col gap-px bg-white/5 border border-white/5">
+      <!-- Boolean toggles -->
+      {(['blog', 'cms', 'animations', 'integration', 'infra_setup'] as const).map((key) => (
+        <label class="addon-toggle bg-[#080808] p-6 flex items-center justify-between gap-6 cursor-pointer hover:bg-[#111] transition-all">
+          <div class="flex flex-col gap-1">
+            <span class="text-white font-body font-semibold text-sm">{t(`quote.addon.${key}.name` as any)}</span>
+            <span class="text-white/40 font-body text-xs">{t(`quote.addon.${key}.desc` as any)}</span>
+          </div>
+          <div class="flex items-center gap-4 shrink-0">
+            <span class="text-white/60 font-mono text-sm">+${ADDON_PRICES[key].toLocaleString('en-US')}</span>
+            <input
+              type="checkbox"
+              name={`addon_${key}`}
+              value="1"
+              class="addon-checkbox w-5 h-5 rounded accent-brand cursor-pointer"
+              data-addon-key={key}
+              data-addon-price={ADDON_PRICES[key]}
+            />
+          </div>
+        </label>
+      ))}
+
+      <!-- Monthly addon: analytics -->
+      <label class="addon-toggle bg-[#080808] p-6 flex items-center justify-between gap-6 cursor-pointer hover:bg-[#111] transition-all">
+        <div class="flex flex-col gap-1">
+          <span class="text-white font-body font-semibold text-sm">{t('quote.addon.analytics.name')}</span>
+          <span class="text-white/40 font-body text-xs">{t('quote.addon.analytics.desc')}</span>
+        </div>
+        <div class="flex items-center gap-4 shrink-0">
+          <span class="text-white/60 font-mono text-sm">+${ADDON_PRICES.analytics.toLocaleString('en-US')}<span class="text-white/30 text-xs">{t('quote.per_month')}</span></span>
+          <input
+            type="checkbox"
+            name="addon_analytics"
+            value="1"
+            class="addon-checkbox w-5 h-5 rounded accent-brand cursor-pointer"
+            data-addon-key="analytics"
+            data-addon-price={ADDON_PRICES.analytics}
+          />
+        </div>
+      </label>
+
+      <!-- Monthly addon: infra_monthly -->
+      <label class="addon-toggle bg-[#080808] p-6 flex items-center justify-between gap-6 cursor-pointer hover:bg-[#111] transition-all">
+        <div class="flex flex-col gap-1">
+          <span class="text-white font-body font-semibold text-sm">{t('quote.addon.infra_monthly.name')}</span>
+          <span class="text-white/40 font-body text-xs">{t('quote.addon.infra_monthly.desc')}</span>
+        </div>
+        <div class="flex items-center gap-4 shrink-0">
+          <span class="text-white/60 font-mono text-sm">+${ADDON_PRICES.infra_monthly.toLocaleString('en-US')}<span class="text-white/30 text-xs">{t('quote.per_month')}</span></span>
+          <input
+            type="checkbox"
+            name="addon_infra_monthly"
+            value="1"
+            class="addon-checkbox w-5 h-5 rounded accent-brand cursor-pointer"
+            data-addon-key="infra_monthly"
+            data-addon-price={ADDON_PRICES.infra_monthly}
+          />
+        </div>
+      </label>
+
+      <!-- Quantity addons -->
+      {(['language', 'extra_pages'] as const).map((key) => (
+        <div class="bg-[#080808] p-6 flex items-center justify-between gap-6">
+          <div class="flex flex-col gap-1">
+            <span class="text-white font-body font-semibold text-sm">{t(`quote.addon.${key}.name` as any)}</span>
+            <span class="text-white/40 font-body text-xs">{t(`quote.addon.${key}.desc` as any)}</span>
+          </div>
+          <div class="flex items-center gap-4 shrink-0">
+            <span class="text-white/60 font-mono text-sm">+${ADDON_PRICES[key].toLocaleString('en-US')}<span class="text-white/30 text-xs">{t(key === 'language' ? 'quote.per_language' : 'quote.per_page' as any)}</span></span>
+            <div class="flex items-center gap-2">
+              <button type="button" class="qty-btn qty-dec w-7 h-7 bg-white/5 text-white/60 hover:bg-white/10 font-mono text-sm flex items-center justify-center" data-addon-key={key} aria-label="Decrease">−</button>
+              <span class="qty-display w-6 text-center text-white font-mono text-sm" data-addon-key={key}>0</span>
+              <button type="button" class="qty-btn qty-inc w-7 h-7 bg-white/5 text-white/60 hover:bg-white/10 font-mono text-sm flex items-center justify-center" data-addon-key={key} aria-label="Increase">+</button>
+              <input type="hidden" name={`addon_${key}`} value="0" data-addon-key={key} data-addon-price={ADDON_PRICES[key]} class="addon-qty-input" />
+            </div>
+          </div>
+        </div>
+      ))}
+
+      <!-- Copywriting qty -->
+      <div class="bg-[#080808] p-6 flex items-center justify-between gap-6">
+        <div class="flex flex-col gap-1">
+          <span class="text-white font-body font-semibold text-sm">{t('quote.addon.copywriting.name')}</span>
+          <span class="text-white/40 font-body text-xs">{t('quote.addon.copywriting.desc')}</span>
+        </div>
+        <div class="flex items-center gap-4 shrink-0">
+          <span class="text-white/60 font-mono text-sm">+${ADDON_PRICES.copywriting.toLocaleString('en-US')}<span class="text-white/30 text-xs">{t('quote.per_page')}</span></span>
+          <div class="flex items-center gap-2">
+            <button type="button" class="qty-btn qty-dec w-7 h-7 bg-white/5 text-white/60 hover:bg-white/10 font-mono text-sm flex items-center justify-center" data-addon-key="copywriting" aria-label="Decrease">−</button>
+            <span class="qty-display w-6 text-center text-white font-mono text-sm" data-addon-key="copywriting">0</span>
+            <button type="button" class="qty-btn qty-inc w-7 h-7 bg-white/5 text-white/60 hover:bg-white/10 font-mono text-sm flex items-center justify-center" data-addon-key="copywriting" aria-label="Increase">+</button>
+            <input type="hidden" name="addon_copywriting" value="0" data-addon-key="copywriting" data-addon-price={ADDON_PRICES.copywriting} class="addon-qty-input" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Revision rounds -->
+      <div class="bg-[#080808] p-6 flex items-center justify-between gap-6">
+        <div class="flex flex-col gap-1">
+          <span class="text-white font-body font-semibold text-sm">{t('quote.addon.revisions.name')}</span>
+          <span class="text-white/40 font-body text-xs">{t('quote.addon.revisions.desc')}</span>
+        </div>
+        <div class="flex items-center gap-4 shrink-0">
+          <span class="text-white/60 font-mono text-sm">+${ADDON_PRICES.revisions.toLocaleString('en-US')}</span>
+          <div class="flex items-center gap-2">
+            <button type="button" class="qty-btn qty-dec w-7 h-7 bg-white/5 text-white/60 hover:bg-white/10 font-mono text-sm flex items-center justify-center" data-addon-key="revisions" aria-label="Decrease">−</button>
+            <span class="qty-display w-6 text-center text-white font-mono text-sm" data-addon-key="revisions">0</span>
+            <button type="button" class="qty-btn qty-inc w-7 h-7 bg-white/5 text-white/60 hover:bg-white/10 font-mono text-sm flex items-center justify-center" data-addon-key="revisions" aria-label="Increase">+</button>
+            <input type="hidden" name="addon_revisions" value="0" data-addon-key="revisions" data-addon-price={ADDON_PRICES.revisions} class="addon-qty-input" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3: Delivery -->
+  <div class="flex flex-col gap-8">
+    <div class="flex flex-col gap-2">
+      <span class="text-corporate-green font-mono text-[10px] font-black tracking-[0.4em] uppercase">{t('quote.step3.label')}</span>
+      <div class="w-12 h-px bg-white/10"></div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row gap-px bg-white/5 border border-white/5" role="radiogroup" aria-label={t('quote.step3.label')}>
+      {([
+        { key: 'normal', mult: 0 },
+        { key: 'fast', mult: 0.8 },
+        { key: 'urgent', mult: 1.5 },
+      ] as const).map(({ key, mult }) => (
+        <label class="flex-1 bg-[#080808] p-6 flex flex-col gap-2 cursor-pointer hover:bg-[#111] transition-all has-[:checked]:bg-[#0f0005] has-[:checked]:border-t-2 has-[:checked]:border-t-brand">
+          <input
+            type="radio"
+            name="delivery"
+            value={key}
+            class="sr-only"
+            checked={key === 'normal'}
+            data-rush-multiplier={mult}
+          />
+          <span class="text-white font-body font-semibold text-sm">{t(`quote.delivery.${key}.label` as any)}</span>
+          <span class={`font-mono text-xs ${mult === 0 ? 'text-white/30' : 'text-brand'}`}>{t(`quote.delivery.${key}.note` as any)}</span>
+        </label>
+      ))}
+    </div>
+  </div>
+
+  <!-- Step 4: Contact form + submit -->
+  <div class="flex flex-col gap-8">
+    <div class="flex flex-col gap-2">
+      <span class="text-corporate-green font-mono text-[10px] font-black tracking-[0.4em] uppercase">{t('quote.step4.label')}</span>
+      <div class="w-12 h-px bg-white/10"></div>
+    </div>
+
+    <form id="quote-form" class="flex flex-col gap-6" novalidate>
+      <!-- Honeypot -->
+      <input type="text" name="company_honeypot" value="" class="hidden" aria-hidden="true" tabindex="-1" autocomplete="off" />
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="flex flex-col gap-2">
+          <label for="quote-name" class="text-white/60 font-mono text-[10px] uppercase tracking-widest">{t('quote.form.name')}</label>
+          <input
+            id="quote-name"
+            type="text"
+            name="name"
+            autocomplete="name"
+            class="bg-[#111] border border-white/10 text-white px-4 py-3 font-body text-sm focus:outline-none focus:border-brand placeholder:text-white/20"
+            placeholder="Ibai Fernández"
+          />
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="quote-company" class="text-white/60 font-mono text-[10px] uppercase tracking-widest">{t('quote.form.company')}</label>
+          <input
+            id="quote-company"
+            type="text"
+            name="company"
+            autocomplete="organization"
+            class="bg-[#111] border border-white/10 text-white px-4 py-3 font-body text-sm focus:outline-none focus:border-brand placeholder:text-white/20"
+            placeholder="Acme Corp"
+          />
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label for="quote-email" class="text-white/60 font-mono text-[10px] uppercase tracking-widest">{t('quote.form.email')}</label>
+        <input
+          id="quote-email"
+          type="email"
+          name="email"
+          required
+          autocomplete="email"
+          class="bg-[#111] border border-white/10 text-white px-4 py-3 font-body text-sm focus:outline-none focus:border-brand placeholder:text-white/20"
+          placeholder={t('quote.form.email_placeholder')}
+        />
+      </div>
+
+      <div class="flex items-start gap-3">
+        <input
+          id="quote-privacy"
+          type="checkbox"
+          name="privacy_consent"
+          required
+          class="mt-1 w-4 h-4 accent-brand cursor-pointer shrink-0"
+        />
+        <label for="quote-privacy" class="text-white/40 font-body text-xs leading-relaxed cursor-pointer">
+          {t('quote.form.privacy')}
+        </label>
+      </div>
+
+      <!-- No product selected warning -->
+      <p id="quote-no-product-warning" class="text-brand font-mono text-xs hidden" role="alert">
+        {t('quote.select_product_prompt')}
+      </p>
+
+      <!-- Error state -->
+      <p id="quote-error" class="text-brand font-mono text-xs hidden" role="alert">
+        {t('quote.error')}
+      </p>
+
+      <button
+        id="quote-submit"
+        type="submit"
+        class="bg-brand hover:bg-brand-dark text-white px-10 py-5 font-display font-black text-lg uppercase tracking-widest transition-all transform hover:scale-[1.02] disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none self-start"
+      >
+        {t('quote.form.submit')}
+      </button>
+    </form>
+  </div>
+
+  <!-- Always included -->
+  <div class="border border-white/5 bg-[#050505] p-8 flex flex-col gap-6">
+    <span class="text-corporate-green font-mono text-[10px] font-black tracking-[0.4em] uppercase">{t('quote.included.title')}</span>
+    <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      {(['seo', 'analytics', 'esp', 'responsive', 'a11y', 'git', 'revisions'] as const).map((item) => (
+        <li class="flex items-start gap-3 text-white/50 font-body text-sm">
+          <span class="text-corporate-green mt-0.5 shrink-0">✓</span>
+          <span>{t(`quote.included.${item}` as any)}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <!-- Success state (hidden until submit) -->
+  <div id="quote-success" class="hidden flex flex-col gap-8 border border-brand/20 bg-[#0f0005] p-12">
+    <span class="text-corporate-green font-mono text-[10px] font-black tracking-[0.4em] uppercase">✓ SENT</span>
+    <h2 class="text-white font-display font-black text-4xl md:text-5xl uppercase tracking-tighter" id="quote-success-heading">
+      <!-- populated by JS -->
+    </h2>
+    <p class="text-white/50 font-body text-lg" id="quote-success-subtext">
+      <!-- populated by JS -->
+    </p>
+    <div class="flex flex-col gap-2">
+      <span class="text-white/30 font-mono text-[9px] uppercase tracking-widest">{t('quote.success.total_label')}</span>
+      <span id="quote-success-total" class="text-brand font-display font-black text-5xl"></span>
+    </div>
+    <a href={contactPath} class="bg-brand hover:bg-brand-dark text-white px-10 py-5 font-display font-black text-lg uppercase tracking-widest transition-all transform hover:scale-[1.02] self-start">
+      {t('quote.success.contact_cta')}
+    </a>
+  </div>
+
+</section>
+
+<script define:vars={{
+  lang,
+  successHeading: t('quote.success.heading'),
+  successSubtext: t('quote.success.subtext'),
+  submittingLabel: t('quote.form.submitting'),
+  submitLabel: t('quote.form.submit'),
+  errorLabel: t('quote.error'),
+  noProductWarning: t('quote.select_product_prompt'),
+}}>
+  // Client-side pricing (mirrors server constants)
+  const BASE_PRICES = { landing: 2900, corporate: 4500, product: 7500, ecommerce: 9500 };
+  const ADDON_PRICES = {
+    language: 600, blog: 500, cms: 900, copywriting: 200,
+    animations: 800, integration: 400, analytics: 500,
+    extra_pages: 250, infra_setup: 300, infra_monthly: 80, revisions: 200,
+  };
+  const RUSH = { normal: 0, fast: 0.80, urgent: 1.50 };
+
+  // State
+  let baseProduct = null;
+  let addons = {};
+  let delivery = 'normal';
+
+  function calcTotal() {
+    if (!baseProduct) return 0;
+    const base = BASE_PRICES[baseProduct] || 0;
+    let addonsTotal = 0;
+    for (const [key, qty] of Object.entries(addons)) {
+      addonsTotal += (ADDON_PRICES[key] || 0) * qty;
+    }
+    const sub = base + addonsTotal;
+    return Math.round(sub + sub * (RUSH[delivery] || 0));
+  }
+
+  function fmt(n) {
+    return '$' + n.toLocaleString('en-US');
+  }
+
+  // Base product radios
+  document.querySelectorAll('input[name="base_product"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      baseProduct = radio.value;
+      document.getElementById('quote-no-product-warning').classList.add('hidden');
+    });
+  });
+
+  // Delivery radios
+  document.querySelectorAll('input[name="delivery"]').forEach(radio => {
+    radio.addEventListener('change', () => { delivery = radio.value; });
+  });
+
+  // Boolean addon checkboxes
+  document.querySelectorAll('input.addon-checkbox').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const key = cb.dataset.addonKey;
+      if (cb.checked) {
+        addons[key] = 1;
+      } else {
+        delete addons[key];
+      }
+    });
+  });
+
+  // Quantity addons
+  document.querySelectorAll('.qty-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.addonKey;
+      const display = document.querySelector(`.qty-display[data-addon-key="${key}"]`);
+      const hiddenInput = document.querySelector(`.addon-qty-input[data-addon-key="${key}"]`);
+      let current = parseInt(display.textContent || '0', 10);
+      if (btn.classList.contains('qty-inc')) {
+        current = Math.min(20, current + 1);
+      } else {
+        current = Math.max(0, current - 1);
+      }
+      display.textContent = String(current);
+      hiddenInput.value = String(current);
+      if (current > 0) {
+        addons[key] = current;
+      } else {
+        delete addons[key];
+      }
+    });
+  });
+
+  // Submit
+  const form = document.getElementById('quote-form');
+  const submitBtn = document.getElementById('quote-submit');
+  const errorEl = document.getElementById('quote-error');
+  const noProductEl = document.getElementById('quote-no-product-warning');
+  const successEl = document.getElementById('quote-success');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorEl.classList.add('hidden');
+
+    if (!baseProduct) {
+      noProductEl.classList.remove('hidden');
+      noProductEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    const formData = new FormData(form);
+    const email = (formData.get('email') || '').toString().trim();
+    const name = (formData.get('name') || '').toString().trim();
+    const company = (formData.get('company') || '').toString().trim();
+    const honeypot = (formData.get('company_honeypot') || '').toString().trim();
+    const privacyConsent = formData.get('privacy_consent') === 'on';
+
+    if (honeypot) return; // silent bot drop
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = submittingLabel;
+
+    const payload = {
+      base_product: baseProduct,
+      addons,
+      delivery,
+      name,
+      company,
+      email,
+      lang,
+      privacy_consent: privacyConsent,
+    };
+
+    try {
+      const res = await fetch('/.netlify/functions/quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+
+      const data = await res.json();
+
+      // Show success
+      document.getElementById('quote-success-heading').textContent = successHeading;
+      document.getElementById('quote-success-subtext').textContent = successSubtext;
+      document.getElementById('quote-success-total').textContent = fmt(data.total || calcTotal());
+
+      form.closest('.quote-calculator').querySelectorAll(
+        '#quote-form, .flex.flex-col.gap-8:not(:last-child)'
+      );
+
+      successEl.classList.remove('hidden');
+      successEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      form.style.display = 'none';
+
+    } catch (err) {
+      console.error('[quote] submit error:', err);
+      errorEl.classList.remove('hidden');
+      submitBtn.disabled = false;
+      submitBtn.textContent = submitLabel;
+    }
+  });
+</script>
