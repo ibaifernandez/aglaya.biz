@@ -1,0 +1,36 @@
+# AGLAYA — The Uncomfortable Agency
+
+> AGLAYA is a trilingual (EN/ES/PT) AI-powered automation agency for digital businesses.
+> We build operational systems — not campaigns. Clients own everything we build.
+
+## About
+
+AGLAYA installs high-performance AI automation infrastructure: lead qualification flows,
+custom CRM logic, automated reporting, content pipelines, and full-stack digital systems.
+We operate across English, Spanish, and Portuguese markets.
+
+Taglines:
+- EN: "The Uncomfortable AI·gency"
+- ES: "La Agenc·IA Incómoda"
+- PT: "A Agência Desconfortável"
+
+## Key pages
+
+- Homepage (EN): https://aglaya.biz/
+- Homepage (ES): https://aglaya.biz/es/
+- Homepage (PT): https://aglaya.biz/pt/
+- Services: https://aglaya.biz/services/
+- ROI Audit: https://aglaya.biz/roi-audit/
+- Quote Calculator: https://aglaya.biz/quote/
+- Contact: https://aglaya.biz/contact/
+- Case studies (Proof): https://aglaya.biz/proof/bill-capital/
+
+## Content policy
+
+- Search indexing: allowed
+- AI training: not permitted
+- Scraping for dataset creation: not permitted
+
+## Contact
+
+info@aglaya.biz
