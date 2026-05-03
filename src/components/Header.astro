@@ -47,7 +47,7 @@ const navItems = [
       <div class="h-6 w-auto group-hover:opacity-80 transition-opacity [&_svg]:h-6 [&_svg]:w-auto [&_.st0]:fill-white">
         <Fragment set:html={logoBlanco} />
       </div>
-      <span class="font-mono text-[6px] text-white uppercase tracking-[0.2em] group-hover:text-white/50 transition-colors text-center">
+      <span aria-hidden="true" class="font-mono text-[6px] text-white uppercase tracking-[0.2em] group-hover:text-white/50 transition-colors text-center">
         {lang === 'es' ? 'La Agenc·IA Incómoda' : lang === 'pt' ? 'A Agência Desconfortável' : 'The Uncomfortable AI·gency'}
       </span>
     </a>
