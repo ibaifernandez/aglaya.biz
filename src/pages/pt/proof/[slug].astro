@@ -23,10 +23,11 @@ const {
   title, client, industry, challenge, strategy, vision,
   summary, results, solution_systems, date,
   heroImage, thumbImage, contentImage, noindex
-} = entry.data as any;
+} = entry.data;
 const slug = Astro.params.slug;
 
-const bodyContent = marked.parse((entry.data as any)[`body_${lang}`] || (entry.data as any).body_pt || '');
+const bodyKey = `body_${lang}` as 'body_en' | 'body_es' | 'body_pt';
+const bodyContent = marked.parse(entry.data[bodyKey] || entry.data.body_pt || '');
 ---
 
 <BaseLayout
