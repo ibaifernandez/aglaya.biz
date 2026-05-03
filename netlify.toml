@@ -5,3 +5,56 @@
 [build.environment]
   NODE_VERSION = "22"
   SECRETS_SCAN_OMIT_KEYS = "PUBLIC_SENTRY_DSN"
+
+# Redirect localized legal-page paths that the language switcher may generate
+# (switcher strips /es|/pt prefix naively; these paths don't follow the standard pattern)
+[[redirects]]
+  from = "/privacidad/"
+  to   = "/es/privacidad/"
+  status = 301
+
+[[redirects]]
+  from = "/privacidade/"
+  to   = "/pt/privacidade/"
+  status = 301
+
+[[redirects]]
+  from = "/es/privacy/"
+  to   = "/es/privacidad/"
+  status = 301
+
+[[redirects]]
+  from = "/pt/privacy/"
+  to   = "/pt/privacidade/"
+  status = 301
+
+[[redirects]]
+  from = "/es/privacidade/"
+  to   = "/es/privacidad/"
+  status = 301
+
+[[redirects]]
+  from = "/pt/privacidad/"
+  to   = "/pt/privacidade/"
+  status = 301
+
+[[redirects]]
+  from = "/en/privacidad/"
+  to   = "/privacy/"
+  status = 301
+
+[[redirects]]
+  from = "/en/privacidade/"
+  to   = "/privacy/"
+  status = 301
+
+# 404 pages: localized variants don't exist as real routes
+[[redirects]]
+  from = "/es/404/"
+  to   = "/404/"
+  status = 301
+
+[[redirects]]
+  from = "/pt/404/"
+  to   = "/404/"
+  status = 301

@@ -12,6 +12,7 @@ interface Props {
   ogType?: string;
   lang?: string;
   alternateUrl?: string;
+  alternateUrlEs?: string;
   alternateUrlPt?: string;
   noindex?: boolean;
 }
@@ -23,6 +24,7 @@ const {
   ogType = 'website',
   lang = 'en',
   alternateUrl,
+  alternateUrlEs,
   alternateUrlPt,
   noindex = false,
 } = Astro.props;
@@ -40,7 +42,7 @@ const enPath = new URL(enUrl).pathname;
 
 const esUrl = lang === 'es'
   ? canonicalURL.href
-  : new URL(enPath === '/' ? '/es/' : `/es${enPath}`, Astro.site).href;
+  : (alternateUrlEs ?? new URL(enPath === '/' ? '/es/' : `/es${enPath}`, Astro.site).href);
 
 const ptUrl = lang === 'pt'
   ? canonicalURL.href

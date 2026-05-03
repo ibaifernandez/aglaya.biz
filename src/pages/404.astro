@@ -12,17 +12,25 @@ const copy = lang === 'es'
       lang: 'es',
       title: 'AGLAYA — Página no encontrada',
       description: 'La página que buscas no existe. Construimos sistemas que siguen funcionando cuando no estamos.',
-      heading: '404',
       sub: 'Página no encontrada.',
       body: 'La URL que introdujiste no existe o ha sido movida.',
       cta: 'Volver al inicio',
       ctaHref: '/es/',
     }
+  : lang === 'pt'
+  ? {
+      lang: 'pt',
+      title: 'AGLAYA — Página não encontrada',
+      description: 'A página que você está procurando não existe. Construímos sistemas que continuam funcionando quando não estamos.',
+      sub: 'Página não encontrada.',
+      body: 'O URL que você digitou não existe ou foi movido.',
+      cta: 'Voltar ao início',
+      ctaHref: '/pt/',
+    }
   : {
       lang: 'en',
       title: 'AGLAYA — Page not found',
       description: 'The page you are looking for does not exist. We build systems that keep running when we\'re not in the room.',
-      heading: '404',
       sub: 'Page not found.',
       body: 'The URL you entered does not exist or has been moved.',
       cta: 'Back to home',
@@ -30,7 +38,7 @@ const copy = lang === 'es'
     };
 ---
 
-<BaseLayout title={copy.title} description={copy.description} lang={copy.lang}>
+<BaseLayout title={copy.title} description={copy.description} lang={copy.lang} noindex={true}>
   <main class="min-h-screen flex flex-col items-center justify-center px-6 py-20 text-center">
     <div class="max-w-3xl">
       <!-- 404 Error Code -->
