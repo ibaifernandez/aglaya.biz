@@ -39,7 +39,7 @@ docs/                # Project documentation
 
 ## Architecture Decisions
 - **i18n**: Subdirectory strategy (EN at `/`, ES at `/es/`, PT at `/pt/`). Full hreflang parity.
-- **Forms**: Client → hCaptcha validation → Netlify Function → Resend/MailerLite. Contact and ROI flows send immediate confirmations plus internal notifications; footer dispatch captures subscribers in MailerLite when configured and sends a Resend confirmation. Confirmation email is rendered in the same language (`lang`) the form was submitted from.
+- **Forms**: Client → hCaptcha validation → Netlify Function → Resend/MailerLite. Contact and ROI flows send immediate confirmations plus internal notifications; footer dispatch captures subscribers in MailerLite when configured — MailerLite owns the confirmation sequence (Email 0) directly. Resend is not involved in dispatch confirmations. Confirmation email for contact/ROI is rendered in the same language (`lang`) the form was submitted from.
 - **Cookie consent**: `CookieBanner.astro` rendered in `BaseLayout.astro`. Consent stored in `localStorage` (`aglaya_cookie_consent`: `all` | `essential`). No external CMP — first-party only.
 - **Styling**: Tailwind v4 via Vite plugin, NOT PostCSS. Design tokens defined in `@theme` block.
 - **Fonts**: Outfit (display/headings), Inter (body). Loaded via Google Fonts with preconnect.
@@ -47,7 +47,7 @@ docs/                # Project documentation
 ## Brand Identity
 - **Primary color**: `#e8003d` (brand red)
 - **Background**: `#080808` (near-black)
-- **Surface**: `#111111`
+- **Surface**: `#080808` / `#0f0f0f` (two surface tokens in global.css)
 - **Typography**: Outfit 300–900, Inter 300–700
 - **Tagline EN**: "The Uncomfortable AI·gency"
 - **Tagline ES**: "La Agenc·IA Incómoda"
@@ -80,6 +80,7 @@ docs/                # Project documentation
 | `MAILERLITE_NO_CUALIFICADOS_GROUP_ID` | Server | Optional MailerLite group id for blocked/open-channel and non-qualified contact leads |
 | `MAILERLITE_CUALIFICADOS_GROUP_ID` | Server | Optional MailerLite group id for qualified contact leads |
 | `MAILERLITE_BORDERLINE_GROUP_ID` | Server | Optional MailerLite group id for borderline contact leads |
+| `MAILERLITE_COTIZACIONES_GROUP_ID` | Server | MailerLite group id for quote calculator leads (fallback hardcoded in quote.ts) |
 
 Sentry environment tagging is inferred from Netlify deploy context by default. Avoid setting a separate public environment label unless you intentionally need to override that behavior outside Netlify.
 | `MAILERLITE_CONTACTO_GROUP_ID` | Server | Legacy fallback MailerLite group id for contact leads |
@@ -125,6 +126,7 @@ gh pr create    # create PR from current branch
 Node.js must be v23.4.0 (via nvm). Run before any npm/build commands:
 ```bash
 export NVM_DIR="$HOME/.nvm" && source "$NVM_DIR/nvm.sh" && nvm use v23.4.0
+# package.json declares engines: { node: ">=22.12.0" } — v23.4.0 is the pinned local dev version
 ```
 
 ## Do NOT
