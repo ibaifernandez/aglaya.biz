@@ -107,6 +107,7 @@ En cualquier campaña manual de Dispatch: excluir segmento donde `onboarding_act
 #### EN
 
 **Subject:** You're in.
+**Preheader:** Signal confirmed. Three more messages coming over the next nine days.
 
 ---
 
@@ -129,6 +130,7 @@ AGLAYA
 #### ES
 
 **Asunto:** Ya estás dentro.
+**Preheader:** Señal confirmada. Tres mensajes más en los próximos nueve días.
 
 ---
 
@@ -151,6 +153,7 @@ AGLAYA
 #### PT
 
 **Assunto:** Você está dentro.
+**Preheader:** Sinal confirmado. Mais três mensagens nos próximos nove dias.
 
 ---
 
@@ -177,6 +180,7 @@ AGLAYA
 #### EN
 
 **Subject:** The agency model has a design flaw.
+**Preheader:** Most agencies are built to produce. Not to last.
 
 Most agencies are built to produce.
 
@@ -205,6 +209,7 @@ AGLAYA
 #### ES
 
 **Asunto:** El modelo de agencia tiene un fallo de diseño.
+**Preheader:** La mayoría de las agencias están construidas para producir. No para durar.
 
 La mayoría de las agencias están construidas para producir.
 
@@ -233,6 +238,7 @@ AGLAYA
 #### PT
 
 **Assunto:** O modelo de agência tem uma falha de design.
+**Preheader:** A maioria das agências é construída para produzir. Não para durar.
 
 A maioria das agências é construída para produzir.
 
@@ -265,6 +271,7 @@ AGLAYA
 #### EN
 
 **Subject:** The tax that doesn't appear on your P&L.
+**Preheader:** Your finance team can't see this cost. But it's there.
 
 There's a cost your finance team can't see.
 
@@ -295,6 +302,7 @@ AGLAYA
 #### ES
 
 **Asunto:** El impuesto que no aparece en tu P&L.
+**Preheader:** Tu equipo financiero no puede ver este coste. Pero existe.
 
 Hay un coste que tu equipo financiero no puede ver.
 
@@ -325,6 +333,7 @@ AGLAYA
 #### PT
 
 **Assunto:** O imposto que não aparece no seu P&L.
+**Preheader:** Sua equipe financeira não consegue ver esse custo. Mas ele existe.
 
 Existe um custo que sua equipe financeira não consegue ver.
 
@@ -359,6 +368,7 @@ AGLAYA
 #### EN
 
 **Subject:** When you're ready.
+**Preheader:** One door. Open once. No pitch, no deadline, no script.
 
 You've been in the Dispatch for nine days.
 
@@ -393,6 +403,7 @@ AGLAYA
 #### ES
 
 **Asunto:** Cuando estés listo.
+**Preheader:** Una puerta. Abierta una vez. Sin pitch, sin fecha límite, sin guión.
 
 Llevas nueve días en el Dispatch.
 
@@ -427,6 +438,7 @@ AGLAYA
 #### PT
 
 **Assunto:** Quando você estiver pronto.
+**Preheader:** Uma porta. Aberta uma vez. Sem pitch, sem prazo, sem roteiro.
 
 Você está no Dispatch há nove dias.
 
@@ -495,6 +507,7 @@ AGLAYA
 #### EN
 
 **Subject:** Signal received.
+**Preheader:** A human will read it, think about it, and reply within 24 hours.
 
 ---
 
@@ -511,6 +524,7 @@ AGLAYA
 #### ES
 
 **Asunto:** Señal recibida.
+**Preheader:** Una persona lo leerá, lo pensará y te responderá en menos de 24 horas.
 
 ---
 
@@ -527,6 +541,7 @@ AGLAYA
 #### PT
 
 **Assunto:** Sinal recebido.
+**Preheader:** Uma pessoa vai ler, pensar e responder em menos de 24 horas.
 
 ---
 
@@ -548,6 +563,7 @@ AGLAYA
 #### EN
 
 **Subject:** ROI Audit request received.
+**Preheader:** Manually scoped. Honestly priced. You'll hear from us within 24 hours.
 
 ---
 
@@ -566,6 +582,7 @@ AGLAYA
 #### ES
 
 **Asunto:** Solicitud de ROI Audit recibida.
+**Preheader:** Alcance manual. Precio honesto. Respuesta en menos de 24 horas.
 
 ---
 
@@ -584,6 +601,7 @@ AGLAYA
 #### PT
 
 **Assunto:** Solicitação de ROI Audit recebida.
+**Preheader:** Escopo manual. Preço honesto. Resposta em até 24 horas.
 
 ---
 
@@ -629,6 +647,7 @@ AGLAYA
 #### EN
 
 **Subject:** Your inquiry is with us.
+**Preheader:** We review before we respond. If there's a fit, you'll hear from us within 48 hours.
 
 ---
 
@@ -647,6 +666,7 @@ AGLAYA
 #### ES
 
 **Asunto:** Tu consulta está con nosotros.
+**Preheader:** Revisamos antes de responder. Si hay encaje, te contactamos en menos de 48 horas.
 
 ---
 
@@ -665,6 +685,7 @@ AGLAYA
 #### PT
 
 **Assunto:** Sua consulta está conosco.
+**Preheader:** Revisamos antes de responder. Se houver fit, entraremos em contato em até 48 horas.
 
 ---
 
@@ -710,6 +731,7 @@ AGLAYA
 #### EN
 
 **Subject:** Message received.
+**Preheader:** We'll be in touch if there's a path forward.
 
 ---
 
@@ -728,6 +750,7 @@ AGLAYA
 #### ES
 
 **Asunto:** Mensaje recibido.
+**Preheader:** Nos pondremos en contacto si hay un camino a seguir.
 
 ---
 
@@ -746,6 +769,7 @@ AGLAYA
 #### PT
 
 **Assunto:** Mensagem recebida.
+**Preheader:** Entraremos em contato se houver um caminho a seguir.
 
 ---
 
@@ -793,6 +817,7 @@ AGLAYA
 #### EN
 
 **Subject:** Your quote request is with us.
+**Preheader:** Under review. You'll receive the full PDF breakdown within 24 hours.
 
 ---
 
@@ -809,6 +834,7 @@ AGLAYA
 #### ES
 
 **Asunto:** Tu solicitud de cotización está con nosotros.
+**Preheader:** En revisión. Recibirás el PDF completo en menos de 24 horas.
 
 ---
 
@@ -825,6 +851,7 @@ AGLAYA
 #### PT
 
 **Assunto:** Sua solicitação de orçamento está conosco.
+**Preheader:** Em revisão. Você receberá o PDF completo em até 24 horas.
 
 ---
 
