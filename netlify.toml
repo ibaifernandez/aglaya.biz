@@ -59,10 +59,10 @@
   to   = "/404/"
   status = 301
 
-# Aviso legal variant paths
+# Legal notice redirects
 [[redirects]]
-  from = "/legal-notice/"
-  to   = "/aviso-legal/"
+  from = "/aviso-legal/"
+  to   = "/legal-notice/"
   status = 301
 
 [[redirects]]

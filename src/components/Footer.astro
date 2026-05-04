@@ -16,7 +16,7 @@ const currentYear = new Date().getFullYear();
 const privacyPath =
   lang === 'es' ? '/es/privacidad' : lang === 'pt' ? '/pt/privacidade' : '/privacy';
 const cookiesPath = translatePath('/cookies');
-const avisoLegalPath = translatePath('/aviso-legal');
+const avisoLegalPath = lang === 'es' ? '/es/aviso-legal' : lang === 'pt' ? '/pt/aviso-legal' : '/legal-notice';
 
 const primaryLinks = [
   {
