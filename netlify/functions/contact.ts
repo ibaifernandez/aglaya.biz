@@ -316,6 +316,7 @@ export const handler: Handler = async (event) => {
     icp_status?: string;
     icp_primary_state?: string;
     privacy_consent?: string | boolean;
+    company_honeypot?: string;
   };
   try {
     body = JSON.parse(event.body ?? "{}");
@@ -336,6 +337,13 @@ export const handler: Handler = async (event) => {
   const icpStatus = (body.icp_status ?? "").trim();
   const icpPrimaryState = (body.icp_primary_state ?? "").trim();
   const privacyConsent = hasAcceptedConsent(body.privacy_consent);
+  const honeypot = (body.company_honeypot ?? "").trim();
+
+  // Honeypot filled → bot; silent 200 to avoid fingerprinting
+  if (honeypot) {
+    console.log("[contact] Honeypot triggered — silent drop");
+    return { statusCode: 200, headers, body: JSON.stringify({ success: true }) };
+  }
 
   if (!email || !isValidEmail(email) || !message || !privacyConsent) {
     return {

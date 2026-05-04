@@ -58,3 +58,24 @@
   from = "/pt/404/"
   to   = "/404/"
   status = 301
+
+# Aviso legal variant paths
+[[redirects]]
+  from = "/legal-notice/"
+  to   = "/aviso-legal/"
+  status = 301
+
+[[redirects]]
+  from = "/es/legal-notice/"
+  to   = "/es/aviso-legal/"
+  status = 301
+
+[[redirects]]
+  from = "/pt/legal-notice/"
+  to   = "/pt/aviso-legal/"
+  status = 301
+
+[[redirects]]
+  from = "/pt/nota-legal/"
+  to   = "/pt/aviso-legal/"
+  status = 301

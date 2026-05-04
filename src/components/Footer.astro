@@ -16,6 +16,7 @@ const currentYear = new Date().getFullYear();
 const privacyPath =
   lang === 'es' ? '/es/privacidad' : lang === 'pt' ? '/pt/privacidade' : '/privacy';
 const cookiesPath = translatePath('/cookies');
+const avisoLegalPath = translatePath('/aviso-legal');
 
 const primaryLinks = [
   {
@@ -115,6 +116,9 @@ const primaryLinks = [
         </a>
         <a href={cookiesPath} class="text-white/42 hover:text-white font-display text-[11px] font-bold uppercase tracking-[0.18em] transition-colors">
           {t('nav.cookies')}
+        </a>
+        <a href={avisoLegalPath} class="text-white/42 hover:text-white font-display text-[11px] font-bold uppercase tracking-[0.18em] transition-colors">
+          {t('nav.legal_notice')}
         </a>
         <span class="text-white/22 font-mono text-[10px] uppercase tracking-[0.2em]">
           © {currentYear} AGLAYA

@@ -79,6 +79,16 @@ const structuredData = {
   }
 };
 
+// WebSite schema with potential SearchAction (enables sitelinks search box in Google)
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AGLAYA",
+  "url": "https://aglaya.biz",
+  "inLanguage": ["en", "es", "pt-BR"],
+  "description": "AI-powered automation agency building operational systems for digital businesses."
+};
+
 ---
 
 <!doctype html>
@@ -171,8 +181,9 @@ const structuredData = {
       rel="stylesheet"
     />
 
-    <!-- LD+JSON — Organization structured data -->
+    <!-- LD+JSON — Organization + WebSite structured data -->
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
 
     {sentryDsn && (
       <SentryBrowser dsn={sentryDsn} environment={sentryEnvironment} release={sentryRelease} />

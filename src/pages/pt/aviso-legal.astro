@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+---
+
+<BaseLayout
+  title="Aviso Legal — AGLAYA"
+  description="Informações de identificação e entidade responsável por aglaya.biz"
+  lang="pt"
+  alternateUrl={new URL('/aviso-legal/', Astro.site).href}
+  alternateUrlEs={new URL('/es/aviso-legal/', Astro.site).href}
+  noindex={true}
+>
+  <Header />
+  <main id="main-content" class="max-w-7xl mx-auto px-6 sm:px-10 lg:px-20 py-40 flex flex-col gap-12">
+    <h1 class="font-display font-black text-4xl sm:text-6xl uppercase tracking-tighter text-white">Aviso Legal</h1>
+
+    <div class="max-w-2xl flex flex-col gap-6 text-white/70 font-body leading-relaxed">
+      <p>Última atualização: 3 de maio de 2026</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Entidade Responsável</h2>
+      <p>
+        Em cumprimento do artigo 10 da Lei 34/2002, de 11 de julho, de Serviços da Sociedade da Informação e Comércio Eletrónico (LSSI-CE), disponibilizam-se os seguintes dados de identificação:
+      </p>
+      <ul class="flex flex-col gap-2 list-none">
+        <li><span class="text-white font-bold">Titular:</span> Antonio Ibai Fernández Gutiérrez</li>
+        <li><span class="text-white font-bold">Nome comercial:</span> AGLAYA</li>
+        <li><span class="text-white font-bold">DNI:</span> 74853234X</li>
+        <li><span class="text-white font-bold">Domicílio:</span> Rua Palestina s/n, Belo Horizonte, Minas Gerais, Brasil. CEP 30850-000</li>
+        <li><span class="text-white font-bold">E-mail de contacto:</span> <a href="mailto:info@aglaya.biz" class="text-brand hover:text-brand-light underline underline-offset-2">info@aglaya.biz</a></li>
+        <li><span class="text-white font-bold">Website:</span> aglaya.biz</li>
+      </ul>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Objeto do Website</h2>
+      <p>aglaya.biz é o website comercial da AGLAYA, agência de marketing digital especializada em sistemas operados por IA. O site disponibiliza informação sobre os serviços oferecidos e canais para que potenciais clientes iniciem contacto.</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Propriedade Intelectual e Industrial</h2>
+      <p>Todo o conteúdo deste website — incluindo, entre outros, textos, gráficos, logótipos, ícones, imagens e código-fonte — é propriedade da AGLAYA ou dos seus fornecedores de conteúdo, e está protegido pela legislação aplicável em matéria de propriedade intelectual e industrial. É proibida a sua reprodução, distribuição ou modificação sem autorização prévia e por escrito.</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Limitação de Responsabilidade</h2>
+      <p>A AGLAYA realiza os esforços razoáveis para manter a informação deste site atualizada e verídica, mas não garante a sua completude nem a sua adequação a qualquer finalidade específica. A AGLAYA não se responsabiliza por quaisquer danos resultantes do uso ou da impossibilidade de uso do conteúdo deste website.</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Links Externos</h2>
+      <p>Este website pode conter links para websites de terceiros. A AGLAYA não é responsável pelo conteúdo, pelas práticas de privacidade nem pela exatidão da informação nesses sites.</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Legislação Aplicável e Jurisdição</h2>
+      <p>O presente Aviso Legal é regido pela legislação espanhola. Para a resolução de qualquer litígio relacionado com este website, as partes submetem-se à jurisdição dos tribunais de Espanha, sem prejuízo do disposto na normativa de proteção de consumidores que for aplicável.</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Políticas Relacionadas</h2>
+      <p>
+        Consulte a nossa <a href="/pt/privacidade/" class="text-brand hover:text-brand-light underline underline-offset-2">Política de Privacidade</a> e a nossa <a href="/pt/cookies/" class="text-brand hover:text-brand-light underline underline-offset-2">Política de Cookies</a> para mais informações sobre o tratamento de dados pessoais e a utilização de cookies.
+      </p>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>
