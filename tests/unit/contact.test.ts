@@ -66,7 +66,7 @@ describe('contact function', () => {
     expect(global.fetch).toHaveBeenCalled();
   });
 
-  it('sends the confirmation email in Portuguese when lang=pt', async () => {
+  it('sends the internal notification in Portuguese when lang=pt', async () => {
     const result = await (contact.handler({
       httpMethod: 'POST',
       headers: { 'x-forwarded-for': '127.0.0.1' },
@@ -83,20 +83,19 @@ describe('contact function', () => {
     expect(result.statusCode).toBe(200);
 
     const fetchMock = global.fetch as ReturnType<typeof vi.fn>;
-    expect(fetchMock).toHaveBeenCalledTimes(3);
+    expect(fetchMock).toHaveBeenCalledTimes(2); // hcaptcha + internal notification
 
-    const confirmationRequest = fetchMock.mock.calls[1]?.[1];
-    expect(confirmationRequest).toBeTruthy();
+    const notifyRequest = fetchMock.mock.calls[1]?.[1];
+    expect(notifyRequest).toBeTruthy();
 
-    const confirmationPayload = JSON.parse(String(confirmationRequest?.body));
-    expect(confirmationPayload.subject).toBe('Sinal recebido — AGLAYA');
-    expect(confirmationPayload.bcc).toEqual(['info@aglaya.biz']);
-    expect(confirmationPayload.html).toContain('// TRANSMISSÃO RECEBIDA');
-    expect(confirmationPayload.html).toContain('Recebemos<br>seu sinal.');
-    expect(confirmationPayload.html).toContain('João,');
+    const notifyPayload = JSON.parse(String(notifyRequest?.body));
+    expect(notifyPayload.subject).toBe('📩 New Contact [PT]: João');
+    expect(notifyPayload.html).toContain('Language:</strong> PT');
+    expect(notifyPayload.html).toContain('Name:</strong> João');
+    expect(notifyPayload.html).toContain('joao@example.com');
   });
 
-  it('sends ROI Audit-specific confirmation and notification copy when inquiry_type is ROI_AUDIT_LEAD', async () => {
+  it('sends ROI Audit-specific internal notification when inquiry_type is ROI_AUDIT_LEAD', async () => {
     const result = await (contact.handler({
       httpMethod: 'POST',
       headers: { 'x-forwarded-for': '127.0.0.1' },
@@ -117,16 +116,9 @@ describe('contact function', () => {
     expect(result.statusCode).toBe(200);
 
     const fetchMock = global.fetch as ReturnType<typeof vi.fn>;
-    const confirmationRequest = fetchMock.mock.calls[1]?.[1];
-    const confirmationPayload = JSON.parse(String(confirmationRequest?.body));
-    expect(confirmationPayload.subject).toBe('ROI Audit request received — AGLAYA');
-    expect(confirmationPayload.bcc).toEqual(['info@aglaya.biz']);
-    expect(confirmationPayload.html).toContain('Your audit request<br>is in.');
-    expect(confirmationPayload.html).toContain('// AUDIT CONTEXT');
-
-    const notifyRequest = fetchMock.mock.calls[2]?.[1];
+    const notifyRequest = fetchMock.mock.calls[1]?.[1];
     const notifyPayload = JSON.parse(String(notifyRequest?.body));
-    expect(notifyPayload.subject).toContain('ROI Audit Request');
+    expect(notifyPayload.subject).toBe('📩 ROI Audit Request [EN]: AGLAYA');
     expect(notifyPayload.html).toContain('https://aglaya.biz');
     expect(notifyPayload.html).toContain('roi_audit');
     expect(notifyPayload.html).toContain('ROI_AUDIT_LEAD');
@@ -155,7 +147,7 @@ describe('contact function', () => {
     expect(result.statusCode).toBe(200);
 
     const fetchMock = global.fetch as ReturnType<typeof vi.fn>;
-    expect(fetchMock).toHaveBeenCalledTimes(4);
+    expect(fetchMock).toHaveBeenCalledTimes(3); // hcaptcha + internal notification + mailerlite
     expect(fetchMock).toHaveBeenLastCalledWith(
       'https://connect.mailerlite.com/api/subscribers',
       expect.objectContaining({
@@ -166,7 +158,7 @@ describe('contact function', () => {
       }),
     );
 
-    const mailerLiteRequest = fetchMock.mock.calls[3]?.[1];
+    const mailerLiteRequest = fetchMock.mock.calls[2]?.[1];
     const mailerLitePayload = JSON.parse(String(mailerLiteRequest?.body));
     expect(mailerLitePayload.groups).toEqual(['group_qualified']);
     expect(mailerLitePayload.fields).toEqual({
@@ -199,7 +191,7 @@ describe('contact function', () => {
     expect(result.statusCode).toBe(200);
 
     const fetchMock = global.fetch as ReturnType<typeof vi.fn>;
-    const mailerLiteRequest = fetchMock.mock.calls[3]?.[1];
+    const mailerLiteRequest = fetchMock.mock.calls[2]?.[1];
     const mailerLitePayload = JSON.parse(String(mailerLiteRequest?.body));
     expect(mailerLitePayload.groups).toEqual(['group_non_qualified']);
   });
