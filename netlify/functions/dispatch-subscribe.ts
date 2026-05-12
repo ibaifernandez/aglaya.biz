@@ -39,53 +39,6 @@ async function verifyHCaptcha(token: string, ip: string): Promise<boolean> {
   return data.success;
 }
 
-async function subscribeViaMailerLite(email: string, ip: string, lang: 'en' | 'es' | 'pt', name?: string): Promise<boolean> {
-  return upsertMailerLiteSubscriber({
-    email,
-    ip,
-    name,
-    language: lang,
-    groups: [getDispatchGroupId()],
-  });
-}
-
-async function notifyFallback(email: string, lang: 'en' | 'es' | 'pt', name?: string): Promise<boolean> {
-  const apiKey = process.env.RESEND_API_KEY ?? '';
-  const notifyTo = process.env.NOTIFY_EMAIL ?? '';
-
-  if (!apiKey || !notifyTo) {
-    return false;
-  }
-
-  const response = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      from: 'AGLAYA <info@aglaya.biz>',
-      to: [notifyTo],
-      subject: `Dispatch signup [${lang.toUpperCase()}]: ${name || email}`,
-      html: `
-        <h2>Footer dispatch signup</h2>
-        <p><strong>Name:</strong> ${name || 'N/A'}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Language:</strong> ${lang.toUpperCase()}</p>
-        <p><strong>Source:</strong> Footer dispatch</p>
-        <p>MailerLite was not available, so this signup should be routed manually.</p>
-      `,
-    }),
-  });
-
-  if (!response.ok) {
-    console.error('[dispatch-subscribe] Resend fallback error:', response.status, await response.text());
-    return false;
-  }
-
-  return true;
-}
-
 export const handler: Handler = async (event) => {
   initFunctionSentry();
 
@@ -144,42 +97,36 @@ export const handler: Handler = async (event) => {
   }
 
   try {
-    let mode: 'mailerlite' | 'fallback' | null = null;
-    const mailerLiteCaptured = await subscribeViaMailerLite(email, ip, lang, name);
-    if (mailerLiteCaptured) {
-      mode = 'mailerlite';
+    const captured = await upsertMailerLiteSubscriber({
+      email,
+      ip,
+      name: name || undefined,
+      language: lang,
+      entry_point: 'dispatch_footer',
+      groups: [getDispatchGroupId()],
+    });
+
+    if (!captured) {
+      throw new Error('MailerLite subscription failed');
     }
 
-    if (!mode) {
-      const fallbackCaptured = await notifyFallback(email, lang, name);
-      if (fallbackCaptured) {
-        mode = 'fallback';
-      }
-    }
-
-    if (!mode) {
-      throw new Error('Failed to capture subscription');
-    }
-
-    return { statusCode: 200, headers, body: JSON.stringify({ success: true, mode }) };
+    return { statusCode: 200, headers, body: JSON.stringify({ success: true }) };
   } catch (error) {
     console.error('[dispatch-subscribe] Unexpected error:', error);
     await captureFunctionException(error, {
       functionName: 'dispatch-subscribe',
-      tags: {
-        stage: 'subscription-flow',
-      },
+      tags: { stage: 'subscription-flow' },
       extra: {
         has_name: Boolean(name),
         language: lang,
         mailerlite_group_configured: Boolean(getDispatchGroupId()),
       },
     });
-  }
 
-  return {
-    statusCode: 500,
-    headers,
-    body: JSON.stringify({ error: 'Failed to capture subscription' }),
-  };
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: 'Failed to capture subscription' }),
+    };
+  }
 };

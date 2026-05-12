@@ -459,38 +459,23 @@ async function generatePDF(
 }
 
 // ---------------------------------------------------------------------------
-// Send PDF via Resend
+// Send PDF internally via Resend (human review before forwarding to client)
 // ---------------------------------------------------------------------------
-async function sendQuoteEmail(
-  to: string,
+async function sendQuoteNotification(
+  leadEmail: string,
   name: string,
   pdfBuffer: Buffer,
   lang: Lang,
   total: number,
+  baseProduct: string,
 ): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY ?? '';
+  const notifyTo = process.env.NOTIFY_EMAIL ?? 'info@aglaya.biz';
+
   if (!apiKey) {
-    console.warn('[quote] RESEND_API_KEY not set — skipping email');
+    console.warn('[quote] RESEND_API_KEY not set — skipping notification');
     return false;
   }
-
-  const subjects: Record<Lang, string> = {
-    en: `Your AGLAYA quote — ${formatUSD(total)}`,
-    es: `Tu cotización AGLAYA — ${formatUSD(total)}`,
-    pt: `Seu orçamento AGLAYA — ${formatUSD(total)}`,
-  };
-
-  const greetings: Record<Lang, string> = {
-    en: `Hi ${name || 'there'},`,
-    es: `Hola${name ? ' ' + name : ''},`,
-    pt: `Olá${name ? ', ' + name : ''},`,
-  };
-
-  const bodies: Record<Lang, string> = {
-    en: `Your project quote from AGLAYA is attached as a PDF. Total: <strong>${formatUSD(total)}</strong>.<br/><br/>This quote is valid for 30 days. If you'd like to move forward or have any questions, <a href="https://aglaya.biz/contact">contact us here</a>.`,
-    es: `Tu cotización de proyecto de AGLAYA se adjunta como PDF. Total: <strong>${formatUSD(total)}</strong>.<br/><br/>Esta cotización es válida por 30 días. Si quieres avanzar o tienes preguntas, <a href="https://aglaya.biz/es/contact">contáctanos aquí</a>.`,
-    pt: `Seu orçamento de projeto da AGLAYA está em anexo como PDF. Total: <strong>${formatUSD(total)}</strong>.<br/><br/>Este orçamento é válido por 30 dias. Se quiser avançar ou tiver dúvidas, <a href="https://aglaya.biz/pt/contact">fale conosco aqui</a>.`,
-  };
 
   const pdfBase64 = pdfBuffer.toString('base64');
 
@@ -502,27 +487,18 @@ async function sendQuoteEmail(
     },
     body: JSON.stringify({
       from: 'AGLAYA <info@aglaya.biz>',
-      to: [to],
-      subject: subjects[lang],
+      to: [notifyTo],
+      subject: `📊 Quote Request [${lang.toUpperCase()}]: ${name || leadEmail} — ${formatUSD(total)} (${baseProduct})`,
       html: `
-        <div style="font-family:sans-serif;color:#111;max-width:600px;margin:auto;">
-          <div style="background:#080808;padding:32px 40px;">
-            <span style="color:#e8003d;font-size:11px;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;">AGLAYA</span>
-          </div>
-          <div style="padding:40px;">
-            <p style="color:#444;">${greetings[lang]}</p>
-            <p style="color:#444;">${bodies[lang]}</p>
-            <hr style="border:none;border-top:1px solid #eee;margin:32px 0;" />
-            <p style="color:#aaa;font-size:11px;">AI executes. Humans strategize. — aglaya.biz</p>
-          </div>
-        </div>
+        <h2>New quote request — aglaya.biz</h2>
+        <p><strong>Name:</strong> ${name || 'N/A'}</p>
+        <p><strong>Email:</strong> ${leadEmail}</p>
+        <p><strong>Language:</strong> ${lang.toUpperCase()}</p>
+        <p><strong>Base Product:</strong> ${baseProduct}</p>
+        <p><strong>Total:</strong> ${formatUSD(total)}</p>
+        <p style="color:#c00;"><strong>Review PDF before forwarding to client.</strong></p>
       `,
-      attachments: [
-        {
-          filename: `aglaya-quote.pdf`,
-          content: pdfBase64,
-        },
-      ],
+      attachments: [{ filename: 'aglaya-quote.pdf', content: pdfBase64 }],
     }),
   });
 
@@ -535,7 +511,7 @@ async function sendQuoteEmail(
 }
 
 // ---------------------------------------------------------------------------
-// Capture lead in MailerLite
+// Capture lead in MailerLite — automation handles acknowledgment email to client
 // ---------------------------------------------------------------------------
 async function captureQuoteLead(
   email: string,
@@ -543,6 +519,7 @@ async function captureQuoteLead(
   company: string,
   lang: Lang,
   ip: string,
+  baseProduct: string,
 ): Promise<void> {
   const groupId = (process.env.MAILERLITE_COTIZACIONES_GROUP_ID ?? '186446693070276318').trim();
 
@@ -553,6 +530,8 @@ async function captureQuoteLead(
     company: company || undefined,
     language: lang,
     groups: [groupId],
+    entry_point: 'quote_calculator',
+    service_interest: baseProduct || undefined,
   });
 }
 
@@ -621,8 +600,8 @@ export const handler: Handler = async (event) => {
     const pdfBuffer = await generatePDF(payload, quote, lang);
 
     const [emailSent] = await Promise.allSettled([
-      sendQuoteEmail(email, name, pdfBuffer, lang, quote.grand_total),
-      captureQuoteLead(email, name, company, lang, ip),
+      sendQuoteNotification(email, name, pdfBuffer, lang, quote.grand_total, payload.base_product ?? ''),
+      captureQuoteLead(email, name, company, lang, ip, payload.base_product ?? ''),
     ]);
 
     const emailOk = emailSent.status === 'fulfilled' && emailSent.value;
