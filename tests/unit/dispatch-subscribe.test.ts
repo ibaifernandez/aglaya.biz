@@ -65,7 +65,7 @@ describe('dispatch-subscribe function', () => {
     } as any, {} as any) as any;
 
     expect(result.statusCode).toBe(200);
-    expect(JSON.parse(result.body)).toEqual({ success: true, mode: 'mailerlite' });
+    expect(JSON.parse(result.body)).toEqual({ success: true });
     expect(global.fetch).toHaveBeenCalledTimes(2); // hcaptcha + mailerlite
     expect(global.fetch).toHaveBeenCalledWith(
       'https://connect.mailerlite.com/api/subscribers',
@@ -80,10 +80,10 @@ describe('dispatch-subscribe function', () => {
     const request = (global.fetch as ReturnType<typeof vi.fn>).mock.calls[1]?.[1];
     const payload = JSON.parse(String(request?.body));
     expect(payload.groups).toEqual(['group_123']);
-    expect(payload.fields).toEqual({ name: 'John', language: 'en' });
+    expect(payload.fields).toEqual({ name: 'John', language: 'en', entry_point: 'dispatch_footer' });
   });
 
-  it('falls back to internal notification when MailerLite is unavailable', async () => {
+  it('returns 500 when MailerLite is not configured', async () => {
     vi.stubEnv('MAILERLITE_API_KEY', '');
     vi.stubEnv('MAILERLITE_SUSCRIPCIONES_GROUP_ID', '');
 
@@ -93,15 +93,9 @@ describe('dispatch-subscribe function', () => {
       body: JSON.stringify({ name: 'Juan', email: 'john@example.com', lang: 'es', token: 'test_token', privacy_consent: true }),
     } as any, {} as any) as any;
 
-    expect(result.statusCode).toBe(200);
-    expect(JSON.parse(result.body)).toEqual({ success: true, mode: 'fallback' });
-    expect(global.fetch).toHaveBeenCalledTimes(2); // hcaptcha + resend fallback
-    expect(global.fetch).toHaveBeenCalledWith(
-      'https://api.resend.com/emails',
-      expect.objectContaining({
-        method: 'POST',
-      }),
-    );
+    expect(result.statusCode).toBe(500);
+    expect(JSON.parse(result.body)).toEqual({ error: 'Failed to capture subscription' });
+    expect(global.fetch).toHaveBeenCalledTimes(1); // hcaptcha only
   });
 
   it('returns 500 when both MailerLite and fallback fail', async () => {
