@@ -19,7 +19,7 @@ consumable_by_agents: true
 
 ## Architecture
 
-- **Email 0 (Day 0, Resend — ya existe):** Confirmación transaccional inmediata. "You're in." No se toca.
+- **Email 0 (Day 0, MailerLite — Automation 1):** Confirmación inmediata al suscriptor. Disparada automáticamente por MailerLite cuando el suscriptor entra en el grupo Suscripciones. Gestionada 100% en MailerLite — Resend no interviene en comunicaciones dirigidas a suscriptores. Resend se reserva exclusivamente para notificaciones internas (info@aglaya.biz).
 - **Email 1 (Day 2, MailerLite):** El marco intelectual. Qué es AGLAYA y qué no es.
 - **Email 2 (Day 5, MailerLite):** Thought leadership. El impuesto operativo.
 - **Email 3 (Day 9, MailerLite):** La puerta abierta. Soft CTA al ROI Audit.

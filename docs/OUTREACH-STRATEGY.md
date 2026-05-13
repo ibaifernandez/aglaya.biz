@@ -13,10 +13,12 @@ Desplegar una instancia pública del Kanban Desk con datos de demostración. El 
 
 ---
 
-### 02 — Automatizaciones en Mailerlite
+### 02 — Automatizaciones en Mailerlite ✅
 **Tipo:** Ops · Marketing  
 
 Conectar el formulario de Dispatch (footer) a Mailerlite. Secuencia de bienvenida automatizada, segmentación por idioma (EN/ES/PT), cadencia de envío definida. Base para el Dispatch real.
+
+**COMPLETADO — 2026-05-13.** MailerLite conectado y activo en producción. 5 automations activas: (1) Dispatch Entry Protocol — Cualificado, (2) Dispatch Entry Protocol — General, (3) Borderline, (4) No Cualificado, (5) Cotización. Segmentación por idioma (EN/ES/PT) operativa vía campo `language`. Resend no interviene en comunicaciones a suscriptores — MailerLite es el único canal de email hacia usuarios.
 
 ---
 
@@ -41,10 +43,12 @@ Widget en la web conectado a la API de Claude. Hace las preguntas del formulario
 
 ---
 
-### 06 — Automatización del Dispatch
+### 06 — Automatización del Dispatch ✅
 **Tipo:** Contenido · Ops  
 
-El Dispatch Entry Protocol (v2) está documentado y listo para carga en MailerLite (`docs/brand/mkt/DISPATCH-ENTRY-PROTOCOL-v2.md`): 3 emails × 3 idiomas, arquitectura Day 0/2/5/9, regla de exclusión vía `onboarding_active`, ruteo por campo `language`. Pendiente: configurar la automation en la UI de MailerLite (trigger, branches por idioma, delays, set/reset de `onboarding_active`).
+El Dispatch Entry Protocol (v2) está documentado y listo para carga en MailerLite (`docs/brand/mkt/DISPATCH-ENTRY-PROTOCOL-v2.md`): 3 emails × 3 idiomas, arquitectura Day 0/2/5/9, regla de exclusión vía `onboarding_active`, ruteo por campo `language`.
+
+**COMPLETADO — 2026-05-13.** Automations 1 y 2 activas (Dispatch Entry Protocol Cualificado y General). Emails 1–3 × 3 idiomas configurados y activos en MailerLite. `onboarding_active` se establece en `1` al entrar y se resetea a `0` al completar Email 3 (día 9). Ver `docs/brand/mkt/DISPATCH-ENTRY-PROTOCOL-v2.md` y `docs/brand/mkt/MAILERLITE-AUTOMATIONS-MASTER.md` para copy completo.
 
 ---
 
@@ -96,11 +100,11 @@ Publicar algo pequeño y útil como producto independiente: calculador de ROI, g
 | # | Línea | Estado |
 |---|---|---|
 | 01 | Kanban Sandbox | `PENDIENTE` |
-| 02 | Automatizaciones Mailerlite | `EN CURSO` |
+| 02 | Automatizaciones Mailerlite | `COMPLETADO` |
 | 03 | Estrategia Redes Sociales | `PENDIENTE` |
 | 04 | ROI Audit Interactivo | `PENDIENTE` |
 | 05 | AI Chatbot Cualificación | `PENDIENTE` |
-| 06 | Automatización Dispatch | `EN CURSO` |
+| 06 | Automatización Dispatch | `COMPLETADO` |
 | 07 | Recuperar Norden | `PENDIENTE` |
 | 08 | Playbook Descargable | `PENDIENTE` |
 | 09 | Video Proof | `PENDIENTE` |
@@ -110,4 +114,4 @@ Publicar algo pequeño y útil como producto independiente: calculador de ROI, g
 
 ---
 
-*Última actualización: 2026-04-29*
+*Última actualización: 2026-05-13*
