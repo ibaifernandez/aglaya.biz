@@ -71,6 +71,10 @@ const processedTitle = (input: string) => {
 };
 ---
 
+<div id="prose-lightbox" role="dialog" aria-modal="true" aria-label="Image lightbox">
+  <img id="prose-lightbox-img" src="" alt="" />
+</div>
+
 <div
   class="dossier-root relative w-full bg-black text-white font-body selection:bg-corporate-green selection:text-black overflow-x-hidden"
 >
@@ -439,6 +443,33 @@ const processedTitle = (input: string) => {
 </script>
 
 <script>
+  function initLightbox() {
+    const lb = document.getElementById('prose-lightbox');
+    const lbImg = document.getElementById('prose-lightbox-img') as HTMLImageElement;
+    if (!lb || !lbImg) return;
+
+    document.querySelectorAll('.prose-dossier img').forEach((img) => {
+      img.addEventListener('click', () => {
+        lbImg.src = (img as HTMLImageElement).src;
+        lbImg.alt = (img as HTMLImageElement).alt;
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    lb.addEventListener('click', () => {
+      lb.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        lb.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    });
+  }
+
   function initCarousel() {
     const dots = document.querySelectorAll(".nav-dot");
     const slides = document.querySelectorAll(".slide");
@@ -493,7 +524,9 @@ const processedTitle = (input: string) => {
   }
 
   document.addEventListener("astro:page-load", initCarousel);
+  document.addEventListener("astro:page-load", initLightbox);
   initCarousel();
+  initLightbox();
 </script>
 
 <style is:global>
@@ -566,7 +599,18 @@ const processedTitle = (input: string) => {
 
   /* ── Images ── */
   .prose-dossier img {
-    @apply w-full my-8 border border-white/8;
+    @apply w-full my-8 border border-white/8 cursor-zoom-in transition-opacity hover:opacity-90;
+  }
+
+  /* ── Lightbox ── */
+  #prose-lightbox {
+    @apply fixed inset-0 z-[9999] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300;
+  }
+  #prose-lightbox.open {
+    @apply opacity-100 pointer-events-auto;
+  }
+  #prose-lightbox img {
+    @apply max-w-full max-h-[90vh] object-contain border border-white/10 cursor-zoom-out;
   }
 
   /* ── Inline links ── */
