@@ -172,6 +172,16 @@ const key = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY || 'a772dbf8-f0da-4658-a4be
 const key = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY ?? 'd9205cec-4106-4c24-add6-b4ca3bb40472';
 ```
 
+### pdfkit in Netlify Functions — use the standalone build
+`pdfkit` (default build) loads Helvetica and other standard font metrics from AFM files on disk (`node_modules/pdfkit/js/data/`). Netlify esbuild bundles functions into a single `.js` file without those data files, so any `.font('Helvetica')` call throws `ENOENT: no such file or directory` at runtime (Sentry AGLAYA-BIZ-6).
+
+Always import the standalone build, which embeds all fonts as base64 strings:
+```ts
+// @ts-expect-error — standalone build has no separate .d.ts; API is identical to main
+import PDFDocument from 'pdfkit/js/pdfkit.standalone.js';
+```
+The API is 100% identical. Never use bare `import PDFDocument from 'pdfkit'` inside a Netlify Function.
+
 ### Always check fetch() responses from external APIs
 ```js
 const res = await fetch('https://api.resend.com/emails', { ... });
