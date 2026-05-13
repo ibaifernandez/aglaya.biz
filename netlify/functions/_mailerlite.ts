@@ -97,7 +97,7 @@ export async function upsertMailerLiteSubscriber({
       email,
       fields: Object.keys(fields).length > 0 ? fields : undefined,
       groups: normalizedGroups,
-      resubscribe: true,
+      resubscribe: false,
       ip_address: ip || undefined,
       optin_ip: ip || undefined,
       opted_in_at: now,

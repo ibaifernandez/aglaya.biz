@@ -1,8 +1,9 @@
 ---
 import Send from './icons/Send.astro';
+import FormComplianceNotice from './FormComplianceNotice.astro';
 
 interface Props {
-  lang?: 'en' | 'es';
+  lang?: 'en' | 'es' | 'pt';
   hcaptchaSiteKey?: string;
 }
 
@@ -95,6 +96,8 @@ const t = labels[lang];
       class="cf-input cf-textarea"
     ></textarea>
   </div>
+
+  <FormComplianceNotice checkboxId="contact-privacy-consent" variant="contact" />
 
   <div class="cf-footer">
     <button id="contact-submit" type="submit" class="cf-btn" disabled>
@@ -285,7 +288,14 @@ form?.addEventListener('submit', async (e) => {
     const res = await fetch('/.netlify/functions/contact', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, message, token, lang }),
+      body: JSON.stringify({
+      name,
+      email,
+      message,
+      token,
+      lang,
+      privacy_consent: (document.getElementById('contact-privacy-consent') as HTMLInputElement | null)?.checked ? 'true' : '',
+    }),
     });
     if (res.ok) {
       form.style.display = 'none';
