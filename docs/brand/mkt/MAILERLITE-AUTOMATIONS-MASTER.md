@@ -647,17 +647,19 @@ AGLAYA
 #### EN
 
 **Subject:** Your inquiry is with us.
-**Preheader:** We review before we respond. If there's a fit, you'll hear from us within 48 hours.
+**Preheader:** You'll hear from us within 48 hours — fit or no fit.
 
 ---
 
 We received your message.
 
-We review every inquiry before responding. If there's a fit, you'll hear from us within 48 hours.
+We review every inquiry thoroughly before responding.
+
+We'll get back to you within 48 hours to let you know whether there's a fit.
 
 In the meantime, the AGLAYA Dispatch is where our thinking lives — documented systems, operational frameworks, and case breakdowns. If the reasoning resonates over time, you'll know when the moment is right.
 
-→ https://aglaya.biz
+Subscribe → https://aglaya.biz
 
 AGLAYA
 
@@ -666,17 +668,19 @@ AGLAYA
 #### ES
 
 **Asunto:** Tu consulta está con nosotros.
-**Preheader:** Revisamos antes de responder. Si hay encaje, te contactamos en menos de 48 horas.
+**Preheader:** En menos de 48 horas te decimos lo que hay. Cuadre o no cuadre.
 
 ---
 
 Hemos recibido tu mensaje.
 
-Revisamos cada consulta antes de responder. Si hay encaje, te contactaremos en menos de 48 horas.
+Revisamos minuciosamente cada consulta antes de responder.
+
+Te contactaremos en menos de 48 horas para decirte si encaja con nuestra filosofía o no.
 
 Mientras tanto, el AGLAYA Dispatch es donde vive nuestro pensamiento: sistemas documentados, frameworks operativos y análisis de casos. Si el razonamiento resuena con el tiempo, sabrás cuándo es el momento.
 
-→ https://aglaya.biz/es/
+Suscríbete → https://aglaya.biz/es/
 
 AGLAYA
 
@@ -685,17 +689,19 @@ AGLAYA
 #### PT
 
 **Assunto:** Sua consulta está conosco.
-**Preheader:** Revisamos antes de responder. Se houver fit, entraremos em contato em até 48 horas.
+**Preheader:** Em até 48 horas você sabe. Haja fit ou não, a gente te avisa.
 
 ---
 
 Recebemos sua mensagem.
 
-Revisamos cada consulta antes de responder. Se houver fit, entraremos em contato em até 48 horas.
+Revisamos cada consulta com muito cuidado antes de responder.
+
+Entraremos em contato em até 48 horas para te dizer se há fit com a gente.
 
 Enquanto isso, o AGLAYA Dispatch é onde nosso pensamento vive — sistemas documentados, frameworks operacionais e análises de casos. Se o raciocínio ressoar com o tempo, você saberá quando o momento for certo.
 
-→ https://aglaya.biz/pt/
+Inscreva-se → https://aglaya.biz/pt/
 
 AGLAYA
 
@@ -817,13 +823,13 @@ AGLAYA
 #### EN
 
 **Subject:** Your quote request is with us.
-**Preheader:** Under review. You'll receive the full PDF breakdown within 24 hours.
+**Preheader:** Under review. You'll receive the full PDF breakdown within 72 hours.
 
 ---
 
 We received your project configuration.
 
-Our team is reviewing it and will send you the detailed proposal — including the full PDF breakdown — within 24 hours.
+Our team is reviewing it and will send you the detailed proposal — including the full PDF breakdown — within 72 hours.
 
 If anything needs clarifying before then, reply directly to this email.
 
@@ -834,13 +840,13 @@ AGLAYA
 #### ES
 
 **Asunto:** Tu solicitud de cotización está con nosotros.
-**Preheader:** En revisión. Recibirás el PDF completo en menos de 24 horas.
+**Preheader:** En revisión. Recibirás el PDF completo en menos de 72 horas.
 
 ---
 
 Hemos recibido la configuración de tu proyecto.
 
-Nuestro equipo la está revisando y te enviará la propuesta detallada —incluyendo el PDF con el desglose completo— en menos de 24 horas.
+Nuestro equipo la está revisando y te enviará la propuesta detallada —incluyendo el PDF con el desglose completo— en menos de 72 horas.
 
 Si necesitas aclarar algo antes, responde directamente a este correo.
 
@@ -851,13 +857,13 @@ AGLAYA
 #### PT
 
 **Assunto:** Sua solicitação de orçamento está conosco.
-**Preheader:** Em revisão. Você receberá o PDF completo em até 24 horas.
+**Preheader:** Em revisão. Você receberá o PDF completo em até 72 horas.
 
 ---
 
 Recebemos a configuração do seu projeto.
 
-Nossa equipe está revisando e enviará a proposta detalhada — incluindo o PDF com o detalhamento completo — em até 24 horas.
+Nossa equipe está revisando e enviará a proposta detalhada — incluindo o PDF com o detalhamento completo — em até 72 horas.
 
 Se precisar esclarecer algo antes disso, responda diretamente a este e-mail.
 
