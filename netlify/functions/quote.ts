@@ -1,6 +1,7 @@
 import type { Handler } from '@netlify/functions';
 import path from 'path';
-import PDFDocument from 'pdfkit';
+// @ts-expect-error — standalone build has no separate .d.ts; API is identical to main
+import PDFDocument from 'pdfkit/js/pdfkit.standalone.js';
 import { upsertMailerLiteSubscriber } from './_mailerlite';
 import { captureFunctionException, initFunctionSentry } from './_sentry';
 
@@ -273,7 +274,7 @@ async function generatePDF(
     });
 
     const chunks: Buffer[] = [];
-    doc.on('data', (chunk) => chunks.push(chunk));
+    doc.on('data', (chunk: Buffer) => chunks.push(chunk));
     doc.on('end', () => resolve(Buffer.concat(chunks)));
     doc.on('error', reject);
 
