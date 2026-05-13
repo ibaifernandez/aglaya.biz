@@ -46,7 +46,6 @@ results:
       pt: "Por auditoria de compliance — sem parecer jurídico"
 featured: true
 date: "2026-04"
-contentImage: "/infographic-legal-reg-tech.jpg"
 client_logo: "../src/assets/images/chile-flag-round-circle-icon.svg"
 body_en: |
   ## What We Built
@@ -54,6 +53,8 @@ body_en: |
   Every Chilean company with a website acquired a regulatory obligation the day Ley 21.719 took effect. Most of them have no idea what that obligation looks like on their own domain — because the diagnosis costs more than they're willing to pay before they even know if there's a problem.
 
   AGLAYA built the machine that changes that equation. A **$12 compliance audit** that sees exactly what a regulator would see: the public surface. Nothing more. Nothing less.
+
+  <img src="/infographic-legal-reg-tech.jpg" alt="Ley 21.719 — System architecture and benchmark data" style="width:100%;margin:2.5rem 0;border:1px solid rgba(255,255,255,0.08);" />
 
   ### Step 1 — Eligibility Pre-Flight
 
@@ -93,6 +94,8 @@ body_es: |
   Cada empresa chilena con sitio web adquirió una obligación regulatoria el día en que entró en vigor la Ley 21.719. La mayoría no sabe cómo se ve esa obligación en su propio dominio — porque el diagnóstico cuesta más de lo que están dispuestas a pagar antes de saber siquiera si hay un problema.
 
   AGLAYA construyó la máquina que cambia esa ecuación. Una **auditoría de compliance por $12** que ve exactamente lo que vería un regulador: la superficie pública. Nada más. Nada menos.
+
+  <img src="/infographic-legal-reg-tech.jpg" alt="Ley 21.719 — Arquitectura del sistema y datos del benchmark" style="width:100%;margin:2.5rem 0;border:1px solid rgba(255,255,255,0.08);" />
 
   ```mermaid
   flowchart TD
@@ -142,6 +145,8 @@ body_pt: |
   Cada empresa chilena com um site adquiriu uma obrigação regulatória no dia em que a Lei 21.719 entrou em vigor. A maioria não sabe como essa obrigação se parece em seu próprio domínio — porque o diagnóstico custa mais do que estão dispostas a pagar antes mesmo de saber se há um problema.
 
   A AGLAYA construiu a máquina que muda essa equação. Uma **auditoria de compliance por $12** que vê exatamente o que um regulador veria: a superfície pública. Nada mais. Nada menos.
+
+  <img src="/infographic-legal-reg-tech.jpg" alt="Lei 21.719 — Arquitetura do sistema e dados do benchmark" style="width:100%;margin:2.5rem 0;border:1px solid rgba(255,255,255,0.08);" />
 
   ### Passo 1 — Pre-Flight de Elegibilidade
 
