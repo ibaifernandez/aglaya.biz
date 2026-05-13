@@ -28,7 +28,9 @@ const {
     document.querySelector('meta[name="aglaya:sentry-release"]')?.getAttribute('content')?.trim() ||
     undefined;
 
-  if (dsn) {
+  function initSentry() {
+    if (!dsn || (window as any).__sentryInitialized) return;
+    (window as any).__sentryInitialized = true;
     Sentry.init({
       dsn,
       environment,
@@ -51,9 +53,18 @@ const {
             delete event.request.headers.authorization;
           }
         }
-
         return event;
       },
     });
+  }
+
+  if (dsn) {
+    if (localStorage.getItem('aglaya_cookie_consent') === 'all') {
+      initSentry();
+    } else {
+      window.addEventListener('aglaya:consent-update', function(e: any) {
+        if (e.detail && e.detail.consent === 'all') initSentry();
+      }, { once: true });
+    }
   }
 </script>
