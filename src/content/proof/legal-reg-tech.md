@@ -72,6 +72,16 @@ body_en: |
 
   *Over panel of domains post-eligibility pre-flight.*
 
+  ```mermaid
+  flowchart TD
+    A["URL input"] --> B["Eligibility pre-flight\nURL resolution · domain state"]
+    B --> C["Consensus engine · 5 scans\nIndependent passes and reconciliation"]
+    C --> D["Control matrix\nDeterministic rules · Ley 21.719"]
+    D --> E["Regulatory alerts\nLinked to article · control · requirement"]
+    E --> F["Claude API\nReport structuring and PDF formatting"]
+    F --> G["Audit report · $12\n100% traceable · Captured HTML evidence"]
+  ```
+
   ### Step 3 — Rules First. Claude API Second.
 
   Regulatory alerts are triggered by deterministic rule logic applied against a control matrix derived from Ley 21.719. The system does not guess. It checks. Every alert maps to a specific article, a specific control, a specific requirement.
@@ -97,16 +107,6 @@ body_es: |
 
   <img src="/infographic-legal-reg-tech.jpg" alt="Ley 21.719 — Arquitectura del sistema y datos del benchmark" style="width:100%;margin:2.5rem 0;border:1px solid rgba(255,255,255,0.08);" />
 
-  ```mermaid
-  flowchart TD
-    A["URL de entrada"] --> B["Pre-flight de elegibilidad\nValidación URL · estado de dominio"]
-    B --> C["Motor de consenso · 5 escaneos\nPasadas independientes y reconciliación"]
-    C --> D["Matriz de controles\nReglas deterministas · Ley 21.719"]
-    D --> E["Alertas regulatorias\nVinculadas a artículo · control · requisito"]
-    E --> F["Claude API\nEstructuración y formato del informe PDF"]
-    F --> G["Informe de auditoría · $12\n100% trazable · Evidencia HTML capturada"]
-  ```
-
   ### Paso 1 — Pre-Flight de Elegibilidad
 
   El sistema valida la resolución de URL y el estado del dominio antes de iniciar cualquier escaneo. Los dominios sin presencia web activa, con certificados inválidos o rutas de crawl bloqueadas se filtran antes de gastar cómputo. Ningún falso positivo de objetivos fuera de alcance. Ningún ciclo desperdiciado. Ningún informe de riesgo inflado.
@@ -122,6 +122,16 @@ body_es: |
   | Alcance del objetivo | 96,1% | 99,2% |
 
   *Sobre panel de dominios tras filtro de elegibilidad pre-flight.*
+
+  ```mermaid
+  flowchart TD
+    A["URL de entrada"] --> B["Pre-flight de elegibilidad\nValidación URL · estado de dominio"]
+    B --> C["Motor de consenso · 5 escaneos\nPasadas independientes y reconciliación"]
+    C --> D["Matriz de controles\nReglas deterministas · Ley 21.719"]
+    D --> E["Alertas regulatorias\nVinculadas a artículo · control · requisito"]
+    E --> F["Claude API\nEstructuración y formato del informe PDF"]
+    F --> G["Informe de auditoría · $12\n100% trazable · Evidencia HTML capturada"]
+  ```
 
   ### Paso 3 — Reglas Primero. Claude API Después.
 
@@ -163,6 +173,16 @@ body_pt: |
   | Alcance do Alvo | 96,1% | 99,2% |
 
   *Sobre painel de domínios após filtro de elegibilidade pre-flight.*
+
+  ```mermaid
+  flowchart TD
+    A["URL de entrada"] --> B["Pre-flight de elegibilidade\nResolução URL · estado do domínio"]
+    B --> C["Motor de consenso · 5 varreduras\nPassagens independentes e reconciliação"]
+    C --> D["Matriz de controles\nRegras deterministas · Lei 21.719"]
+    D --> E["Alertas regulatórios\nVinculados a artigo · controle · requisito"]
+    E --> F["Claude API\nEstruturação e formatação do relatório PDF"]
+    F --> G["Relatório de auditoria · $12\n100% rastreável · Evidência HTML capturada"]
+  ```
 
   ### Passo 3 — Regras Primeiro. Claude API Depois.
 
