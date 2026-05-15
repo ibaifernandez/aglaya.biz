@@ -10,38 +10,63 @@ import Footer from '../components/Footer.astro';
   lang="en"
   alternateUrlEs={new URL('/es/privacidad/', Astro.site).href}
   alternateUrlPt={new URL('/pt/privacidade/', Astro.site).href}
-  noindex={true}
 >
   <Header />
   <main id="main-content" class="max-w-7xl mx-auto px-6 sm:px-10 lg:px-20 py-40 flex flex-col gap-12">
     <h1 class="font-display font-black text-4xl sm:text-6xl uppercase tracking-tighter text-white">Privacy Policy</h1>
 
     <div class="max-w-2xl flex flex-col gap-6 text-white/70 font-body leading-relaxed">
-      <p>Last updated: April 15, 2026</p>
+      <p>Last updated: May 15, 2026</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Data Controller</h2>
+      <p>
+        The data controller responsible for processing personal data collected through aglaya.biz is:
+      </p>
+      <ul class="flex flex-col gap-1 list-none pl-4 border-l border-white/10">
+        <li><span class="text-white font-semibold">Name:</span> Antonio Ibai Fernández Gutiérrez</li>
+        <li><span class="text-white font-semibold">Trading name:</span> AGLAYA</li>
+        <li><span class="text-white font-semibold">Address:</span> Rua Palestina s/n, Belo Horizonte, Minas Gerais, Brazil, CEP 30850-000</li>
+        <li><span class="text-white font-semibold">Email:</span> <a href="mailto:info@aglaya.biz" class="text-brand hover:text-brand-light underline underline-offset-2">info@aglaya.biz</a></li>
+        <li><span class="text-white font-semibold">Website:</span> aglaya.biz</li>
+      </ul>
 
       <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Data We Collect</h2>
-      <p>When you submit a contact, ROI Audit, or dispatch form, we may collect your name, email address, company, website, message, qualification inputs, and the submission context tied to that request. If bot protection is active, hCaptcha also processes technical verification data to help us block abuse.</p>
+      <p>When you submit a contact, ROI Audit, quote, or dispatch form, we may collect your name, email address, company, website, message, qualification inputs, and the submission context tied to that request. If bot protection is active, hCaptcha also processes technical verification data to help us block abuse.</p>
 
       <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">How We Use It</h2>
-      <p>We use inquiry data to review fit, respond to your request, qualify whether an engagement is justified, and route the lead operationally inside our systems. Dispatch subscriptions are used only to send the editorial updates you explicitly opt into.</p>
+      <p>We use inquiry data to review fit, respond to your request, qualify whether an engagement is justified, and route the lead operationally inside our systems. Dispatch subscriptions are used only to send the editorial updates you explicitly opt into. Quote form data is used solely to generate and deliver the requested quote.</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Legal Basis</h2>
+      <p>For proposal, contact, ROI Audit, and quote requests, we process your data to handle the request you initiated, evaluate operational fit, and continue the pre-engagement conversation where justified (legitimate interest / performance of pre-contractual steps). For dispatch subscriptions and optional marketing communications, we rely on the consent you grant at the form level and that you can withdraw at any time.</p>
 
       <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Processors We Use</h2>
-      <p>Transactional and notification emails are sent through Resend. Dispatch subscribers and segmented contact leads may be synced to MailerLite when that integration is enabled in our stack. Anti-abuse verification is handled by hCaptcha. We also use Sentry for technical error monitoring so we can detect and fix failures in the browser, Astro runtime, and form-processing functions. We do not sell your personal data.</p>
+      <p>Transactional and notification emails are sent through Resend. Dispatch subscribers and segmented contact leads may be synced to MailerLite when that integration is enabled in our stack. Anti-abuse verification is handled by hCaptcha. We also use Sentry for technical error monitoring so we can detect and fix failures in the browser, Astro runtime, and form-processing functions. Our site infrastructure runs on Netlify. We do not sell your personal data.</p>
 
       <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Data Retention &amp; International Transfers</h2>
       <p>We retain your data only as long as necessary for the purposes described above. Approximate retention periods by processor: <strong>MailerLite</strong> — subscriber data kept while subscription is active, deleted within 30 days of a verified deletion request; <strong>Resend</strong> — email delivery metadata retained up to 3 days; <strong>Sentry</strong> — error events retained for 90 days; <strong>Netlify</strong> — function invocation logs retained for 7 days. Some processors are based outside the European Economic Area: Resend (US), hCaptcha (US), Sentry (US), and Netlify (US) operate under Standard Contractual Clauses or equivalent adequacy safeguards. MailerLite is headquartered in Vilnius, Lithuania (EEA). You may request copies of applicable transfer safeguards by writing to <a href="mailto:info@aglaya.biz" class="text-brand hover:text-brand-light underline underline-offset-2">info@aglaya.biz</a>.</p>
 
-      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Legal Basis</h2>
-      <p>For proposal, contact, and ROI Audit requests, we process your data to handle the request you initiated, evaluate operational fit, and continue the pre-engagement conversation where justified. For dispatch subscriptions and optional marketing communications, we rely on the consent you grant at the form level and that you can withdraw at any time.</p>
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Security Measures</h2>
+      <p>We implement appropriate technical and organizational measures to protect personal data against unauthorized access, accidental loss, destruction, or alteration. These include encrypted data transmission (HTTPS/TLS enforced across all endpoints), access controls on processing platforms, and contractually required security practices applied by our sub-processors under their respective Data Processing Agreements.</p>
 
       <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Analytics</h2>
       <p>If you accept all cookies, we may load analytics and measurement scripts via Google Tag Manager to understand aggregate traffic and interaction patterns. These scripts are not loaded until consent is granted.</p>
 
       <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Your Rights</h2>
-      <p>You may request access to, correction of, deletion of, or restriction on the personal data we hold by contacting <a href="mailto:info@aglaya.biz" class="text-brand hover:text-brand-light underline underline-offset-2">info@aglaya.biz</a>. If you subscribed to the dispatch, every dispatch email also contains an unsubscribe path.</p>
+      <p>Under applicable data protection law (including the GDPR where it applies), you have the following rights regarding personal data we hold about you:</p>
+      <ul class="flex flex-col gap-2 list-disc list-inside pl-2">
+        <li><span class="text-white font-semibold">Access:</span> obtain a copy of the personal data we hold about you.</li>
+        <li><span class="text-white font-semibold">Rectification:</span> request correction of inaccurate or incomplete data.</li>
+        <li><span class="text-white font-semibold">Erasure:</span> request deletion of your personal data where there is no overriding reason to continue processing it.</li>
+        <li><span class="text-white font-semibold">Restriction:</span> request that we limit how we use your data in certain circumstances.</li>
+        <li><span class="text-white font-semibold">Portability:</span> receive your data in a structured, commonly used, machine-readable format and have it transmitted to another controller where technically feasible.</li>
+        <li><span class="text-white font-semibold">Objection:</span> object to processing based on legitimate interests; we will stop unless we can demonstrate compelling grounds.</li>
+        <li><span class="text-white font-semibold">Withdraw consent:</span> where processing is based on consent, withdraw it at any time without affecting the lawfulness of prior processing. Every dispatch email also contains an unsubscribe link.</li>
+        <li><span class="text-white font-semibold">Lodge a complaint:</span> you have the right to lodge a complaint with the supervisory authority in your country of residence. EU/EEA residents may contact their national data protection authority; UK residents may contact the ICO (ico.org.uk).</li>
+      </ul>
+      <p>To exercise any of these rights, contact us at <a href="mailto:info@aglaya.biz" class="text-brand hover:text-brand-light underline underline-offset-2">info@aglaya.biz</a>. We will respond within 30 days.</p>
 
       <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Cookies</h2>
-      <p>See our <a href="/cookies/" class="text-brand hover:text-brand-light underline underline-offset-2">Cookie Policy</a> for details on how we use cookies.</p>
+      <p>See our <a href="/cookies/" class="text-brand hover:text-brand-light underline underline-offset-2">Cookie Policy</a> for details on how we use cookies and how to manage your preferences.</p>
     </div>
   </main>
   <Footer />

@@ -10,38 +10,81 @@ import Footer from '../../components/Footer.astro';
   lang="pt"
   alternateUrl={new URL('/privacy/', Astro.site).href}
   alternateUrlEs={new URL('/es/privacidad/', Astro.site).href}
-  noindex={true}
 >
   <Header />
   <main id="main-content" class="max-w-7xl mx-auto px-6 sm:px-10 lg:px-20 py-40 flex flex-col gap-12">
     <h1 class="font-display font-black text-4xl sm:text-6xl uppercase tracking-tighter text-white">Política de Privacidade</h1>
 
     <div class="max-w-2xl flex flex-col gap-6 text-white/70 font-body leading-relaxed">
-      <p>Última atualização: 15 de abril de 2026</p>
+      <p>Última atualização: 15 de maio de 2026</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Controlador dos Dados</h2>
+      <p>
+        O controlador responsável pelo tratamento dos dados pessoais coletados por meio de aglaya.biz é:
+      </p>
+      <ul class="flex flex-col gap-1 list-none pl-4 border-l border-white/10">
+        <li><span class="text-white font-semibold">Nome:</span> Antonio Ibai Fernández Gutiérrez</li>
+        <li><span class="text-white font-semibold">Nome comercial:</span> AGLAYA</li>
+        <li><span class="text-white font-semibold">Endereço:</span> Rua Palestina s/n, Belo Horizonte, Minas Gerais, Brasil, CEP 30850-000</li>
+        <li><span class="text-white font-semibold">E-mail:</span> <a href="mailto:info@aglaya.biz" class="text-brand hover:text-brand-light underline underline-offset-2">info@aglaya.biz</a></li>
+        <li><span class="text-white font-semibold">Site:</span> aglaya.biz</li>
+      </ul>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Encarregado de Proteção de Dados (DPO)</h2>
+      <p>
+        Em cumprimento ao art. 41 da Lei Geral de Proteção de Dados (LGPD — Lei 13.709/2018), o Encarregado de Proteção de Dados da AGLAYA é:
+      </p>
+      <ul class="flex flex-col gap-1 list-none pl-4 border-l border-white/10">
+        <li><span class="text-white font-semibold">Nome:</span> Antonio Ibai Fernández Gutiérrez</li>
+        <li><span class="text-white font-semibold">Canal de contato:</span> <a href="mailto:info@aglaya.biz" class="text-brand hover:text-brand-light underline underline-offset-2">info@aglaya.biz</a></li>
+      </ul>
+      <p>O Encarregado recebe comunicações de titulares de dados e da Autoridade Nacional de Proteção de Dados (ANPD).</p>
 
       <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Dados que Coletamos</h2>
-      <p>Quando você envia um formulário de contato, ROI Audit ou dispatch, podemos coletar seu nome, e-mail, empresa, site, mensagem, sinais de qualificação e o contexto de entrada associado à solicitação. Se a proteção anti-bot estiver ativa, o hCaptcha também processa dados técnicos de verificação para nos ajudar a bloquear abuso.</p>
+      <p>Quando você envia um formulário de contato, ROI Audit, orçamento ou dispatch, podemos coletar seu nome, e-mail, empresa, site, mensagem, sinais de qualificação e o contexto de entrada associado à solicitação. Se a proteção anti-bot estiver ativa, o hCaptcha também processa dados técnicos de verificação para nos ajudar a bloquear abusos.</p>
 
       <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Como os Utilizamos</h2>
-      <p>Usamos os dados da consulta para revisar aderência, responder à solicitação, qualificar se um engagement se justifica e encaminhar o lead operacionalmente dentro dos nossos sistemas. As inscrições no dispatch são usadas apenas para enviar as atualizações editoriais às quais você aderiu de forma explícita.</p>
-
-      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Operadores que Utilizamos</h2>
-      <p>Os e-mails transacionais e de notificação são enviados por meio do Resend. Assinantes do dispatch e leads segmentados de contato podem ser sincronizados com o MailerLite quando essa integração estiver ativa na nossa stack. A verificação antiabuso é feita com hCaptcha. Também usamos o Sentry para monitoramento técnico de erros, de modo a detectar e corrigir falhas no navegador, no runtime do Astro e nas funções que processam formulários. Não vendemos seus dados pessoais.</p>
-
-      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Retenção de Dados e Transferências Internacionais</h2>
-      <p>Retemos seus dados apenas pelo tempo necessário para os fins descritos acima. Prazos aproximados por operador: <strong>MailerLite</strong> — dados do assinante mantidos enquanto a assinatura estiver ativa, excluídos em até 30 dias após solicitação de exclusão verificada; <strong>Resend</strong> — metadados de entrega de e-mail retidos por até 3 dias; <strong>Sentry</strong> — eventos de erro retidos por 90 dias; <strong>Netlify</strong> — logs de invocação de funções retidos por 7 dias. Alguns operadores estão sediados fora do Espaço Econômico Europeu: Resend (EUA), hCaptcha (EUA), Sentry (EUA) e Netlify (EUA) operam sob Cláusulas Contratuais Padrão ou salvaguardas de adequação equivalentes. O MailerLite está sediado em Vilnius, Lituânia (EEE). Você pode solicitar cópias das salvaguardas de transferência aplicáveis entrando em contato com <a href="mailto:info@aglaya.biz" class="text-brand hover:text-brand-light underline underline-offset-2">info@aglaya.biz</a>.</p>
+      <p>Usamos os dados da consulta para revisar aderência, responder à solicitação, qualificar se um engagement se justifica e encaminhar o lead operacionalmente dentro dos nossos sistemas. As inscrições no dispatch são usadas apenas para enviar as atualizações editoriais às quais você aderiu de forma explícita. Os dados do formulário de orçamento são usados exclusivamente para gerar e entregar o orçamento solicitado.</p>
 
       <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Base Legal</h2>
-      <p>Para solicitações de proposta, contato e ROI Audit, tratamos seus dados para atender o pedido que você iniciou, avaliar aderência operacional e continuar a conversa pré-contratual quando isso fizer sentido. Para inscrições no dispatch e comunicações opcionais, nos baseamos no consentimento concedido no próprio formulário, que pode ser retirado a qualquer momento.</p>
+      <p>
+        Em conformidade com a <strong>Lei Geral de Proteção de Dados (LGPD — Lei 13.709/2018)</strong>, os tratamentos realizados pela AGLAYA se fundamentam nas seguintes hipóteses legais previstas no art. 7º:
+      </p>
+      <ul class="flex flex-col gap-2 list-disc list-inside pl-2">
+        <li>Para solicitações de contato, proposta, ROI Audit e orçamento: <strong>legítimo interesse do controlador</strong> (art. 7º, IX) e <strong>execução de procedimentos preliminares relacionados a contrato</strong> (art. 7º, V), na medida em que não prevaleçam os direitos e liberdades do titular.</li>
+        <li>Para inscrições no dispatch e comunicações de marketing: <strong>consentimento do titular</strong> (art. 7º, I), que pode ser revogado a qualquer momento.</li>
+      </ul>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Operadores que Utilizamos</h2>
+      <p>Os e-mails transacionais e de notificação são enviados por meio do Resend. Assinantes do dispatch e leads segmentados de contato podem ser sincronizados com o MailerLite quando essa integração estiver ativa na nossa stack. A verificação antiabuso é feita com hCaptcha. Também usamos o Sentry para monitoramento técnico de erros. A infraestrutura do site opera sobre Netlify. Não vendemos seus dados pessoais.</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Retenção de Dados e Transferências Internacionais</h2>
+      <p>Retemos seus dados apenas pelo tempo necessário para os fins descritos acima. Prazos aproximados por operador: <strong>MailerLite</strong> — dados do assinante mantidos enquanto a assinatura estiver ativa, excluídos em até 30 dias após solicitação de exclusão verificada; <strong>Resend</strong> — metadados de entrega de e-mail retidos por até 3 dias; <strong>Sentry</strong> — eventos de erro retidos por 90 dias; <strong>Netlify</strong> — logs de invocação de funções retidos por 7 dias. Alguns operadores estão sediados fora do Brasil: Resend (EUA), hCaptcha (EUA), Sentry (EUA) e Netlify (EUA) operam sob Cláusulas Contratuais Padrão ou salvaguardas de adequação equivalentes, conforme exigido pelo art. 33 da LGPD. O MailerLite está sediado em Vilnius, Lituânia (EEE). Você pode solicitar cópias das salvaguardas de transferência aplicáveis entrando em contato com <a href="mailto:info@aglaya.biz" class="text-brand hover:text-brand-light underline underline-offset-2">info@aglaya.biz</a>.</p>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Medidas de Segurança</h2>
+      <p>Adotamos medidas técnicas e organizacionais adequadas para proteger os dados pessoais contra acesso não autorizado, perda acidental, destruição ou alteração, em cumprimento ao art. 46 da LGPD. Essas medidas incluem: transmissão de dados criptografada (HTTPS/TLS em todos os endpoints), controles de acesso nas plataformas de tratamento e práticas de segurança exigidas contratualmente aos nossos suboperadores por meio de instrumentos jurídicos adequados.</p>
 
       <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Análise</h2>
       <p>Se você aceitar todos os cookies, podemos carregar scripts de análise e medição via Google Tag Manager para entender padrões agregados de tráfego e interação. Esses scripts não são carregados até que o consentimento seja concedido.</p>
 
       <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Seus Direitos</h2>
-      <p>Você pode solicitar acesso, correção, exclusão ou limitação do tratamento de quaisquer dados pessoais que mantenhamos entrando em contato com <a href="mailto:info@aglaya.biz" class="text-brand hover:text-brand-light underline underline-offset-2">info@aglaya.biz</a>. Se você se inscreveu no dispatch, cada envio também inclui um caminho de descadastro.</p>
+      <p>Nos termos do art. 18 da LGPD, você tem os seguintes direitos em relação aos seus dados pessoais:</p>
+      <ul class="flex flex-col gap-2 list-disc list-inside pl-2">
+        <li><span class="text-white font-semibold">Confirmação:</span> confirmar se realizamos o tratamento dos seus dados pessoais.</li>
+        <li><span class="text-white font-semibold">Acesso:</span> obter uma cópia dos seus dados pessoais que tratamos.</li>
+        <li><span class="text-white font-semibold">Correção:</span> solicitar a correção de dados incompletos, inexatos ou desatualizados.</li>
+        <li><span class="text-white font-semibold">Anonimização, bloqueio ou eliminação:</span> solicitar a anonimização, bloqueio ou eliminação de dados desnecessários, excessivos ou tratados em desconformidade com a LGPD.</li>
+        <li><span class="text-white font-semibold">Portabilidade:</span> solicitar a portabilidade dos seus dados a outro fornecedor de serviço ou produto, mediante requisição expressa.</li>
+        <li><span class="text-white font-semibold">Eliminação:</span> solicitar a eliminação dos dados pessoais tratados com seu consentimento.</li>
+        <li><span class="text-white font-semibold">Informação sobre compartilhamento:</span> obter informação sobre as entidades públicas e privadas com as quais compartilhamos seus dados.</li>
+        <li><span class="text-white font-semibold">Informação sobre não fornecer consentimento:</span> ser informado sobre a possibilidade de não fornecer consentimento e as consequências da negativa.</li>
+        <li><span class="text-white font-semibold">Revogação do consentimento:</span> revogar o consentimento a qualquer momento, sem que isso afete a licitude do tratamento realizado antes da revogação. Cada envio do dispatch também contém um link de descadastro.</li>
+      </ul>
+      <p>Para exercer qualquer desses direitos, entre em contato com o Encarregado pelo e-mail <a href="mailto:info@aglaya.biz" class="text-brand hover:text-brand-light underline underline-offset-2">info@aglaya.biz</a>. Responderemos no prazo de 15 dias úteis, conforme exigido pela LGPD.</p>
+      <p>Você também tem o direito de peticionar à <strong>Autoridade Nacional de Proteção de Dados (ANPD)</strong> em caso de descumprimento da LGPD. Mais informações em <a href="https://www.gov.br/anpd" class="text-brand hover:text-brand-light underline underline-offset-2" target="_blank" rel="noopener noreferrer">gov.br/anpd</a>.</p>
 
       <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Cookies</h2>
-      <p>Consulte nossa <a href="/pt/cookies/" class="text-brand hover:text-brand-light underline underline-offset-2">Política de Cookies</a> para mais detalhes.</p>
+      <p>Consulte nossa <a href="/pt/cookies/" class="text-brand hover:text-brand-light underline underline-offset-2">Política de Cookies</a> para mais detalhes sobre o uso de cookies e como gerenciar suas preferências.</p>
     </div>
   </main>
   <Footer />

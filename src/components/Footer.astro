@@ -38,6 +38,16 @@ const primaryLinks = [
 ---
 
 <footer class="relative overflow-hidden border-t border-white/8 bg-[#040404] pt-20 pb-10">
+  <script>
+  document.getElementById('footer-cookie-reset')?.addEventListener('click', () => {
+    localStorage.removeItem('aglaya_cookie_consent');
+    const banner = document.getElementById('cookie-banner');
+    if (banner) {
+      banner.hidden = false;
+      requestAnimationFrame(() => requestAnimationFrame(() => banner.classList.add('is-visible')));
+    }
+  });
+  </script>
   <div class="absolute inset-0 bg-grid opacity-15 pointer-events-none"></div>
   <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent pointer-events-none"></div>
 
@@ -120,6 +130,13 @@ const primaryLinks = [
         <a href={avisoLegalPath} class="text-white/42 hover:text-white font-display text-[11px] font-bold uppercase tracking-[0.18em] transition-colors">
           {t('nav.legal_notice')}
         </a>
+        <button
+          id="footer-cookie-reset"
+          type="button"
+          class="text-white/42 hover:text-white font-display text-[11px] font-bold uppercase tracking-[0.18em] transition-colors cursor-pointer bg-transparent border-none p-0"
+        >
+          {t('footer.cookie_preferences')}
+        </button>
         <span class="text-white/22 font-mono text-[10px] uppercase tracking-[0.2em]">
           © {currentYear} AGLAYA
         </span>

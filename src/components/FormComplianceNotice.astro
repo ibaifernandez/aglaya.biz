@@ -3,7 +3,7 @@ import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/util
 
 interface Props {
   checkboxId: string;
-  variant: 'contact' | 'dispatch';
+  variant: 'contact' | 'dispatch' | 'quote';
 }
 
 const { checkboxId, variant } = Astro.props;
@@ -19,11 +19,15 @@ const cookiesPath = translatePath('/cookies/');
 const label =
   variant === 'dispatch'
     ? t('footer.dispatch.consent_label')
+    : variant === 'quote'
+    ? t('quote.form.privacy')
     : t('contact.form.consent_label');
 
 const note =
   variant === 'dispatch'
     ? t('footer.dispatch.consent_note')
+    : variant === 'quote'
+    ? t('quote.form.consent_note')
     : t('contact.form.consent_note');
 ---
 
