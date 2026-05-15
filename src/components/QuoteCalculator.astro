@@ -1,6 +1,7 @@
 ---
 import { useTranslations } from '../i18n/utils';
 import type { Lang } from '../i18n/translations';
+import FormComplianceNotice from './FormComplianceNotice.astro';
 
 interface Props {
   lang: Lang;
@@ -276,18 +277,7 @@ const ADDON_PRICES = {
         />
       </div>
 
-      <div class="flex items-start gap-3">
-        <input
-          id="quote-privacy"
-          type="checkbox"
-          name="privacy_consent"
-          required
-          class="mt-1 w-4 h-4 accent-brand cursor-pointer shrink-0"
-        />
-        <label for="quote-privacy" class="text-white/40 font-body text-xs leading-relaxed cursor-pointer">
-          {t('quote.form.privacy')}
-        </label>
-      </div>
+      <FormComplianceNotice checkboxId="quote-privacy" variant="quote" />
 
       <!-- No product selected warning -->
       <p id="quote-no-product-warning" class="text-brand font-mono text-xs hidden" role="alert">

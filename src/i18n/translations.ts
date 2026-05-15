@@ -50,6 +50,7 @@ export const ui = {
     'footer.links.services': 'Inspect the architecture layers we actually deploy.',
     'footer.links.contact': 'If the fit is urgent, skip the dispatch and open a direct channel.',
     'footer.bottom': 'Sovereign systems. Zero platform dependency theatre.',
+    'footer.cookie_preferences': 'Cookie Preferences',
 
     /* Meta */
     'meta.title': 'AGLAYA — The Uncomfortable Agency',
@@ -62,6 +63,7 @@ export const ui = {
     'cookie.reject': 'Decline',
     'cookie.policy_link': 'Cookie Policy',
     'cookie.privacy_link': 'Privacy Policy',
+    'cookie.reset': 'Reset Cookie Preferences',
 
     /* Hero */
     'hero.eyebrow': 'We build systems that empower your business while you sleep',
@@ -363,6 +365,7 @@ export const ui = {
     'quote.form.submit': 'Get My Quote →',
     'quote.form.submitting': 'Generating PDF...',
     'quote.form.privacy': 'I have read the Privacy Policy and authorize AGLAYA to process my data to generate and send this quote.',
+    'quote.form.consent_note': 'Required. We use this data only to generate and deliver the quote you requested.',
     'quote.success.heading': 'Your quote is on its way.',
     'quote.success.subtext': 'Check your inbox. A full breakdown PDF has been sent to your email address.',
     'quote.success.total_label': 'Project Total',
@@ -425,6 +428,7 @@ export const ui = {
     'footer.links.services': 'Inspecciona las capas de arquitectura que realmente desplegamos.',
     'footer.links.contact': 'Si el encaje es urgente, sáltate el dispatch y abre un canal directo.',
     'footer.bottom': 'Sistemas soberanos. Cero teatro de dependencia de plataforma.',
+    'footer.cookie_preferences': 'Preferencias de Cookies',
 
     /* Meta */
     'meta.title': 'AGLAYA — La Agencia Incómoda',
@@ -437,6 +441,7 @@ export const ui = {
     'cookie.reject': 'Rechazar',
     'cookie.policy_link': 'Política de Cookies',
     'cookie.privacy_link': 'Política de Privacidad',
+    'cookie.reset': 'Restablecer Preferencias de Cookies',
 
     /* Hero */
     'hero.eyebrow': 'Construimos sistemas que empoderan tu negocio mientras duermes',
@@ -732,6 +737,7 @@ export const ui = {
     'quote.form.submit': 'Obtener mi cotización →',
     'quote.form.submitting': 'Generando PDF...',
     'quote.form.privacy': 'He leído la Política de Privacidad y autorizo a AGLAYA a tratar mis datos para generar y enviar esta cotización.',
+    'quote.form.consent_note': 'Obligatorio. Usamos estos datos únicamente para generar y entregar la cotización que has solicitado.',
     'quote.success.heading': 'Tu cotización está en camino.',
     'quote.success.subtext': 'Revisa tu bandeja de entrada. Hemos enviado un PDF con el desglose completo a tu correo.',
     'quote.success.total_label': 'Total del Proyecto',
@@ -793,6 +799,7 @@ export const ui = {
     'footer.links.services': 'Inspecione as camadas de arquitetura que realmente implementamos.',
     'footer.links.contact': 'Se o encaixe for urgente, pule o dispatch e abra um canal direto.',
     'footer.bottom': 'Sistemas soberanos. Zero teatro de dependência de plataforma.',
+    'footer.cookie_preferences': 'Preferências de Cookies',
 
     /* Meta */
     'meta.title': 'AGLAYA — A Agência Desconfortável',
@@ -805,6 +812,7 @@ export const ui = {
     'cookie.reject': 'Recusar',
     'cookie.policy_link': 'Política de Cookies',
     'cookie.privacy_link': 'Política de Privacidade',
+    'cookie.reset': 'Redefinir Preferências de Cookies',
 
     /* Hero */
     'hero.eyebrow': 'Construímos sistemas que potencializam seu negócio enquanto você dorme',
@@ -1106,6 +1114,7 @@ export const ui = {
     'quote.form.submit': 'Obter meu orçamento →',
     'quote.form.submitting': 'Gerando PDF...',
     'quote.form.privacy': 'Li a Política de Privacidade e autorizo a AGLAYA a tratar meus dados para gerar e enviar este orçamento.',
+    'quote.form.consent_note': 'Obrigatório. Usamos esses dados apenas para gerar e entregar o orçamento que você solicitou.',
     'quote.success.heading': 'Seu orçamento está a caminho.',
     'quote.success.subtext': 'Verifique a sua caixa de entrada. Enviamos um PDF com o desglose completo para o seu e-mail.',
     'quote.success.total_label': 'Total do Projeto',

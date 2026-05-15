@@ -8,27 +8,110 @@ import Footer from '../../components/Footer.astro';
   title="Política de Cookies — AGLAYA"
   description="Como a AGLAYA utiliza cookies em aglaya.biz"
   lang="pt"
-  noindex={true}
 >
   <Header />
   <main id="main-content" class="max-w-7xl mx-auto px-6 sm:px-10 lg:px-20 py-40 flex flex-col gap-12">
     <h1 class="font-display font-black text-4xl sm:text-6xl uppercase tracking-tighter text-white">Política de Cookies</h1>
 
     <div class="max-w-2xl flex flex-col gap-6 text-white/70 font-body leading-relaxed">
-      <p>Última atualização: abril de 2026</p>
+      <p>Última atualização: 15 de maio de 2026</p>
 
-      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Cookies Essenciais</h2>
-      <p>Necessários para o funcionamento do site. Não podem ser desativados. Incluem gerenciamento de sessão e tokens de segurança. Nenhum dado pessoal é armazenado.</p>
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">O que Utilizamos</h2>
+      <p>O aglaya.biz usa uma combinação de localStorage do navegador e cookies de terceiros para manter a integridade do site, proteger contra abusos e — com o seu consentimento explícito — analisar padrões agregados de tráfego. Não são usados cookies de publicidade nem de rastreamento entre sites.</p>
 
-      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Cookies de Análise</h2>
-      <p>Utilizados para entender como os visitantes interagem com o site (páginas visitadas, duração da sessão, fontes de tráfego). Dados agregados — sem rastreamento individual. Ativados apenas se você aceitar todos os cookies.</p>
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Essenciais (Sempre Ativos)</h2>
+      <p>Estes não podem ser desativados. São estritamente necessários para o funcionamento do site e não armazenam dados de identificação pessoal.</p>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="border-b border-white/10">
+              <th class="text-left text-white/50 font-mono text-[10px] uppercase tracking-widest py-3 pr-4">Nome / Chave</th>
+              <th class="text-left text-white/50 font-mono text-[10px] uppercase tracking-widest py-3 pr-4">Provedor</th>
+              <th class="text-left text-white/50 font-mono text-[10px] uppercase tracking-widest py-3 pr-4">Finalidade</th>
+              <th class="text-left text-white/50 font-mono text-[10px] uppercase tracking-widest py-3">Duração</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-white/5">
+            <tr>
+              <td class="py-3 pr-4 font-mono text-xs text-white/80">aglaya_cookie_consent</td>
+              <td class="py-3 pr-4">AGLAYA</td>
+              <td class="py-3 pr-4">Armazena sua escolha de consentimento de cookies (chave de localStorage — não é um cookie). Evita que o banner apareça novamente após a sua decisão.</td>
+              <td class="py-3">Até limpeza manual</td>
+            </tr>
+            <tr>
+              <td class="py-3 pr-4 font-mono text-xs text-white/80">hCaptcha sessão</td>
+              <td class="py-3 pr-4">hCaptcha (Intuition Machines, Inc. — EUA)</td>
+              <td class="py-3 pr-4">Token de verificação antiabuso. Necessário para enviar formulários de contato, ROI Audit, orçamento e dispatch. Nenhum dado pessoal é armazenado além da sessão de verificação.</td>
+              <td class="py-3">Sessão</td>
+            </tr>
+            <tr>
+              <td class="py-3 pr-4 font-mono text-xs text-white/80">Sentry sessão</td>
+              <td class="py-3 pr-4">Sentry (Functional Software, Inc. — EUA)</td>
+              <td class="py-3 pr-4">Monitoramento anônimo de erros. Captura erros do navegador e dados de desempenho para nos ajudar a detectar e corrigir falhas do site. Nenhum dado pessoal é coletado intencionalmente.</td>
+              <td class="py-3">Sessão / até 90 dias no Sentry</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Análise (Requer Consentimento)</h2>
+      <p>Estes são carregados somente após você clicar em "Aceitar Tudo". Se escolher "Apenas Essenciais" ou "Recusar", nenhum deles é carregado.</p>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="border-b border-white/10">
+              <th class="text-left text-white/50 font-mono text-[10px] uppercase tracking-widest py-3 pr-4">Nome / Chave</th>
+              <th class="text-left text-white/50 font-mono text-[10px] uppercase tracking-widest py-3 pr-4">Provedor</th>
+              <th class="text-left text-white/50 font-mono text-[10px] uppercase tracking-widest py-3 pr-4">Finalidade</th>
+              <th class="text-left text-white/50 font-mono text-[10px] uppercase tracking-widest py-3">Duração</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-white/5">
+            <tr>
+              <td class="py-3 pr-4 font-mono text-xs text-white/80">_ga, _ga_*</td>
+              <td class="py-3 pr-4">Google Analytics 4 (Google LLC — EUA)</td>
+              <td class="py-3 pr-4">Análise agregada de tráfego: páginas visitadas, duração da sessão, fontes de tráfego. Dados anonimizados — sem rastreamento individual.</td>
+              <td class="py-3">_ga: 2 anos; _ga_*: 2 anos</td>
+            </tr>
+            <tr>
+              <td class="py-3 pr-4 font-mono text-xs text-white/80">GTM container</td>
+              <td class="py-3 pr-4">Google Tag Manager (Google LLC — EUA)</td>
+              <td class="py-3 pr-4">Carrega scripts de análise após a confirmação do consentimento. O GTM não define cookies próprios.</td>
+              <td class="py-3">Sessão</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Suas Opções</h2>
-      <p>Você pode alterar suas preferências a qualquer momento excluindo a chave <code>aglaya_cookie_consent</code> do <code>localStorage</code> do seu navegador e recarregando a página.</p>
+      <p>Você pode alterar suas preferências de cookies a qualquer momento usando o botão abaixo. Ao clicar, sua escolha salva é apagada e o banner de consentimento é exibido novamente.</p>
+
+      <button
+        id="reset-cookies-btn"
+        type="button"
+        class="inline-flex items-center gap-2 border border-white/20 bg-white/[0.03] px-5 py-3 font-display text-[11px] font-black uppercase tracking-[0.18em] text-white/70 transition-all hover:border-white/40 hover:text-white cursor-pointer"
+      >
+        Redefinir Preferências de Cookies
+      </button>
+
+      <p class="text-white/46 text-xs">Você também pode apagar manualmente a chave <code class="font-mono bg-white/5 px-1 py-0.5 rounded">aglaya_cookie_consent</code> do localStorage nas ferramentas de desenvolvedor do seu navegador.</p>
 
       <h2 class="text-white font-display font-black text-xl uppercase tracking-widest">Contato</h2>
-      <p>Dúvidas? <a href="mailto:info@aglaya.biz" class="text-brand hover:text-brand-light underline underline-offset-2">info@aglaya.biz</a></p>
+      <p>Dúvidas sobre cookies ou dados? <a href="mailto:info@aglaya.biz" class="text-brand hover:text-brand-light underline underline-offset-2">info@aglaya.biz</a></p>
     </div>
   </main>
   <Footer />
 </BaseLayout>
+
+<script>
+document.getElementById('reset-cookies-btn')?.addEventListener('click', () => {
+  localStorage.removeItem('aglaya_cookie_consent');
+  const banner = document.getElementById('cookie-banner');
+  if (banner) {
+    banner.hidden = false;
+    requestAnimationFrame(() => requestAnimationFrame(() => banner.classList.add('is-visible')));
+  }
+});
+</script>
