@@ -58,15 +58,15 @@
       const onEnter = () => { if (active) cursor.style.opacity = '1'; };
 
       const onOver = (e: MouseEvent) => {
-        const t = e.target as HTMLElement;
-        if (t?.closest('a,button,input,textarea,select')) {
+        const t = e.target;
+        if (t instanceof Element && t.closest('a,button,input,textarea,select')) {
           targetScale = 3;
           cursor.classList.add('is-hovering');
         }
       };
       const onOut = (e: MouseEvent) => {
-        const t = e.target as HTMLElement;
-        if (t?.closest('a,button,input,textarea,select')) {
+        const t = e.target;
+        if (t instanceof Element && t.closest('a,button,input,textarea,select')) {
           targetScale = 1;
           cursor.classList.remove('is-hovering');
         }
