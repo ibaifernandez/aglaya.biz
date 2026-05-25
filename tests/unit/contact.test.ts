@@ -5,7 +5,10 @@ describe('contact function', () => {
   beforeEach(() => {
     vi.resetModules();
     vi.clearAllMocks();
-    
+    // Reset all stubbed env vars so prior tests don't leak (MailerLite/CRM
+    // stubs in particular flip call counts in unrelated cases).
+    vi.unstubAllEnvs();
+
     vi.stubEnv('RESEND_API_KEY', 're_test_123');
     vi.stubEnv('HCAPTCHA_SECRET', 'test_hcaptcha_secret');
     vi.stubEnv('NOTIFY_EMAIL', 'info@aglaya.biz');
@@ -215,5 +218,380 @@ describe('contact function', () => {
 
     expect(result.statusCode).toBe(422);
     expect(JSON.parse(result.body).error).toBe('Bot verification failed');
+  });
+
+  /* ── CRM dispatch ─────────────────────────────────── */
+
+  it('skips CRM dispatch when CRM_API_KEY or CRM_LEADS_CAPTURE_URL is missing', async () => {
+    // No CRM env stubbed; both vars absent.
+    const result = await (contact.handler({
+      httpMethod: 'POST',
+      headers: { 'x-forwarded-for': '127.0.0.1' },
+      body: JSON.stringify({
+        name: 'Jane',
+        email: 'jane@example.com',
+        message: 'Quiero un audit',
+        token: 'test_token',
+        icp_status: 'QUALIFIED',
+        icp_primary_state: 'qualified',
+        icp_signal_score: '82',
+        privacy_consent: true,
+      }),
+    } as any, {} as any)) as any;
+
+    expect(result.statusCode).toBe(200);
+
+    const fetchMock = global.fetch as ReturnType<typeof vi.fn>;
+    // hcaptcha + internal notification only (no MailerLite, no CRM)
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('dispatches qualified leads to CRM with correct source, score, language, and notes', async () => {
+    vi.stubEnv('CRM_API_KEY', 'crm_test_key');
+    vi.stubEnv('CRM_LEADS_CAPTURE_URL', 'https://crm.example.test/api/v1/admin/crm/leads/capture');
+
+    global.fetch = vi.fn().mockImplementation((url: string) => {
+      if (typeof url === 'string' && url.includes('/leads/capture')) {
+        return Promise.resolve({
+          ok: true,
+          status: 201,
+          json: () =>
+            Promise.resolve({
+              contact_id: 'contact_42',
+              deal_id: 'deal_99',
+              deal_path: '/deals/99',
+              lead_score: 82,
+              language: 'en',
+            }),
+          text: () => Promise.resolve('ok'),
+        });
+      }
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({ success: true }),
+        text: () => Promise.resolve('ok'),
+      });
+    });
+
+    const result = await (contact.handler({
+      httpMethod: 'POST',
+      headers: { 'x-forwarded-for': '127.0.0.1' },
+      body: JSON.stringify({
+        name: 'Jane',
+        email: 'jane@example.com',
+        company: 'Acme',
+        message: 'We want help.',
+        token: 'test_token',
+        icp_status: 'QUALIFIED',
+        icp_primary_state: 'qualified',
+        icp_signal_score: '82',
+        manual_execution: '75',
+        data_infrastructure: 'crm',
+        growth_investment: 'between_15_40',
+        lang: 'en',
+        privacy_consent: true,
+      }),
+    } as any, {} as any)) as any;
+
+    expect(result.statusCode).toBe(200);
+
+    const fetchMock = global.fetch as ReturnType<typeof vi.fn>;
+    // hcaptcha + internal notification + CRM dispatch (no MailerLite, env not stubbed)
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+
+    const crmCall = fetchMock.mock.calls.find(([url]) =>
+      typeof url === 'string' && url.includes('/leads/capture'),
+    );
+    expect(crmCall).toBeTruthy();
+    const [crmUrl, crmInit] = crmCall as [string, RequestInit];
+    expect(crmUrl).toBe('https://crm.example.test/api/v1/admin/crm/leads/capture');
+    expect(crmInit.method).toBe('POST');
+    expect((crmInit.headers as Record<string, string>)['X-CRM-API-Key']).toBe('crm_test_key');
+
+    const crmPayload = JSON.parse(String(crmInit.body));
+    expect(crmPayload.email).toBe('jane@example.com');
+    expect(crmPayload.source).toBe('aglaya-form-qualified');
+    expect(crmPayload.lead_score).toBe(82);
+    expect(crmPayload.language).toBe('en');
+    expect(crmPayload.name).toBe('Jane');
+    expect(crmPayload.company).toBe('Acme');
+    expect(crmPayload.notes).toContain('icp=qualified');
+    expect(crmPayload.notes).toContain('score=82');
+    expect(crmPayload.notes).toContain('data=crm');
+    expect(crmPayload.notes).toContain('investment=between_15_40');
+    expect(crmPayload.notes).toContain('manual=75');
+    expect(crmPayload.notes).toContain('We want help.');
+    // UTMs not implemented yet; payload sends nulls
+    expect(crmPayload.utm_source).toBeNull();
+    expect(crmPayload.fbclid).toBeNull();
+  });
+
+  it('maps BORDERLINE icp_status to aglaya-form-borderline source', async () => {
+    vi.stubEnv('CRM_API_KEY', 'crm_test_key');
+    vi.stubEnv('CRM_LEADS_CAPTURE_URL', 'https://crm.example.test/api/v1/admin/crm/leads/capture');
+
+    let capturedSource: string | undefined;
+    global.fetch = vi.fn().mockImplementation((url: string, init?: RequestInit) => {
+      if (typeof url === 'string' && url.includes('/leads/capture') && init?.body) {
+        capturedSource = JSON.parse(String(init.body)).source;
+        return Promise.resolve({
+          ok: true,
+          status: 201,
+          json: () => Promise.resolve({ contact_id: 'c', deal_id: 'd', lead_score: 60, language: 'es' }),
+          text: () => Promise.resolve('ok'),
+        });
+      }
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ success: true }),
+        text: () => Promise.resolve('ok'),
+      });
+    });
+
+    const result = await (contact.handler({
+      httpMethod: 'POST',
+      headers: { 'x-forwarded-for': '127.0.0.1' },
+      body: JSON.stringify({
+        email: 'bord@example.com',
+        message: 'hola',
+        token: 'test_token',
+        icp_status: 'BORDERLINE',
+        icp_signal_score: '60',
+        lang: 'es',
+        privacy_consent: true,
+      }),
+    } as any, {} as any)) as any;
+
+    expect(result.statusCode).toBe(200);
+    expect(capturedSource).toBe('aglaya-form-borderline');
+  });
+
+  it('maps OPEN_CHANNEL and BLOCKED_* icp_status to aglaya-form-open-channel source', async () => {
+    vi.stubEnv('CRM_API_KEY', 'crm_test_key');
+    vi.stubEnv('CRM_LEADS_CAPTURE_URL', 'https://crm.example.test/api/v1/admin/crm/leads/capture');
+
+    const sources: string[] = [];
+    global.fetch = vi.fn().mockImplementation((url: string, init?: RequestInit) => {
+      if (typeof url === 'string' && url.includes('/leads/capture') && init?.body) {
+        sources.push(JSON.parse(String(init.body)).source);
+        return Promise.resolve({
+          ok: true,
+          status: 201,
+          json: () => Promise.resolve({ contact_id: 'c', deal_id: 'd' }),
+          text: () => Promise.resolve('ok'),
+        });
+      }
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ success: true }),
+        text: () => Promise.resolve('ok'),
+      });
+    });
+
+    await contact.handler({
+      httpMethod: 'POST',
+      headers: { 'x-forwarded-for': '127.0.0.1' },
+      body: JSON.stringify({
+        email: 'a@example.com',
+        message: 'm',
+        token: 'test_token',
+        icp_status: 'OPEN_CHANNEL',
+        privacy_consent: true,
+      }),
+    } as any, {} as any);
+
+    await contact.handler({
+      httpMethod: 'POST',
+      headers: { 'x-forwarded-for': '127.0.0.1' },
+      body: JSON.stringify({
+        email: 'b@example.com',
+        message: 'm',
+        token: 'test_token',
+        icp_status: 'BLOCKED_INVESTMENT',
+        privacy_consent: true,
+      }),
+    } as any, {} as any);
+
+    expect(sources).toEqual(['aglaya-form-open-channel', 'aglaya-form-open-channel']);
+  });
+
+  it('treats CRM 201 with null deal_id as excluded and still returns 200 to the user', async () => {
+    vi.stubEnv('CRM_API_KEY', 'crm_test_key');
+    vi.stubEnv('CRM_LEADS_CAPTURE_URL', 'https://crm.example.test/api/v1/admin/crm/leads/capture');
+
+    global.fetch = vi.fn().mockImplementation((url: string) => {
+      if (typeof url === 'string' && url.includes('/leads/capture')) {
+        return Promise.resolve({
+          ok: true,
+          status: 201,
+          json: () =>
+            Promise.resolve({
+              contact_id: null,
+              deal_id: null,
+              lead_score: null,
+              language: null,
+            }),
+          text: () => Promise.resolve('ok'),
+        });
+      }
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ success: true }),
+        text: () => Promise.resolve('ok'),
+      });
+    });
+
+    const result = await (contact.handler({
+      httpMethod: 'POST',
+      headers: { 'x-forwarded-for': '127.0.0.1' },
+      body: JSON.stringify({
+        email: 'ibai600+aglaya-form-smoke@gmail.com',
+        message: 'smoke',
+        token: 'test_token',
+        icp_status: 'QUALIFIED',
+        icp_signal_score: '80',
+        privacy_consent: true,
+      }),
+    } as any, {} as any)) as any;
+
+    expect(result.statusCode).toBe(200);
+    expect(JSON.parse(result.body)).toEqual({ success: true });
+  });
+
+  it('still returns 200 to the user when CRM responds with 401/422/503', async () => {
+    vi.stubEnv('CRM_API_KEY', 'crm_test_key');
+    vi.stubEnv('CRM_LEADS_CAPTURE_URL', 'https://crm.example.test/api/v1/admin/crm/leads/capture');
+
+    global.fetch = vi.fn().mockImplementation((url: string) => {
+      if (typeof url === 'string' && url.includes('/leads/capture')) {
+        return Promise.resolve({
+          ok: false,
+          status: 503,
+          json: () => Promise.resolve({}),
+          text: () => Promise.resolve('Service Unavailable'),
+        });
+      }
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ success: true }),
+        text: () => Promise.resolve('ok'),
+      });
+    });
+
+    const result = await (contact.handler({
+      httpMethod: 'POST',
+      headers: { 'x-forwarded-for': '127.0.0.1' },
+      body: JSON.stringify({
+        email: 'jane@example.com',
+        message: 'hi',
+        token: 'test_token',
+        icp_status: 'QUALIFIED',
+        icp_signal_score: '90',
+        privacy_consent: true,
+      }),
+    } as any, {} as any)) as any;
+
+    expect(result.statusCode).toBe(200);
+  });
+
+  it('still returns 500 to the user when Resend (canary) fails — CRM is a downstream sync, not a canary', async () => {
+    vi.stubEnv('CRM_API_KEY', 'crm_test_key');
+    vi.stubEnv('CRM_LEADS_CAPTURE_URL', 'https://crm.example.test/api/v1/admin/crm/leads/capture');
+
+    global.fetch = vi.fn().mockImplementation((url: string) => {
+      if (typeof url === 'string' && url.includes('api.resend.com')) {
+        return Promise.resolve({
+          ok: false,
+          status: 401,
+          json: () => Promise.resolve({}),
+          text: () => Promise.resolve('Unauthorized'),
+        });
+      }
+      // hcaptcha
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ success: true }),
+        text: () => Promise.resolve('ok'),
+      });
+    });
+
+    const result = await (contact.handler({
+      httpMethod: 'POST',
+      headers: { 'x-forwarded-for': '127.0.0.1' },
+      body: JSON.stringify({
+        email: 'jane@example.com',
+        message: 'hi',
+        token: 'test_token',
+        icp_status: 'QUALIFIED',
+        icp_signal_score: '90',
+        privacy_consent: true,
+      }),
+    } as any, {} as any)) as any;
+
+    expect(result.statusCode).toBe(500);
+  });
+
+  it('does not dispatch to CRM when icp_status is missing (e.g., general contact form)', async () => {
+    vi.stubEnv('CRM_API_KEY', 'crm_test_key');
+    vi.stubEnv('CRM_LEADS_CAPTURE_URL', 'https://crm.example.test/api/v1/admin/crm/leads/capture');
+
+    const result = await (contact.handler({
+      httpMethod: 'POST',
+      headers: { 'x-forwarded-for': '127.0.0.1' },
+      body: JSON.stringify({
+        email: 'general@example.com',
+        message: 'no ICP context here',
+        token: 'test_token',
+        inquiry_type: 'GENERAL_LEAD',
+        privacy_consent: true,
+      }),
+    } as any, {} as any)) as any;
+
+    expect(result.statusCode).toBe(200);
+
+    const fetchMock = global.fetch as ReturnType<typeof vi.fn>;
+    const crmCalls = fetchMock.mock.calls.filter(([url]) =>
+      typeof url === 'string' && url.includes('/leads/capture'),
+    );
+    expect(crmCalls.length).toBe(0);
+  });
+
+  it('clamps lead_score above 100 down to 100 (defense in depth) before sending to CRM', async () => {
+    vi.stubEnv('CRM_API_KEY', 'crm_test_key');
+    vi.stubEnv('CRM_LEADS_CAPTURE_URL', 'https://crm.example.test/api/v1/admin/crm/leads/capture');
+
+    let receivedScore: unknown;
+    global.fetch = vi.fn().mockImplementation((url: string, init?: RequestInit) => {
+      if (typeof url === 'string' && url.includes('/leads/capture') && init?.body) {
+        receivedScore = JSON.parse(String(init.body)).lead_score;
+        return Promise.resolve({
+          ok: true,
+          status: 201,
+          json: () => Promise.resolve({ contact_id: 'c', deal_id: 'd' }),
+          text: () => Promise.resolve('ok'),
+        });
+      }
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ success: true }),
+        text: () => Promise.resolve('ok'),
+      });
+    });
+
+    await contact.handler({
+      httpMethod: 'POST',
+      headers: { 'x-forwarded-for': '127.0.0.1' },
+      body: JSON.stringify({
+        email: 'x@example.com',
+        message: 'm',
+        token: 'test_token',
+        icp_status: 'QUALIFIED',
+        icp_signal_score: '999',
+        privacy_consent: true,
+      }),
+    } as any, {} as any);
+
+    expect(receivedScore).toBe(100);
   });
 });

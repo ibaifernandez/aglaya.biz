@@ -1,0 +1,245 @@
+/**
+ * CRM AGLAYA dispatch helper.
+ *
+ * Endpoint contract (negotiated with crm-aglaya thread, 2026-05-25):
+ *   POST <CRM_LEADS_CAPTURE_URL>
+ *   Header: X-CRM-API-Key
+ *   Body:   { email, name, company, phone, title, source, notes,
+ *             lead_score (0..100|null), language ('en'|'es'|'pt'|null),
+ *             utm_source, utm_medium, utm_campaign, utm_content,
+ *             utm_term, fbclid, landing_source } — all but email nullable
+ *   Resp:   201 with { contact_id, deal_id, deal_path, lead_score, language }
+ *
+ * Important behaviors:
+ *   - The CRM may respond 201 with `deal_id: null` when the email matches
+ *     an exclusion entry server-side (gmail plus-alias normalization,
+ *     blocklist, etc.). This is INTENTIONAL — the sender should not need to
+ *     know. We surface it as outcome='excluded' so callers can log it apart
+ *     from successful captures.
+ *   - 401/422/503 (or any non-2xx) → outcome='failed'. We never throw; the
+ *     caller decides what to do (typically: log + continue, never bounce
+ *     the visitor).
+ *   - If `CRM_API_KEY` or `CRM_LEADS_CAPTURE_URL` is unset, dispatch is
+ *     skipped silently with outcome='skipped'. Useful for local dev /
+ *     deploy-previews without the secret wired up.
+ */
+
+type CrmSource =
+  | 'aglaya-form-qualified'
+  | 'aglaya-form-borderline'
+  | 'aglaya-form-open-channel';
+
+type CrmLanguage = 'en' | 'es' | 'pt';
+
+export interface CrmLeadInput {
+  email: string;
+  source: CrmSource;
+  leadScore: number | null;
+  name?: string;
+  company?: string;
+  phone?: string;
+  title?: string;
+  notes?: string;
+  language?: CrmLanguage;
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_content?: string;
+  utm_term?: string;
+  fbclid?: string;
+  landing_source?: string;
+}
+
+export type CrmDispatchOutcome = 'skipped' | 'created' | 'excluded' | 'failed';
+
+export interface CrmDispatchResult {
+  outcome: CrmDispatchOutcome;
+  status?: number;
+  contactId?: string | null;
+  dealId?: string | null;
+  leadScoreEcho?: number | null;
+  languageEcho?: string | null;
+  error?: string;
+}
+
+const NOTES_MAX_LEN = 1800;
+
+function clampLeadScore(value: number | null | undefined): number | null {
+  if (value === null || value === undefined) return null;
+  if (!Number.isFinite(value)) return null;
+  return Math.max(0, Math.min(100, Math.round(value)));
+}
+
+function truncateNotes(notes: string, max = NOTES_MAX_LEN): string {
+  if (notes.length <= max) return notes;
+  return `${notes.slice(0, max - 1)}…`;
+}
+
+function nullableString(value: string | undefined): string | null {
+  if (value === undefined) return null;
+  const trimmed = value.trim();
+  return trimmed.length === 0 ? null : trimmed;
+}
+
+/**
+ * Map the ICP funnel status into the CRM source taxonomy negotiated with the
+ * CRM thread. Returns null if the status does not map to a CRM-bound source
+ * (e.g., empty, unknown, or a state we explicitly do not forward).
+ */
+export function deriveCrmSource(icpStatus?: string): CrmSource | null {
+  const normalized = (icpStatus ?? '').trim().toUpperCase();
+  if (normalized === 'QUALIFIED') return 'aglaya-form-qualified';
+  if (normalized === 'BORDERLINE') return 'aglaya-form-borderline';
+  if (normalized === 'OPEN_CHANNEL' || normalized.startsWith('BLOCKED')) {
+    return 'aglaya-form-open-channel';
+  }
+  return null;
+}
+
+export function deriveLeadScore(rawIcpSignalScore?: string): number | null {
+  if (rawIcpSignalScore === undefined || rawIcpSignalScore === null) return null;
+  const trimmed = String(rawIcpSignalScore).trim();
+  if (trimmed.length === 0) return null;
+  const parsed = Number.parseInt(trimmed, 10);
+  if (!Number.isFinite(parsed)) return null;
+  return clampLeadScore(parsed);
+}
+
+function normalizeLanguage(value: string | undefined): CrmLanguage | null {
+  if (value === 'en' || value === 'es' || value === 'pt') return value;
+  return null;
+}
+
+/**
+ * Build the short operator-facing notes string the brief asked for.
+ * Format: "[ICP=<state>, score=<n>, data=<x>, investment=<y>, manual=<z>] <user message>"
+ * Clamped to NOTES_MAX_LEN.
+ */
+export function buildCrmNotes(args: {
+  message?: string;
+  icpStatus?: string;
+  icpPrimaryState?: string;
+  manualExecution?: string;
+  dataInfrastructure?: string;
+  growthInvestment?: string;
+  leadScore?: number | null;
+}): string | null {
+  const summaryParts: string[] = [];
+  const state = (args.icpPrimaryState ?? args.icpStatus ?? '').trim().toLowerCase();
+  if (state) summaryParts.push(`icp=${state}`);
+  if (args.leadScore !== null && args.leadScore !== undefined) {
+    summaryParts.push(`score=${args.leadScore}`);
+  }
+  const data = (args.dataInfrastructure ?? '').trim();
+  if (data) summaryParts.push(`data=${data}`);
+  const investment = (args.growthInvestment ?? '').trim();
+  if (investment) summaryParts.push(`investment=${investment}`);
+  const manual = (args.manualExecution ?? '').trim();
+  if (manual) summaryParts.push(`manual=${manual}`);
+
+  const summary = summaryParts.length > 0 ? `[${summaryParts.join(', ')}]` : '';
+  const message = (args.message ?? '').trim();
+
+  const combined = [summary, message].filter(Boolean).join(' ');
+  if (!combined) return null;
+  return truncateNotes(combined);
+}
+
+export async function dispatchLeadToCrm(input: CrmLeadInput): Promise<CrmDispatchResult> {
+  const apiKey = (process.env.CRM_API_KEY ?? '').trim();
+  const url = (process.env.CRM_LEADS_CAPTURE_URL ?? '').trim();
+
+  if (!apiKey || !url) {
+    console.warn(
+      '[crm] CRM_API_KEY or CRM_LEADS_CAPTURE_URL not set — skipping CRM dispatch',
+    );
+    return { outcome: 'skipped' };
+  }
+
+  const body = {
+    email: input.email,
+    name: nullableString(input.name),
+    company: nullableString(input.company),
+    phone: nullableString(input.phone),
+    title: nullableString(input.title),
+    source: input.source,
+    notes: input.notes ? truncateNotes(input.notes) : null,
+    lead_score: clampLeadScore(input.leadScore),
+    language: normalizeLanguage(input.language),
+    utm_source: nullableString(input.utm_source),
+    utm_medium: nullableString(input.utm_medium),
+    utm_campaign: nullableString(input.utm_campaign),
+    utm_content: nullableString(input.utm_content),
+    utm_term: nullableString(input.utm_term),
+    fbclid: nullableString(input.fbclid),
+    landing_source: nullableString(input.landing_source),
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CRM-API-Key': apiKey,
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      const errText = await response.text().catch(() => '');
+      console.error(
+        `[crm] dispatch failed status=${response.status} email=${input.email} body=${errText.slice(0, 240)}`,
+      );
+      return {
+        outcome: 'failed',
+        status: response.status,
+        error: errText.slice(0, 500),
+      };
+    }
+
+    const data = (await response.json().catch(() => ({}))) as {
+      contact_id?: string | null;
+      deal_id?: string | null;
+      lead_score?: number | null;
+      language?: string | null;
+    };
+
+    const contactId = data?.contact_id ?? null;
+    const dealId = data?.deal_id ?? null;
+    const leadScoreEcho = typeof data?.lead_score === 'number' ? data.lead_score : null;
+    const languageEcho = typeof data?.language === 'string' ? data.language : null;
+
+    if (!dealId) {
+      // 201 with deal_id null = CRM-side exclusion filter caught it
+      console.log(
+        `[crm] lead excluded status=${response.status} email=${input.email} contact_id=${contactId ?? 'null'}`,
+      );
+      return {
+        outcome: 'excluded',
+        status: response.status,
+        contactId,
+        dealId,
+        leadScoreEcho,
+        languageEcho,
+      };
+    }
+
+    console.log(
+      `[crm] lead created status=${response.status} email=${input.email} deal_id=${dealId} lead_score=${leadScoreEcho ?? 'null'} language=${languageEcho ?? 'null'}`,
+    );
+    return {
+      outcome: 'created',
+      status: response.status,
+      contactId,
+      dealId,
+      leadScoreEcho,
+      languageEcho,
+    };
+  } catch (err) {
+    console.error('[crm] dispatch threw:', err);
+    return {
+      outcome: 'failed',
+      error: err instanceof Error ? err.message : String(err),
+    };
+  }
+}
