@@ -1,5 +1,13 @@
 import type { Handler } from "@netlify/functions";
 import { getContactGroupIds, upsertMailerLiteSubscriber } from "./_mailerlite";
+import {
+  buildCrmNotes,
+  CRM_ATTENTION_OUTCOMES,
+  deriveCrmSource,
+  deriveLeadScore,
+  dispatchLeadToCrm,
+  type CrmDispatchResult,
+} from "./_crm";
 import { captureFunctionException, initFunctionSentry } from "./_sentry";
 
 /* ── helpers ─────────────────────────────────── */
@@ -169,6 +177,10 @@ export const handler: Handler = async (event) => {
     service_interest?: string;
     icp_status?: string;
     icp_primary_state?: string;
+    icp_signal_score?: string;
+    manual_execution?: string;
+    data_infrastructure?: string;
+    growth_investment?: string;
     privacy_consent?: string | boolean;
     company_honeypot?: string;
   };
@@ -190,6 +202,10 @@ export const handler: Handler = async (event) => {
   const serviceInterest = (body.service_interest ?? "").trim();
   const icpStatus = (body.icp_status ?? "").trim();
   const icpPrimaryState = (body.icp_primary_state ?? "").trim();
+  const icpSignalScore = (body.icp_signal_score ?? "").trim();
+  const manualExecution = (body.manual_execution ?? "").trim();
+  const dataInfrastructure = (body.data_infrastructure ?? "").trim();
+  const growthInvestment = (body.growth_investment ?? "").trim();
   const privacyConsent = hasAcceptedConsent(body.privacy_consent);
   const honeypot = (body.company_honeypot ?? "").trim();
 
@@ -220,6 +236,9 @@ export const handler: Handler = async (event) => {
       };
     }
 
+    // Canary: Resend internal notification stays `await`-blocking. If it
+    // fails, we want to fail the request (so the operator notices the gap
+    // between form-submission email and CRM panel).
     await sendInternalNotification(
       name,
       email,
@@ -233,18 +252,30 @@ export const handler: Handler = async (event) => {
       icpStatus,
     );
 
-    try {
-      await syncContactToMailerLite({
-        email,
-        ip,
-        name,
-        company,
-        icpStatus,
-        icpPrimaryState,
-        entryPoint,
-        serviceInterest,
-      });
-    } catch (err) {
+    // Best-effort downstream syncs. Both swallow their own errors and
+    // surface them via Sentry below; neither bounces the visitor.
+    const crmSource = deriveCrmSource(icpStatus);
+    const leadScore = deriveLeadScore(icpSignalScore);
+    const crmNotes = buildCrmNotes({
+      message,
+      icpStatus,
+      icpPrimaryState,
+      manualExecution,
+      dataInfrastructure,
+      growthInvestment,
+      leadScore,
+    });
+
+    const mailerLitePromise = syncContactToMailerLite({
+      email,
+      ip,
+      name,
+      company,
+      icpStatus,
+      icpPrimaryState,
+      entryPoint,
+      serviceInterest,
+    }).catch(async (err) => {
       console.error("[contact] MailerLite sync error:", err);
       await captureFunctionException(err, {
         functionName: "contact",
@@ -258,6 +289,70 @@ export const handler: Handler = async (event) => {
           service_interest: serviceInterest || "general",
           has_company: Boolean(company),
           has_name: Boolean(name),
+        },
+      });
+    });
+
+    // Only dispatch to CRM if the form mapped to a known source. Forms
+    // without ICP context (e.g., the general ContactForm) intentionally
+    // do not land in the CRM via this path.
+    const crmDispatchPromise: Promise<CrmDispatchResult | null> = crmSource
+      ? dispatchLeadToCrm({
+          email,
+          source: crmSource,
+          leadScore,
+          name: name || undefined,
+          company: company || undefined,
+          notes: crmNotes ?? undefined,
+          language: lang,
+          // UTM/fbclid/landing_source pipeline not implemented yet; send nulls.
+          // Tracked as a follow-up (separate PR).
+        })
+      : Promise.resolve(null);
+
+    const [_mlSettled, crmSettled] = await Promise.allSettled([
+      mailerLitePromise,
+      crmDispatchPromise,
+    ]);
+
+    if (crmSettled.status === "fulfilled" && crmSettled.value) {
+      const result = crmSettled.value;
+      if (CRM_ATTENTION_OUTCOMES.has(result.outcome)) {
+        const errorMsg =
+          result.outcome === "anomaly"
+            ? "CRM dispatch anomaly: 2xx with excluded:false and deal_id:null"
+            : `CRM dispatch ${result.outcome}: ${result.error ?? "unknown"}`;
+        await captureFunctionException(new Error(errorMsg), {
+          functionName: "contact",
+          tags: {
+            stage: "crm-dispatch",
+            crm_outcome: result.outcome,
+            crm_status: String(result.status ?? "none"),
+            crm_source: crmSource ?? "none",
+            inquiry_type: inquiryType || "unknown",
+            icp_status: icpStatus || "unknown",
+          },
+          extra: {
+            entry_point: entryPoint || "direct",
+            service_interest: serviceInterest || "general",
+            has_company: Boolean(company),
+            has_name: Boolean(name),
+            lead_score: leadScore,
+          },
+        });
+      }
+    } else if (crmSettled.status === "rejected") {
+      // dispatchLeadToCrm is designed to never throw; if we get here the
+      // helper itself is misbehaving. Treat as a hard error and capture.
+      console.error("[contact] CRM dispatch promise rejected:", crmSettled.reason);
+      await captureFunctionException(crmSettled.reason, {
+        functionName: "contact",
+        tags: {
+          stage: "crm-dispatch",
+          crm_outcome: "rejected",
+          crm_source: crmSource ?? "none",
+          inquiry_type: inquiryType || "unknown",
+          icp_status: icpStatus || "unknown",
         },
       });
     }
