@@ -11,17 +11,24 @@
  *   Resp:   201 with { contact_id, deal_id, deal_path, lead_score, language }
  *
  * Important behaviors:
- *   - The CRM may respond 201 with `deal_id: null` when the email matches
- *     an exclusion entry server-side (gmail plus-alias normalization,
- *     blocklist, etc.). This is INTENTIONAL — the sender should not need to
- *     know. We surface it as outcome='excluded' so callers can log it apart
- *     from successful captures.
- *   - 401/422/503 (or any non-2xx) → outcome='failed'. We never throw; the
- *     caller decides what to do (typically: log + continue, never bounce
- *     the visitor).
+ *   - The CRM may respond 201 with `excluded: true` (and `deal_id: null`)
+ *     when the email matches an exclusion entry server-side (gmail
+ *     plus-alias normalization, blocklist, etc.). This is INTENTIONAL —
+ *     the sender should not need to know. We surface it as
+ *     outcome='excluded' so callers can log it apart from successful
+ *     captures.
+ *   - 4xx responses (typically 422 = payload validation) → outcome='rejected'.
+ *     Means our payload is malformed (our bug). Captured to Sentry.
+ *   - 5xx / network errors → outcome='failed'. Means CRM is down or
+ *     unreachable (their bug or transient). Captured to Sentry.
+ *   - 201 with `excluded: false` AND `deal_id: null` → outcome='anomaly'.
+ *     Should never happen (CRM contract violation). Captured to Sentry.
  *   - If `CRM_API_KEY` or `CRM_LEADS_CAPTURE_URL` is unset, dispatch is
  *     skipped silently with outcome='skipped'. Useful for local dev /
  *     deploy-previews without the secret wired up.
+ *   - We never throw. The helper always resolves with a CrmDispatchResult.
+ *     Callers decide what to do (typically: log + continue, never bounce
+ *     the visitor).
  */
 
 type CrmSource =
@@ -50,7 +57,20 @@ export interface CrmLeadInput {
   landing_source?: string;
 }
 
-export type CrmDispatchOutcome = 'skipped' | 'created' | 'excluded' | 'failed';
+export type CrmDispatchOutcome =
+  | 'skipped'
+  | 'created'
+  | 'excluded'
+  | 'anomaly'
+  | 'rejected'
+  | 'failed';
+
+/** Outcomes that warrant Sentry capture — i.e. require human attention. */
+export const CRM_ATTENTION_OUTCOMES: ReadonlySet<CrmDispatchOutcome> = new Set([
+  'anomaly',
+  'rejected',
+  'failed',
+]);
 
 export interface CrmDispatchResult {
   outcome: CrmDispatchOutcome;
@@ -59,6 +79,7 @@ export interface CrmDispatchResult {
   dealId?: string | null;
   leadScoreEcho?: number | null;
   languageEcho?: string | null;
+  excluded?: boolean | null;
   error?: string;
 }
 
@@ -187,11 +208,13 @@ export async function dispatchLeadToCrm(input: CrmLeadInput): Promise<CrmDispatc
 
     if (!response.ok) {
       const errText = await response.text().catch(() => '');
+      const isRejection = response.status >= 400 && response.status < 500;
+      const outcome: CrmDispatchOutcome = isRejection ? 'rejected' : 'failed';
       console.error(
-        `[crm] dispatch failed status=${response.status} email=${input.email} body=${errText.slice(0, 240)}`,
+        `[crm] dispatch ${outcome} status=${response.status} email=${input.email} body=${errText.slice(0, 240)}`,
       );
       return {
-        outcome: 'failed',
+        outcome,
         status: response.status,
         error: errText.slice(0, 500),
       };
@@ -202,15 +225,18 @@ export async function dispatchLeadToCrm(input: CrmLeadInput): Promise<CrmDispatc
       deal_id?: string | null;
       lead_score?: number | null;
       language?: string | null;
+      excluded?: boolean | null;
     };
 
     const contactId = data?.contact_id ?? null;
     const dealId = data?.deal_id ?? null;
     const leadScoreEcho = typeof data?.lead_score === 'number' ? data.lead_score : null;
     const languageEcho = typeof data?.language === 'string' ? data.language : null;
+    const excluded = data?.excluded === true;
 
-    if (!dealId) {
-      // 201 with deal_id null = CRM-side exclusion filter caught it
+    if (excluded) {
+      // CRM-side exclusion filter caught it (gmail plus-alias normalization,
+      // blocklist, etc.). Intentional silent drop on their side.
       console.log(
         `[crm] lead excluded status=${response.status} email=${input.email} contact_id=${contactId ?? 'null'}`,
       );
@@ -221,6 +247,24 @@ export async function dispatchLeadToCrm(input: CrmLeadInput): Promise<CrmDispatc
         dealId,
         leadScoreEcho,
         languageEcho,
+        excluded: true,
+      };
+    }
+
+    if (!dealId) {
+      // 2xx + excluded:false + no deal_id should never happen per CRM
+      // contract. Capture as anomaly for human review.
+      console.error(
+        `[crm] anomaly status=${response.status} email=${input.email} excluded=false but deal_id=null`,
+      );
+      return {
+        outcome: 'anomaly',
+        status: response.status,
+        contactId,
+        dealId,
+        leadScoreEcho,
+        languageEcho,
+        excluded: false,
       };
     }
 
@@ -234,6 +278,7 @@ export async function dispatchLeadToCrm(input: CrmLeadInput): Promise<CrmDispatc
       dealId,
       leadScoreEcho,
       languageEcho,
+      excluded: false,
     };
   } catch (err) {
     console.error('[crm] dispatch threw:', err);

@@ -2,6 +2,7 @@ import type { Handler } from "@netlify/functions";
 import { getContactGroupIds, upsertMailerLiteSubscriber } from "./_mailerlite";
 import {
   buildCrmNotes,
+  CRM_ATTENTION_OUTCOMES,
   deriveCrmSource,
   deriveLeadScore,
   dispatchLeadToCrm,
@@ -316,28 +317,29 @@ export const handler: Handler = async (event) => {
 
     if (crmSettled.status === "fulfilled" && crmSettled.value) {
       const result = crmSettled.value;
-      if (result.outcome === "failed") {
-        await captureFunctionException(
-          new Error(`CRM dispatch failed: ${result.error ?? "unknown"}`),
-          {
-            functionName: "contact",
-            tags: {
-              stage: "crm-dispatch",
-              crm_outcome: result.outcome,
-              crm_status: String(result.status ?? "none"),
-              crm_source: crmSource ?? "none",
-              inquiry_type: inquiryType || "unknown",
-              icp_status: icpStatus || "unknown",
-            },
-            extra: {
-              entry_point: entryPoint || "direct",
-              service_interest: serviceInterest || "general",
-              has_company: Boolean(company),
-              has_name: Boolean(name),
-              lead_score: leadScore,
-            },
+      if (CRM_ATTENTION_OUTCOMES.has(result.outcome)) {
+        const errorMsg =
+          result.outcome === "anomaly"
+            ? "CRM dispatch anomaly: 2xx with excluded:false and deal_id:null"
+            : `CRM dispatch ${result.outcome}: ${result.error ?? "unknown"}`;
+        await captureFunctionException(new Error(errorMsg), {
+          functionName: "contact",
+          tags: {
+            stage: "crm-dispatch",
+            crm_outcome: result.outcome,
+            crm_status: String(result.status ?? "none"),
+            crm_source: crmSource ?? "none",
+            inquiry_type: inquiryType || "unknown",
+            icp_status: icpStatus || "unknown",
           },
-        );
+          extra: {
+            entry_point: entryPoint || "direct",
+            service_interest: serviceInterest || "general",
+            has_company: Boolean(company),
+            has_name: Boolean(name),
+            lead_score: leadScore,
+          },
+        });
       }
     } else if (crmSettled.status === "rejected") {
       // dispatchLeadToCrm is designed to never throw; if we get here the

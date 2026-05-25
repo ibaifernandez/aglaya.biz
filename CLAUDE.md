@@ -224,9 +224,20 @@ import { ViewTransitions } from 'astro:transitions';
 Astro/Rollup requires all `import` statements before any `interface`, `const`, or logic. Placing imports after declarations causes a build error.
 
 ### CRM AGLAYA `/leads/capture` returns 201 even when it excludes the lead
-The CRM honors a server-side exclusion list (gmail plus-alias normalization, blocklist, etc.). When a submitted email matches, the endpoint still responds `201 Created` but with `{contact_id: null, deal_id: null}` — no deal is created. This is intentional (the sender should not need to know whether the lead was kept or dropped).
+The CRM honors a server-side exclusion list (gmail plus-alias normalization, blocklist, etc.). When a submitted email matches, the endpoint still responds `201 Created` with body `{contact_id: null, deal_id: null, excluded: true}` — no deal is created. This is intentional (the sender should not need to know whether the lead was kept or dropped).
 
-Implication for logging in `netlify/functions/_crm.ts`: a status code alone is not enough. Inspect `deal_id` in the response body to distinguish `created` (`deal_id` present) from `excluded` (`deal_id` null). The helper surfaces this as `outcome: 'created' | 'excluded' | 'failed' | 'skipped'`.
+Implication for logging in `netlify/functions/_crm.ts`: a status code alone is not enough. Inspect the response body. The helper surfaces 6 outcomes:
+
+| Outcome | Trigger | Sentry capture? |
+|---|---|---|
+| `created` | 2xx + `excluded:false` + `deal_id` present | no — logs only |
+| `excluded` | 2xx + `excluded:true` | no — logs only (intentional CRM-side drop) |
+| `anomaly` | 2xx + `excluded:false` + `deal_id:null` (contract violation) | **yes** |
+| `rejected` | 4xx (typically 422 — our payload malformed) | **yes** |
+| `failed` | 5xx / network error (CRM down or transient) | **yes** |
+| `skipped` | `CRM_API_KEY` or `CRM_LEADS_CAPTURE_URL` unset | no — logs only |
+
+`CRM_ATTENTION_OUTCOMES` (exported from `_crm.ts`) is the set `{anomaly, rejected, failed}`. Filter Sentry by `crm_outcome:anomaly OR crm_outcome:failed OR crm_outcome:rejected` to see everything requiring human attention.
 
 ### CRM dispatch is best-effort, Resend is the canary
 In `contact.ts`, the Resend internal notification stays `await`-blocking so that a failed Resend call returns `500` to the user (and you notice the gap between form-submission email and CRM panel). MailerLite and CRM dispatch run in parallel via `Promise.allSettled` after Resend succeeds — both are best-effort. A CRM failure never bounces the visitor; it is captured in Sentry with tag `stage=crm-dispatch` for manual reconciliation against the internal email canary.
