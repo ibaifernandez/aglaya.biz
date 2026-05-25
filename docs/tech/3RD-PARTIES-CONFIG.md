@@ -3,7 +3,7 @@ status: active
 domain: architecture
 owner: engineering
 source_of_truth: true
-last_reviewed: 2026-04-15
+last_reviewed: 2026-05-25
 consumable_by_agents: true
 ---
 
@@ -60,6 +60,8 @@ Configured in **Site settings → Environment variables**
 | `SENTRY_AUTH_TOKEN` | Build | Optional source-map upload token |
 | `SENTRY_ORG` | Build | Sentry org slug for source-map uploads |
 | `SENTRY_PROJECT` | Build | Sentry project slug for source-map uploads |
+| `CRM_API_KEY` | All | CRM AGLAYA API key (paste from Railway → `crm-aglaya` → Variables). Marked `--secret` in Netlify so the value is masked in logs. Unset → CRM dispatch is skipped silently. |
+| `CRM_LEADS_CAPTURE_URL` | All | Full URL to the CRM AGLAYA `/leads/capture` endpoint. Transition value points to the Railway service direct; post-DNS-cutover swaps to `https://crm.aglaya.biz/...` via env-var swap only (no redeploy). |
 
 `PUBLIC_SENTRY_ENVIRONMENT` is intentionally **not** used anymore. Environment labels are derived from Netlify deploy context.
 
@@ -91,6 +93,35 @@ Configured in **Site settings → Environment variables**
   - qualified leads → qualified group
   - borderline leads → borderline group
   - blocked/open-channel leads → non-qualified group
+
+### 🧭 CRM AGLAYA (Lead Pipeline)
+- **Status:** ✅ Active when `CRM_API_KEY` + `CRM_LEADS_CAPTURE_URL` are configured (otherwise dispatch is skipped silently).
+- **Role:** internal customer-relationship-management system used to route qualified, borderline, and open-channel leads to the right operator workflow and track pre-engagement conversations.
+- **Hosting:** Railway (US-based infrastructure provider) under our own data-processing controls. Disclosed as a sub-processor in the EN/ES/PT privacy pages.
+- **Endpoint contract:**
+  - `POST <CRM_LEADS_CAPTURE_URL>`
+  - Header: `X-CRM-API-Key`
+  - Body: `{email, name, company, phone, title, source, notes, lead_score (0..100|null), language ("en"|"es"|"pt"|null), utm_source, utm_medium, utm_campaign, utm_content, utm_term, fbclid, landing_source}` — only `email` required, the rest nullable
+  - Response: `201 Created` with `{contact_id, deal_id, deal_path, lead_score, language, excluded}`
+- **Source taxonomy (used by `contact.ts`):**
+  - `aglaya-form-qualified`
+  - `aglaya-form-borderline`
+  - `aglaya-form-open-channel` (covers `OPEN_CHANNEL` plus all `BLOCKED_*` ICP states)
+- **6 dispatch outcomes** (surfaced by `_crm.ts`):
+
+  | Outcome | Trigger | Sentry capture? |
+  |---|---|---|
+  | `created` | 2xx + `excluded:false` + `deal_id` present | no — logs only |
+  | `excluded` | 2xx + `excluded:true` | no — logs only (intentional CRM-side drop) |
+  | `anomaly` | 2xx + `excluded:false` + `deal_id:null` (contract violation) | **yes** |
+  | `rejected` | 4xx (typically 422 — our payload malformed) | **yes** |
+  | `failed` | 5xx / network error (CRM down or transient) | **yes** |
+  | `skipped` | `CRM_API_KEY` or `CRM_LEADS_CAPTURE_URL` unset | no — logs only |
+
+  `CRM_ATTENTION_OUTCOMES = {anomaly, rejected, failed}` is the Sentry filter set. Use `crm_outcome:anomaly OR crm_outcome:failed OR crm_outcome:rejected` in Sentry to surface everything that requires human attention.
+- **Dispatch model:** best-effort. Runs in parallel with the MailerLite sync via `Promise.allSettled` after the Resend internal-notification canary. A CRM failure never bounces the visitor.
+- **Used by:** `contact.ts` (via `_crm.ts` helper). NOT used by `dispatch-subscribe.ts` (newsletter subscribers ≠ leads) or `quote.ts` (separate funnel, MailerLite-only).
+- **Excluded leads:** the CRM normalizes gmail plus-aliases server-side and applies an exclusion list (`CRM_EXCLUDED_EMAILS`). A submission from `ibai600+anything@gmail.com` returns `201` with `excluded:true` and no deal is created. The form-side sees `outcome:'excluded'`.
 
 ### 🐞 Sentry (Error Tracking)
 - **Status:** ✅ Active when DSN is configured.

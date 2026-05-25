@@ -12,6 +12,7 @@ graph TD
     hCaptcha[hCaptcha]
     Resend[Resend API]
     MailerLite[MailerLite API]
+    CRM[CRM AGLAYA API]
     Sentry[Sentry SDK]
     GTM[Google Tag Manager]
     UptimeRobot[UptimeRobot]
@@ -24,9 +25,10 @@ graph TD
     User -- Submits dispatch --> DispatchFn
     ContactFn -- Verifies token --> hCaptcha
     DispatchFn -- Verifies token --> hCaptcha
-    ContactFn -- Sends emails --> Resend
+    ContactFn -- Sends internal notification (canary) --> Resend
     DispatchFn -- Sends emails --> Resend
-    ContactFn -- Segments leads --> MailerLite
+    ContactFn -- Segments leads (best-effort) --> MailerLite
+    ContactFn -- Dispatches qualified/borderline/open-channel leads (best-effort) --> CRM
     DispatchFn -- Captures subscribers --> MailerLite
     UptimeRobot -- Monitors --> Netlify
 ```
@@ -51,9 +53,12 @@ graph TD
 5. `contact.ts`:
    - validates payload
    - verifies hCaptcha
-   - sends confirmation email via Resend
-   - sends internal notification/BCC to `info@aglaya.biz`
-   - syncs the lead to the correct MailerLite group when configured
+   - **canary**: `await sendInternalNotification(...)` — Resend → `info@aglaya.biz`. A Resend failure here returns `500` to the user (operator notices the gap between the form-submission email and the CRM panel).
+   - **best-effort downstream syncs in parallel** via `Promise.allSettled`:
+     - `syncContactToMailerLite(...)` — routes the lead to the correct MailerLite group when configured.
+     - `dispatchLeadToCrm(...)` — POSTs to CRM AGLAYA's `/leads/capture` with the form-computed `lead_score` (0..100), `language`, and the source taxonomy `aglaya-form-{qualified,borderline,open-channel}`. Skipped silently if env vars are unset. Failures are captured in Sentry under `stage=crm-dispatch` with `crm_outcome:{anomaly,rejected,failed}` tags — they never bounce the visitor.
+
+   Reconciliation while the CRM has no replay endpoint (tracked as INV-005 on the `crm-aglaya` side): the operator compares Resend internal emails against the CRM panel. If an email arrives but no deal appears, check Sentry for the `crm_outcome` tag and replay manually.
 
 ### 2. Footer Dispatch Flow
 
@@ -135,3 +140,4 @@ BaseLayout.astro
 - **Functions**: `netlify/functions/_sentry.ts`
 - **Analytics**: GTM gated behind cookie consent
 - **Health monitoring**: UptimeRobot monitors public routes
+- **CRM dispatch outcomes**: `contact.ts` tags each Sentry capture with `stage=crm-dispatch` + `crm_outcome:{anomaly|rejected|failed}` + `crm_status:<http-code>` + `crm_source:<funnel>`. Filter Sentry by `crm_outcome:anomaly OR crm_outcome:failed OR crm_outcome:rejected` to surface everything requiring human attention. The remaining outcomes (`created`, `excluded`, `skipped`) stay in structured logs only — they are expected steady-state behaviors, not errors.
