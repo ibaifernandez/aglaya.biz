@@ -241,3 +241,14 @@ Implication for logging in `netlify/functions/_crm.ts`: a status code alone is n
 
 ### CRM dispatch is best-effort, Resend is the canary
 In `contact.ts`, the Resend internal notification stays `await`-blocking so that a failed Resend call returns `500` to the user (and you notice the gap between form-submission email and CRM panel). MailerLite and CRM dispatch run in parallel via `Promise.allSettled` after Resend succeeds — both are best-effort. A CRM failure never bounces the visitor; it is captured in Sentry with tag `stage=crm-dispatch` for manual reconciliation against the internal email canary.
+
+### Netlify secrets scanning fails the build on env-var values found in source
+A Netlify deploy can fail with `astro build` "exit code 2" / "Failed during stage 'building site'" while the **same build is green locally and in GitHub Actions**. The real failure is the **secrets-scanning** step, which only runs on Netlify (not locally, not in CI). It greps the build output AND repo source for the *values* of all env vars, and aborts if it finds one. The trap: `SENTRY_PROJECT`'s value is the slug `aglaya-biz`, which matches as a substring of any brand-ish literal — e.g. a `"aglaya-biz-form"` source label in `contact.ts` tripped it. Two-part fix already applied:
+1. Never embed an env-var value (even a non-secret slug) in a source literal — the offending label was renamed `aglaya-website-form`.
+2. `SENTRY_ORG`/`SENTRY_PROJECT` are slugs, not secrets, so they are listed in `SECRETS_SCAN_OMIT_KEYS` in `netlify.toml`.
+
+When a Netlify build fails "exit code 2" but `npm run build` is clean locally, **check secrets scanning first** — read the build log's "Scanning for secrets" section for the flagged key and file:line. (Separately: the Sentry source-map upload errors non-fatally with "Project not found" — a pre-existing slug misconfig — it does NOT fail builds.)
+
+## Cross-Product Contracts
+
+Lead capture + consent/accountability into CRM AGLAYA is governed by a versioned, product-agnostic contract: [`docs/contracts/lead-capture-contract.md`](docs/contracts/lead-capture-contract.md) (currently **v1.0.0**). It is the single source of truth for the legal-basis model (legitimate interest for inbound forms; consent only for Dispatch), the `privacy_policy_version` / `privacy_policy_displayed_at` accountability record, the `/leads/capture` API shape, retention wording, and the DPO channel. When the contract changes, bump its version and re-sync with the CRM thread (and any other signatory product, e.g. Scanner 21.719). Do not let aglaya.biz drift from the contract version it has signed.
