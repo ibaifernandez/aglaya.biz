@@ -7,9 +7,6 @@ import sentry from '@sentry/astro';
 import tailwindcss from '@tailwindcss/vite';
 
 const sentryDsn = process.env.SENTRY_DSN || process.env.PUBLIC_SENTRY_DSN;
-const hasSentrySourceMaps = Boolean(
-  process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_ORG && process.env.SENTRY_PROJECT,
-);
 
 // https://astro.build/config
 export default defineConfig({
@@ -41,19 +38,17 @@ export default defineConfig({
       project: process.env.SENTRY_PROJECT,
       authToken: process.env.SENTRY_AUTH_TOKEN,
       sourcemaps: {
-        disable: !hasSentrySourceMaps,
+        disable: true,
       },
-      // Source-map upload to Sentry must never fail the production deploy.
-      // A failed or anomalous upload (network, auth, or sandbox limits on the
-      // Netlify builder — invisible locally and in GitHub Actions, which lack
-      // the SENTRY_* secrets) is logged and swallowed so the site still ships.
+      // Build-time Sentry (source-map upload + release creation) is DISABLED.
+      // The configured project slug is wrong on Netlify — sentry-cli returns
+      // "Project not found", which aborted the Netlify build (`astro build`
+      // exit 2). This step is invisible locally and in GitHub Actions, which
+      // lack the SENTRY_* secrets. Runtime error capture via DSN is unaffected.
+      // Re-enable by fixing SENTRY_ORG / SENTRY_PROJECT in Netlify and removing
+      // `disable: true` here.
       unstable_sentryVitePluginOptions: {
-        errorHandler: (err) => {
-          console.warn(
-            '[sentry] source map upload failed (non-fatal):',
-            err?.message ?? err,
-          );
-        },
+        disable: true,
       },
     }),
   ],
