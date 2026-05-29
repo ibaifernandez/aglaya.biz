@@ -1,7 +1,7 @@
 # AGLAYA Lead-Capture & Data-Protection Contract
 
 - **Version:** 1.0.0
-- **Status:** ACTIVE
+- **Status:** ACTIVE — SMOKED ✓ (end-to-end verified 2026-05-29; see §11)
 - **Canonical home:** this file (`aglaya.biz/docs/contracts/lead-capture-contract.md`)
 - **Last updated:** 2026-05-29
 
@@ -117,9 +117,20 @@ A new producer (e.g. Scanner 21.719):
 | Party | Status | Implements | Reference |
 |---|---|---|---|
 | **aglaya.biz** | signed | v1.0.0 | web forms → `/leads/capture`; PR #64 (`0b63257`) |
-| **CRM AGLAYA** | pending countersign | v1.0.0 | schema + `crm_deals` columns + tests (`c91b11a`); data-subject endpoints (`065988b`); legal docs (`f45e90a`) |
+| **CRM AGLAYA** | countersigned | v1.0.0 | schema + `crm_deals` columns + tests (`c91b11a`); data-subject endpoints (`065988b`); legal docs (`f45e90a`); countersign recorded in `crm-aglaya/docs/contracts/IMPLEMENTS.md` (`0f32781`), accepts contract source SHA `eb837a4` |
 | Scanner 21.719 | not yet | — | — |
 
-To countersign, the CRM thread confirms this file's content matches its
-implementation and records the contract version + this file's commit SHA in
-`crm-aglaya` (suggested: `docs/contracts/IMPLEMENTS.md`).
+Both parties are in sync on v1.0.0: aglaya.biz accepts at source SHA `eb837a4`;
+CRM AGLAYA countersigns at `0f32781` referencing that same source SHA.
+
+## 11. Verification log
+
+- **v1.0.0 — SMOKED ✓ (2026-05-29).** End-to-end round-trip via the
+  open-channel funnel on prod aglaya.biz. The Astro server sealed
+  `privacy_policy_displayed_at=2026-05-29T20:13:11.899Z` and forwarded
+  `privacy_policy_version=2026-05-25` in the `/leads/capture` payload; CRM
+  AGLAYA persisted both verbatim on deal #59 / contact #30, and
+  `POST /contacts/export` echoed them. Backward compatibility confirmed: a
+  pre-existing scanner-sourced deal on the same contact retains NULL on both
+  fields (scanner / cal.com / operator-manual paths unaffected). CRM status
+  commit `421acc2`.
