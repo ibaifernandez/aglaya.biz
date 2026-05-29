@@ -7,7 +7,16 @@
  *   Body:   { email, name, company, phone, title, source, notes,
  *             lead_score (0..100|null), language ('en'|'es'|'pt'|null),
  *             utm_source, utm_medium, utm_campaign, utm_content,
- *             utm_term, fbclid, landing_source } — all but email nullable
+ *             utm_term, fbclid, landing_source,
+ *             privacy_policy_version, privacy_policy_displayed_at }
+ *             — all but email nullable
+ *
+ *   privacy_policy_version / privacy_policy_displayed_at are the GDPR
+ *   Art. 5(2) accountability record: which privacy-policy version was live
+ *   on the form when the user submitted, and the submission timestamp. Basis
+ *   is legitimate interest (not consent), so this evidences "what notice was
+ *   shown", not consent. Persisted as columns on crm_deals (CRM-side change
+ *   landed 2026-05-29).
  *   Resp:   201 with { contact_id, deal_id, deal_path, lead_score, language }
  *
  * Important behaviors:
@@ -55,6 +64,8 @@ export interface CrmLeadInput {
   utm_term?: string;
   fbclid?: string;
   landing_source?: string;
+  privacyPolicyVersion?: string;
+  privacyPolicyDisplayedAt?: string;
 }
 
 export type CrmDispatchOutcome =
@@ -194,6 +205,8 @@ export async function dispatchLeadToCrm(input: CrmLeadInput): Promise<CrmDispatc
     utm_term: nullableString(input.utm_term),
     fbclid: nullableString(input.fbclid),
     landing_source: nullableString(input.landing_source),
+    privacy_policy_version: nullableString(input.privacyPolicyVersion),
+    privacy_policy_displayed_at: nullableString(input.privacyPolicyDisplayedAt),
   };
 
   try {

@@ -1,5 +1,6 @@
 ---
 import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
+import { PRIVACY_POLICY_VERSION } from '../legal/policy-version';
 
 interface Props {
   checkboxId: string;
@@ -46,6 +47,11 @@ const note =
       {label}
     </span>
   </label>
+
+  <!-- Accountability record (GDPR Art. 5(2)): which privacy-policy version was
+       shown at submission. Basis-neutral; flows into the POST payload of any
+       form that serializes via FormData. -->
+  <input type="hidden" name="privacy_policy_version" value={PRIVACY_POLICY_VERSION} />
 
   <p id={`${checkboxId}-note`} class="mt-3 pl-7 text-white/46 font-body text-xs leading-relaxed">
     {note}

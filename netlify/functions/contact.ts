@@ -182,6 +182,7 @@ export const handler: Handler = async (event) => {
     data_infrastructure?: string;
     growth_investment?: string;
     privacy_consent?: string | boolean;
+    privacy_policy_version?: string;
     company_honeypot?: string;
   };
   try {
@@ -207,6 +208,7 @@ export const handler: Handler = async (event) => {
   const dataInfrastructure = (body.data_infrastructure ?? "").trim();
   const growthInvestment = (body.growth_investment ?? "").trim();
   const privacyConsent = hasAcceptedConsent(body.privacy_consent);
+  const privacyPolicyVersion = (body.privacy_policy_version ?? "").trim();
   const honeypot = (body.company_honeypot ?? "").trim();
 
   // Honeypot filled → bot; silent 200 to avoid fingerprinting
@@ -235,6 +237,26 @@ export const handler: Handler = async (event) => {
         body: JSON.stringify({ error: "Bot verification failed" }),
       };
     }
+
+    // Accountability record (GDPR Art. 5(2)): which privacy-policy version the
+    // user was shown at submission, and when. Basis is legitimate interest,
+    // NOT consent — this evidences "what notice was visible", not proof of
+    // consent. The durable home is the CRM lead record (columns
+    // privacy_policy_version + privacy_policy_displayed_at, forwarded below for
+    // CRM-bound leads). This log line is a secondary copy; Netlify function
+    // logs only retain ~7 days, so for non-CRM-bound forms it is the only
+    // record. The same timestamp is shared between the log and the CRM payload.
+    const privacyDisplayedAt = new Date().toISOString();
+    console.log(
+      JSON.stringify({
+        event: "aglaya_form_privacy_notice",
+        privacy_policy_version: privacyPolicyVersion || "unknown",
+        privacy_policy_displayed_at: privacyDisplayedAt,
+        ip,
+        email,
+        source: deriveCrmSource(icpStatus) ?? "aglaya-biz-form",
+      }),
+    );
 
     // Canary: Resend internal notification stays `await`-blocking. If it
     // fails, we want to fail the request (so the operator notices the gap
@@ -305,6 +327,8 @@ export const handler: Handler = async (event) => {
           company: company || undefined,
           notes: crmNotes ?? undefined,
           language: lang,
+          privacyPolicyVersion: privacyPolicyVersion || undefined,
+          privacyPolicyDisplayedAt: privacyDisplayedAt,
           // UTM/fbclid/landing_source pipeline not implemented yet; send nulls.
           // Tracked as a follow-up (separate PR).
         })
