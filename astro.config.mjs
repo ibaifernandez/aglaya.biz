@@ -43,6 +43,18 @@ export default defineConfig({
       sourcemaps: {
         disable: !hasSentrySourceMaps,
       },
+      // Source-map upload to Sentry must never fail the production deploy.
+      // A failed or anomalous upload (network, auth, or sandbox limits on the
+      // Netlify builder — invisible locally and in GitHub Actions, which lack
+      // the SENTRY_* secrets) is logged and swallowed so the site still ships.
+      unstable_sentryVitePluginOptions: {
+        errorHandler: (err) => {
+          console.warn(
+            '[sentry] source map upload failed (non-fatal):',
+            err?.message ?? err,
+          );
+        },
+      },
     }),
   ],
 
