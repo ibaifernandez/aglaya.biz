@@ -295,6 +295,7 @@ form?.addEventListener('submit', async (e) => {
       token,
       lang,
       privacy_consent: (document.getElementById('contact-privacy-consent') as HTMLInputElement | null)?.checked ? 'true' : '',
+      privacy_policy_version: (form.querySelector('[name="privacy_policy_version"]') as HTMLInputElement | null)?.value ?? '',
     }),
     });
     if (res.ok) {
