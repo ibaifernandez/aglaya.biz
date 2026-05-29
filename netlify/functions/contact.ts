@@ -254,7 +254,7 @@ export const handler: Handler = async (event) => {
         privacy_policy_displayed_at: privacyDisplayedAt,
         ip,
         email,
-        source: deriveCrmSource(icpStatus) ?? "aglaya-biz-form",
+        source: deriveCrmSource(icpStatus) ?? "aglaya-website-form",
       }),
     );
 

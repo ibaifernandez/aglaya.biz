@@ -4,7 +4,10 @@
 
 [build.environment]
   NODE_VERSION = "22"
-  SECRETS_SCAN_OMIT_KEYS = "PUBLIC_SENTRY_DSN"
+  # SENTRY_ORG/SENTRY_PROJECT are slugs (e.g. "aglaya-biz"), not secrets, but
+  # the slug collides with brand strings in source (e.g. a CRM source label),
+  # which trips secrets scanning. Omit these non-secret keys from the scan.
+  SECRETS_SCAN_OMIT_KEYS = "PUBLIC_SENTRY_DSN,SENTRY_ORG,SENTRY_PROJECT"
 
 # Redirect localized legal-page paths that the language switcher may generate
 # (switcher strips /es|/pt prefix naively; these paths don't follow the standard pattern)
