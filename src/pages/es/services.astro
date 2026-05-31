@@ -22,6 +22,26 @@ const systems = [
     tagline: 'Ejecución de marketing con integridad de sistema',
     cases: 'CRM con scoring de leads, secuencias de email con lógica condicional, sistema de contenido semi-automatizado, funnel de conversión con atribución, dashboard de marketing intelligence',
     stack: 'Resend / HubSpot / Notion / Airtable / Astro / Next.js',
+    deployed: [
+      {
+        name: 'Pulse',
+        label: 'Inteligencia comercial · v1',
+        description: 'Sistema que traduce el engagement de campañas de email en una agenda comercial diaria. Cada mañana el equipo recibe qué llamadas hacer, en qué orden y con qué pitch — sin reportes manuales. Mide objetivamente si el contacto generó movimiento en la cartera.',
+        stack: 'Flask · Mailchimp API · Supabase · Resend · GitHub Actions',
+        demoUrl: 'https://pulse.aglaya.biz/',
+        caseUrl: '/es/proof/massiva/',
+        demoLabel: 'Demo en producción →',
+        caseLabel: 'Caso completo →',
+      },
+      {
+        name: 'Outreach',
+        label: 'Análisis y segmentación · v1',
+        description: 'Sistema que convierte una base de contactos B2B/B2C cruda en un entregable comercial profesional (HTML showcase autónomo + PDF informe) en horas, no semanas. La lógica vive en el motor, no en el deck — el segundo cliente cuesta 1/10 del primero.',
+        stack: 'Python · procesamiento CSV · motor de renderizado propio',
+        caseUrl: '/es/proof/bill-capital/',
+        caseLabel: 'Caso completo →',
+      },
+    ],
   },
   {
     id: '03',
@@ -125,6 +145,35 @@ const conditions = [
               <span class="text-white/20 font-mono text-[8px] uppercase tracking-widest">Stack / Formato</span>
               <p class="text-white/40 font-mono text-xs leading-relaxed">{s.stack}</p>
             </div>
+            {'deployed' in s && s.deployed && (
+              <div class="col-span-full border-t border-white/5 pt-8 flex flex-col gap-6">
+                <span class="text-corporate-green font-mono text-[8px] uppercase tracking-[0.5em]">Sistemas Desplegados</span>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {s.deployed.map((d) => (
+                    <div class="border-l-2 border-brand/30 pl-5 flex flex-col gap-3">
+                      <div class="flex items-baseline justify-between gap-4 flex-wrap">
+                        <h4 class="text-white font-display font-black text-lg uppercase tracking-tighter">{d.name}</h4>
+                        <span class="text-white/25 font-mono text-[10px]">{d.label}</span>
+                      </div>
+                      <p class="text-white/50 font-body text-sm leading-relaxed">{d.description}</p>
+                      <span class="text-white/20 font-mono text-[10px] uppercase">{d.stack}</span>
+                      <div class="flex gap-6 mt-1">
+                        {'demoUrl' in d && d.demoUrl && (
+                          <a href={d.demoUrl} target="_blank" rel="noopener noreferrer"
+                             class="text-brand hover:text-white font-display font-black text-[11px] uppercase tracking-widest transition-colors">
+                            {d.demoLabel}
+                          </a>
+                        )}
+                        <a href={d.caseUrl}
+                           class="text-white/40 hover:text-white font-display font-black text-[11px] uppercase tracking-widest transition-colors">
+                          {d.caseLabel}
+                        </a>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
