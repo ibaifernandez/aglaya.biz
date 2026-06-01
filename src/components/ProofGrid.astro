@@ -16,7 +16,7 @@ const entries = allEntries
 // 1-2-1 layout: featured top · two mid · featured-2 bottom
 // Add card IDs here as they're built and ready.
 const featured  = entries.find(e => e.id === 'legal-reg-tech') ?? entries[0];
-const MID_IDS   = ['elm-st-web', 'bill-capital'];
+const MID_IDS   = ['elm-st-web', 'bill-capital', 'massiva'];
 const midCards  = MID_IDS.map(id => entries.find(e => e.id === id)).filter(Boolean);
 const featured2 = entries.find(e => e.id === 'kanban-desk') ?? null;
 ---
@@ -47,11 +47,9 @@ const featured2 = entries.find(e => e.id === 'kanban-desk') ?? null;
         <ProofCard entry={featured} featured />
       )}
 
-      <div class="flex flex-col md:flex-row gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         {midCards.map(entry => (
-          <div class="flex-1">
-            <ProofCard entry={entry} />
-          </div>
+          <ProofCard entry={entry} />
         ))}
       </div>
 

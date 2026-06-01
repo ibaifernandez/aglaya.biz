@@ -22,6 +22,26 @@ const systems = [
     tagline: 'Marketing execution with system integrity',
     cases: 'CRM with lead scoring, conditional email sequences, semi-automated content system, conversion funnel with attribution, marketing intelligence dashboard',
     stack: 'Resend / HubSpot / Notion / Airtable / Astro / Next.js',
+    deployed: [
+      {
+        name: 'Pulse',
+        label: 'Commercial intelligence · v1',
+        description: 'System that translates email campaign engagement into a daily commercial agenda. Each morning the team receives which calls to make, in what order, and with what pitch — without manual reports. Objectively measures whether contact generated portfolio movement.',
+        stack: 'Flask · Mailchimp API · Supabase · Resend · GitHub Actions',
+        demoUrl: 'https://pulse.aglaya.biz/',
+        caseUrl: '/proof/massiva/',
+        demoLabel: 'Demo in production →',
+        caseLabel: 'Full case →',
+      },
+      {
+        name: 'Outreach',
+        label: 'Analysis & segmentation · v1',
+        description: 'System that converts a raw B2B/B2C contact database into a professional commercial deliverable (standalone HTML showcase + PDF report) in hours, not weeks. The logic lives in the engine, not the deck — second client costs 1/10th of the first.',
+        stack: 'Python · CSV processing · custom rendering engine',
+        caseUrl: '/proof/bill-capital/',
+        caseLabel: 'Full case →',
+      },
+    ],
   },
   {
     id: '03',
@@ -126,6 +146,35 @@ const conditions = [
               <span class="text-white/20 font-mono text-[8px] uppercase tracking-widest">Stack / Format</span>
               <p class="text-white/40 font-mono text-xs leading-relaxed">{s.stack}</p>
             </div>
+            {'deployed' in s && s.deployed && (
+              <div class="col-span-full border-t border-white/5 pt-8 flex flex-col gap-6">
+                <span class="text-corporate-green font-mono text-[8px] uppercase tracking-[0.5em]">Deployed Systems</span>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {s.deployed.map((d) => (
+                    <div class="border-l-2 border-brand/30 pl-5 flex flex-col gap-3">
+                      <div class="flex items-baseline justify-between gap-4 flex-wrap">
+                        <h4 class="text-white font-display font-black text-lg uppercase tracking-tighter">{d.name}</h4>
+                        <span class="text-white/25 font-mono text-[10px]">{d.label}</span>
+                      </div>
+                      <p class="text-white/50 font-body text-sm leading-relaxed">{d.description}</p>
+                      <span class="text-white/20 font-mono text-[10px] uppercase">{d.stack}</span>
+                      <div class="flex gap-6 mt-1">
+                        {'demoUrl' in d && d.demoUrl && (
+                          <a href={d.demoUrl} target="_blank" rel="noopener noreferrer"
+                             class="text-brand hover:text-white font-display font-black text-[11px] uppercase tracking-widest transition-colors">
+                            {d.demoLabel}
+                          </a>
+                        )}
+                        <a href={d.caseUrl}
+                           class="text-white/40 hover:text-white font-display font-black text-[11px] uppercase tracking-widest transition-colors">
+                          {d.caseLabel}
+                        </a>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
