@@ -17,9 +17,9 @@ summary:
   es: "AGLAYA construyó y desplegó su propio producto RegTech: un scanner automatizado que visita cualquier sitio web chileno, detecta señales visibles de riesgo regulatorio bajo la Ley 21.719 y entrega una auditoría de compliance estructurada por $12. Sin opinión legal. Sin revisión manual. Una máquina que ve lo que cualquiera puede ver — y lo convierte en un informe técnico accionable."
   pt: "A AGLAYA construiu e implantou seu próprio produto RegTech: um scanner automatizado que visita qualquer site chileno, detecta sinais visíveis de risco regulatório sob a Lei 21.719 e entrega uma auditoria de compliance estruturada por $12. Sem parecer jurídico. Sem revisão manual. Uma máquina que vê o que qualquer um pode ver — e transforma isso em um relatório técnico acionável."
 strategy:
-  en: "Eligibility pre-flight + five-scan consensus engine + deterministic rule matrix + Claude API report generation. Deployed on Railway + Netlify. Payments via LemonSqueezy."
-  es: "Pre-flight de elegibilidad + motor de consenso de 5 escaneos + matriz de reglas deterministas + generación de informe con Claude API. Desplegado en Railway + Netlify. Pagos vía LemonSqueezy."
-  pt: "Pre-flight de elegibilidade + motor de consenso de 5 varreduras + matriz de regras deterministas + geração de relatório com Claude API. Implantado no Railway + Netlify. Pagamentos via LemonSqueezy."
+  en: "Eligibility pre-flight + five-scan consensus engine + deterministic rule matrix + deterministic report rendering. Zero LLM dependency. Deployed on Railway + Netlify. Payments via LemonSqueezy."
+  es: "Pre-flight de elegibilidad + motor de consenso de 5 escaneos + matriz de reglas deterministas + renderizado de informe determinista. Sin dependencia de LLM. Desplegado en Railway + Netlify. Pagos vía LemonSqueezy."
+  pt: "Pre-flight de elegibilidade + motor de consenso de 5 varreduras + matriz de regras deterministas + renderização determinista de relatório. Sem dependência de LLM. Implantado no Railway + Netlify. Pagamentos via LemonSqueezy."
 vision:
   en: "Compliance intelligence that any company can access — before the lawyer, before the fine."
   es: "Inteligencia de compliance que cualquier empresa puede acceder — antes del abogado, antes de la multa."

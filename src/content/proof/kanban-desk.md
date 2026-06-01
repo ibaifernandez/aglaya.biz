@@ -13,13 +13,13 @@ challenge:
   es: "Toda herramienta de gestión de proyectos te obliga a elegir: trabajo personal o proyectos de equipo. Necesitábamos ambos — más una capa de cliente con visibilidad controlada."
   pt: "Toda ferramenta de gestão de projetos te obriga a escolher: trabalho pessoal ou projetos de equipe. Precisávamos dos dois — mais uma camada de cliente com visibilidade controlada."
 summary:
-  en: "AGLAYA built its own multi-tenant Kanban. Three workspace types — Personal, Internal, Client — with Row Level Security enforced at the database layer. Clients see only what they've been assigned. The team sees everything internal. Full-stack: React 18 + Express + Supabase. 26 tests. In production."
-  es: "AGLAYA construyó su propio Kanban multi-tenant. Tres tipos de workspace — Personal, Interno, Cliente — con Row Level Security aplicado en la capa de base de datos. Los clientes solo ven lo que se les ha asignado. El equipo ve todo lo interno. Full-stack: React 18 + Express + Supabase. 26 tests. En producción."
-  pt: "A AGLAYA construiu seu próprio Kanban multi-tenant. Três tipos de workspace — Pessoal, Interno, Cliente — com Row Level Security aplicado na camada de banco de dados. Os clientes veem apenas o que lhes foi atribuído. O time vê tudo interno. Full-stack: React 18 + Express + Supabase. 26 testes. Em produção."
+  en: "AGLAYA built its own multi-tenant Kanban. Three workspace types — Personal, Internal, Client — with Row Level Security enforced at the database layer. Clients see only what they've been assigned. The team sees everything internal. Full-stack: React 18 + Express + Supabase. 95 tests. In production."
+  es: "AGLAYA construyó su propio Kanban multi-tenant. Tres tipos de workspace — Personal, Interno, Cliente — con Row Level Security aplicado en la capa de base de datos. Los clientes solo ven lo que se les ha asignado. El equipo ve todo lo interno. Full-stack: React 18 + Express + Supabase. 95 tests. En producción."
+  pt: "A AGLAYA construiu seu próprio Kanban multi-tenant. Três tipos de workspace — Pessoal, Interno, Cliente — com Row Level Security aplicado na camada de banco de dados. Os clientes veem apenas o que lhes foi atribuído. O time vê tudo interno. Full-stack: React 18 + Express + Supabase. 95 testes. Em produção."
 strategy:
-  en: "React 18 + Vite frontend · Express 4 + Node.js backend · Supabase (PostgreSQL + RLS + Auth + Storage) · @dnd-kit drag & drop · Nodemailer daily digest · Jest + Supertest 26 tests · Netlify + Railway."
-  es: "Frontend React 18 + Vite · Backend Express 4 + Node.js · Supabase (PostgreSQL + RLS + Auth + Storage) · @dnd-kit drag & drop · Nodemailer digest diario · Jest + Supertest 26 tests · Netlify + Railway."
-  pt: "Frontend React 18 + Vite · Backend Express 4 + Node.js · Supabase (PostgreSQL + RLS + Auth + Storage) · @dnd-kit drag & drop · Nodemailer digest diário · Jest + Supertest 26 testes · Netlify + Railway."
+  en: "React 18 + Vite frontend · Express 4 + Node.js backend · Supabase (PostgreSQL + RLS + Auth + Storage) · @dnd-kit drag & drop · Nodemailer daily digest · Jest + Supertest 95 tests · Netlify + Railway."
+  es: "Frontend React 18 + Vite · Backend Express 4 + Node.js · Supabase (PostgreSQL + RLS + Auth + Storage) · @dnd-kit drag & drop · Nodemailer digest diario · Jest + Supertest 95 tests · Netlify + Railway."
+  pt: "Frontend React 18 + Vite · Backend Express 4 + Node.js · Supabase (PostgreSQL + RLS + Auth + Storage) · @dnd-kit drag & drop · Nodemailer digest diário · Jest + Supertest 95 testes · Netlify + Railway."
 vision:
   en: "Own the tools you use. Build for real constraints, not demos."
   es: "Poseer las herramientas que usas. Construir para restricciones reales, no demos."
@@ -33,7 +33,7 @@ results:
       en: "Workspace types · Personal · Team · Client"
       es: "Tipos de workspace · Personal · Equipo · Cliente"
       pt: "Tipos de workspace · Pessoal · Equipe · Cliente"
-  - metric: "26"
+  - metric: "95"
     label:
       en: "Tests passing · Jest + Supertest"
       es: "Tests en verde · Jest + Supertest"
@@ -89,7 +89,7 @@ body_en: |
   - Daily admin digest via Nodemailer: global stats, overdue cards, orphaned cards, top boards, Supabase user data
   - On-demand digest endpoint for immediate delivery
 
-  ### Tests — 26 Passing
+  ### Tests — 95 Passing
 
   | Suite | Tests |
   |---|---|
@@ -147,7 +147,7 @@ body_es: |
   - Digest diario de administrador vía Nodemailer: estadísticas globales, tarjetas vencidas, tarjetas huérfanas, top tableros, datos de usuarios Supabase
   - Endpoint de digest bajo demanda para envío inmediato
 
-  ### Tests — 26 en Verde
+  ### Tests — 95 en Verde
 
   | Suite | Tests |
   |---|---|
@@ -205,7 +205,7 @@ body_pt: |
   - Digest diário de administrador via Nodemailer: estatísticas globais, cards vencidos, cards órfãos, top boards, dados de usuários Supabase
   - Endpoint de digest sob demanda para envio imediato
 
-  ### Testes — 26 em Verde
+  ### Testes — 95 em Verde
 
   | Suite | Testes |
   |---|---|
