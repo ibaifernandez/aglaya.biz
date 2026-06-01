@@ -1,9 +1,9 @@
 # AGLAYA Lead-Capture & Data-Protection Contract
 
-- **Version:** 1.0.0
+- **Version:** 1.0.1
 - **Status:** ACTIVE — SMOKED ✓ (end-to-end verified 2026-05-29; see §11)
 - **Canonical home:** this file (`aglaya.biz/docs/contracts/lead-capture-contract.md`)
-- **Last updated:** 2026-05-29
+- **Last updated:** 2026-06-01
 
 This is the single source of truth governing how any AGLAYA product captures
 leads and consent/accountability evidence into CRM AGLAYA, and the
@@ -83,8 +83,9 @@ must never exceed the public ceiling above.
 
 ## 6. Data-subject rights
 
-- Channel: `info@aglaya.biz` (ACTIVE). `dpo@aglaya.biz` is aspirational — a
-  single-point swap once the alias exists.
+- Channel: `dpo@aglaya.biz` (ACTIVE — alias created 2026-06-01, routes to `info@aglaya.biz`).
+  Privacy pages (EN/ES/PT) updated to reflect this address for DPO contact,
+  rights exercise, and transfer-safeguard requests.
 
 ## 7. Operational gotchas (binding)
 
