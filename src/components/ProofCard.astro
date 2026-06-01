@@ -7,6 +7,7 @@ import pocuroLogo from '../assets/images/pocuro.png';
 import elmStLogo from '../assets/images/elm-st.svg';
 import billCapitalLogo from '../assets/images/logo-bill-capital.png';
 import massivaLogo from '../assets/images/logo-massiva-cuadrado.svg';
+import djAmapolaLogo from '../assets/images/logo-dj-amapola.svg';
 
 interface Props {
   entry: CollectionEntry<'proof'>;
@@ -37,6 +38,7 @@ const proofLogoMap: Record<string, string> = {
   'elm-st.svg': typeof elmStLogo === 'string' ? elmStLogo : (elmStLogo as any).src,
   'logo-bill-capital.png': billCapitalLogo.src,
   'logo-massiva-cuadrado.svg': typeof massivaLogo === 'string' ? massivaLogo : (massivaLogo as any).src,
+  'logo-dj-amapola.svg': typeof djAmapolaLogo === 'string' ? djAmapolaLogo : (djAmapolaLogo as any).src,
 };
 const clientLogoSrc = proofLogoMap[logoFilename] || rawClientLogoSrc || '';
 

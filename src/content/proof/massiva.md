@@ -1,8 +1,8 @@
 ---
 title:
-  en: "Pulse · Commercial Intelligence"
-  es: "Pulse · Inteligencia Comercial"
-  pt: "Pulse · Inteligência Comercial"
+  en: "AGLAYA Pulse · Commercial Intelligence"
+  es: "AGLAYA Pulse · Inteligencia Comercial"
+  pt: "AGLAYA Pulse · Inteligência Comercial"
 client: "Massiva Chile"
 client_logo: "../src/assets/images/logo-massiva-cuadrado.svg"
 industry:

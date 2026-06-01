@@ -1,8 +1,8 @@
 ---
 title:
-  en: "Zero-Budget AI Campaign Engine"
-  es: "Motor de Campaña IA · Presupuesto Cero"
-  pt: "Motor de Campanha IA · Orçamento Zero"
+  en: "AGLAYA Outreach · Zero-Budget Precision"
+  es: "AGLAYA Outreach · Precisión con Presupuesto Cero"
+  pt: "AGLAYA Outreach · Precisão com Orçamento Zero"
 client: "Bill Capital"
 industry:
   en: "Fintech / Factoring"
@@ -13,9 +13,9 @@ challenge:
   es: "1.155 registros en bruto, sin segmentación, sin estrategia. Construir una campaña de adquisición desde cero — con presupuesto cero en herramientas externas."
   pt: "1.155 registros brutos, sem segmentação, sem estratégia. Construir uma campanha de aquisição do zero — com orçamento zero em ferramentas externas."
 summary:
-  en: "Bill Capital handed over a raw database of 1,155 contacts and a target: convert financial executives into MICs (Micro Commercial Investors). AGLAYA built a proprietary BBDD Cleaner, ran AI classification in Python with no external APIs, and produced 4 segmented campaigns, 11 emails, and 4 HubSpot automation flows — with zero spend on external tools."
-  es: "Bill Capital entregó una base de datos en bruto de 1.155 contactos y un objetivo: convertir ejecutivos financieros en MICs (Micro Inversores Comerciales). AGLAYA construyó un BBDD Cleaner propio, ejecutó clasificación IA en Python sin APIs externas, y produjo 4 campañas segmentadas, 11 emails y 4 flujos de automatización HubSpot — con cero gasto en herramientas externas."
-  pt: "Bill Capital entregou um banco de dados bruto de 1.155 contatos e um objetivo: converter executivos financeiros em MICs (Micro Investidores Comerciais). A AGLAYA construiu um BBDD Cleaner proprietário, executou classificação de IA em Python sem APIs externas, e produziu 4 campanhas segmentadas, 11 emails e 4 fluxos de automação HubSpot — com gasto zero em ferramentas externas."
+  en: "AGLAYA Outreach turns raw contact databases into precision acquisition campaigns. For Bill Capital's first MIC acquisition drive, AGLAYA deployed a proprietary BBDD Cleaner, Python-based AI scoring with no external APIs, and produced 4 segmented campaigns, 11 emails, and 4 HubSpot automation flows — at zero external tool cost. The second client costs a tenth of the first."
+  es: "AGLAYA Outreach convierte bases de datos crudas en campañas de adquisición de precisión. En la primera campaña de captación de MICs de Bill Capital, AGLAYA desplegó un BBDD Cleaner propio, scoring IA en Python sin APIs externas, y produjo 4 campañas segmentadas, 11 emails y 4 flujos HubSpot — con coste cero en herramientas externas. El segundo cliente cuesta una décima parte del primero."
+  pt: "AGLAYA Outreach converte bancos de dados brutos em campanhas de aquisição de precisão. Na primeira campanha de captação de MICs da Bill Capital, a AGLAYA implementou um BBDD Cleaner proprietário, scoring IA em Python sem APIs externas, e produziu 4 campanhas segmentadas, 11 emails e 4 fluxos HubSpot — com custo zero em ferramentas externas. O segundo cliente custa um décimo do primeiro."
 strategy:
   en: "Proprietary BBDD Cleaner (duplicate detection + DNS validation) → Python AI classifier (function, seniority, company type, MIC score A/B/C/D) → 4 campaign segments → 11 emails + pre-headers → 4 HubSpot automation flows."
   es: "BBDD Cleaner propio (detección de duplicados + validación DNS) → clasificador IA en Python (función, seniority, tipo de empresa, score MIC A/B/C/D) → 4 segmentos de campaña → 11 emails + pre-headers → 4 flujos de automatización HubSpot."
