@@ -54,6 +54,14 @@ body_en: |
 
   They delivered 1,155 raw contacts. No segmentation. No context. No strategy. External tools budget: **$0**.
 
+  ```mermaid
+  flowchart TD
+    A["1,155 raw records"] --> B["BBDD Cleaner\n−314 duplicates · −1 syntax · −2 DNS"]
+    B --> C["838 valid contacts"]
+    C --> D["AI Classification · Python\nScore A / B / C / D"]
+    D --> E1["326 · Score A\nIndependent factoring"] & E2["246 · Score B\nCommercial banking"] & E3["142 · Score C\nOps & risk"] & E4["124 · Score D\nReferral channel"]
+  ```
+
   ### Step 1 — Database Audit (Proprietary BBDD Cleaner)
 
   Before writing a single line of copy, the raw database went through a proprietary audit tool:
@@ -161,6 +169,14 @@ body_pt: |
   A Bill Capital precisava converter executivos financeiros em MICs (Micro Investidores Comerciais) — profissionais que operam factoring usando a plataforma e o capital da Bill Capital, construindo sua própria carteira de clientes e ganhando comissão direta por operação fechada.
 
   Entregaram 1.155 contatos brutos. Sem segmentação. Sem contexto. Sem estratégia. Orçamento em ferramentas externas: **$0**.
+
+  ```mermaid
+  flowchart TD
+    A["1.155 registros brutos"] --> B["BBDD Cleaner\n−314 duplicatas · −1 sintaxe · −2 DNS"]
+    B --> C["838 contatos válidos"]
+    C --> D["Classificação IA · Python\nScore A / B / C / D"]
+    D --> E1["326 · Score A\nFactoring independente"] & E2["246 · Score B\nBanca comercial"] & E3["142 · Score C\nOperações e risco"] & E4["124 · Score D\nCanal de indicações"]
+  ```
 
   ### Passo 1 — Auditoria do Banco de Dados (BBDD Cleaner proprietário)
 

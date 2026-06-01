@@ -102,6 +102,13 @@ body_es: |
 
   Nada llega a `main` sin pasar todos los gates. El pipeline corre en cada push, manualmente bajo demanda, y en un **schedule semanal automático cada lunes a las 13:00 UTC**:
 
+  ```mermaid
+  flowchart LR
+    A[Lint\nHTML·JS·CSS] --> B[Netlify\nConfig] --> C[Links\nExternos] --> D[Playwright\nE2E] --> E[axe-core\nA11y] --> F[Regresión\nVisual] --> G[Lighthouse\nCI] --> H[Perf\nBudgets]
+    style A fill:#111,stroke:#9FC243,color:#fff
+    style H fill:#111,stroke:#9FC243,color:#fff
+  ```
+
   1. **Lint HTML · JS · CSS** — validación de sintaxis y estilo
   2. **Netlify config** — comprobación estructural de netlify.toml
   3. **Links externos** — detección de enlaces rotos
@@ -141,6 +148,13 @@ body_pt: |
   ### Pipeline CI/CD — 8 Passos Bloqueantes
 
   Nada chega ao `main` sem passar por todos os gates. O pipeline roda a cada push, manualmente sob demanda, e em um **schedule semanal automático toda segunda-feira às 13:00 UTC**:
+
+  ```mermaid
+  flowchart LR
+    A[Lint\nHTML·JS·CSS] --> B[Netlify\nConfig] --> C[Links\nExternos] --> D[Playwright\nE2E] --> E[axe-core\nA11y] --> F[Regressão\nVisual] --> G[Lighthouse\nCI] --> H[Perf\nBudgets]
+    style A fill:#111,stroke:#9FC243,color:#fff
+    style H fill:#111,stroke:#9FC243,color:#fff
+  ```
 
   1. **Lint HTML · JS · CSS** — validação de sintaxe e estilo
   2. **Netlify config** — verificação estrutural do netlify.toml

@@ -4,7 +4,7 @@ title:
   es: "Pulse · Inteligencia Comercial"
   pt: "Pulse · Inteligência Comercial"
 client: "Massiva Chile"
-client_logo: "../src/assets/images/chile-flag-round-circle-icon.svg"
+client_logo: "../src/assets/images/logo-massiva-cuadrado.svg"
 industry:
   en: "Outdoor Advertising / OOH"
   es: "Publicidad Exterior / OOH"
@@ -87,13 +87,14 @@ body_en: |
 
   ## Architecture
 
-  ```
-  Mailchimp API ──┐
-                  ├──→ Pulse Engine (Flask) ──→ Dashboard
-  Supabase     ──┤                          ──→ Daily briefing (Resend)
-  (contact_log)   │                          ──→ ROI Report
-                  │
-  GitHub Actions ─┘  (crons: daily refresh · briefing · keep-alive)
+  ```mermaid
+  flowchart TD
+    A["Mailchimp API\n5,154 contacts"] --> B["Pulse Engine · Flask\nScoring + Affinity"]
+    C["Supabase Postgres\ncontact_log"] --> B
+    D["GitHub Actions\ndaily crons"] --> B
+    B --> E["Dashboard · Today View"]
+    B --> F["Daily briefing · Resend\n8am Santiago"]
+    B --> G["ROI Report"]
   ```
 
   Stack: **Flask · Mailchimp API v3 · Supabase Postgres · Resend · GitHub Actions**
@@ -266,13 +267,14 @@ body_pt: |
 
   ## Arquitetura
 
-  ```
-  Mailchimp API ──┐
-                  ├──→ Pulse Engine (Flask) ──→ Dashboard
-  Supabase     ──┤                          ──→ Briefing diário (Resend)
-  (contact_log)   │                          ──→ Relatório ROI
-                  │
-  GitHub Actions ─┘  (crons: refresh diário · briefing · keep-alive)
+  ```mermaid
+  flowchart TD
+    A["Mailchimp API\n5.154 contatos"] --> B["Pulse Engine · Flask\nPontuação + Afinidade"]
+    C["Supabase Postgres\ncontact_log"] --> B
+    D["GitHub Actions\ncrons diários"] --> B
+    B --> E["Dashboard · View Hoje"]
+    B --> F["Briefing diário · Resend\n8h Santiago"]
+    B --> G["Relatório ROI"]
   ```
 
   Stack: **Flask · Mailchimp API v3 · Supabase Postgres · Resend · GitHub Actions**

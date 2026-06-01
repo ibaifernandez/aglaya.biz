@@ -6,7 +6,7 @@ import nordenLogo from '../assets/images/norden.png';
 import pocuroLogo from '../assets/images/pocuro.png';
 import elmStLogo from '../assets/images/elm-st.svg';
 import billCapitalLogo from '../assets/images/logo-bill-capital.png';
-import chileFlagLogo from '../assets/images/chile-flag-round-circle-icon.svg';
+import massivaLogo from '../assets/images/logo-massiva-cuadrado.svg';
 
 interface Props {
   entry: CollectionEntry<'proof'>;
@@ -36,7 +36,7 @@ const proofLogoMap: Record<string, string> = {
   'pocuro.png': pocuroLogo.src,
   'elm-st.svg': typeof elmStLogo === 'string' ? elmStLogo : (elmStLogo as any).src,
   'logo-bill-capital.png': billCapitalLogo.src,
-  'chile-flag-round-circle-icon.svg': typeof chileFlagLogo === 'string' ? chileFlagLogo : (chileFlagLogo as any).src,
+  'logo-massiva-cuadrado.svg': typeof massivaLogo === 'string' ? massivaLogo : (massivaLogo as any).src,
 };
 const clientLogoSrc = proofLogoMap[logoFilename] || rawClientLogoSrc || '';
 
@@ -48,7 +48,7 @@ const cleanSlug = entry.id.replace(/^(en|es|pt)\//, '');
 <a
   href={externalUrl ?? translatePath(`/proof/${cleanSlug}/`)}
   {...externalUrl ? { target: '_blank', rel: 'noopener noreferrer' } : {}}
-  class={`group relative flex ${featured ? 'flex-col lg:flex-row' : 'flex-col'} bg-[#eaeaea]/10 border border-white/5 hover:border-brand/40 transition-all duration-500 overflow-hidden`}
+  class={`group relative flex ${featured ? 'flex-col lg:flex-row' : 'flex-col'} h-full bg-[#eaeaea]/10 border border-white/5 hover:border-brand/40 transition-all duration-500 overflow-hidden`}
   data-animate="fade-up"
 >
   <!-- Header Meta -->
@@ -60,21 +60,21 @@ const cleanSlug = entry.id.replace(/^(en|es|pt)\//, '');
   <div class={`flex-1 flex flex-col gap-8 p-10 pt-24 ${featured ? 'lg:py-16 lg:px-6' : ''}`}>
 
     <!-- Title + Brand -->
-    <div class="flex items-center justify-between gap-6">
-    <h3 class={`text-white font-display font-black leading-tight tracking-tighter uppercase group-hover:text-brand transition-colors ${featured ? 'text-4xl sm:text-6xl' : 'text-3xl'}`}>
-      {titleText}
-    </h3>
-    {clientLogoSrc ? (
-      <img
-      src={clientLogoSrc}
-      alt={client}
-      class="h-24 sm:h-32 max-w-[350px] object-contain"
-      loading="lazy"
-/>
-    ) : (
-      <span class="text-white/60 font-mono text-xs tracking-widest uppercase">{client}</span>
-    )}
-  </div>
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <h3 class={`min-w-0 text-white font-display font-black leading-tight tracking-tighter uppercase group-hover:text-brand transition-colors ${featured ? 'text-3xl sm:text-4xl xl:text-6xl' : 'text-xl xl:text-3xl'}`}>
+        {titleText}
+      </h3>
+      {clientLogoSrc ? (
+        <img
+          src={clientLogoSrc}
+          alt={client}
+          class="shrink-0 h-14 w-auto max-w-[80px] object-contain"
+          loading="lazy"
+        />
+      ) : (
+        <span class="shrink-0 text-white/60 font-mono text-xs tracking-widest uppercase">{client}</span>
+      )}
+    </div>
 
     <!-- Systems Mapping -->
     <div class="flex flex-wrap gap-2 mt-auto">
