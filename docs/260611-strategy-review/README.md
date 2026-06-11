@@ -15,7 +15,7 @@ que produce cada capa es el input de la siguiente.
 | # | Capa | Qué decide | Skills | Artefacto | Estado |
 |---|------|-----------|--------|-----------|--------|
 | 1 | [Posicionamiento](01-positioning/) | Quiénes somos, categoría, mercado, ICP, narrativa | `obviously-awesome` · `crossing-the-chasm` · `jobs-to-be-done` · `aglaya-os:brand-voice` | [`positioning-statement.md`](01-positioning/positioning-statement.md) | ✅ Cerrado (2026-06-11) |
-| 2 | [Oferta de valor](02-value-proposition/) | Por qué te eligen; mensaje matriz; el "incómodo" como ventaja | `hundred-million-offers` · `storybrand-messaging` · `made-to-stick` · `mom-test` | Propuesta de valor + mensaje matriz | ⬜ Pendiente |
+| 2 | [Oferta de valor](02-value-proposition/) | Por qué te eligen; mensaje matriz; el "incómodo" como ventaja | `hundred-million-offers` · `storybrand-messaging` · `made-to-stick` · `mom-test` | [`value-proposition.md`](02-value-proposition/value-proposition.md) | ✅ Cerrado (2026-06-11) |
 | 3 | [Productos](03-products/) | Catálogo: packaging, pricing, posición vs alternativas | `pricing-strategy` · `product-marketing-context` · `competitor-alternatives` · `free-tool-strategy` | Catálogo comercial | ⬜ Pendiente |
 | 4 | [Arquitectura del sitio](04-site-architecture/) | Qué páginas, qué jerarquía, qué ruta de conversión | `site-architecture` · `content-strategy` · `cro-methodology` · `seo-audit` | Mapa del sitio + ruta de conversión | ⬜ Pendiente |
 | 5 | [Páginas](05-pages/) | Cada página ejecutando su trabajo | `page-cro` · `ads-landing` · `refactoring-ui` · `copywriting` | Páginas rediseñadas (specs) | ⬜ Pendiente |
@@ -40,4 +40,4 @@ La cola técnica previa se absorbe en las capas:
 
 ## Estado global
 
-**Fase actual:** ✅ Capa 1 cerrada (2026-06-11) → 🔄 Capa 2 (Oferta de valor) en curso.
+**Fase actual:** ✅ Capas 1-2 cerradas (2026-06-11) → siguiente: Capa 3 (Productos / catálogo).
