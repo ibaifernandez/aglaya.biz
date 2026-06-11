@@ -249,6 +249,12 @@ A Netlify deploy can fail with `astro build` "exit code 2" / "Failed during stag
 
 When a Netlify build fails "exit code 2" but `npm run build` is clean locally, **check secrets scanning first** — read the build log's "Scanning for secrets" section for the flagged key and file:line. (Separately: the Sentry source-map upload errors non-fatally with "Project not found" — a pre-existing slug misconfig — it does NOT fail builds.)
 
-## Cross-Product Contracts
+## CRM AGLAYA Integration — Contract (read before sending leads)
 
-Lead capture + consent/accountability into CRM AGLAYA is governed by a versioned, product-agnostic contract: [`docs/contracts/lead-capture-contract.md`](docs/contracts/lead-capture-contract.md) (currently **v1.0.0**). It is the single source of truth for the legal-basis model (legitimate interest for inbound forms; consent only for Dispatch), the `privacy_policy_version` / `privacy_policy_displayed_at` accountability record, the `/leads/capture` API shape, retention wording, and the DPO channel. When the contract changes, bump its version and re-sync with the CRM thread (and any other signatory product, e.g. Scanner 21.719). Do not let aglaya.biz drift from the contract version it has signed.
+aglaya.biz is a **PRODUCER** feeding the CRM AGLAYA. Any form/flow that sends leads is governed by two documents:
+
+- **Governance (canonical, wins):** [`docs/contracts/lead-capture-contract.md`](docs/contracts/lead-capture-contract.md) (currently **v1.0.1**, three producers signed). Single source of truth for the legal-basis model (legitimate interest for inbound forms; consent only for Dispatch), the GDPR accountability record (`privacy_policy_version` / `privacy_policy_displayed_at`), the `source` taxonomy (`<product>-<channel>-<segment>`), §9 (extending to a new product), and §10 (signatories). When this contract changes, bump its version (§8) and re-sync every signatory thread.
+
+- **Technical API:** `crm-aglaya/docs/contracts/crm-ingestion-api.md` (CRM-owned spec) — endpoints, payloads, `Idempotency-Key`. The CRM owns this; it wins on interface details. The governance contract above wins on the legal/data-protection model.
+
+**For a NEW form:** POST to `/leads/capture` with a `source` from your taxonomy (`aglaya-form-<segment>`) plus the GDPR fields. The CRM accepts any `source` (additive); the taxonomy and the §10 signature are mandatory. Reuse `netlify/functions/_crm.ts` (`dispatchLeadToCrm` already sends auth, GDPR fields, and `Idempotency-Key`). Do not improvise — propose contract changes in the canonical doc (§6). Do not let aglaya.biz drift from the contract version it has signed.
