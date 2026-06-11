@@ -20,7 +20,7 @@ que produce cada capa es el input de la siguiente.
 | 4 | [Arquitectura del sitio](04-site-architecture/) | Qué páginas, qué jerarquía, qué ruta de conversión | `site-architecture` · `content-strategy` · `cro-methodology` · `seo-audit` | [`sitemap.md`](04-site-architecture/sitemap.md) · [`conversion-paths.md`](04-site-architecture/conversion-paths.md) | ✅ Cerrado (2026-06-11) |
 | 5 | [Páginas](05-pages/) | Cada página ejecutando su trabajo | `page-cro` · `ads-landing` · `refactoring-ui` · `copywriting` | [`page-specs.md`](05-pages/page-specs.md) | ✅ Cerrado (2026-06-11) |
 | 6 | [Formularios](06-forms/) | Captura: usabilidad sin perder personalidad | `form-cro` · `ux-heuristics` · `signup-flow-cro` | [`form-spec.md`](06-forms/form-spec.md) | ✅ Cerrado (2026-06-11) |
-| 7 | [Automatizaciones](07-automations/) | Qué pasa tras el submit: CRM, MailerLite, secuencias | `email-sequence` · `analytics-tracking` · `revops` | Flujos post-captura | ⬜ Pendiente |
+| 7 | [Automatizaciones](07-automations/) | Qué pasa tras el submit: CRM, MailerLite, secuencias | `email-sequence` · `analytics-tracking` · `revops` | [`post-capture-flows.md`](07-automations/post-capture-flows.md) · [`mailerlite-validation.md`](07-automations/mailerlite-validation.md) | ✅ Cerrado (2026-06-11) |
 | 8 | [Ventas](08-sales/) | El cierre: propuestas, outreach, ROI audit como oferta | `predictable-revenue` · `aglaya-os:proposal` · `aglaya-os:roi-audit` · `aglaya-os:outreach` | Motor comercial | ⬜ Pendiente |
 
 ## Cómo se usa
@@ -40,4 +40,4 @@ La cola técnica previa se absorbe en las capas:
 
 ## Estado global
 
-**Fase actual:** ✅ Capas 1-6 cerradas (2026-06-11) → siguiente: Capa 7 (Automatizaciones).
+**Fase actual:** ✅ Capas 1-7 cerradas (2026-06-11) → siguiente: Capa 8 (Ventas) — la última.
