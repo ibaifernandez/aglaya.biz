@@ -3,7 +3,7 @@
 - **Version:** 1.0.1
 - **Status:** ACTIVE — SMOKED ✓ (end-to-end verified 2026-05-29; see §11)
 - **Canonical home:** this file (`aglaya.biz/docs/contracts/lead-capture-contract.md`)
-- **Last updated:** 2026-06-01
+- **Last updated:** 2026-06-10
 
 This is the single source of truth governing how any AGLAYA product captures
 leads and consent/accountability evidence into CRM AGLAYA, and the
@@ -117,12 +117,15 @@ A new producer (e.g. Scanner 21.719):
 
 | Party | Status | Implements | Reference |
 |---|---|---|---|
-| **aglaya.biz** | signed | v1.0.0 | web forms → `/leads/capture`; PR #64 (`0b63257`) |
-| **CRM AGLAYA** | countersigned | v1.0.0 | schema + `crm_deals` columns + tests (`c91b11a`); data-subject endpoints (`065988b`); legal docs (`f45e90a`); countersign recorded in `crm-aglaya/docs/contracts/IMPLEMENTS.md` (`0f32781`), accepts contract source SHA `eb837a4` |
-| Scanner 21.719 | not yet | — | — |
+| **aglaya.biz** | signed | v1.0.1 | web forms → `/leads/capture`; PR #64 (`0b63257`); DPO-alias patch v1.0.1 (`b360b5d`) |
+| **CRM AGLAYA** | countersigned | v1.0.1 | schema + `crm_deals` columns + tests (`c91b11a`); data-subject endpoints (`065988b`); legal docs (`f45e90a`); v1.0.1 re-acknowledged in `crm-aglaya/docs/contracts/IMPLEMENTS.md` (`b360b5d`) |
+| **Scanner 21.719** | signed | v1.0.1 | acknowledgement in `legal-reg-tech/docs/contracts/IMPLEMENTS.md` (`6d233af`); sources `scanner21719-{scan,plan,contacto}`; own `privacy_policy_version` at `auditoria-ley21719.cl/privacy/` |
 
-Both parties are in sync on v1.0.0: aglaya.biz accepts at source SHA `eb837a4`;
-CRM AGLAYA countersigns at `0f32781` referencing that same source SHA.
+All three producers are in sync on v1.0.1. Legal basis differs per producer and
+this is intentional (§2 + §9): aglaya.biz forms run on legitimate interest;
+Scanner 21.719 runs on consent under Ley 21.719. Each forwards only its own
+`privacy_policy_version`; the CRM persists it verbatim as the accountability
+record. DPO channel `dpo@aglaya.biz` is shared (Ibai is controller for both).
 
 ## 11. Verification log
 
