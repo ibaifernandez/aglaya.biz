@@ -138,3 +138,13 @@ record. DPO channel `dpo@aglaya.biz` is shared (Ibai is controller for both).
   pre-existing scanner-sourced deal on the same contact retains NULL on both
   fields (scanner / cal.com / operator-manual paths unaffected). CRM status
   commit `421acc2`.
+- **v1.0.1 — RE-SMOKED ✓ (2026-06-11), post CRM independence.** After the CRM
+  became a standalone multi-producer service, the round-trip was re-verified
+  against the unchanged railway-direct endpoint
+  (`crm-aglaya-production.up.railway.app/.../leads/capture`). Open-channel funnel
+  submission (`source=aglaya-form-open-channel`, email `mon@aglaya.biz`): the
+  Astro server sealed `privacy_policy_displayed_at=2026-06-11T02:37:13Z` and
+  forwarded `privacy_policy_version=2026-05-25`, `language=en`; the CRM persisted
+  all fields verbatim on the test deal (since deleted). Producer side green:
+  function returned 200, zero `crm_outcome:failed|rejected|anomaly` in Sentry.
+  Confirms the integration survives the CRM independence with no producer change.
