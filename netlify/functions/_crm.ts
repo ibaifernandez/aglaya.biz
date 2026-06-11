@@ -40,6 +40,8 @@
  *     the visitor).
  */
 
+import { randomUUID } from 'node:crypto';
+
 type CrmSource =
   | 'aglaya-form-qualified'
   | 'aglaya-form-borderline'
@@ -63,9 +65,18 @@ export interface CrmLeadInput {
   utm_content?: string;
   utm_term?: string;
   fbclid?: string;
+  gclid?: string;
   landing_source?: string;
   privacyPolicyVersion?: string;
   privacyPolicyDisplayedAt?: string;
+  /**
+   * Stable UUID per logical lead, sent as the `Idempotency-Key` header so a
+   * retry/re-send never creates a duplicate deal (crm-ingestion-api.md §7.1,
+   * v1.2.0). Optional for the Web producer (best-effort, no durable requeue):
+   * if omitted, dispatch generates a fresh UUID per call. Pass a caller-stable
+   * key only if/when the caller gains a retry/requeue path.
+   */
+  idempotencyKey?: string;
 }
 
 export type CrmDispatchOutcome =
@@ -204,10 +215,16 @@ export async function dispatchLeadToCrm(input: CrmLeadInput): Promise<CrmDispatc
     utm_content: nullableString(input.utm_content),
     utm_term: nullableString(input.utm_term),
     fbclid: nullableString(input.fbclid),
+    gclid: nullableString(input.gclid),
     landing_source: nullableString(input.landing_source),
     privacy_policy_version: nullableString(input.privacyPolicyVersion),
     privacy_policy_displayed_at: nullableString(input.privacyPolicyDisplayedAt),
   };
+
+  // crm-ingestion-api.md §7.1: send a stable per-lead UUID so a retry never
+  // duplicates the deal. Web has no durable requeue, so a fresh UUID per call
+  // is sufficient; callers with a retry path may pass their own stable key.
+  const idempotencyKey = (input.idempotencyKey ?? '').trim() || randomUUID();
 
   try {
     const response = await fetch(url, {
@@ -215,6 +232,7 @@ export async function dispatchLeadToCrm(input: CrmLeadInput): Promise<CrmDispatc
       headers: {
         'Content-Type': 'application/json',
         'X-CRM-API-Key': apiKey,
+        'Idempotency-Key': idempotencyKey,
       },
       body: JSON.stringify(body),
     });
