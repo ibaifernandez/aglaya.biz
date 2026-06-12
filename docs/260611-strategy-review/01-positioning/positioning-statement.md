@@ -1,13 +1,13 @@
-# Posicionamiento AGLAYA — v1.0 (CERRADO 2026-06-11)
+# Posicionamiento AGLAYA — v1.1 (revisión fundador 2026-06-11)
 
-> **Estado:** ✅ CERRADO. Validado por el fundador. Este documento es el input
-> canónico de todas las capas siguientes del blueprint.
+> **Estado:** ✅ CERRADO · revisado. Input canónico de las capas siguientes.
 > Método: marco *Obviously Awesome* (April Dunford).
 >
-> **Síntesis en una frase:** AGLAYA construye **instalaciones digitales soberanas**
-> — plataformas personalizadas que el cliente posee (ni SaaS ni servicios por horas).
-> Global remoto · base de casos LATAM · marco legal España/UE · techo de ingresos
-> EE.UU. Categoría: **la agencia que confronta en vez de validar.**
+> **Síntesis en una frase:** AGLAYA construye **principalmente instalaciones
+> digitales soberanas** — plataformas personalizadas que el cliente posee. No SaaS.
+> Servicios por horas **solo a clientes selectos** (ver Services, capa 5). Global
+> remoto · base de casos LATAM · marco legal España/UE · techo de ingresos EE.UU.
+> Categoría: **la agencia que confronta en vez de validar.**
 
 ---
 

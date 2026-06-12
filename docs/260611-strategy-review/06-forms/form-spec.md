@@ -12,8 +12,8 @@ Hoy hay **dos** filtros que se pisan:
 
 1. **ICPFilter** (en el HOME) — el buen juego: 3 ejes (% trabajo manual, infraestructura
    de datos, inversión en growth) → score ponderado → 3 ramas (qualified / borderline /
-   blocked). Mecánica sólida. **Problemas:** copy críptico + está en el home (debe ir al
-   ROI Audit, capa 4) + backend real (sí dispatcha al CRM vía contact.ts).
+   blocked). Mecánica sólida. **Problemas:** copy **y UX** crípticos + está en el home
+   (debe ir al ROI Audit, capa 4). El backend sí es real (dispatcha al CRM vía contact.ts).
 2. **ROIForm** (en /roi-audit) — un filtro pobre de **1 pregunta** (LTV) con submit
    **falso** (setTimeout). Redundante e inferior al ICPFilter.
 

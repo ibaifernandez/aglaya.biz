@@ -5,8 +5,10 @@
 > (wording del dream outcome, naming, cifras, targeting) se pulen en capas 3 y 5
 > — no bloquean.
 >
-> **Category of one:** la **propiedad**. SaaS y agencias no pueden ofrecerla
-> estructuralmente. AGLAYA sí: el sistema funciona, es tuyo, sigue corriendo sin AGLAYA.
+> **Category of one:** la **propiedad doble — infraestructura + sistema** (revisión
+> v1.1). SaaS y agencias no pueden ofrecerla: el SaaS te alquila; la agencia se va con
+> todo (migrar de su infra a la tuya es un infierno). AGLAYA te entrega el sistema
+> funcionando, corriendo **en TU infra**, y sigue sin nosotros. Imposible de comparar.
 
 ---
 
@@ -31,7 +33,7 @@ entrena a la IA de un tercero.
 `Valor = (Dream Outcome × Probabilidad percibida) / (Tiempo × Esfuerzo)`
 
 - **Dream Outcome:** *"Tu negocio corre sobre infraestructura que POSEES. Sin alquiler mensual, sin lock-in, sin perder tu ventaja. Funciona mientras duermes."* → ⚠️ a reformular **en palabras del fundador/cliente**.
-- **Probabilidad percibida ↑:** proofs reales (Massiva, Bill Capital, Elm St., DJ Amapola), disciplina de ingeniería (tests, CI/CD, Lighthouse 100), + la garantía (§C).
+- **Probabilidad percibida ↑ (revisión v1.1):** NO presumimos ROI — no lo tenemos del todo, y prometerlo nos contradiría ("construimos herramientas, no garantizamos resultados"). La credibilidad viene de **capacidad técnica demostrable**: sistemas reales funcionando en vivo (Pulse en Massiva, webs con Lighthouse 100), código auditable, disciplina de ingeniería + la garantía (§C). **Prueba de competencia, no de resultado.** Los casos se citan como ilustración de lo posible, nunca con métricas de negocio.
 - **Tiempo ↓:** el Stack out-of-the-box convierte meses de build en semanas de instalación.
 - **Esfuerzo ↓:** done-for-you — AGLAYA instala y personaliza; el cliente no construye nada.
 
