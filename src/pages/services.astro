@@ -66,15 +66,6 @@ const systems = [
   },
 ];
 
-const conditions = [
-  ['Minimum contract', '3 months retainer'],
-  ['Retainer price', '$8,000/month USD. No discounts. The price is the signal.'],
-  ['Maximum capacity', '2 simultaneous retainer clients'],
-  ['Payment method', 'Bank transfer, Wise or equivalent. First of the month.'],
-  ['Working language', 'Spanish or English per client'],
-  ['Entry criterion', 'Prior ROI Audit or clear evidence of strategic fit'],
-  ['Exit policy', '30 days notice. The client keeps everything built.'],
-];
 ---
 
 <BaseLayout
@@ -180,86 +171,7 @@ const conditions = [
       </div>
     </section>
 
-    <!-- Pricing -->
-    <section class="bg-[#050505] border-t border-white/5">
-      <div class="max-w-7xl mx-auto px-6 py-32 flex flex-col gap-16">
-        <div class="flex flex-col gap-4">
-          <span class="text-corporate-green font-mono text-[10px] font-black tracking-[0.4em] uppercase">Investment</span>
-          <h2 class="text-white font-display font-black text-5xl md:text-7xl tracking-tighter uppercase">Two entry points.<br/>One direction.</h2>
-          <div class="w-12 h-1 bg-brand mt-2"></div>
-        </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/5">
-
-          <!-- ROI Audit -->
-          <div class="bg-[#080808] p-12 flex flex-col gap-8">
-            <div class="flex flex-col gap-2">
-              <span class="text-corporate-green font-mono text-[8px] uppercase tracking-[0.5em]">Entry Point</span>
-              <h3 class="text-white font-display font-black text-3xl uppercase tracking-tighter">ROI Audit</h3>
-            </div>
-            <div class="flex items-baseline gap-3">
-              <span class="text-white font-display font-black text-5xl tracking-tighter">Scope-based</span>
-              <span class="text-white/30 font-mono text-xs uppercase">quoting</span>
-            </div>
-            <p class="text-white/50 font-body text-sm leading-relaxed">
-              2-week working session with your team. We map every manual process and quantify its exact monthly cost.
-              Output: system design + business case with explicit assumptions.
-            </p>
-            <p class="text-corporate-green font-mono text-[9px] uppercase tracking-widest border-t border-white/10 pt-6">
-              Investment calibrated after manual scope review. No online checkout.
-            </p>
-            <a
-              href={translatePath('/roi-audit')}
-              class="mt-auto bg-white text-black px-8 py-4 font-display font-black text-sm uppercase tracking-widest hover:bg-brand hover:text-white transition-all w-fit"
-            >
-              Full details →
-            </a>
-          </div>
-
-          <!-- System Retainer -->
-          <div class="bg-brand p-12 flex flex-col gap-8">
-            <div class="flex flex-col gap-2">
-              <span class="text-white/70 font-mono text-[8px] uppercase tracking-[0.5em]">Core Product</span>
-              <h3 class="text-white font-display font-black text-3xl uppercase tracking-tighter">System Retainer</h3>
-            </div>
-            <div class="flex items-baseline gap-3">
-              <span class="text-white font-display font-black text-6xl tracking-tighter">$8,000</span>
-              <span class="text-white/70 font-mono text-xs uppercase">/month</span>
-            </div>
-            <ul class="flex flex-col gap-3 text-white/90 font-body text-sm">
-              <li class="flex gap-3 items-start"><span class="text-white/50 mt-0.5">—</span>Direct access to architect, not an account manager</li>
-              <li class="flex gap-3 items-start"><span class="text-white/50 mt-0.5">—</span>Design + build of priority automations</li>
-              <li class="flex gap-3 items-start"><span class="text-white/50 mt-0.5">—</span>Continuous maintenance and system evolution</li>
-              <li class="flex gap-3 items-start"><span class="text-white/50 mt-0.5">—</span>Weekly 30–45 min sync + async real-time updates</li>
-              <li class="flex gap-3 items-start"><span class="text-white/50 mt-0.5">—</span>Impact metrics dashboard (time saved, conversions, cost reduced)</li>
-            </ul>
-            <p class="text-white/50 font-mono text-[9px] uppercase tracking-widest border-t border-white/20 pt-6">
-              Max 2 active retainers simultaneously. 3-month minimum commitment.
-            </p>
-            <a
-              href={translatePath('/contact')}
-              class="mt-auto bg-black text-white px-8 py-4 font-display font-black text-sm uppercase tracking-widest hover:bg-[#111] transition-all w-fit"
-            >
-              {t('nav.contact')} →
-            </a>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- Work Conditions -->
-    <section class="max-w-7xl mx-auto px-6 w-full py-24 flex flex-col gap-12">
-      <span class="text-corporate-green font-mono text-[10px] font-black tracking-[0.4em] uppercase">Work Conditions</span>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-px bg-white/5 border border-white/5">
-        {conditions.map(([key, val]) => (
-          <div class="bg-[#080808] p-8 flex flex-col gap-2">
-            <span class="text-white/30 font-mono text-[9px] uppercase tracking-widest">{key}</span>
-            <span class="text-white font-body text-sm">{val}</span>
-          </div>
-        ))}
-      </div>
-    </section>
 
     <!-- CTA -->
     <section class="border-t border-white/5 bg-[#050505] py-32">
