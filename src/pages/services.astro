@@ -31,7 +31,7 @@ const systems = [
         demoUrl: 'https://pulse.aglaya.biz/',
         caseUrl: '/proof/massiva/',
         demoLabel: 'Demo in production →',
-        caseLabel: 'Full case →',
+        caseLabel: 'How we built it →',
       },
       {
         name: 'Outreach',
@@ -39,7 +39,7 @@ const systems = [
         description: 'System that converts a raw B2B/B2C contact database into a professional commercial deliverable (standalone HTML showcase + PDF report) in hours, not weeks. The logic lives in the engine, not the deck — second client costs 1/10th of the first.',
         stack: 'Python · CSV processing · custom rendering engine',
         caseUrl: '/proof/bill-capital/',
-        caseLabel: 'Full case →',
+        caseLabel: 'How we built it →',
       },
     ],
   },
@@ -49,6 +49,18 @@ const systems = [
     tagline: 'High-performance digital infrastructure',
     cases: 'High-conversion web, authentication systems, owned data infrastructure, third-party integrations without vendor lock-in, internal API architecture',
     stack: 'Astro / Next.js / Netlify / Vercel / PostgreSQL / Supabase / Cloudflare',
+    deployed: [
+      {
+        name: 'AGLAYA Web',
+        label: 'Sovereign web · in production',
+        description: 'Production-grade static sites you own outright — Astro, blocking CI/CD, Lighthouse 100, delivered in your repo. If AGLAYA disappears tomorrow, the site keeps running. Built for DJ Amapola and Elm St.',
+        stack: 'Astro · Tailwind · Netlify · Playwright · GitHub Actions',
+        demoUrl: 'https://djamapola.com',
+        demoLabel: 'See it live →',
+        caseUrl: '/proof/dj-amapola/',
+        caseLabel: 'How we built it →',
+      },
+    ],
   },
   {
     id: '04',
@@ -139,7 +151,7 @@ const systems = [
             </div>
             {'deployed' in s && s.deployed && (
               <div class="col-span-full border-t border-white/5 pt-8 flex flex-col gap-6">
-                <span class="text-corporate-green font-mono text-[8px] uppercase tracking-[0.5em]">Deployed Systems</span>
+                <span class="text-corporate-green font-mono text-[8px] uppercase tracking-[0.5em]">Built · running · yours</span>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {s.deployed.map((d) => (
                     <div class="border-l-2 border-brand/30 pl-5 flex flex-col gap-3">
