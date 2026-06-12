@@ -31,7 +31,7 @@ const systems = [
         demoUrl: 'https://pulse.aglaya.biz/',
         caseUrl: '/pt/proof/massiva/',
         demoLabel: 'Demo em produção →',
-        caseLabel: 'Caso completo →',
+        caseLabel: 'Como construímos →',
       },
       {
         name: 'Outreach',
@@ -39,7 +39,7 @@ const systems = [
         description: 'Sistema que converte uma base de contatos B2B/B2C bruta em um entregável comercial profissional (HTML showcase autônomo + PDF relatório) em horas, não semanas. A lógica vive no motor, não no deck — o segundo cliente custa 1/10 do primeiro.',
         stack: 'Python · processamento CSV · motor de renderização próprio',
         caseUrl: '/pt/proof/bill-capital/',
-        caseLabel: 'Caso completo →',
+        caseLabel: 'Como construímos →',
       },
     ],
   },
@@ -49,6 +49,18 @@ const systems = [
     tagline: 'Infraestrutura digital de alto desempenho',
     cases: 'Web de alta conversão, sistemas de autenticação, infraestrutura de dados própria, integrações de terceiros sem vendor lock-in, arquitetura de APIs internas',
     stack: 'Astro / Next.js / Netlify / Vercel / PostgreSQL / Supabase / Cloudflare',
+    deployed: [
+      {
+        name: 'AGLAYA Web',
+        label: 'Web soberana · em produção',
+        description: 'Sites estáticos de nível produção que você possui por completo — Astro, CI/CD bloqueante, Lighthouse 100, entregues no seu repositório. Se a AGLAYA desaparecer amanhã, o site continua funcionando. Construído para DJ Amapola e Elm St.',
+        stack: 'Astro · Tailwind · Netlify · Playwright · GitHub Actions',
+        demoUrl: 'https://djamapola.com',
+        demoLabel: 'Ver ao vivo →',
+        caseUrl: '/pt/proof/dj-amapola/',
+        caseLabel: 'Como construímos →',
+      },
+    ],
   },
   {
     id: '04',
@@ -135,7 +147,7 @@ const systems = [
             </div>
             {'deployed' in s && s.deployed && (
               <div class="col-span-full border-t border-white/5 pt-8 flex flex-col gap-6">
-                <span class="text-corporate-green font-mono text-[8px] uppercase tracking-[0.5em]">Sistemas Implantados</span>
+                <span class="text-corporate-green font-mono text-[8px] uppercase tracking-[0.5em]">Construído · funcionando · seu</span>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {s.deployed.map((d) => (
                     <div class="border-l-2 border-brand/30 pl-5 flex flex-col gap-3">

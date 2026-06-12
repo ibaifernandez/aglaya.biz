@@ -31,7 +31,7 @@ const systems = [
         demoUrl: 'https://pulse.aglaya.biz/',
         caseUrl: '/es/proof/massiva/',
         demoLabel: 'Demo en producción →',
-        caseLabel: 'Caso completo →',
+        caseLabel: 'Cómo lo construimos →',
       },
       {
         name: 'Outreach',
@@ -39,7 +39,7 @@ const systems = [
         description: 'Sistema que convierte una base de contactos B2B/B2C cruda en un entregable comercial profesional (HTML showcase autónomo + PDF informe) en horas, no semanas. La lógica vive en el motor, no en el deck — el segundo cliente cuesta 1/10 del primero.',
         stack: 'Python · procesamiento CSV · motor de renderizado propio',
         caseUrl: '/es/proof/bill-capital/',
-        caseLabel: 'Caso completo →',
+        caseLabel: 'Cómo lo construimos →',
       },
     ],
   },
@@ -49,6 +49,18 @@ const systems = [
     tagline: 'Infraestructura digital de alto rendimiento',
     cases: 'Web de alta conversión, sistemas de autenticación, infraestructura de datos propia, integraciones de terceros sin vendor lock-in, arquitectura de APIs internas',
     stack: 'Astro / Next.js / Netlify / Vercel / PostgreSQL / Supabase / Cloudflare',
+    deployed: [
+      {
+        name: 'AGLAYA Web',
+        label: 'Web soberana · en producción',
+        description: 'Sitios estáticos de nivel producción que posees por completo — Astro, CI/CD bloqueante, Lighthouse 100, entregados en tu repo. Si AGLAYA desaparece mañana, el sitio sigue funcionando. Construido para DJ Amapola y Elm St.',
+        stack: 'Astro · Tailwind · Netlify · Playwright · GitHub Actions',
+        demoUrl: 'https://djamapola.com',
+        demoLabel: 'Verlo en vivo →',
+        caseUrl: '/es/proof/dj-amapola/',
+        caseLabel: 'Cómo lo construimos →',
+      },
+    ],
   },
   {
     id: '04',
@@ -138,7 +150,7 @@ const systems = [
             </div>
             {'deployed' in s && s.deployed && (
               <div class="col-span-full border-t border-white/5 pt-8 flex flex-col gap-6">
-                <span class="text-corporate-green font-mono text-[8px] uppercase tracking-[0.5em]">Sistemas Desplegados</span>
+                <span class="text-corporate-green font-mono text-[8px] uppercase tracking-[0.5em]">Construido · funcionando · tuyo</span>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {s.deployed.map((d) => (
                     <div class="border-l-2 border-brand/30 pl-5 flex flex-col gap-3">
