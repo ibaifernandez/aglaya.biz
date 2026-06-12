@@ -27,7 +27,7 @@ Cómo se llenan los primeros leads **sin presupuesto de publi**:
 1. **Lead magnets que ya tienes:**
    - Scanner Ley 21.719 (Chile) → Plan $230 → cliente satisfecho → candidato a Web/Stack.
    - Diagnóstico online (gratis) → califica y captura.
-2. **Proof como imán:** los 5 casos reales (Massiva, Bill Capital, Elm St., DJ Amapola, legal-reg-tech) son tu credibilidad. Cada uno empuja a su puerta (capa 4).
+2. **Casos como imán (revisión v1.1):** los 5 casos reales (Massiva, Bill Capital, Elm St., DJ Amapola, legal-reg-tech) son tu credibilidad — pero viven **dentro de The Stack**, citados como capacidad técnica demostrable, **sin métricas de ROI**. Ya no hay sección "Proof"; cada caso ilustra un sistema y empuja a su puerta.
 3. **Outreach proactivo** (`aglaya-os:outreach`): dado que no hay red, **outbound dirigido** al ICP (negocios hartos del alquiler SaaS). El propio AGLAYA Outreach (el producto) es la herramienta — *AGLAYA usa su producto para venderse* (dogfooding = prueba viviente).
 4. **Contenido incómodo** (la voz de marca): posicionarse como "la agencia que confronta" genera atención orgánica sin gasto.
 

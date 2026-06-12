@@ -40,7 +40,16 @@ La cola técnica previa se absorbe en las capas:
 
 ## Estado global
 
-**Fase actual:** ✅✅ **BLUEPRINT COMPLETO — 8/8 capas cerradas (2026-06-11).** La fase
-de documentación termina aquí. Lo siguiente es **ejecución**: aplicar este plan al
-código del sitio, capa por capa (empezando por la 5, Páginas). Cada capa cerrada es
-el contrato de su ejecución.
+**Fase actual:** ✅✅ **BLUEPRINT COMPLETO + REVISADO (v1.1, 2026-06-11).** Las 8 capas
+cerradas y revisadas por el fundador. Lo siguiente es **ejecución**: aplicar este plan
+al código del sitio, capa por capa. Cada capa es el contrato de su ejecución.
+
+### Changelog v1.1 — revisión del fundador (2026-06-11)
+- **Proof eliminado** como sección/nav → casos absorbidos en **The Stack**, citando clientes **sin ROI** ("construimos herramientas, no garantizamos resultados").
+- **Services reintroducida** como página propia: servicios de marketing **selectivos** ("solo si nos gusta tu proyecto") — encuadre de privilegio, no catálogo.
+- **Nav v1.1:** Home · The Stack · Web · ROI Audit · Services · Contact (6 items).
+- **Propiedad doble:** infraestructura + sistema; corre en la infra del cliente.
+- AGLAYA "**principalmente**" instalaciones soberanas (deja aire a las otras líneas).
+- Credibilidad = capacidad técnica demostrable (sistemas en vivo), no evidencia de ROI.
+- Copy **y UX** crípticos (no solo copy) en el diagnóstico.
+- Capacidad de equipo: Món + Ibai asumen todo — capa 8 intacta.
