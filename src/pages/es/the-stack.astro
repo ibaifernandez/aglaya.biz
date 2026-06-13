@@ -1,0 +1,205 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getLangFromUrl, useTranslations, useTranslatedPath } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+
+const systems = [
+  {
+    id: '01',
+    name: 'Systemic Alchemy',
+    tagline: 'Procesos manuales → activos digitales autónomos',
+    cases: 'Calificación automática de leads, generación de reportes, flujos de aprobación interna, onboarding de clientes, seguimiento post-venta, facturación, gestión de inventario',
+    stack: 'n8n / Make / Zapier / Python / APIs propias / Webhooks',
+  },
+  {
+    id: '02',
+    name: 'Narrative Delivery',
+    tagline: 'Ejecución de marketing con integridad de sistema',
+    cases: 'CRM con scoring de leads, secuencias de email con lógica condicional, sistema de contenido semi-automatizado, funnel de conversión con atribución, dashboard de marketing intelligence',
+    stack: 'Resend / HubSpot / Notion / Airtable / Astro / Next.js',
+    deployed: [
+      {
+        name: 'Pulse',
+        label: 'Inteligencia comercial · v1',
+        description: 'Sistema que traduce el engagement de campañas de email en una agenda comercial diaria. Cada mañana el equipo recibe qué llamadas hacer, en qué orden y con qué pitch — sin reportes manuales. Mide objetivamente si el contacto generó movimiento en la cartera.',
+        stack: 'Flask · Mailchimp API · Supabase · Resend · GitHub Actions',
+        demoUrl: 'https://pulse.aglaya.biz/',
+        caseUrl: '/es/proof/massiva/',
+        demoLabel: 'Demo en producción →',
+        caseLabel: 'Cómo lo construimos →',
+      },
+      {
+        name: 'Outreach',
+        label: 'Análisis y segmentación · v1',
+        description: 'Sistema que convierte una base de contactos B2B/B2C cruda en un entregable comercial profesional (HTML showcase autónomo + PDF informe) en horas, no semanas. La lógica vive en el motor, no en el deck — el segundo cliente cuesta 1/10 del primero.',
+        stack: 'Python · procesamiento CSV · motor de renderizado propio',
+        caseUrl: '/es/proof/bill-capital/',
+        caseLabel: 'Cómo lo construimos →',
+      },
+    ],
+  },
+  {
+    id: '03',
+    name: 'Zero-Leak Architecture',
+    tagline: 'Infraestructura digital de alto rendimiento',
+    cases: 'Web de alta conversión, sistemas de autenticación, infraestructura de datos propia, integraciones de terceros sin vendor lock-in, arquitectura de APIs internas',
+    stack: 'Astro / Next.js / Netlify / Vercel / PostgreSQL / Supabase / Cloudflare',
+    deployed: [
+      {
+        name: 'AGLAYA Web',
+        label: 'Web soberana · en producción',
+        description: 'Sitios estáticos de nivel producción que posees por completo — Astro, CI/CD bloqueante, Lighthouse 100, entregados en tu repo. Si AGLAYA desaparece mañana, el sitio sigue funcionando. Construido para DJ Amapola y Elm St.',
+        stack: 'Astro · Tailwind · Netlify · Playwright · GitHub Actions',
+        demoUrl: 'https://djamapola.com',
+        demoLabel: 'Verlo en vivo →',
+        caseUrl: '/es/proof/dj-amapola/',
+        caseLabel: 'Cómo lo construimos →',
+      },
+    ],
+  },
+  {
+    id: '04',
+    name: 'AI Orchestration',
+    tagline: 'Inteligencia aplicada al núcleo del negocio',
+    cases: 'Agentes de atención con contexto real del negocio, análisis automático de datos con insights accionables, generación de contenido con voz de marca calibrada, enrutamiento inteligente de leads',
+    stack: 'Claude API / OpenAI / LangChain / RAG / Bases vectoriales',
+  },
+  {
+    id: '05',
+    name: 'Productive Friction',
+    tagline: 'Desafío estratégico para exponer la verdad',
+    cases: 'Auditoría de posicionamiento y mensajes, revisión de funnel de ventas, análisis de coherencia narrativa marca-operación, sesión de priorización estratégica antes de construir',
+    stack: '1–3 sesiones intensivas (4h cada una) + deliverable escrito accionable',
+  },
+];
+
+---
+
+<BaseLayout
+  title="The Stack — AGLAYA"
+  description="AGLAYA no vende servicios. Vende infraestructura. Cinco arquitecturas de sistema que automatizan tus operaciones de forma permanente. Tú eres el dueño de todo lo que construimos."
+  lang="es"
+  alternateUrl={new URL('/the-stack/', Astro.site).href}
+>
+  <Header />
+
+  <main id="main-content" class="flex flex-col">
+
+    <!-- Page Hero -->
+    <section class="max-w-7xl mx-auto px-6 w-full pt-40 pb-20 flex flex-col gap-6">
+      <span class="text-corporate-green font-mono text-[10px] font-black tracking-[0.4em] uppercase">Arquitectura de Servicios</span>
+      <h1 class="text-white font-display font-black text-6xl md:text-8xl lg:text-[9rem] tracking-tighter leading-[0.88] uppercase">
+        No vendemos<br/>servicios.
+      </h1>
+      <p class="text-white/50 text-xl font-body leading-relaxed max-w-2xl mt-4">
+        Un servicio termina cuando termina el mes. La infraestructura sigue funcionando cuando no estás mirando.
+        Construimos lo segundo.
+      </p>
+      <div class="w-24 h-1 bg-brand mt-4"></div>
+    </section>
+
+    <!-- Philosophy Strip -->
+    <section class="border-t border-b border-white/5 bg-[#050505]">
+      <div class="max-w-7xl mx-auto px-6 py-0 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/5">
+        <div class="flex flex-col gap-4 p-10 md:p-14">
+          <span class="text-corporate-green font-mono text-[8px] uppercase tracking-[0.5em]">01 / NARRATIVE</span>
+          <h3 class="text-white font-display font-black text-2xl uppercase tracking-tighter">Identificar la verdad operativa</h3>
+          <p class="text-white/40 font-body text-sm leading-relaxed">Encontramos y articulamos exactamente qué se está rompiendo, filtrando o costando margen.</p>
+        </div>
+        <div class="flex flex-col gap-4 p-10 md:p-14">
+          <span class="text-corporate-green font-mono text-[8px] uppercase tracking-[0.5em]">02 / SYSTEM</span>
+          <h3 class="text-white font-display font-black text-2xl uppercase tracking-tighter">Construir la arquitectura</h3>
+          <p class="text-white/40 font-body text-sm leading-relaxed">Diseñamos y desplegamos la infraestructura técnica que hace la narrativa operable y medible.</p>
+        </div>
+        <div class="flex flex-col gap-4 p-10 md:p-14">
+          <span class="text-corporate-green font-mono text-[8px] uppercase tracking-[0.5em]">03 / SOVEREIGNTY</span>
+          <h3 class="text-white font-display font-black text-2xl uppercase tracking-tighter">Tú posees todo</h3>
+          <p class="text-white/40 font-body text-sm leading-relaxed">El cliente posee el sistema. AGLAYA lo mantiene y evoluciona. Sin vendor lock-in. Nunca.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 Systems -->
+    <section class="max-w-7xl mx-auto px-6 w-full py-32 flex flex-col gap-16">
+      <div class="flex flex-col gap-4">
+        <span class="text-corporate-green font-mono text-[10px] font-black tracking-[0.4em] uppercase">Catálogo de Sistemas</span>
+        <h2 class="text-white font-display font-black text-5xl md:text-7xl tracking-tighter leading-none uppercase">Cinco sistemas.<br/>Una infraestructura.</h2>
+        <div class="w-12 h-1 bg-brand mt-2"></div>
+      </div>
+
+      <div class="flex flex-col divide-y divide-white/5 border border-white/5">
+        {systems.map((s) => (
+          <div class="bg-[#080808] hover:bg-[#0a0a0a] transition-colors p-10 md:p-14 grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div class="flex flex-col gap-4">
+              <span class="text-corporate-green font-mono text-[8px] uppercase tracking-[0.5em]">SISTEMA_{s.id}</span>
+              <h3 class="text-white font-display font-black text-2xl md:text-3xl uppercase tracking-tighter">{s.name}</h3>
+              <p class="text-white/40 font-body text-sm italic">{s.tagline}</p>
+            </div>
+            <div class="flex flex-col gap-3">
+              <span class="text-white/20 font-mono text-[8px] uppercase tracking-widest">Casos de Uso</span>
+              <p class="text-white/60 font-body text-sm leading-relaxed">{s.cases}</p>
+            </div>
+            <div class="flex flex-col gap-3">
+              <span class="text-white/20 font-mono text-[8px] uppercase tracking-widest">Stack / Formato</span>
+              <p class="text-white/40 font-mono text-xs leading-relaxed">{s.stack}</p>
+            </div>
+            {'deployed' in s && s.deployed && (
+              <div class="col-span-full border-t border-white/5 pt-8 flex flex-col gap-6">
+                <span class="text-corporate-green font-mono text-[8px] uppercase tracking-[0.5em]">Construido · funcionando · tuyo</span>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {s.deployed.map((d) => (
+                    <div class="border-l-2 border-brand/30 pl-5 flex flex-col gap-3">
+                      <div class="flex items-baseline justify-between gap-4 flex-wrap">
+                        <h4 class="text-white font-display font-black text-lg uppercase tracking-tighter">{d.name}</h4>
+                        <span class="text-white/25 font-mono text-[10px]">{d.label}</span>
+                      </div>
+                      <p class="text-white/50 font-body text-sm leading-relaxed">{d.description}</p>
+                      <span class="text-white/20 font-mono text-[10px] uppercase">{d.stack}</span>
+                      <div class="flex gap-6 mt-1">
+                        {'demoUrl' in d && d.demoUrl && (
+                          <a href={d.demoUrl} target="_blank" rel="noopener noreferrer"
+                             class="text-brand hover:text-white font-display font-black text-[11px] uppercase tracking-widest transition-colors">
+                            {d.demoLabel}
+                          </a>
+                        )}
+                        <a href={d.caseUrl}
+                           class="text-white/40 hover:text-white font-display font-black text-[11px] uppercase tracking-widest transition-colors">
+                          {d.caseLabel}
+                        </a>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="border-t border-white/5 bg-[#050505] py-32">
+      <div class="max-w-4xl mx-auto px-6 flex flex-col items-center gap-10 text-center">
+        <span class="text-corporate-green font-mono text-[10px] uppercase tracking-[0.5em]">SIGUIENTE_PASO</span>
+        <h2 class="text-white font-display font-black text-5xl md:text-6xl tracking-tighter uppercase">Empieza con la auditoría.</h2>
+        <p class="text-white/50 font-body text-xl leading-relaxed max-w-xl">
+          Si no encontramos $15K/mes en trabajo automatizable, lo decimos. Sin propuesta. Esa honestidad es el producto.
+        </p>
+        <a
+          href={translatePath('/roi-audit')}
+          class="bg-brand hover:bg-brand-dark text-white px-16 py-6 font-display font-black text-xl uppercase tracking-widest transition-all transform hover:scale-[1.02]"
+        >
+          Reservar ROI Audit →
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <Footer />
+</BaseLayout>

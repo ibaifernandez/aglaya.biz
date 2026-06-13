@@ -12,6 +12,10 @@ export const ui = {
   en: {
     /* Global */
     'nav.proof': 'Proof',
+    'nav.home': 'Home',
+    'nav.the_stack': 'The Stack',
+    'nav.web': 'Web',
+    'nav.contact_short': 'Contact',
     'nav.systems': 'Systems',
     'nav.economics': 'Economics',
     'nav.services': 'Services',
@@ -390,6 +394,10 @@ export const ui = {
   es: {
     /* Global */
     'nav.proof': 'Evidencia',
+    'nav.home': 'Inicio',
+    'nav.the_stack': 'The Stack',
+    'nav.web': 'Web',
+    'nav.contact_short': 'Contacto',
     'nav.systems': 'Sistemas',
     'nav.economics': 'Economía',
     'nav.services': 'Servicios',
@@ -761,6 +769,10 @@ export const ui = {
   pt: {
     /* Global */
     'nav.proof': 'Evidência',
+    'nav.home': 'Início',
+    'nav.the_stack': 'The Stack',
+    'nav.web': 'Web',
+    'nav.contact_short': 'Contato',
     'nav.systems': 'Sistemas',
     'nav.economics': 'Economia',
     'nav.services': 'Serviços',

@@ -32,10 +32,12 @@ const allLangs: LangOption[] = [
 const otherLangs = allLangs.filter(l => l.code !== lang);
 
 const navItems = [
-  { href: translatePath('/#proof'), label: t('nav.proof') },
-  { href: translatePath('/services/'), label: t('nav.services') },
+  { href: translatePath('/'), label: t('nav.home') },
+  { href: translatePath('/the-stack/'), label: t('nav.the_stack') },
+  { href: translatePath('/quote/'), label: t('nav.web') },
   { href: translatePath('/roi-audit/'), label: t('nav.roi_audit') },
-  { href: translatePath('/quote/'), label: t('nav.quote') },
+  { href: translatePath('/services/'), label: t('nav.services') },
+  { href: translatePath('/contact/'), label: t('nav.contact_short') },
 ];
 ---
 
