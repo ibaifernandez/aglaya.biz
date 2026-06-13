@@ -326,7 +326,7 @@ export const handler: Handler = async (event) => {
     // split ROI Audit from the general contact funnel.
     const roiAuditLead = isRoiAuditLead(inquiryType, entryPoint, serviceInterest);
     const consentSource = roiAuditLead ? "aglayabiz-roi-audit" : "aglayabiz-contact";
-    const consentPurpose = roiAuditLead ? "roi-audit" : "commercial-contact";
+    const consentPurpose = roiAuditLead ? "roi-audit" : "contacto";
 
     const crmDispatchPromise: Promise<CrmDispatchResult | null> = crmSource
       ? dispatchLeadToCrm({
