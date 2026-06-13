@@ -35,6 +35,17 @@ const labels = {
     success: 'Mensaje enviado. Te contactaremos en menos de 24 horas.',
     error: 'Algo salió mal. Inténtalo de nuevo.',
   },
+  pt: {
+    nameLabel: 'Nome',
+    namePlaceholder: 'Seu nome',
+    emailLabel: 'E-mail',
+    emailPlaceholder: 'seu@email.com',
+    messageLabel: 'Mensagem',
+    messagePlaceholder: 'Conte-nos sobre o seu projeto...',
+    submit: 'Enviar Mensagem',
+    success: 'Mensagem enviada. Entraremos em contato em até 24 horas.',
+    error: 'Algo deu errado. Tente novamente.',
+  },
 };
 
 const t = labels[lang];
@@ -294,6 +305,12 @@ form?.addEventListener('submit', async (e) => {
       message,
       token,
       lang,
+      // General contact (no ICP qualification) lands in the CRM as an
+      // open-channel / non-qualified lead and in the MailerLite no-cualificados
+      // group (which owns the auto-reply). Resend internal notification always
+      // fires. See contact.ts deriveCrmSource / getContactGroupIds.
+      icp_status: 'OPEN_CHANNEL',
+      inquiry_type: 'GENERAL_LEAD',
       privacy_consent: (document.getElementById('contact-privacy-consent') as HTMLInputElement | null)?.checked ? 'true' : '',
       privacy_policy_version: (form.querySelector('[name="privacy_policy_version"]') as HTMLInputElement | null)?.value ?? '',
     }),

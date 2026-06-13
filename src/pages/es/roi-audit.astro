@@ -2,12 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-import { getLangFromUrl, useTranslations, useTranslatedPath } from '../../i18n/utils';
-
-const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
-const translatePath = useTranslatedPath(lang);
-const roiAuditContactPath = `${translatePath('/contact')}?type=roi-audit&entry_point=roi_audit&service_interest=roi_audit`;
+import ICPFilter from '../../components/ICPFilter.astro';
 
 const outputs = [
   {
@@ -68,26 +63,26 @@ const outputs = [
             Entrevistamos, observamos, mapeamos. El output no es un PDF bonito — es un diagnóstico operativo
             preciso con una arquitectura de sistema y un business case construido sobre números reales.
           </p>
-          <p class="text-white/40 font-body text-base leading-relaxed">
+          <p class="text-white/55 font-body text-base leading-relaxed">
             La inversión del audit es variable según alcance. La calibramos tras revisar superficie operativa,
             carga de stakeholders y complejidad sistémica. Por eso el proceso empieza con una solicitud, no con un checkout.
           </p>
         </div>
         <div class="flex flex-col gap-px bg-white/5 border border-white/5">
           <div class="bg-[#080808] p-8 flex flex-col gap-2">
-            <span class="text-white/30 font-mono text-[9px] uppercase tracking-widest">Duración</span>
+            <span class="text-white/50 font-mono text-[9px] uppercase tracking-widest">Duración</span>
             <span class="text-white font-body">2 semanas con tu equipo</span>
           </div>
           <div class="bg-[#080808] p-8 flex flex-col gap-2">
-            <span class="text-white/30 font-mono text-[9px] uppercase tracking-widest">Formato</span>
+            <span class="text-white/50 font-mono text-[9px] uppercase tracking-widest">Formato</span>
             <span class="text-white font-body">Entrevistas + observación + revisión documental</span>
           </div>
           <div class="bg-[#080808] p-8 flex flex-col gap-2">
-            <span class="text-white/30 font-mono text-[9px] uppercase tracking-widest">Inversión</span>
+            <span class="text-white/50 font-mono text-[9px] uppercase tracking-widest">Inversión</span>
             <span class="text-white font-body">Variable según alcance y superficie operativa</span>
           </div>
           <div class="bg-[#080808] p-8 flex flex-col gap-2">
-            <span class="text-white/30 font-mono text-[9px] uppercase tracking-widest">Modelo comercial</span>
+            <span class="text-white/50 font-mono text-[9px] uppercase tracking-widest">Modelo comercial</span>
             <span class="text-white font-body">Se cotiza tras revisión manual de alcance. No hay pago online.</span>
           </div>
         </div>
@@ -123,7 +118,7 @@ const outputs = [
         <blockquote class="text-white font-display font-black text-3xl md:text-5xl tracking-tighter uppercase leading-tight">
           "Si el audit no identifica al menos $15K/mes en trabajo automatizable, lo decimos y no proponemos retainer."
         </blockquote>
-        <p class="text-white/40 font-body text-lg leading-relaxed max-w-2xl">
+        <p class="text-white/55 font-body text-lg leading-relaxed max-w-2xl">
           Esa honestidad no es generosidad — es parte de nuestra propuesta. No estamos aquí para vender.
           Estamos aquí para construir sistemas que valgan la pena construir. Si el tuyo aún no está listo, te lo decimos de frente.
         </p>
@@ -131,25 +126,22 @@ const outputs = [
       </div>
     </section>
 
-    <!-- CTA -->
-    <section class="border-t border-white/5 py-32">
-      <div class="max-w-4xl mx-auto px-6 flex flex-col items-center gap-10 text-center">
-        <span class="text-corporate-green font-mono text-[10px] uppercase tracking-[0.5em]">EMPIEZA AQUÍ</span>
-        <h2 class="text-white font-display font-black text-5xl md:text-6xl tracking-tighter uppercase">
-          Solicita la auditoría.
-        </h2>
-        <p class="text-white/50 font-body text-xl leading-relaxed max-w-xl">
-          Completa el protocolo de calificación. Revisaremos el fit, el alcance y el rango del audit en menos de 24 horas.
-        </p>
-        <a
-          href={roiAuditContactPath}
-          class="bg-brand hover:bg-brand-dark text-white px-16 py-6 font-display font-black text-xl uppercase tracking-widest transition-all transform hover:scale-[1.02]"
-        >
-          {t('nav.contact')} →
-        </a>
-        <p class="text-white/20 font-mono text-[9px] uppercase tracking-widest">
-          Sin precio fijo. Sin checkout online. Alcance confirmado manualmente en menos de 24H.
-        </p>
+    <!-- Protocolo de calificación (embebido) -->
+    <section id="request" class="border-t border-white/5 py-32 scroll-mt-24">
+      <div class="max-w-7xl mx-auto px-6 w-full flex flex-col items-center gap-12">
+        <div class="flex flex-col items-center gap-4 text-center max-w-2xl">
+          <span class="text-corporate-green font-mono text-[10px] uppercase tracking-[0.5em]">EMPIEZA AQUÍ</span>
+          <h2 class="text-white font-display font-black text-5xl md:text-6xl tracking-tighter uppercase">
+            Solicita la auditoría.
+          </h2>
+          <p class="text-white/50 font-body text-xl leading-relaxed">
+            Sin precio fijo. Sin checkout online. Declara el estado de tu operación abajo — revisamos fit, alcance y rango en menos de 24H.
+          </p>
+        </div>
+        <ICPFilter
+          entryPoint="roi_audit"
+          serviceInterest="roi_audit"
+        />
       </div>
     </section>
 
