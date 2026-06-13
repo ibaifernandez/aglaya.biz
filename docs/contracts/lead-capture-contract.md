@@ -164,7 +164,7 @@ A new producer (e.g. Scanner 21.719):
 
 | Party | Status | Implements | Reference |
 |---|---|---|---|
-| **aglaya.biz** | signed | v1.1.0 | web forms → `/leads/capture`; DPO-alias patch (`b360b5d`); **v1.1.0**: consent-ledger emission (P2) + privacy clause (P5b) + this contract (P5a) |
+| **aglaya.biz** | signed | v1.1.0 | web forms → `/leads/capture`; DPO-alias patch (`b360b5d`); **v1.1.0**: consent-ledger emission (P2) + privacy clause (P5b) + this contract (P5a); signature ledger in [`IMPLEMENTS.md`](./IMPLEMENTS.md) |
 | **CRM AGLAYA** | countersigned | v1.1.0 (consumer) | ledger + DSR + PDF export live in prod; accepts optional consent fields (backward-compatible, dedup by `evidence_hash`); formal v1.1.0 re-ack in `crm-aglaya/docs/contracts/IMPLEMENTS.md` **pending** |
 | **Scanner 21.719** | signed | v1.1.0 | orchestrator of this rollout; emits ficha at 4 points + unsubscribe webhook, E2E in prod; `build_consent_fields`/`build_dsr_fields` are the technical source of truth |
 

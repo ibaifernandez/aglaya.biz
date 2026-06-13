@@ -329,16 +329,17 @@ describe('contact function', () => {
     // Consent ficha (§3-bis) rides the same payload, sent FLAT (top-level),
     // matching Scanner's payload.update(consent). aglaya.biz runs on
     // legitimate interest; the ledger records that basis verbatim.
-    expect(crmPayload.purpose).toBe('commercial-contact');
+    expect(crmPayload.purpose).toBe('contacto');
     expect(crmPayload.legal_basis).toBe('legitimate-interest');
     expect(crmPayload.regime).toBe('cl-21719');
-    expect(crmPayload.channel).toBe('aglayabiz-contact');
+    expect(crmPayload.channel).toBe('web-form');
     expect(crmPayload.status).toBe('granted');
     expect(crmPayload.consent_contract_version).toBe('1.1.0');
     expect(crmPayload.evidence_hash).toMatch(/^sha256:[0-9a-f]{64}$/);
     expect(crmPayload.subject_national_id).toBeNull();
-    // No nested object — flat only.
+    // No nested object — flat only. Hash inputs are not stored fields.
     expect(crmPayload.consent).toBeUndefined();
+    expect(crmPayload.notice_version).toBeUndefined();
   });
 
   it('tags ROI Audit leads with the roi-audit consent purpose and source', async () => {
@@ -381,7 +382,10 @@ describe('contact function', () => {
 
     expect(consent).toBeTruthy();
     expect(consent.purpose).toBe('roi-audit');
-    expect(consent.channel).toBe('aglayabiz-roi-audit');
+    expect(consent.channel).toBe('web-form');
+    // The consent producer-source feeds the hash but is NOT emitted, so the
+    // §4 lead `source` survives the flat merge intact (no collision).
+    expect(consent.source).toBe('aglaya-form-qualified');
   });
 
   it('maps BORDERLINE icp_status to aglaya-form-borderline source', async () => {

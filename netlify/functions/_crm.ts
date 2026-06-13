@@ -68,44 +68,71 @@ type CrmLanguage = 'en' | 'es' | 'pt';
 /** Bumped with the governance contract. Persisted on every consent record. */
 export const CONSENT_CONTRACT_VERSION = '1.1.0';
 
-/** GDPR Art. 6 / Ley 21.719 lawful-basis vocabulary. */
-export type ConsentLegalBasis = 'consent' | 'legitimate-interest' | 'contract';
+/** GDPR Art. 6 / Ley 21.719 lawful-basis vocabulary (§3-bis). */
+export type ConsentLegalBasis =
+  | 'consent'
+  | 'contract'
+  | 'legitimate-interest'
+  | 'legal-obligation'
+  | 'vital-interest'
+  | 'public-task';
 
-/** Data-protection regime the entry is recorded under. */
+/** Data-protection regime the entry is recorded under (§3-bis). */
 export type ConsentRegime = 'cl-21719' | 'eu-gdpr';
+
+/** How the basis was captured (§3-bis vocab) — distinct from the hash `source`. */
+export type ConsentChannel = 'web-form' | 'double-opt-in' | 'import' | 'api';
+
+/** National-ID sub-object (§3-bis). Web forms don't collect it → null. */
+export interface ConsentNationalId {
+  value: string;
+  type: 'rut' | 'dni' | 'nif' | 'passport';
+  country: string; // ISO-3166
+}
 
 export interface ConsentFieldsInput {
   /** Lowercased subject email — first segment of the canonical hash. */
   email: string;
-  /** Processing purpose, e.g. 'commercial-contact', 'roi-audit'. */
+  /** Processing purpose, e.g. 'contacto', 'roi-audit', 'newsletter'. */
   purpose: string;
   /** Lawful basis actually relied upon (forms → 'legitimate-interest'). */
   legalBasis: ConsentLegalBasis;
   /** Regime the record is filed under. Defaults to 'cl-21719'. */
   regime?: ConsentRegime;
-  /** `aglayabiz-<form>` — both the ledger channel and the hash `source`. */
+  /** Capture channel (stored field). Defaults to 'web-form'. */
+  channel?: ConsentChannel;
+  /**
+   * Producer-prefixed `aglayabiz-<form>`. HASH INPUT ONLY — it is the 6th
+   * canonical segment, NOT a stored field (the lead body already carries its
+   * own §4 `source` taxonomy; emitting this would collide on the flat merge).
+   */
   source: string;
-  /** privacy_policy_version live on the form at submission. */
+  /**
+   * privacy_policy_version live at submission. HASH INPUT ONLY — already sent
+   * top-level as `privacy_policy_version` (§3), so not duplicated as a field.
+   */
   noticeVersion: string;
   /** ISO-8601 timestamp; identical to privacy_policy_displayed_at. */
   grantedAt: string;
-  /** Ledger status. Defaults to 'granted'. */
-  status?: 'granted' | 'withdrawn';
-  /** National ID for cl-21719 subjects; null for anonymous web forms. */
-  subjectNationalId?: string | null;
+  /** Optional national ID; null/omitted for anonymous web forms. */
+  subjectNationalId?: ConsentNationalId | null;
 }
 
+/**
+ * The stored consent record — exactly the §3-bis table fields, in table order.
+ * `status` is always 'granted' on creation (immutable; withdrawal is a separate
+ * DSR entry, request_type='withdraw-consent', never a status flip here).
+ */
 export interface ConsentFields {
   purpose: string;
   legal_basis: ConsentLegalBasis;
   regime: ConsentRegime;
-  channel: string;
-  status: 'granted' | 'withdrawn';
+  channel: ConsentChannel;
+  status: 'granted';
   granted_at: string;
-  notice_version: string;
   evidence_hash: string;
   consent_contract_version: string;
-  subject_national_id: string | null;
+  subject_national_id: ConsentNationalId | null;
 }
 
 /** U+001F unit separator — the canonical field delimiter for the hash. */
@@ -114,11 +141,11 @@ const CONSENT_HASH_SEP = '';
 /**
  * Build the consent ficha for a CRM-bound lead, computing the cross-producer
  * `evidence_hash`. The hash input order and separator are a hard contract
- * (§3-bis) — do not reorder fields or change the separator.
+ * (§3-bis) — do not reorder fields or change the separator. `source` and
+ * `noticeVersion` feed the hash but are NOT emitted as stored fields (the
+ * returned object is exactly the §3-bis table).
  */
 export function buildConsentFields(input: ConsentFieldsInput): ConsentFields {
-  const regime = input.regime ?? 'cl-21719';
-  const status = input.status ?? 'granted';
   const canonical = [
     input.email,
     input.purpose,
@@ -131,11 +158,10 @@ export function buildConsentFields(input: ConsentFieldsInput): ConsentFields {
   return {
     purpose: input.purpose,
     legal_basis: input.legalBasis,
-    regime,
-    channel: input.source,
-    status,
+    regime: input.regime ?? 'cl-21719',
+    channel: input.channel ?? 'web-form',
+    status: 'granted',
     granted_at: input.grantedAt,
-    notice_version: input.noticeVersion,
     evidence_hash: evidenceHash,
     consent_contract_version: CONSENT_CONTRACT_VERSION,
     subject_national_id: input.subjectNationalId ?? null,
