@@ -41,3 +41,6 @@ graphify-out/
 
 # Delivery artifacts (client-facing exports — tracked externally)
 docs/delivery/
+
+# Scanner infographics belong to auditoria-ley21719.cl, not here
+src/assets/images/infografia-ley-21719-*.png
