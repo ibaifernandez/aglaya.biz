@@ -173,8 +173,8 @@ export interface CrmLeadInput {
   /**
    * Consent ficha (§3-bis). Built via buildConsentFields so evidence_hash is
    * cross-producer consistent. Optional: omit for paths that do not record a
-   * ledger entry. Sent as a nested `consent` object; CRM dedups by
-   * evidence_hash.
+   * ledger entry. Fields are spread FLAT into the request body (top-level),
+   * matching Scanner's payload.update(consent); CRM dedups by evidence_hash.
    */
   consent?: ConsentFields;
 }
@@ -319,7 +319,11 @@ export async function dispatchLeadToCrm(input: CrmLeadInput): Promise<CrmDispatc
     landing_source: nullableString(input.landing_source),
     privacy_policy_version: nullableString(input.privacyPolicyVersion),
     privacy_policy_displayed_at: nullableString(input.privacyPolicyDisplayedAt),
-    consent: input.consent ?? null,
+    // Consent ficha is sent FLAT (top-level), matching Scanner's
+    // payload.update(consent). The CRM expects flat consent fields, NOT a
+    // nested `consent` object — nesting yields 422 (crm-ingestion-api consent
+    // fields still unversioned; flat shape confirmed by Scanner thread).
+    ...(input.consent ?? {}),
   };
 
   // crm-ingestion-api.md §7.1: send a stable per-lead UUID so a retry never
