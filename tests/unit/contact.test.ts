@@ -326,17 +326,19 @@ describe('contact function', () => {
     expect(crmPayload.utm_source).toBeNull();
     expect(crmPayload.fbclid).toBeNull();
 
-    // Consent ficha (§3-bis) rides the same payload. aglaya.biz runs on
+    // Consent ficha (§3-bis) rides the same payload, sent FLAT (top-level),
+    // matching Scanner's payload.update(consent). aglaya.biz runs on
     // legitimate interest; the ledger records that basis verbatim.
-    expect(crmPayload.consent).toBeTruthy();
-    expect(crmPayload.consent.purpose).toBe('commercial-contact');
-    expect(crmPayload.consent.legal_basis).toBe('legitimate-interest');
-    expect(crmPayload.consent.regime).toBe('cl-21719');
-    expect(crmPayload.consent.channel).toBe('aglayabiz-contact');
-    expect(crmPayload.consent.status).toBe('granted');
-    expect(crmPayload.consent.consent_contract_version).toBe('1.1.0');
-    expect(crmPayload.consent.evidence_hash).toMatch(/^sha256:[0-9a-f]{64}$/);
-    expect(crmPayload.consent.subject_national_id).toBeNull();
+    expect(crmPayload.purpose).toBe('commercial-contact');
+    expect(crmPayload.legal_basis).toBe('legitimate-interest');
+    expect(crmPayload.regime).toBe('cl-21719');
+    expect(crmPayload.channel).toBe('aglayabiz-contact');
+    expect(crmPayload.status).toBe('granted');
+    expect(crmPayload.consent_contract_version).toBe('1.1.0');
+    expect(crmPayload.evidence_hash).toMatch(/^sha256:[0-9a-f]{64}$/);
+    expect(crmPayload.subject_national_id).toBeNull();
+    // No nested object — flat only.
+    expect(crmPayload.consent).toBeUndefined();
   });
 
   it('tags ROI Audit leads with the roi-audit consent purpose and source', async () => {
@@ -346,7 +348,7 @@ describe('contact function', () => {
     let consent: any;
     global.fetch = vi.fn().mockImplementation((url: string, init?: RequestInit) => {
       if (typeof url === 'string' && url.includes('/leads/capture') && init?.body) {
-        consent = JSON.parse(String(init.body)).consent;
+        consent = JSON.parse(String(init.body));
         return Promise.resolve({
           ok: true,
           status: 201,
