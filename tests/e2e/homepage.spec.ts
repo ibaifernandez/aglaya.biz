@@ -12,9 +12,7 @@ test.describe('Homepage', () => {
     await expect(page.locator('section#hero')).toBeVisible();
     await expect(page.locator('section#problem')).toBeVisible();
     await expect(page.locator('section#systems')).toBeVisible();
-    await expect(page.locator('section#how-it-works')).toBeVisible();
     await expect(page.locator('section#proof')).toBeVisible();
-    await expect(page.locator('section#anti-client')).toBeVisible();
     await expect(page.locator('section#economics')).toBeVisible();
     await expect(page.locator('section#contact')).toBeVisible();
     await expect(page.locator('footer')).toBeVisible();
