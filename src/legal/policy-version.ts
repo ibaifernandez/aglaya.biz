@@ -10,11 +10,11 @@
 // This constant MUST equal the "Last updated" date rendered on the privacy
 // pages (they import PRIVACY_POLICY_VERSION_DISPLAY below, so they cannot
 // drift). Bump both whenever the privacy policy text changes.
-export const PRIVACY_POLICY_VERSION = '2026-05-25';
+export const PRIVACY_POLICY_VERSION = '2026-06-13';
 
 // Localized display of the same version, rendered on each privacy page.
 export const PRIVACY_POLICY_VERSION_DISPLAY: Record<'en' | 'es' | 'pt', string> = {
-  en: 'May 25, 2026',
-  es: '25 de mayo de 2026',
-  pt: '25 de maio de 2026',
+  en: 'June 13, 2026',
+  es: '13 de junio de 2026',
+  pt: '13 de junho de 2026',
 };

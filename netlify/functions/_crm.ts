@@ -40,7 +40,7 @@
  *     the visitor).
  */
 
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 
 type CrmSource =
   | 'aglaya-form-qualified'
@@ -48,6 +48,99 @@ type CrmSource =
   | 'aglaya-form-open-channel';
 
 type CrmLanguage = 'en' | 'es' | 'pt';
+
+/* ── Consent / DSR ledger (contract §3-bis, v1.1.0) ──────────────────────────
+ *
+ * Every CRM-bound submission rides a consent ficha: an immutable record of WHAT
+ * basis was used to process WHICH purpose, under WHICH notice, WHEN. aglaya.biz
+ * web forms run on legitimate interest (NOT consent) — the ledger is basis-
+ * neutral and records that fact verbatim (`legal_basis: 'legitimate-interest'`).
+ * The CRM dedups entries by `evidence_hash` (backward-compatible additive field;
+ * crm-ingestion-api consent fields not yet versioned — flagged to CRM thread).
+ *
+ * `evidence_hash` is the canonical fingerprint the three producers agreed on:
+ *   sha256( email ␟ purpose ␟ legal_basis ␟ notice_version ␟ granted_at ␟ source )
+ * where ␟ is U+001F (unit separator), digest hex, prefixed `sha256:`. Field
+ * order and separator are load-bearing — they must match Scanner's
+ * `build_consent_fields` byte-for-byte or dedup across producers breaks.
+ */
+
+/** Bumped with the governance contract. Persisted on every consent record. */
+export const CONSENT_CONTRACT_VERSION = '1.1.0';
+
+/** GDPR Art. 6 / Ley 21.719 lawful-basis vocabulary. */
+export type ConsentLegalBasis = 'consent' | 'legitimate-interest' | 'contract';
+
+/** Data-protection regime the entry is recorded under. */
+export type ConsentRegime = 'cl-21719' | 'eu-gdpr';
+
+export interface ConsentFieldsInput {
+  /** Lowercased subject email — first segment of the canonical hash. */
+  email: string;
+  /** Processing purpose, e.g. 'commercial-contact', 'roi-audit'. */
+  purpose: string;
+  /** Lawful basis actually relied upon (forms → 'legitimate-interest'). */
+  legalBasis: ConsentLegalBasis;
+  /** Regime the record is filed under. Defaults to 'cl-21719'. */
+  regime?: ConsentRegime;
+  /** `aglayabiz-<form>` — both the ledger channel and the hash `source`. */
+  source: string;
+  /** privacy_policy_version live on the form at submission. */
+  noticeVersion: string;
+  /** ISO-8601 timestamp; identical to privacy_policy_displayed_at. */
+  grantedAt: string;
+  /** Ledger status. Defaults to 'granted'. */
+  status?: 'granted' | 'withdrawn';
+  /** National ID for cl-21719 subjects; null for anonymous web forms. */
+  subjectNationalId?: string | null;
+}
+
+export interface ConsentFields {
+  purpose: string;
+  legal_basis: ConsentLegalBasis;
+  regime: ConsentRegime;
+  channel: string;
+  status: 'granted' | 'withdrawn';
+  granted_at: string;
+  notice_version: string;
+  evidence_hash: string;
+  consent_contract_version: string;
+  subject_national_id: string | null;
+}
+
+/** U+001F unit separator — the canonical field delimiter for the hash. */
+const CONSENT_HASH_SEP = '';
+
+/**
+ * Build the consent ficha for a CRM-bound lead, computing the cross-producer
+ * `evidence_hash`. The hash input order and separator are a hard contract
+ * (§3-bis) — do not reorder fields or change the separator.
+ */
+export function buildConsentFields(input: ConsentFieldsInput): ConsentFields {
+  const regime = input.regime ?? 'cl-21719';
+  const status = input.status ?? 'granted';
+  const canonical = [
+    input.email,
+    input.purpose,
+    input.legalBasis,
+    input.noticeVersion,
+    input.grantedAt,
+    input.source,
+  ].join(CONSENT_HASH_SEP);
+  const evidenceHash = `sha256:${createHash('sha256').update(canonical, 'utf8').digest('hex')}`;
+  return {
+    purpose: input.purpose,
+    legal_basis: input.legalBasis,
+    regime,
+    channel: input.source,
+    status,
+    granted_at: input.grantedAt,
+    notice_version: input.noticeVersion,
+    evidence_hash: evidenceHash,
+    consent_contract_version: CONSENT_CONTRACT_VERSION,
+    subject_national_id: input.subjectNationalId ?? null,
+  };
+}
 
 export interface CrmLeadInput {
   email: string;
@@ -77,6 +170,13 @@ export interface CrmLeadInput {
    * key only if/when the caller gains a retry/requeue path.
    */
   idempotencyKey?: string;
+  /**
+   * Consent ficha (§3-bis). Built via buildConsentFields so evidence_hash is
+   * cross-producer consistent. Optional: omit for paths that do not record a
+   * ledger entry. Sent as a nested `consent` object; CRM dedups by
+   * evidence_hash.
+   */
+  consent?: ConsentFields;
 }
 
 export type CrmDispatchOutcome =
@@ -219,6 +319,7 @@ export async function dispatchLeadToCrm(input: CrmLeadInput): Promise<CrmDispatc
     landing_source: nullableString(input.landing_source),
     privacy_policy_version: nullableString(input.privacyPolicyVersion),
     privacy_policy_displayed_at: nullableString(input.privacyPolicyDisplayedAt),
+    consent: input.consent ?? null,
   };
 
   // crm-ingestion-api.md §7.1: send a stable per-lead UUID so a retry never

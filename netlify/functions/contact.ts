@@ -1,6 +1,7 @@
 import type { Handler } from "@netlify/functions";
 import { getContactGroupIds, upsertMailerLiteSubscriber } from "./_mailerlite";
 import {
+  buildConsentFields,
   buildCrmNotes,
   CRM_ATTENTION_OUTCOMES,
   deriveCrmSource,
@@ -318,6 +319,15 @@ export const handler: Handler = async (event) => {
     // Only dispatch to CRM if the form mapped to a known source. Forms
     // without ICP context (e.g., the general ContactForm) intentionally
     // do not land in the CRM via this path.
+    // Consent ficha (§3-bis). aglaya.biz forms run on legitimate interest, so
+    // the ledger records that basis verbatim — this is the GDPR Art. 6(1)(f)
+    // processing event, not an Art. 6(1)(a) opt-in. granted_at == the notice
+    // timestamp; notice_version == the policy version shown. Source/purpose
+    // split ROI Audit from the general contact funnel.
+    const roiAuditLead = isRoiAuditLead(inquiryType, entryPoint, serviceInterest);
+    const consentSource = roiAuditLead ? "aglayabiz-roi-audit" : "aglayabiz-contact";
+    const consentPurpose = roiAuditLead ? "roi-audit" : "commercial-contact";
+
     const crmDispatchPromise: Promise<CrmDispatchResult | null> = crmSource
       ? dispatchLeadToCrm({
           email,
@@ -329,6 +339,15 @@ export const handler: Handler = async (event) => {
           language: lang,
           privacyPolicyVersion: privacyPolicyVersion || undefined,
           privacyPolicyDisplayedAt: privacyDisplayedAt,
+          consent: buildConsentFields({
+            email,
+            purpose: consentPurpose,
+            legalBasis: "legitimate-interest",
+            regime: "cl-21719",
+            source: consentSource,
+            noticeVersion: privacyPolicyVersion || "unknown",
+            grantedAt: privacyDisplayedAt,
+          }),
           // UTM/fbclid/landing_source pipeline not implemented yet; send nulls.
           // Tracked as a follow-up (separate PR).
         })

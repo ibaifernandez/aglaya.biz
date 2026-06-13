@@ -325,6 +325,61 @@ describe('contact function', () => {
     // UTMs not implemented yet; payload sends nulls
     expect(crmPayload.utm_source).toBeNull();
     expect(crmPayload.fbclid).toBeNull();
+
+    // Consent ficha (§3-bis) rides the same payload. aglaya.biz runs on
+    // legitimate interest; the ledger records that basis verbatim.
+    expect(crmPayload.consent).toBeTruthy();
+    expect(crmPayload.consent.purpose).toBe('commercial-contact');
+    expect(crmPayload.consent.legal_basis).toBe('legitimate-interest');
+    expect(crmPayload.consent.regime).toBe('cl-21719');
+    expect(crmPayload.consent.channel).toBe('aglayabiz-contact');
+    expect(crmPayload.consent.status).toBe('granted');
+    expect(crmPayload.consent.consent_contract_version).toBe('1.1.0');
+    expect(crmPayload.consent.evidence_hash).toMatch(/^sha256:[0-9a-f]{64}$/);
+    expect(crmPayload.consent.subject_national_id).toBeNull();
+  });
+
+  it('tags ROI Audit leads with the roi-audit consent purpose and source', async () => {
+    vi.stubEnv('CRM_API_KEY', 'crm_test_key');
+    vi.stubEnv('CRM_LEADS_CAPTURE_URL', 'https://crm.example.test/api/v1/admin/crm/leads/capture');
+
+    let consent: any;
+    global.fetch = vi.fn().mockImplementation((url: string, init?: RequestInit) => {
+      if (typeof url === 'string' && url.includes('/leads/capture') && init?.body) {
+        consent = JSON.parse(String(init.body)).consent;
+        return Promise.resolve({
+          ok: true,
+          status: 201,
+          json: () => Promise.resolve({ contact_id: 'c', deal_id: 'd' }),
+          text: () => Promise.resolve('ok'),
+        });
+      }
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ success: true }),
+        text: () => Promise.resolve('ok'),
+      });
+    });
+
+    await contact.handler({
+      httpMethod: 'POST',
+      headers: { 'x-forwarded-for': '127.0.0.1' },
+      body: JSON.stringify({
+        email: 'roi@example.com',
+        message: 'audit please',
+        token: 'test_token',
+        inquiry_type: 'ROI_AUDIT_LEAD',
+        entry_point: 'roi_audit',
+        service_interest: 'roi_audit',
+        icp_status: 'QUALIFIED',
+        icp_signal_score: '80',
+        privacy_consent: true,
+      }),
+    } as any, {} as any);
+
+    expect(consent).toBeTruthy();
+    expect(consent.purpose).toBe('roi-audit');
+    expect(consent.channel).toBe('aglayabiz-roi-audit');
   });
 
   it('maps BORDERLINE icp_status to aglaya-form-borderline source', async () => {

@@ -1,9 +1,9 @@
 # AGLAYA Lead-Capture & Data-Protection Contract
 
-- **Version:** 1.0.1
-- **Status:** ACTIVE — SMOKED ✓ (end-to-end verified 2026-05-29; see §11)
+- **Version:** 1.1.0
+- **Status:** ACTIVE — SMOKED ✓ (lead-capture verified 2026-05-29; consent-ledger E2E pending first aglaya.biz ficha; see §11)
 - **Canonical home:** this file (`aglaya.biz/docs/contracts/lead-capture-contract.md`)
-- **Last updated:** 2026-06-10
+- **Last updated:** 2026-06-13
 
 This is the single source of truth governing how any AGLAYA product captures
 leads and consent/accountability evidence into CRM AGLAYA, and the
@@ -45,6 +45,44 @@ first signatory; Scanner 21.719 and future products implement the same contract.
 - This evidences *which notice was shown*, not consent (the basis is legitimate
   interest for these forms).
 
+## 3-bis. Consent & DSR ledger (v1.1.0)
+
+Beyond §3, producers emit an immutable **consent-ledger entry** on every "yes"
+and a **DSR entry** on every rights request / revocation. Append-once; the CRM
+dedups by `evidence_hash`. Egress is **non-blocking** (best-effort; never bounces
+the visitor — for Node producers via the same `Promise.allSettled` path as the
+CRM lead dispatch; for the Scanner via RQ, per its 2026-06-10 postmortem).
+Technical source of truth: `legal-reg-tech/backend/app/services/consent_ledger.py`.
+
+**Consent record** (`build_consent_fields`):
+
+| Field | Type / values |
+|---|---|
+| `purpose` | what the basis is for (e.g. `contacto`, `roi-audit`, `newsletter`) |
+| `legal_basis` | GDPR Art. 6 vocab: `consent` · `contract` · `legitimate-interest` · `legal-obligation` · `vital-interest` · `public-task` |
+| `regime` | `cl-21719` (Chile, active) · `eu-gdpr` (EU/Spain) |
+| `channel` | `web-form` · `double-opt-in` · `import` · `api` |
+| `status` | `granted` (immutable on creation) |
+| `granted_at` | ISO-8601 UTC, server-sealed (same instant as notice display) |
+| `evidence_hash` | `sha256:<64hex>` over `email␟purpose␟legal_basis␟notice_version␟granted_at␟source` (U+001F separator) — deterministic; dedup key |
+| `consent_contract_version` | `"1.1.0"` |
+| `subject_national_id` | optional `{value, type: rut\|dni\|nif\|passport, country: ISO-3166}` |
+
+`source` uses the producer prefix `aglayabiz-<form>` (Scanner: `scanner21719-*`).
+
+**DSR record** (`build_dsr_fields`):
+
+| Field | Type / values |
+|---|---|
+| `entry_kind` | `"dsr"` |
+| `request_type` | `access` · `rectification` · `erasure` · `objection` · `withdraw-consent` · `portability` · `restriction` |
+| `status` | `received` (CRM → in-progress \| resolved \| rejected) |
+| `requested_at` | ISO-8601 UTC |
+| `legal_deadline` | optional, profile-specific |
+| `relates_to` | optional, target consent id |
+| `source` | `mailerlite-unsubscribe` · `dpo-email` · `preference-center` · `panel-operator` |
+| `regime`, `evidence_hash`, `subject_national_id` | as above |
+
 ## 4. API contract — `POST /leads/capture`
 
 - **Auth:** header `X-CRM-API-Key`.
@@ -80,6 +118,15 @@ first signatory; Scanner 21.719 and future products implement the same contract.
 
 Internal retention granularity (open / won / lost / backups) may be finer but
 must never exceed the public ceiling above.
+
+**Erasure ↔ retention (v1.1.0; GDPR Art. 17(3)(b)/(e); Ley 21.719).** On an erasure
+request: (1) the DSR is recorded as a new ledger entry (§3-bis); (2) the actual
+*use* of the data (newsletter, account, marketing) is erased; (3) the *minimized
+proof* — that the subject consented to a purpose on a date and, where applicable,
+withdrew it later — is retained for the applicable limitation period, as a legal
+obligation and defence of claims. **Erase the use, keep the proof.** Each producer's
+privacy notice must state this (aglaya.biz: section "Proof of Consent & Erasure" in
+`/privacy/`, all three languages).
 
 ## 6. Data-subject rights
 
@@ -117,15 +164,17 @@ A new producer (e.g. Scanner 21.719):
 
 | Party | Status | Implements | Reference |
 |---|---|---|---|
-| **aglaya.biz** | signed | v1.0.1 | web forms → `/leads/capture`; PR #64 (`0b63257`); DPO-alias patch v1.0.1 (`b360b5d`) |
-| **CRM AGLAYA** | countersigned | v1.0.1 | schema + `crm_deals` columns + tests (`c91b11a`); data-subject endpoints (`065988b`); legal docs (`f45e90a`); v1.0.1 re-acknowledged in `crm-aglaya/docs/contracts/IMPLEMENTS.md` (`b360b5d`) |
-| **Scanner 21.719** | signed | v1.0.1 | acknowledgement in `legal-reg-tech/docs/contracts/IMPLEMENTS.md` (`6d233af`); sources `scanner21719-{scan,plan,contacto}`; own `privacy_policy_version` at `auditoria-ley21719.cl/privacy/` |
+| **aglaya.biz** | signed | v1.1.0 | web forms → `/leads/capture`; DPO-alias patch (`b360b5d`); **v1.1.0**: consent-ledger emission (P2) + privacy clause (P5b) + this contract (P5a) |
+| **CRM AGLAYA** | countersigned | v1.1.0 (consumer) | ledger + DSR + PDF export live in prod; accepts optional consent fields (backward-compatible, dedup by `evidence_hash`); formal v1.1.0 re-ack in `crm-aglaya/docs/contracts/IMPLEMENTS.md` **pending** |
+| **Scanner 21.719** | signed | v1.1.0 | orchestrator of this rollout; emits ficha at 4 points + unsubscribe webhook, E2E in prod; `build_consent_fields`/`build_dsr_fields` are the technical source of truth |
 
-All three producers are in sync on v1.0.1. Legal basis differs per producer and
-this is intentional (§2 + §9): aglaya.biz forms run on legitimate interest;
-Scanner 21.719 runs on consent under Ley 21.719. Each forwards only its own
-`privacy_policy_version`; the CRM persists it verbatim as the accountability
-record. DPO channel `dpo@aglaya.biz` is shared (Ibai is controller for both).
+Producers run **different legal bases by design** (§2 + §9): aglaya.biz forms on
+legitimate interest, Scanner 21.719 on consent under Ley 21.719 — the ledger records
+the actual `legal_basis` per entry. Each forwards its own `privacy_policy_version`;
+the CRM persists it verbatim. DPO channel `dpo@aglaya.biz` is shared.
+
+> **v1.1.0 re-sign pending:** CRM and Scanner threads to record v1.1.0 in their
+> `IMPLEMENTS.md`. aglaya.biz signs here on merge of the consent-ledger PR.
 
 ## 11. Verification log
 
