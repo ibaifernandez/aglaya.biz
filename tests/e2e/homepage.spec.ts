@@ -29,7 +29,7 @@ test.describe('Homepage', () => {
 
     // Desktop nav has anchor links to homepage sections
     // .first() because mobile nav also has the same links (hidden at desktop width)
-    await expect(page.locator('a[href="/#proof"]').first()).toBeVisible();
+    await expect(page.locator('a[href="/the-stack/"]').first()).toBeVisible();
     await expect(page.locator('a[href="/services/"]').first()).toBeVisible();
     await expect(page.locator('a[href="/roi-audit/"]').first()).toBeVisible();
     await expect(page.locator('a[href="/quote/"]').first()).toBeVisible();
