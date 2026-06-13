@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-async function gotoContact(
+async function gotoWithConsent(
   page: Parameters<typeof test>[0]['page'],
-  path = '/contact/',
+  path: string,
 ) {
   await page.addInitScript(() => {
     window.localStorage.setItem('aglaya_cookie_consent', 'essential');
@@ -31,34 +31,63 @@ async function checkHiddenOption(
   await page.locator(selector).check({ force: true });
 }
 
-test.describe('Contact Page', () => {
-  test('should switch language from contact page without breaking', async ({ page }) => {
-    await gotoContact(page);
+/* ── /contact — simple contact form (no ICP qualification) ─────────────── */
 
-    // Toggle to ES (should navigate to /es/contact or /es/contact/)
+test.describe('Contact Page (simple form)', () => {
+  test('should switch language from contact page without breaking', async ({ page }) => {
+    await gotoWithConsent(page, '/contact/');
+
     await page.click('.lang-switcher');
     await page.waitForURL(/\/es\/contact\/?$/);
 
-    // Toggle back to EN
     await page.click('.lang-switcher');
     await page.waitForURL(/\/contact\/?$/);
   });
 
-  test('should render the contact page with ICP filter', async ({ page }) => {
-    await gotoContact(page);
+  test('should render the simple contact form', async ({ page }) => {
+    await gotoWithConsent(page, '/contact/');
 
-    // Check page title
     await expect(page).toHaveTitle('Request Proposal — AGLAYA');
 
-    // Check that the ICP filter is present
-    await expect(page.locator('#icp-container')).toBeVisible();
+    // The ICP qualification funnel must NOT be here anymore.
+    await expect(page.locator('#icp-container')).toHaveCount(0);
 
-    // Check that initial inputs are present
+    // Simple form is present.
+    await expect(page.locator('#contact-form')).toBeVisible();
+    await expect(page.locator('#contact-email')).toBeVisible();
+    await expect(page.locator('#contact-message')).toBeVisible();
+    await expect(page.locator('#contact-privacy-consent')).toBeAttached();
+    // Submit stays disabled until hCaptcha resolves.
+    await expect(page.locator('#contact-submit')).toBeDisabled();
+  });
+
+  test('should pass axe-core accessibility checks', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await gotoWithConsent(page, '/contact/');
+
+    const results = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'best-practice'])
+      .exclude('.h-captcha')         // hCaptcha has low-contrast warning in non-prod
+      .exclude('.marquee-container') // decorative scrolling text, aria-hidden
+      .exclude('.deco-text')         // opacity-based decorative labels, aria-hidden
+      .analyze();
+
+    expect(results.violations).toHaveLength(0);
+  });
+});
+
+/* ── /roi-audit — ICP qualification funnel (moved here from /contact) ───── */
+
+test.describe('ROI Audit qualification', () => {
+  test('should render the ROI audit page with the ICP filter', async ({ page }) => {
+    await gotoWithConsent(page, '/roi-audit/');
+
+    await expect(page).toHaveTitle('ROI Audit — AGLAYA');
+
+    await expect(page.locator('#icp-container')).toBeVisible();
     await expect(page.locator('#icp-manual')).toBeVisible();
     await expect(page.locator('#icp-data-none')).toBeAttached();
     await expect(page.locator('#icp-investment-0')).toBeAttached();
-
-    // Check that the live audit and evaluate button are present
     await expect(page.locator('#icp-audit-panel')).toBeVisible();
     await expect(page.locator('#icp-evaluate')).toBeVisible();
     await expect(page.locator('#icp-evaluate')).toContainText(/complete signal input/i);
@@ -68,7 +97,7 @@ test.describe('Contact Page', () => {
   });
 
   test('should surface a blocked state and keep an open contact channel for weak signals', async ({ page }) => {
-    await gotoContact(page);
+    await gotoWithConsent(page, '/roi-audit/');
 
     await setRangeValue(page, '#icp-manual', '20');
     await checkHiddenOption(page, '#icp-data-none');
@@ -86,7 +115,7 @@ test.describe('Contact Page', () => {
   });
 
   test('should show qualified form for strong operational signals', async ({ page }) => {
-    await gotoContact(page);
+    await gotoWithConsent(page, '/roi-audit/');
 
     await setRangeValue(page, '#icp-manual', '80');
     await checkHiddenOption(page, '#icp-data-crm');
@@ -105,13 +134,8 @@ test.describe('Contact Page', () => {
     await expect(page.locator('#qualified-form input[name="data_infrastructure"]')).toHaveValue('crm');
   });
 
-  test('should preserve ROI audit context through the qualification flow', async ({ page }) => {
-    await gotoContact(
-      page,
-      '/contact/?type=roi-audit&entry_point=roi_audit&service_interest=roi_audit',
-    );
-
-    await expect(page.locator('main h1')).toContainText(/request the roi audit/i);
+  test('should carry ROI audit context natively (entry_point + service_interest)', async ({ page }) => {
+    await gotoWithConsent(page, '/roi-audit/');
 
     await setRangeValue(page, '#icp-manual', '80');
     await checkHiddenOption(page, '#icp-data-crm');
@@ -119,7 +143,6 @@ test.describe('Contact Page', () => {
     await page.locator('#icp-evaluate').click();
 
     await expect(page.locator('#icp-qualified')).toBeVisible();
-    await expect(page.locator('#qualified-form input[name="inquiry_type"]')).toHaveValue('ROI_AUDIT_LEAD');
     await expect(page.locator('#qualified-form input[name="entry_point"]')).toHaveValue('roi_audit');
     await expect(page.locator('#qualified-form input[name="service_interest"]')).toHaveValue('roi_audit');
   });
@@ -133,7 +156,7 @@ test.describe('Contact Page', () => {
       });
     });
 
-    await gotoContact(page);
+    await gotoWithConsent(page, '/roi-audit/');
 
     await setRangeValue(page, '#icp-manual', '80');
     await checkHiddenOption(page, '#icp-data-crm');
@@ -172,31 +195,15 @@ test.describe('Contact Page', () => {
     );
 
     expect(events).toEqual([
-      {
-        event: 'icp_evaluated',
-        icp_state: 'qualified',
-        form_type: null,
-      },
-      {
-        event: 'icp_branch_viewed',
-        icp_state: 'qualified',
-        form_type: null,
-      },
-      {
-        event: 'contact_form_submit_attempted',
-        icp_state: 'qualified',
-        form_type: 'qualified',
-      },
-      {
-        event: 'contact_form_submit_succeeded',
-        icp_state: 'qualified',
-        form_type: 'qualified',
-      },
+      { event: 'icp_evaluated', icp_state: 'qualified', form_type: null },
+      { event: 'icp_branch_viewed', icp_state: 'qualified', form_type: null },
+      { event: 'contact_form_submit_attempted', icp_state: 'qualified', form_type: 'qualified' },
+      { event: 'contact_form_submit_succeeded', icp_state: 'qualified', form_type: 'qualified' },
     ]);
   });
 
   test('should show borderline form for transitional cases', async ({ page }) => {
-    await gotoContact(page);
+    await gotoWithConsent(page, '/roi-audit/');
 
     await setRangeValue(page, '#icp-manual', '55');
     await checkHiddenOption(page, '#icp-data-sheet');
@@ -215,7 +222,7 @@ test.describe('Contact Page', () => {
 
   test('should pass axe-core accessibility checks', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await gotoContact(page);
+    await gotoWithConsent(page, '/roi-audit/');
 
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'best-practice'])
