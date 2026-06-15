@@ -147,169 +147,115 @@ const icpUi = {
 >
   <div id="icp-copy" data-json={encodeURIComponent(JSON.stringify(icpUi))} hidden></div>
 
-  <!-- Step 1: Stress Test -->
-  <div id="icp-step-1" class="flex flex-col gap-12 transition-opacity duration-500">
-    <div class="flex flex-col gap-4 text-center max-w-3xl mx-auto">
-      <span class="text-corporate-green font-mono text-[10px] uppercase tracking-[0.5em]">{t('contact.qualify.eyebrow')}</span>
+  <!-- Step 1: Fit check -->
+  <div id="icp-step-1" class="flex flex-col gap-12 transition-opacity duration-500 max-w-2xl mx-auto">
+    <div class="flex flex-col gap-4 text-center">
+      <span class="text-corporate-green font-mono text-[10px] uppercase tracking-[0.35em]">{t('contact.qualify.eyebrow')}</span>
       <h2 class="text-white font-display font-black text-4xl md:text-5xl uppercase tracking-tighter">{t('contact.qualify.heading')}</h2>
-      <p class="text-white/60 font-body text-lg md:text-xl leading-relaxed">
+      <p class="text-white/60 font-body text-lg leading-relaxed">
         {t('contact.qualify.intro')}
       </p>
     </div>
 
-    <div class="grid gap-8 xl:gap-10 lg:grid-cols-[minmax(0,1.95fr)_minmax(320px,1fr)] items-start">
-      <div class="flex flex-col gap-8">
-        <div class="icp-panel icp-panel--manual border border-white/8 p-6 md:p-8 flex flex-col gap-5">
-          <label for="icp-manual" class="text-white/70 font-mono text-[11px] uppercase tracking-widest flex justify-between gap-4">
-            <span>{t('contact.qualify.manual_label')}</span>
-            <span id="manual-val" class="icp-value-chip text-[#ff4d70] font-black">{t('contact.qualify.unset')}</span>
-          </label>
-          <p class="text-white/55 font-body text-sm md:text-base leading-relaxed max-w-3xl">
-            {t('contact.qualify.manual_caption')}
-          </p>
-          <input
-            type="range"
-            id="icp-manual"
-            min="0"
-            max="100"
-            step="5"
-            value="50"
-            class="w-full icp-range"
-          />
-          <div class="flex justify-between font-mono text-[9px] text-white/60 uppercase tracking-[0.22em]" aria-hidden="true">
-            <span>{t('contact.qualify.manual_range_1')}</span>
-            <span>{t('contact.qualify.manual_range_2')}</span>
-            <span>{t('contact.qualify.manual_range_3')}</span>
-          </div>
-        </div>
-
-        <div class="grid gap-8 lg:grid-cols-2">
-          <fieldset class="icp-panel icp-panel--data border border-white/8 p-6 md:p-8 flex flex-col gap-5">
-            <legend class="text-white/70 font-mono text-[11px] uppercase tracking-widest px-2">{t('contact.qualify.data_label')}</legend>
-            <p class="text-white/55 font-body text-sm md:text-base leading-relaxed height-min-90px">
-              {t('contact.qualify.data_caption')}
-            </p>
-            <div class="grid gap-3 sm:grid-cols-2">
-              {dataOptions.map((option) => (
-                <div>
-                  <input
-                    type="radio"
-                    id={option.id}
-                    name="data_infrastructure"
-                    value={option.value}
-                    class="sr-only icp-choice"
-                  />
-                  <label
-                    for={option.id}
-                    class="icp-option-card block cursor-pointer border border-white/10 bg-white/[0.02] p-5 transition-all"
-                  >
-                    <span class="block text-white font-display font-black text-base md:text-lg uppercase tracking-tight">{option.label}</span>
-                    <span class="block mt-2 text-white/55 font-body text-sm leading-relaxed">{option.hint}</span>
-                  </label>
-                </div>
-              ))}
-            </div>
-          </fieldset>
-
-          <fieldset class="icp-panel icp-panel--investment border border-white/8 p-6 md:p-8 flex flex-col gap-5">
-            <legend class="text-white/70 font-mono text-[11px] uppercase tracking-widest px-2">{t('contact.qualify.investment_label')}</legend>
-            <p class="text-white/55 font-body text-sm md:text-base leading-relaxed height-min-90px">
-              {t('contact.qualify.investment_caption')}
-            </p>
-            <div class="grid gap-3 sm:grid-cols-2">
-              {investmentOptions.map((option) => (
-                <div>
-                  <input
-                    type="radio"
-                    id={option.id}
-                    name="growth_investment"
-                    value={option.value}
-                    class="sr-only icp-choice"
-                  />
-                  <label
-                    for={option.id}
-                    class="icp-option-card block cursor-pointer border border-white/10 bg-white/[0.02] p-5 transition-all"
-                  >
-                    <span class="block text-white font-display font-black text-base md:text-lg uppercase tracking-tight">{option.label}</span>
-                    <span class="block mt-2 text-white/55 font-body text-sm leading-relaxed">{option.hint}</span>
-                  </label>
-                </div>
-              ))}
-            </div>
-          </fieldset>
-        </div>
+    <!-- Question 1 — manual work -->
+    <div class="flex flex-col gap-5">
+      <div class="flex flex-col gap-2">
+        <label for="icp-manual" class="text-white font-display font-black text-xl tracking-tight flex justify-between gap-4 items-baseline">
+          <span>{t('contact.qualify.manual_label')}</span>
+          <span id="manual-val" class="text-[#ff4d70] font-black text-base">{t('contact.qualify.unset')}</span>
+        </label>
+        <p class="text-white/55 font-body text-base leading-relaxed">{t('contact.qualify.manual_caption')}</p>
       </div>
+      <input
+        type="range"
+        id="icp-manual"
+        min="0"
+        max="100"
+        step="5"
+        value="50"
+        class="w-full icp-range"
+      />
+      <div class="flex justify-between text-white/50 font-body text-xs" aria-hidden="true">
+        <span>{t('contact.qualify.manual_range_1')}</span>
+        <span>{t('contact.qualify.manual_range_2')}</span>
+        <span>{t('contact.qualify.manual_range_3')}</span>
+      </div>
+    </div>
 
-      <div class="lg:sticky lg:top-28">
-        <div
-          id="icp-audit-panel"
-          data-state="incomplete"
-          class="border border-white/10 bg-black/60 p-6 md:p-8 flex flex-col gap-8"
-        >
-          <div class="flex items-center justify-between gap-4">
-            <span class="text-corporate-green font-mono text-[10px] uppercase">{t('contact.qualify.audit_label')}</span>
-            <span id="icp-audit-badge" class="text-white/60 font-mono text-[9px] uppercase tracking-[0.3em] text-right">{t('contact.qualify.state.incomplete.title')}</span>
-          </div>
-
-          <div class="flex flex-col gap-3" aria-live="polite">
-            <h3 id="icp-audit-title" class="text-white font-display font-black text-3xl uppercase tracking-tight">
-              {t('contact.qualify.state.incomplete.title')}
-            </h3>
-            <p id="icp-audit-body" class="text-white/55 font-body text-sm md:text-base leading-relaxed">
-              {t('contact.qualify.state.incomplete.body')}
-            </p>
-          </div>
-
-          <div class="icp-console border-y border-white/8 py-3">
-            <div id="icp-audit-manual-row" class="icp-console-row" data-ready="false">
-              <span id="icp-audit-manual-flag" class="icp-console-flag" aria-hidden="true">[!]</span>
-              <div class="min-w-0 flex flex-1 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-                <span class="icp-console-label">{t('contact.qualify.manual_label')}</span>
-                <span id="icp-audit-manual" class="icp-console-value">{t('contact.qualify.unset')}</span>
-              </div>
-            </div>
-
-            <div id="icp-audit-data-row" class="icp-console-row" data-ready="false">
-              <span id="icp-audit-data-flag" class="icp-console-flag" aria-hidden="true">[!]</span>
-              <div class="min-w-0 flex flex-1 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-                <span class="icp-console-label">{t('contact.qualify.data_label')}</span>
-                <span id="icp-audit-data" class="icp-console-value">{t('contact.qualify.unset')}</span>
-              </div>
-            </div>
-
-            <div id="icp-audit-investment-row" class="icp-console-row" data-ready="false">
-              <span id="icp-audit-investment-flag" class="icp-console-flag" aria-hidden="true">[!]</span>
-              <div class="min-w-0 flex flex-1 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-                <span class="icp-console-label">{t('contact.qualify.investment_label')}</span>
-                <span id="icp-audit-investment" class="icp-console-value">{t('contact.qualify.unset')}</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="icp-audit-footer pt-6 flex flex-col gap-6">
-            <div class="flex items-end justify-between gap-6">
-              <div class="flex flex-col gap-2 height-min-65px">
-                <span class="text-white/50 font-mono text-[9px] uppercase tracking-[0.35em]">{t('contact.qualify.score_label')}</span>
-                <p id="icp-audit-score" class="text-corporate-green font-display font-black text-3xl uppercase tracking-tight">--/100</p>
-              </div>
-              <div class="text-right flex flex-col gap-2 height-min-65px">
-                <span class="text-white/45 font-mono text-[9px] uppercase tracking-[0.35em]">{t('contact.qualify.audit_label')}</span>
-                <p id="icp-audit-footer-state" class="text-white/72 font-body text-sm leading-relaxed">{t('contact.qualify.state.incomplete.title')}</p>
-              </div>
-            </div>
-
-            <button
-              id="icp-evaluate"
-              type="button"
-              disabled
-              data-state="incomplete"
-              class="w-full px-8 py-5 font-display font-black uppercase tracking-[0.18em] transition-all"
+    <!-- Question 2 — data -->
+    <fieldset class="flex flex-col gap-5">
+      <legend class="text-white font-display font-black text-xl tracking-tight">{t('contact.qualify.data_label')}</legend>
+      <p class="text-white/55 font-body text-base leading-relaxed -mt-3">{t('contact.qualify.data_caption')}</p>
+      <div class="grid gap-3 sm:grid-cols-2">
+        {dataOptions.map((option) => (
+          <div>
+            <input
+              type="radio"
+              id={option.id}
+              name="data_infrastructure"
+              value={option.value}
+              class="sr-only icp-choice"
+            />
+            <label
+              for={option.id}
+              class="icp-option-card block cursor-pointer border border-white/10 bg-white/[0.02] p-5 transition-all h-full"
             >
-              {t('contact.qualify.button.incomplete')}
-            </button>
+              <span class="block text-white font-display font-black text-base md:text-lg tracking-tight">{option.label}</span>
+              <span class="block mt-1 text-white/55 font-body text-sm leading-relaxed">{option.hint}</span>
+            </label>
           </div>
-        </div>
+        ))}
       </div>
+    </fieldset>
+
+    <!-- Question 3 — budget -->
+    <fieldset class="flex flex-col gap-5">
+      <legend class="text-white font-display font-black text-xl tracking-tight">{t('contact.qualify.investment_label')}</legend>
+      <p class="text-white/55 font-body text-base leading-relaxed -mt-3">{t('contact.qualify.investment_caption')}</p>
+      <div class="grid gap-3 sm:grid-cols-2">
+        {investmentOptions.map((option) => (
+          <div>
+            <input
+              type="radio"
+              id={option.id}
+              name="growth_investment"
+              value={option.value}
+              class="sr-only icp-choice"
+            />
+            <label
+              for={option.id}
+              class="icp-option-card block cursor-pointer border border-white/10 bg-white/[0.02] p-5 transition-all h-full"
+            >
+              <span class="block text-white font-display font-black text-base md:text-lg tracking-tight">{option.label}</span>
+              <span class="block mt-1 text-white/55 font-body text-sm leading-relaxed">{option.hint}</span>
+            </label>
+          </div>
+        ))}
+      </div>
+    </fieldset>
+
+    <!-- Result -->
+    <div
+      id="icp-audit-panel"
+      data-state="incomplete"
+      class="border border-white/10 bg-black/40 p-6 md:p-8 flex flex-col gap-5"
+      aria-live="polite"
+    >
+      <h3 id="icp-audit-title" class="text-white font-display font-black text-2xl md:text-3xl tracking-tight">
+        {t('contact.qualify.state.incomplete.title')}
+      </h3>
+      <p id="icp-audit-body" class="text-white/60 font-body text-base leading-relaxed">
+        {t('contact.qualify.state.incomplete.body')}
+      </p>
+      <button
+        id="icp-evaluate"
+        type="button"
+        disabled
+        data-state="incomplete"
+        class="w-full px-8 py-5 font-display font-black uppercase tracking-[0.18em] transition-all"
+      >
+        {t('contact.qualify.button.incomplete')}
+      </button>
     </div>
   </div>
 
@@ -346,8 +292,6 @@ const icpUi = {
     <BorderlineForm />
   </div>
 
-  <!-- Industrial Detail -->
-  <div class="icp-watermark absolute bottom-4 right-4 opacity-10 font-mono text-[8px] uppercase tracking-widest" aria-hidden="true">ICP_ENGINE_JTBD_v1</div>
 </div>
 
 <script>
