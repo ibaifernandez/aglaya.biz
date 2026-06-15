@@ -377,7 +377,9 @@ const icpUi = {
   }
 
   function getQualificationState() {
-    const manual = manualInput ? parseInt(manualInput.value, 10) : 0;
+    // Slider is inverted: left = most manual, right = most automated. The engine
+    // works in "% manual" (high = more manual), so manual = 100 - thumb position.
+    const manual = manualInput ? 100 - parseInt(manualInput.value, 10) : 50;
     const data = getSelectedValue(dataInputs);
     const investment = getSelectedValue(investmentInputs);
     const complete = touched.manual && touched.data && touched.investment;
@@ -428,7 +430,8 @@ const icpUi = {
     }
 
     if (manualInput) {
-      manualInput.style.setProperty('--range-progress', `${result.manual}%`);
+      // Fill tracks the thumb position (inverted vs. manual %).
+      manualInput.style.setProperty('--range-progress', `${100 - result.manual}%`);
     }
 
     if (auditScore) {

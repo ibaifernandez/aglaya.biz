@@ -117,7 +117,7 @@ test.describe('ROI Audit qualification', () => {
   test('should show qualified form for strong operational signals', async ({ page }) => {
     await gotoWithConsent(page, '/roi-audit/');
 
-    await setRangeValue(page, '#icp-manual', '80');
+    await setRangeValue(page, '#icp-manual', '20'); // inverted slider: 20 = 80% manual
     await checkHiddenOption(page, '#icp-data-crm');
     await checkHiddenOption(page, '#icp-investment-2');
 
@@ -137,7 +137,7 @@ test.describe('ROI Audit qualification', () => {
   test('should carry ROI audit context natively (entry_point + service_interest)', async ({ page }) => {
     await gotoWithConsent(page, '/roi-audit/');
 
-    await setRangeValue(page, '#icp-manual', '80');
+    await setRangeValue(page, '#icp-manual', '20'); // inverted slider: 20 = 80% manual
     await checkHiddenOption(page, '#icp-data-crm');
     await checkHiddenOption(page, '#icp-investment-2');
     await page.locator('#icp-evaluate').click();
@@ -158,7 +158,7 @@ test.describe('ROI Audit qualification', () => {
 
     await gotoWithConsent(page, '/roi-audit/');
 
-    await setRangeValue(page, '#icp-manual', '80');
+    await setRangeValue(page, '#icp-manual', '20'); // inverted slider: 20 = 80% manual
     await checkHiddenOption(page, '#icp-data-crm');
     await checkHiddenOption(page, '#icp-investment-2');
     await page.locator('#icp-evaluate').click();
