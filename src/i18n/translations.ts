@@ -194,8 +194,8 @@ export const ui = {
     'eco.footer': 'Marketing is an expense. Systems are assets.',
 
     /* Contact / ICP */
-    'contact.heading': 'Before we talk — a few honest questions.',
-    'contact.description': 'We don\'t do proposals. We do audits. Identify your leaks and discover the exact systemic infrastructure needed to bridge the gap between chaos and clockwork.',
+    'contact.heading': 'Let\'s talk.',
+    'contact.description': 'Tell us what you\'re working on and where it\'s getting stuck. We read every message and reply within 24 hours — in the language you wrote in.',
     'contact.roi_audit.eyebrow': 'ROI Audit Request',
     'contact.roi_audit.heading': 'Request the ROI Audit.',
     'contact.roi_audit.description': 'Pass the qualification filter and tell us what operational surface area needs to be audited. We scope the audit manually because the investment changes with the size and complexity of the system.',
@@ -570,8 +570,8 @@ export const ui = {
     'eco.footer': 'El marketing es un gasto. Los sistemas son activos.',
 
     /* Contact / ICP */
-    'contact.heading': 'Antes de hablar — algunas preguntas honestas.',
-    'contact.description': 'No hacemos propuestas. Hacemos auditorías. Identificamos tus fugas y descubrimos la infraestructura sistémica exacta para cerrar la brecha entre el caos y la certidumbre automatizada.',
+    'contact.heading': 'Hablemos.',
+    'contact.description': 'Cuéntanos en qué estás trabajando y dónde se te está atascando. Leemos cada mensaje y respondemos en menos de 24 horas, en el idioma en el que nos escribas.',
     'contact.roi_audit.eyebrow': 'Solicitud de ROI Audit',
     'contact.roi_audit.heading': 'Solicita el ROI Audit.',
     'contact.roi_audit.description': 'Pasa el filtro de calificación y cuéntanos qué superficie operativa hay que auditar. Calibramos el audit manualmente porque la inversión cambia según el tamaño y la complejidad del sistema.',
@@ -951,8 +951,8 @@ export const ui = {
     'eco.footer': 'Marketing é despesa. Sistemas são ativos.',
 
     /* Contact / ICP */
-    'contact.heading': 'Antes de conversar — algumas perguntas honestas.',
-    'contact.description': 'Não fazemos propostas. Fazemos auditorias. Identificamos seus vazamentos e descobrimos a infraestrutura sistêmica exata para fechar a lacuna entre o caos e a certeza automatizada.',
+    'contact.heading': 'Vamos conversar.',
+    'contact.description': 'Conte o que você está construindo e onde está travando. Lemos cada mensagem e respondemos em até 24 horas, no idioma em que você escrever.',
     'contact.roi_audit.eyebrow': 'Solicitação de ROI Audit',
     'contact.roi_audit.heading': 'Solicite o ROI Audit.',
     'contact.roi_audit.description': 'Passe pelo filtro de qualificação e conte qual superfície operacional precisa ser auditada. Calibramos o audit manualmente porque o investimento muda conforme o tamanho e a complexidade do sistema.',

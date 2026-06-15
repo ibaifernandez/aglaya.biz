@@ -25,6 +25,15 @@ export function getDispatchGroupId(): string {
   ).trim();
 }
 
+/**
+ * Group for the **simple /contact form** (general inbound, no ICP
+ * qualification). Distinct from the funnel's no-cualificados/cualificados/etc.
+ * so general "let's talk" leads get their own MailerLite sequence.
+ */
+export function getGeneralContactGroupId(): string {
+  return (process.env.MAILERLITE_CONTACTO_GROUP_ID ?? '').trim();
+}
+
 export function getContactGroupIds(icpStatus?: string, icpPrimaryState?: string): string[] {
   const normalizedStatus = (icpStatus ?? '').trim().toUpperCase();
   const normalizedPrimaryState = (icpPrimaryState ?? '').trim().toLowerCase();
