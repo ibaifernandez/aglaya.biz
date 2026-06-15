@@ -195,7 +195,7 @@ export const ui = {
 
     /* Contact / ICP */
     'contact.heading': 'Let\'s talk.',
-    'contact.description': 'Tell us what you\'re working on and where it\'s getting stuck. We read every message and reply within 24 hours — in the language you wrote in.',
+    'contact.description': 'Tell us what you\'re working on and where it\'s getting stuck. We read every message and reply within 24 hours.',
     'contact.roi_audit.eyebrow': 'ROI Audit Request',
     'contact.roi_audit.heading': 'Request the ROI Audit.',
     'contact.roi_audit.description': 'Pass the qualification filter and tell us what operational surface area needs to be audited. We scope the audit manually because the investment changes with the size and complexity of the system.',
@@ -571,7 +571,7 @@ export const ui = {
 
     /* Contact / ICP */
     'contact.heading': 'Hablemos.',
-    'contact.description': 'Cuéntanos en qué estás trabajando y dónde se te está atascando. Leemos cada mensaje y respondemos en menos de 24 horas, en el idioma en el que nos escribas.',
+    'contact.description': 'Cuéntanos en qué estás trabajando y dónde se te está atascando. Leemos cada mensaje y respondemos en menos de 24 horas.',
     'contact.roi_audit.eyebrow': 'Solicitud de ROI Audit',
     'contact.roi_audit.heading': 'Solicita el ROI Audit.',
     'contact.roi_audit.description': 'Pasa el filtro de calificación y cuéntanos qué superficie operativa hay que auditar. Calibramos el audit manualmente porque la inversión cambia según el tamaño y la complejidad del sistema.',
@@ -952,7 +952,7 @@ export const ui = {
 
     /* Contact / ICP */
     'contact.heading': 'Vamos conversar.',
-    'contact.description': 'Conte o que você está construindo e onde está travando. Lemos cada mensagem e respondemos em até 24 horas, no idioma em que você escrever.',
+    'contact.description': 'Conte o que você está construindo e onde está travando. Lemos cada mensagem e respondemos em até 24 horas.',
     'contact.roi_audit.eyebrow': 'Solicitação de ROI Audit',
     'contact.roi_audit.heading': 'Solicite o ROI Audit.',
     'contact.roi_audit.description': 'Passe pelo filtro de qualificação e conte qual superfície operacional precisa ser auditada. Calibramos o audit manualmente porque o investimento muda conforme o tamanho e a complexidade do sistema.',
