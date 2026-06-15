@@ -90,7 +90,7 @@ test.describe('ROI Audit qualification', () => {
     await expect(page.locator('#icp-investment-0')).toBeAttached();
     await expect(page.locator('#icp-audit-panel')).toBeVisible();
     await expect(page.locator('#icp-evaluate')).toBeVisible();
-    await expect(page.locator('#icp-evaluate')).toContainText(/complete signal input/i);
+    await expect(page.locator('#icp-evaluate')).toContainText(/answer all three/i);
     await expect(page.locator('#qualified-form #q-privacy-consent')).toBeAttached();
     await expect(page.locator('#borderline-form #b-privacy-consent')).toBeAttached();
     await expect(page.locator('#open-channel-form #oc-privacy-consent')).toBeAttached();
@@ -103,7 +103,7 @@ test.describe('ROI Audit qualification', () => {
     await checkHiddenOption(page, '#icp-data-none');
     await checkHiddenOption(page, '#icp-investment-0');
 
-    await expect(page.locator('#icp-evaluate')).toContainText(/critical mass not reached/i);
+    await expect(page.locator('#icp-audit-title')).toContainText(/not the right time/i);
 
     await page.locator('#icp-evaluate').click();
 
@@ -121,7 +121,7 @@ test.describe('ROI Audit qualification', () => {
     await checkHiddenOption(page, '#icp-data-crm');
     await checkHiddenOption(page, '#icp-investment-2');
 
-    await expect(page.locator('#icp-evaluate')).toContainText(/execute stress test/i);
+    await expect(page.locator('#icp-audit-title')).toContainText(/strong fit/i);
     await page.locator('#icp-evaluate').click();
 
     await expect(page.locator('#icp-qualified')).toBeVisible();
@@ -209,7 +209,7 @@ test.describe('ROI Audit qualification', () => {
     await checkHiddenOption(page, '#icp-data-sheet');
     await checkHiddenOption(page, '#icp-investment-1');
 
-    await expect(page.locator('#icp-evaluate')).toContainText(/review transitional state/i);
+    await expect(page.locator('#icp-audit-title')).toContainText(/could be a fit/i);
     await page.locator('#icp-evaluate').click();
 
     await expect(page.locator('#icp-borderline')).toBeVisible();
