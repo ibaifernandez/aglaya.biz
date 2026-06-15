@@ -139,7 +139,7 @@ const icpUi = {
 
 <div
   id="icp-container"
-  class="max-w-3xl mx-auto w-full bg-[#050505] border border-white/10 p-6 md:p-10 relative overflow-hidden lg:overflow-visible transition-all duration-700"
+  class="mx-auto w-full bg-[#050505] border border-white/10 p-6 md:p-12 relative overflow-hidden lg:overflow-visible transition-all duration-700"
   data-state="incomplete"
   data-inquiry-type-override={inquiryTypeOverride}
   data-entry-point={entryPoint}
@@ -148,7 +148,7 @@ const icpUi = {
   <div id="icp-copy" data-json={encodeURIComponent(JSON.stringify(icpUi))} hidden></div>
 
   <!-- Step 1: Fit check -->
-  <div id="icp-step-1" class="flex flex-col gap-12 transition-opacity duration-500 max-w-2xl mx-auto">
+  <div id="icp-step-1" class="flex flex-col gap-12 transition-opacity duration-500">
     <div class="flex flex-col gap-4 text-center">
       <span class="text-corporate-green font-mono text-[10px] uppercase tracking-[0.35em]">{t('contact.qualify.eyebrow')}</span>
       <h2 class="text-white font-display font-black text-4xl md:text-5xl uppercase tracking-tighter">{t('contact.qualify.heading')}</h2>
@@ -186,7 +186,7 @@ const icpUi = {
     <fieldset class="flex flex-col gap-2">
       <legend class="text-white font-display font-black text-xl tracking-tight">{t('contact.qualify.data_label')}</legend>
       <p class="text-white/55 font-body text-base leading-relaxed">{t('contact.qualify.data_caption')}</p>
-      <div class="grid gap-3 sm:grid-cols-2 mt-3">
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mt-3">
         {dataOptions.map((option) => (
           <div>
             <input
@@ -212,7 +212,7 @@ const icpUi = {
     <fieldset class="flex flex-col gap-2">
       <legend class="text-white font-display font-black text-xl tracking-tight">{t('contact.qualify.investment_label')}</legend>
       <p class="text-white/55 font-body text-base leading-relaxed">{t('contact.qualify.investment_caption')}</p>
-      <div class="grid gap-3 sm:grid-cols-2 mt-3">
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mt-3">
         {investmentOptions.map((option) => (
           <div>
             <input
