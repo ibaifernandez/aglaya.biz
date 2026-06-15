@@ -110,6 +110,11 @@ const t = labels[lang];
 
   <FormComplianceNotice checkboxId="contact-privacy-consent" variant="contact" />
 
+  <div id="contact-error" class="cf-msg cf-msg--error hidden" role="alert" aria-live="assertive">
+    <span class="cf-msg-dot"></span>
+    {t.error}
+  </div>
+
   <div class="cf-footer">
     <button id="contact-submit" type="submit" class="cf-btn" disabled>
       <span id="contact-btn-text">{t.submit}</span>
@@ -125,11 +130,6 @@ const t = labels[lang];
       role="region"
       aria-label="Bot verification"
     ></div>
-  </div>
-
-  <div id="contact-error" class="cf-msg cf-msg--error hidden" role="alert" aria-live="assertive">
-    <span class="cf-msg-dot"></span>
-    {t.error}
   </div>
 </form>
 
