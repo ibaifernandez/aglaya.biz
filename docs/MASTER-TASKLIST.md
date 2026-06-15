@@ -13,7 +13,7 @@
 
 | ID | Task | Pri | Owner | Status | Depends on / Definition of done |
 |----|------|-----|-------|--------|-------------------------------|
-| A1 | CRM confirms it **accepts the flat consent fields** on `/leads/capture` (no 422). | P0 | 🔁 CRM | ☐ | DoD: a real qualified/open-channel lead persists the consent ficha CRM-side; verified in CRM panel or `/contacts/export`. **Until confirmed, fichas may be silently dropped (best-effort).** |
+| A1 | CRM confirms it **accepts the flat consent fields** on `/leads/capture` (no 422). | P0 | 🔁 CRM | ☑ | **DONE 2026-06-15** — verified in prod: `elmstproductions@gmail.com` submit landed a deal + a consent-ledger entry in the CRM Registro (purpose=contacto, legal_basis=legitimate-interest, regime=cl-21719, source=aglaya-form-open-channel, evidence_hash `sha256:5967c…`). CRM persists flat fields. |
 | A2 | CRM **versions the consent fields** in `crm-ingestion-api.md` (undocumented as of v1.3.0). | P0 | 🔁 CRM | ☐ | DoD: spec lists `purpose, legal_basis, regime, channel, status, granted_at, evidence_hash, consent_contract_version, subject_national_id` + dedup-by-`evidence_hash` behaviour. |
 | A3 | **Re-sign v1.1.0** in `crm-aglaya/docs/contracts/IMPLEMENTS.md`. | P1 | 🔁 CRM | ☐ | DoD: §10 of canonical can mark CRM `countersigned v1.1.0`. |
 | A4 | **Re-sign v1.1.0** in `legal-reg-tech/docs/contracts/IMPLEMENTS.md`. | P1 | 🔁 Scanner | ☐ | DoD: §10 marks Scanner `signed v1.1.0`. |
@@ -24,7 +24,7 @@
 
 | ID | Task | Pri | Owner | Status | Depends on / Definition of done |
 |----|------|-----|-------|--------|-------------------------------|
-| B1 | **MailerLite E2E in prod** — submit one lead per form × 3 langs, confirm the right group + auto-reply (Email 0) fires. Forms: `/contact` simple (→ no-cualificados), `/roi-audit` funnel (qualified/borderline/open-channel), footer dispatch, `/quote`. (was task #9) | P0 | 🧑 | ☐ | DoD: matrix of 4 forms × 3 langs all confirmed receiving the correct sequence. Highest risk after the contact/ROI swap — could be losing leads silently. |
+| B1 | **MailerLite E2E in prod** — submit one lead per form × 3 langs, confirm the right group + auto-reply fires. Tracked in [`docs/qa/automations-validation.csv`](qa/automations-validation.csv). (was task #9) | P0 | 🧑 | ◐ | **`/contact` ×3 + CRM PASS (2026-06-15)** — Contacto group, language branch, acuse per lang, deal+ficha all verified. **Pending:** roi-audit funnel ×3, footer dispatch ×3, quote ×3. |
 | B2 | **UTM / fbclid / gclid / landing_source pipeline** — `contact.ts` currently sends nulls (`// not implemented yet; separate PR`). Capture from URL params client-side and forward. | P1 | 🤖 | ☐ | DoD: a lead arriving with `?utm_source=...` lands those values in the CRM. File: `netlify/functions/contact.ts:351`. |
 | B3 | Verify the **language of confirmation emails** matches submission `lang` across all forms (regression check after swap). | P2 | 🧑 | ☐ | Part of B1 matrix. |
 
