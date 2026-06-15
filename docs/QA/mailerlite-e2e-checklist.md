@@ -19,12 +19,13 @@
 | `MAILERLITE_CUALIFICADOS_GROUP_ID` | `184811572071237368` | `[AGLAYA.biz] Cualificados` |
 | `MAILERLITE_BORDERLINE_GROUP_ID` | `184811588007494791` | `[AGLAYA.biz] Borderline` |
 | `MAILERLITE_COTIZACIONES_GROUP_ID` | `186446693070276318` | `[AGLAYA.biz] Cotizaciones` |
+| `MAILERLITE_CONTACTO_GROUP_ID` | `190336414601184801` | `[AGLAYA.biz] Contacto` |
 
 ## Expected routing (from code)
 
 | Form | What to do in the funnel | Expected group | Sequence |
 |---|---|---|---|
-| `/contact` (simple) | just submit | No cualificados | auto-reply |
+| `/contact` (simple) | just submit | **Contacto** (`MAILERLITE_CONTACTO_GROUP_ID`) | auto-reply |
 | `/roi-audit` → **qualified** | manual 80, data=CRM, investment $15K–40K | Cualificados | auto-reply |
 | `/roi-audit` → **borderline** | manual 55, data=spreadsheet, investment $5K–15K | Borderline | auto-reply |
 | `/roi-audit` → **blocked/open** | manual 20, data=none, investment <$5K | No cualificados | auto-reply |

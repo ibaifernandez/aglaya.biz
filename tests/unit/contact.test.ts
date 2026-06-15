@@ -167,7 +167,41 @@ describe('contact function', () => {
     expect(mailerLitePayload.fields).toEqual({
       name: 'John Doe',
       company: 'AGLAYA',
+      language: 'en',
     });
+  });
+
+  it('routes the simple /contact form (GENERAL_LEAD) to the Contacto group with language', async () => {
+    vi.stubEnv('MAILERLITE_API_KEY', 'ml_test_123');
+    vi.stubEnv('MAILERLITE_NO_CUALIFICADOS_GROUP_ID', 'group_non_qualified');
+    vi.stubEnv('MAILERLITE_CONTACTO_GROUP_ID', 'group_contacto');
+
+    const result = await (contact.handler({
+      httpMethod: 'POST',
+      headers: { 'x-forwarded-for': '127.0.0.1' },
+      body: JSON.stringify({
+        name: 'Maria',
+        email: 'maria@example.com',
+        message: 'Hola, quiero hablar de un proyecto.',
+        token: 'test_token',
+        lang: 'es',
+        inquiry_type: 'GENERAL_LEAD',
+        icp_status: 'OPEN_CHANNEL', // drives CRM open-channel, NOT the ML group
+        privacy_consent: true,
+      }),
+    } as any, {} as any)) as any;
+
+    expect(result.statusCode).toBe(200);
+
+    const fetchMock = global.fetch as ReturnType<typeof vi.fn>;
+    const mailerLiteRequest = fetchMock.mock.calls.find(([url]) =>
+      typeof url === 'string' && url.includes('mailerlite.com'),
+    )?.[1];
+    const mailerLitePayload = JSON.parse(String(mailerLiteRequest?.body));
+    // General contact → Contacto group, NOT no-cualificados.
+    expect(mailerLitePayload.groups).toEqual(['group_contacto']);
+    // Language must be recorded.
+    expect(mailerLitePayload.fields.language).toBe('es');
   });
 
   it('routes blocked contacts to the non-qualified MailerLite group when configured', async () => {

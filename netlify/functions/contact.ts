@@ -1,5 +1,5 @@
 import type { Handler } from "@netlify/functions";
-import { getContactGroupIds, upsertMailerLiteSubscriber } from "./_mailerlite";
+import { getContactGroupIds, getGeneralContactGroupId, upsertMailerLiteSubscriber } from "./_mailerlite";
 import {
   buildConsentFields,
   buildCrmNotes,
@@ -114,8 +114,8 @@ async function syncContactToMailerLite({
   ip,
   name,
   company,
-  icpStatus,
-  icpPrimaryState,
+  language,
+  groups,
   entryPoint,
   serviceInterest,
 }: {
@@ -123,12 +123,11 @@ async function syncContactToMailerLite({
   ip: string;
   name?: string;
   company?: string;
-  icpStatus?: string;
-  icpPrimaryState?: string;
+  language?: "en" | "es" | "pt";
+  groups: string[];
   entryPoint?: string;
   serviceInterest?: string;
 }): Promise<void> {
-  const groups = getContactGroupIds(icpStatus, icpPrimaryState);
   if (groups.length === 0) return;
 
   const synced = await upsertMailerLiteSubscriber({
@@ -136,6 +135,7 @@ async function syncContactToMailerLite({
     ip,
     name,
     company,
+    language,
     groups,
     entry_point: entryPoint,
     service_interest: serviceInterest,
@@ -289,13 +289,22 @@ export const handler: Handler = async (event) => {
       leadScore,
     });
 
+    // The simple /contact form (inquiry_type=GENERAL_LEAD) is general inbound,
+    // NOT a funnel result — it gets its own MailerLite "Contacto" group/sequence.
+    // The ICP funnel keeps its segmented routing. (CRM source stays open-channel
+    // for the general form, set via icp_status; only the ML group differs.)
+    const isGeneralContact = inquiryType === "GENERAL_LEAD";
+    const mailerLiteGroups = isGeneralContact
+      ? [getGeneralContactGroupId()].filter(Boolean)
+      : getContactGroupIds(icpStatus, icpPrimaryState);
+
     const mailerLitePromise = syncContactToMailerLite({
       email,
       ip,
       name,
       company,
-      icpStatus,
-      icpPrimaryState,
+      language: lang,
+      groups: mailerLiteGroups,
       entryPoint,
       serviceInterest,
     }).catch(async (err) => {
