@@ -1,0 +1,544 @@
+---
+import { getLangFromUrl, useTranslatedPath } from '../i18n/utils';
+import { useTranslations } from '../i18n/utils';
+import { getCopy } from '../lib/diagnostic/copy';
+import { PRIVACY_POLICY_VERSION } from '../legal/policy-version';
+
+const lang = getLangFromUrl(Astro.url);
+const c = getCopy(lang);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+
+const privacyPath =
+  lang === 'es' ? '/es/privacidad/' : lang === 'pt' ? '/pt/privacidade/' : '/privacy/';
+const cookiesPath = translatePath('/cookies/');
+const contactPath = translatePath('/contact');
+
+const pains = ['reports', 'leads', 'invoices', 'copypaste', 'admin', 'data'] as const;
+const peopleOpts = ['p1', 'p2_3', 'p4_10', 'p10plus'] as const;
+const hoursOpts = ['h_lt5', 'h5_15', 'h15_40', 'h40plus'] as const;
+const toolOpts = ['none', 'spreadsheet', 'offshelf', 'patchwork'] as const;
+const teamOpts = ['t_solo', 't2_10', 't11_50', 't50plus'] as const;
+const spendOpts = ['s_lt100', 's100_500', 's500_2k', 's2kplus'] as const;
+---
+
+<div
+  id="roi-diag"
+  class="diag-card"
+  data-lang={lang}
+  data-policy-version={PRIVACY_POLICY_VERSION}
+  data-progress-tpl={c.nav.progress}
+  data-sending-text={c.report.sending}
+  data-sent-text={c.report.sent}
+  data-error-text={c.report.sendError}
+>
+  <!-- progress -->
+  <div id="diag-progress" class="diag-progress" hidden>
+    <div class="diag-progress-track"><div id="diag-bar" class="diag-progress-bar"></div></div>
+    <span id="diag-progress-text" class="diag-progress-text"></span>
+  </div>
+
+  <!-- STEP: intro -->
+  <section class="diag-step diag-intro" data-step="intro">
+    <span class="diag-eyebrow">{c.intro.eyebrow}</span>
+    <h2 class="diag-headline">{c.intro.headline}</h2>
+    <p class="diag-sub">{c.intro.sub}</p>
+    <button type="button" class="diag-btn diag-btn-primary" data-action="start">
+      {c.intro.start} <span aria-hidden="true">→</span>
+    </button>
+    <p class="diag-trust">{c.intro.trust}</p>
+  </section>
+
+  <!-- STEP: pain (Q1) -->
+  <section class="diag-step" data-step="pain" data-key="pain" role="group" aria-labelledby="diag-q-pain" hidden>
+    <button type="button" class="diag-back" data-action="back">← {c.nav.back}</button>
+    <h2 id="diag-q-pain" class="diag-q">{c.questions.pain.q}</h2>
+    <p class="diag-help">{c.questions.pain.help}</p>
+    <div class="diag-grid">
+      {pains.map((p) => (
+        <button type="button" class="diag-opt" data-value={p} aria-pressed="false">
+          {c.questions.pain.options[p]}
+        </button>
+      ))}
+    </div>
+  </section>
+
+  <!-- STEP: email gate -->
+  <section class="diag-step diag-email" data-step="email" hidden>
+    <button type="button" class="diag-back" data-action="back">← {c.nav.back}</button>
+    <h2 class="diag-q">{c.email.title}</h2>
+    <p class="diag-help">{c.email.sub}</p>
+    <div class="diag-email-row">
+      <input
+        id="diag-email"
+        type="email"
+        inputmode="email"
+        autocomplete="email"
+        class="diag-email-input"
+        placeholder={c.email.placeholder}
+      />
+      <button type="button" class="diag-btn diag-btn-primary" data-action="email-continue">
+        {c.email.button} <span aria-hidden="true">→</span>
+      </button>
+    </div>
+    <p id="diag-email-error" class="diag-error" hidden>{c.email.error}</p>
+    <p class="diag-note">
+      {c.email.consent}{' '}
+      <a href={privacyPath} class="diag-link">{t('nav.privacy')}</a>
+      <span class="diag-sep">/</span>
+      <a href={cookiesPath} class="diag-link">{t('nav.cookies')}</a>
+    </p>
+  </section>
+
+  <!-- STEP: people -->
+  <section class="diag-step" data-step="people" data-key="people" role="group" aria-labelledby="diag-q-people" hidden>
+    <button type="button" class="diag-back" data-action="back">← {c.nav.back}</button>
+    <h2 id="diag-q-people" class="diag-q">{c.questions.people.q}</h2>
+    <div class="diag-grid diag-grid-4">
+      {peopleOpts.map((o) => (
+        <button type="button" class="diag-opt" data-value={o} aria-pressed="false">
+          {c.questions.people.options[o]}
+        </button>
+      ))}
+    </div>
+  </section>
+
+  <!-- STEP: hours -->
+  <section class="diag-step" data-step="hours" data-key="hours" role="group" aria-labelledby="diag-q-hours" hidden>
+    <button type="button" class="diag-back" data-action="back">← {c.nav.back}</button>
+    <h2 id="diag-q-hours" class="diag-q">{c.questions.hours.q}</h2>
+    <div class="diag-grid diag-grid-4">
+      {hoursOpts.map((o) => (
+        <button type="button" class="diag-opt" data-value={o} aria-pressed="false">
+          {c.questions.hours.options[o]}
+        </button>
+      ))}
+    </div>
+  </section>
+
+  <!-- STEP: tool -->
+  <section class="diag-step" data-step="tool" data-key="tool" role="group" aria-labelledby="diag-q-tool" hidden>
+    <button type="button" class="diag-back" data-action="back">← {c.nav.back}</button>
+    <h2 id="diag-q-tool" class="diag-q">{c.questions.tool.q}</h2>
+    <div class="diag-grid">
+      {toolOpts.map((o) => (
+        <button type="button" class="diag-opt" data-value={o} aria-pressed="false">
+          {c.questions.tool.options[o]}
+        </button>
+      ))}
+    </div>
+  </section>
+
+  <!-- STEP: team -->
+  <section class="diag-step" data-step="team" data-key="team" role="group" aria-labelledby="diag-q-team" hidden>
+    <button type="button" class="diag-back" data-action="back">← {c.nav.back}</button>
+    <h2 id="diag-q-team" class="diag-q">{c.questions.team.q}</h2>
+    <div class="diag-grid diag-grid-4">
+      {teamOpts.map((o) => (
+        <button type="button" class="diag-opt" data-value={o} aria-pressed="false">
+          {c.questions.team.options[o]}
+        </button>
+      ))}
+    </div>
+  </section>
+
+  <!-- STEP: spend -->
+  <section class="diag-step" data-step="spend" data-key="spend" role="group" aria-labelledby="diag-q-spend" hidden>
+    <button type="button" class="diag-back" data-action="back">← {c.nav.back}</button>
+    <h2 id="diag-q-spend" class="diag-q">{c.questions.spend.q}</h2>
+    <div class="diag-grid diag-grid-4">
+      {spendOpts.map((o) => (
+        <button type="button" class="diag-opt" data-value={o} aria-pressed="false">
+          {c.questions.spend.options[o]}
+        </button>
+      ))}
+    </div>
+  </section>
+
+  <!-- STEP: computing -->
+  <section class="diag-step diag-computing" data-step="computing" hidden>
+    <div class="diag-spinner" aria-hidden="true"></div>
+    <p class="diag-q">{c.computing}</p>
+  </section>
+
+  <!-- STEP: report -->
+  <section class="diag-step diag-report" data-step="report" aria-live="polite" hidden>
+    <p class="diag-report-label">{c.report.label}</p>
+    <p class="diag-number"><span id="diag-number"></span> <span class="diag-peryear">{c.report.perYear}</span></p>
+    <p id="diag-range" class="diag-range" data-tpl={c.report.range}></p>
+    <p id="diag-sticky-patchwork" class="diag-sticky" hidden>{c.report.stickyPatchwork}</p>
+    <p id="diag-sticky-generic" class="diag-sticky" hidden>{c.report.stickyGeneric}</p>
+
+    <div class="diag-block">
+      <h2 class="diag-block-title">{c.report.mathTitle}</h2>
+      <p id="diag-math" class="diag-math" data-tpl={c.report.mathLine}></p>
+      <p class="diag-assumptions">{c.report.assumptions}</p>
+      <p id="diag-saas" class="diag-saas" data-tpl={c.report.saas} hidden></p>
+    </div>
+
+    <p class="diag-emotional">{c.report.emotional}</p>
+
+    <div class="diag-block diag-rx">
+      <h2 class="diag-block-title diag-rx-title">{c.report.rxTitle}</h2>
+      {pains.map((p) => (
+        <p class="diag-pres" data-pres={p} hidden>{c.report.prescriptions[p]}</p>
+      ))}
+      <p class="diag-receipts">{c.report.receipts}</p>
+    </div>
+
+    <!-- tier: qualified -->
+    <div class="diag-tier" data-tier="qualified" hidden>
+      <h2 class="diag-tier-title">{c.report.tier.qualified.title}</h2>
+      <p class="diag-tier-body">{c.report.tier.qualified.body}</p>
+      <a href={contactPath} class="diag-btn diag-btn-primary">{c.report.tier.qualified.cta} <span aria-hidden="true">→</span></a>
+      <p class="diag-tier-note">{c.report.tier.qualified.note}</p>
+      <p class="diag-guarantee">{c.report.guarantee}</p>
+      <p class="diag-scarcity">{c.report.scarcity}</p>
+    </div>
+
+    <!-- tier: borderline -->
+    <div class="diag-tier" data-tier="borderline" hidden>
+      <h2 class="diag-tier-title">{c.report.tier.borderline.title}</h2>
+      <p class="diag-tier-body">{c.report.tier.borderline.body}</p>
+      <a href={contactPath} class="diag-btn diag-btn-primary">{c.report.tier.borderline.cta} <span aria-hidden="true">→</span></a>
+      <p class="diag-guarantee">{c.report.guarantee}</p>
+      <p class="diag-scarcity">{c.report.scarcity}</p>
+    </div>
+
+    <!-- tier: not_yet -->
+    <div class="diag-tier" data-tier="not_yet" hidden>
+      <h2 class="diag-tier-title">{c.report.tier.not_yet.title}</h2>
+      <p class="diag-tier-body">{c.report.tier.not_yet.body}</p>
+      <a href={contactPath} class="diag-btn diag-btn-ghost">{c.report.tier.not_yet.cta} <span aria-hidden="true">→</span></a>
+    </div>
+
+    <p id="diag-send-status" class="diag-send-status" hidden></p>
+    <button type="button" class="diag-restart" data-action="restart">{c.report.restart}</button>
+  </section>
+
+  <!-- honeypot (off-screen, bots fill it) -->
+  <input class="diag-hp" type="text" name="company_honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" />
+</div>
+
+<style>
+  .diag-card {
+    width: 100%;
+    max-width: 44rem;
+    margin: 0 auto;
+    background: #0a0a0a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    padding: 2.5rem;
+  }
+  @media (min-width: 768px) {
+    .diag-card { padding: 3.5rem; }
+  }
+  .diag-step[hidden] { display: none; }
+  .diag-step { display: flex; flex-direction: column; gap: 1rem; }
+
+  /* progress */
+  .diag-progress { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+  .diag-progress[hidden] { display: none; }
+  .diag-progress-track { flex: 1; height: 3px; background: rgba(255, 255, 255, 0.08); border-radius: 99px; overflow: hidden; }
+  .diag-progress-bar { height: 100%; width: 0; background: #e8003d; transition: width 0.35s ease; }
+  .diag-progress-text { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255, 255, 255, 0.62); white-space: nowrap; }
+
+  /* intro */
+  .diag-intro { gap: 1.25rem; text-align: center; align-items: center; }
+  .diag-eyebrow { font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.35em; text-transform: uppercase; color: #9fc243; }
+  .diag-headline { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: clamp(1.9rem, 5vw, 3rem); line-height: 1.02; letter-spacing: -0.02em; color: #fcfcfc; }
+  .diag-sub { font-family: 'Inter', sans-serif; font-size: 1.0625rem; line-height: 1.6; color: rgba(255, 255, 255, 0.6); max-width: 32rem; }
+  .diag-trust { font-family: 'Inter', sans-serif; font-size: 0.8125rem; color: rgba(255, 255, 255, 0.62); }
+
+  /* questions */
+  .diag-back { align-self: flex-start; background: none; border: none; padding: 0; cursor: pointer; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255, 255, 255, 0.62); transition: color 0.2s; }
+  .diag-back:hover { color: rgba(255, 255, 255, 0.8); }
+  .diag-q { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: clamp(1.4rem, 3.5vw, 2rem); line-height: 1.12; letter-spacing: -0.015em; color: #fcfcfc; }
+  .diag-help { font-family: 'Inter', sans-serif; font-size: 0.9375rem; color: rgba(255, 255, 255, 0.62); margin-top: -0.5rem; }
+
+  .diag-grid { display: grid; grid-template-columns: 1fr; gap: 0.75rem; margin-top: 0.5rem; }
+  @media (min-width: 640px) { .diag-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 640px) { .diag-grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; } }
+
+  .diag-opt {
+    text-align: left;
+    background: #131313;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    padding: 1.1rem 1.25rem;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+    transition: border-color 0.18s, background 0.18s, transform 0.06s;
+  }
+  .diag-grid-4 .diag-opt { text-align: center; }
+  .diag-opt:hover { border-color: #e8003d; background: #181818; }
+  .diag-opt:active { transform: scale(0.99); }
+  .diag-opt[aria-pressed='true'] { border-color: #e8003d; background: rgba(232, 0, 61, 0.12); color: #fff; }
+  .diag-opt:focus-visible { outline: 2px solid #ff4d70; outline-offset: 2px; }
+
+  /* email */
+  .diag-email-row { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.5rem; }
+  @media (min-width: 640px) { .diag-email-row { flex-direction: row; } }
+  .diag-email-input {
+    flex: 1;
+    background: #131313;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 3px;
+    padding: 0.95rem 1.1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    color: #fcfcfc;
+  }
+  .diag-email-input::placeholder { color: rgba(255, 255, 255, 0.35); }
+  .diag-email-input:focus { outline: none; border-color: #e8003d; }
+  .diag-error { font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #ff4d70; }
+  .diag-note { font-family: 'Inter', sans-serif; font-size: 0.75rem; line-height: 1.5; color: rgba(255, 255, 255, 0.64); }
+  .diag-link { color: rgba(255, 255, 255, 0.72); text-decoration: underline; text-underline-offset: 2px; }
+  .diag-link:hover { color: #fff; }
+  .diag-sep { padding: 0 0.5rem; color: rgba(255, 255, 255, 0.2); }
+
+  /* buttons */
+  .diag-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center;
+    font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.95rem;
+    padding: 0.95rem 1.6rem; border-radius: 3px; cursor: pointer; border: 1px solid transparent;
+    text-decoration: none; transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+  .diag-btn-primary { background: #e8003d; color: #fff; }
+  .diag-btn-primary:hover { background: #ff4d70; }
+  .diag-btn-ghost { background: transparent; color: #fcfcfc; border-color: rgba(255, 255, 255, 0.25); }
+  .diag-btn-ghost:hover { border-color: #fff; }
+  .diag-btn:focus-visible { outline: 2px solid #ff4d70; outline-offset: 2px; }
+
+  /* computing */
+  .diag-computing { align-items: center; text-align: center; gap: 1.5rem; padding: 2rem 0; }
+  .diag-spinner {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.12); border-top-color: #e8003d;
+    animation: diag-spin 0.8s linear infinite;
+  }
+  @keyframes diag-spin { to { transform: rotate(360deg); } }
+
+  /* report */
+  .diag-report { gap: 1.25rem; }
+  .diag-report-label { font-family: 'Inter', sans-serif; font-size: 1.0625rem; color: rgba(255, 255, 255, 0.6); }
+  .diag-number { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: clamp(2rem, 6vw, 3.4rem); line-height: 1; letter-spacing: -0.03em; color: #e8003d; }
+  .diag-peryear { font-size: 0.4em; font-weight: 700; color: rgba(255, 255, 255, 0.62); letter-spacing: 0; }
+  .diag-range { font-family: 'Inter', sans-serif; font-size: 0.85rem; color: rgba(255, 255, 255, 0.62); margin-top: -0.4rem; }
+  .diag-sticky { font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 1.125rem; line-height: 1.35; color: #fcfcfc; }
+  .diag-sticky[hidden] { display: none; }
+
+  .diag-block { border: 1px solid rgba(255, 255, 255, 0.08); background: #050505; border-radius: 3px; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
+  .diag-block-title { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: #9fc243; }
+  .diag-rx-title { color: #fcfcfc; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.25rem; letter-spacing: -0.01em; text-transform: none; }
+  .diag-math { font-family: 'Space Mono', monospace; font-size: 0.9rem; color: rgba(255, 255, 255, 0.82); }
+  .diag-assumptions { font-family: 'Inter', sans-serif; font-size: 0.8125rem; line-height: 1.55; color: rgba(255, 255, 255, 0.64); }
+  .diag-saas { font-family: 'Inter', sans-serif; font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); }
+  .diag-saas[hidden] { display: none; }
+  .diag-emotional { font-family: 'Outfit', sans-serif; font-weight: 500; font-size: 1.0625rem; line-height: 1.5; color: rgba(255, 255, 255, 0.85); }
+  .diag-pres { font-family: 'Inter', sans-serif; font-size: 1rem; line-height: 1.6; color: rgba(255, 255, 255, 0.88); }
+  .diag-pres[hidden] { display: none; }
+  .diag-receipts { font-family: 'Inter', sans-serif; font-size: 0.9rem; line-height: 1.6; color: rgba(255, 255, 255, 0.68); }
+
+  .diag-tier { display: flex; flex-direction: column; gap: 0.9rem; align-items: flex-start; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 1.5rem; }
+  .diag-tier[hidden] { display: none; }
+  .diag-tier-title { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.4rem; letter-spacing: -0.01em; color: #fcfcfc; }
+  .diag-tier-body { font-family: 'Inter', sans-serif; font-size: 1rem; line-height: 1.6; color: rgba(255, 255, 255, 0.7); }
+  .diag-tier-note { font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #9fc243; }
+  .diag-guarantee { font-family: 'Inter', sans-serif; font-size: 0.9rem; line-height: 1.5; color: rgba(255, 255, 255, 0.78); border-left: 2px solid #e8003d; padding-left: 0.9rem; }
+  .diag-scarcity { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255, 255, 255, 0.64); }
+
+  .diag-send-status { font-family: 'Inter', sans-serif; font-size: 0.85rem; color: rgba(255, 255, 255, 0.64); }
+  .diag-send-status[hidden] { display: none; }
+  .diag-restart { align-self: flex-start; background: none; border: none; padding: 0; cursor: pointer; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255, 255, 255, 0.62); }
+  .diag-restart:hover { color: rgba(255, 255, 255, 0.75); }
+
+  /* honeypot — visually hidden but focusable to bots */
+  .diag-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .diag-spinner { animation-duration: 2s; }
+    .diag-progress-bar { transition: none; }
+  }
+</style>
+
+<script>
+  import { computeDiagnostic } from '../lib/diagnostic/engine';
+  import type { DiagnosticAnswers } from '../lib/diagnostic/types';
+  import type { DiagnosticReport } from '../lib/diagnostic/types';
+
+  const root = document.getElementById('roi-diag');
+  if (root) {
+    const lang = root.dataset.lang || 'en';
+    const policyVersion = root.dataset.policyVersion || '';
+    const steps = Array.from(root.querySelectorAll<HTMLElement>('[data-step]'));
+    const order = ['intro', 'pain', 'email', 'people', 'hours', 'tool', 'team', 'spend', 'computing', 'report'];
+    const qIndex: Record<string, number> = { pain: 1, people: 2, hours: 3, tool: 4, team: 5, spend: 6 };
+    const TOTAL_Q = 6;
+
+    const bar = root.querySelector<HTMLElement>('#diag-bar');
+    const progressWrap = root.querySelector<HTMLElement>('#diag-progress');
+    const progressText = root.querySelector<HTMLElement>('#diag-progress-text');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const answers: Partial<DiagnosticAnswers> = {};
+    let emailVal = '';
+
+    const track = (event: string, payload: Record<string, unknown> = {}) =>
+      window.dispatchEvent(new CustomEvent('aglaya:track', { detail: { event, payload } }));
+
+    function show(step: string) {
+      steps.forEach((s) => { s.hidden = s.dataset.step !== step; });
+      const qi = qIndex[step];
+      if (qi && progressWrap && bar && progressText) {
+        progressWrap.hidden = false;
+        bar.style.width = `${(qi / TOTAL_Q) * 100}%`;
+        progressText.textContent = (root!.dataset.progressTpl || '')
+          .replace('{n}', String(qi))
+          .replace('{total}', String(TOTAL_Q));
+      } else if (progressWrap) {
+        progressWrap.hidden = true;
+      }
+      root!.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+      const focusEl = steps.find((s) => s.dataset.step === step)?.querySelector<HTMLElement>('button:not(.diag-back), input, a');
+      if (focusEl && step !== 'intro') setTimeout(() => focusEl.focus({ preventScroll: true }), 50);
+    }
+
+    function next(from: string) {
+      const i = order.indexOf(from);
+      if (i >= 0 && i < order.length - 1) show(order[i + 1]);
+    }
+
+    root.querySelector('[data-action="start"]')?.addEventListener('click', () => { track('diag_start'); show('pain'); });
+
+    root.querySelectorAll('[data-action="back"]').forEach((b) =>
+      b.addEventListener('click', () => {
+        const cur = (b.closest('[data-step]') as HTMLElement)?.dataset.step;
+        const i = order.indexOf(cur || '');
+        if (i > 0) show(order[i - 1]);
+      }),
+    );
+
+    root.querySelectorAll<HTMLElement>('.diag-opt').forEach((btn) =>
+      btn.addEventListener('click', () => {
+        const stepEl = btn.closest('[data-step]') as HTMLElement;
+        const key = stepEl.dataset.key as keyof DiagnosticAnswers;
+        const val = btn.dataset.value as string;
+        (answers as Record<string, string>)[key] = val;
+        stepEl.querySelectorAll('.diag-opt').forEach((o) => o.setAttribute('aria-pressed', String(o === btn)));
+        track('diag_answer', { q: key, a: val });
+        const cur = stepEl.dataset.step!;
+        setTimeout(() => {
+          if (cur === 'spend') { show('computing'); runCompute(); }
+          else next(cur);
+        }, 180);
+      }),
+    );
+
+    // email gate
+    const emailInput = root.querySelector<HTMLInputElement>('#diag-email');
+    const emailErr = root.querySelector<HTMLElement>('#diag-email-error');
+    const isEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    function submitEmail() {
+      const v = (emailInput?.value || '').trim();
+      if (!isEmail(v)) { if (emailErr) emailErr.hidden = false; emailInput?.focus(); return; }
+      if (emailErr) emailErr.hidden = true;
+      emailVal = v;
+      track('diag_email');
+      next('email');
+    }
+    root.querySelector('[data-action="email-continue"]')?.addEventListener('click', submitEmail);
+    emailInput?.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); submitEmail(); } });
+
+    function runCompute() {
+      const delay = reduceMotion ? 250 : 900;
+      setTimeout(async () => {
+        const report = computeDiagnostic(answers as DiagnosticAnswers);
+        fillReport(report);
+        show('report');
+        track('diag_report', { tier: report.tier });
+        await postLead(report);
+      }, delay);
+    }
+
+    function fillReport(r: DiagnosticReport) {
+      const locale = lang === 'es' ? 'es-ES' : lang === 'pt' ? 'pt-BR' : 'en-US';
+      const nf = new Intl.NumberFormat(locale);
+      const round = (n: number) => Math.round(n / 100) * 100;
+      const usd = (n: number) => '$' + nf.format(round(n));
+
+      const numEl = root!.querySelector('#diag-number');
+      if (numEl) numEl.textContent = usd(r.laborBleedMid);
+
+      const rangeEl = root!.querySelector<HTMLElement>('#diag-range');
+      if (rangeEl) {
+        rangeEl.textContent = (rangeEl.dataset.tpl || '')
+          .replace('{low}', usd(r.laborBleed.low))
+          .replace('{high}', usd(r.laborBleed.high));
+      }
+
+      const mathEl = root!.querySelector<HTMLElement>('#diag-math');
+      if (mathEl) {
+        mathEl.textContent = (mathEl.dataset.tpl || '')
+          .replace('{people}', `~${r.assumptions.people}`)
+          .replace('{hours}', `~${r.assumptions.hours}`)
+          .replace('{rate}', String(r.assumptions.loadedRate));
+      }
+
+      const saasEl = root!.querySelector<HTMLElement>('#diag-saas');
+      if (saasEl) {
+        if (r.saasSpend.high > 0) {
+          saasEl.textContent = (saasEl.dataset.tpl || '')
+            .replace('{low}', usd(r.saasSpend.low))
+            .replace('{high}', usd(r.saasSpend.high));
+          saasEl.hidden = false;
+        } else {
+          saasEl.hidden = true;
+        }
+      }
+
+      const sp = root!.querySelector<HTMLElement>('#diag-sticky-patchwork');
+      const sg = root!.querySelector<HTMLElement>('#diag-sticky-generic');
+      if (sp) sp.hidden = !r.flags.patchwork;
+      if (sg) sg.hidden = r.flags.patchwork;
+
+      root!.querySelectorAll<HTMLElement>('[data-pres]').forEach((el) => { el.hidden = el.dataset.pres !== r.pain; });
+      root!.querySelectorAll<HTMLElement>('[data-tier]').forEach((el) => { el.hidden = el.dataset.tier !== r.tier; });
+    }
+
+    async function postLead(r: DiagnosticReport) {
+      const statusEl = root!.querySelector<HTMLElement>('#diag-send-status');
+      if (statusEl) { statusEl.textContent = root!.dataset.sendingText || ''; statusEl.hidden = false; }
+      const hp = root!.querySelector<HTMLInputElement>('.diag-hp');
+      try {
+        const res = await fetch('/.netlify/functions/diagnostic', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: emailVal,
+            lang,
+            answers,
+            privacy_policy_version: policyVersion,
+            company_honeypot: hp?.value || '',
+          }),
+        });
+        if (!res.ok) throw new Error('bad status ' + res.status);
+        if (statusEl) statusEl.textContent = root!.dataset.sentText || '';
+      } catch (e) {
+        if (statusEl) statusEl.textContent = root!.dataset.errorText || '';
+        track('diag_send_error', { tier: r.tier });
+      }
+    }
+
+    root.querySelector('[data-action="restart"]')?.addEventListener('click', () => {
+      for (const k in answers) delete (answers as Record<string, unknown>)[k];
+      emailVal = '';
+      if (emailInput) emailInput.value = '';
+      root!.querySelectorAll('.diag-opt').forEach((o) => o.setAttribute('aria-pressed', 'false'));
+      show('intro');
+    });
+  }
+</script>

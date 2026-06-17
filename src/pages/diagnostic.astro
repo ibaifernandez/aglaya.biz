@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ROIDiagnostic from '../components/ROIDiagnostic.astro';
+import { getCopy } from '../lib/diagnostic/copy';
+
+const c = getCopy('en');
+---
+
+<BaseLayout
+  title={c.meta.title}
+  description={c.meta.description}
+  lang="en"
+  alternateUrl={new URL('/es/diagnostic/', Astro.site).href}
+  alternateUrlPt={new URL('/pt/diagnostic/', Astro.site).href}
+>
+  <Header />
+
+  <main id="main-content" class="flex flex-col">
+    <section class="px-6 w-full pt-40 pb-28 flex flex-col">
+      <h1 class="sr-only">{c.intro.headline}</h1>
+      <ROIDiagnostic />
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
