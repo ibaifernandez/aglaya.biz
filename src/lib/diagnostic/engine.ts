@@ -3,8 +3,9 @@
 import type { DiagnosticAnswers, DiagnosticReport, Tier } from './types';
 import {
   computeLaborBleed,
+  computeSplits,
+  computeEquivalent,
   computeSaasSpend,
-  LOADED_RATE,
   PEOPLE_MID,
   HOURS_MID,
 } from './costing';
@@ -14,37 +15,44 @@ export function computeTier(a: DiagnosticAnswers, bleedMid: number): Tier {
   const fundable = a.spend === 's500_2k' || a.spend === 's2kplus';
   const scale = a.team !== 't_solo';
 
-  // Too small / nothing to build on → honest "not yet".
   if ((a.team === 't_solo' && a.spend === 's_lt100') || bleedMid < 12000) {
     return 'not_yet';
   }
-  // Big bleed + fundable + real team → strong fit.
   if (scale && fundable && bleedMid >= 60000) {
     return 'qualified';
   }
-  // Real bleed, one gate soft → could be a fit.
   return 'borderline';
 }
 
 export function computeDiagnostic(a: DiagnosticAnswers): DiagnosticReport {
-  const bleed = computeLaborBleed(a.pain, a.people, a.hours);
+  const areas = a.areas.length ? a.areas : [a.worst];
+  const bleed = computeLaborBleed(areas, a.worst, a.people, a.hours);
+  const splits = computeSplits(bleed.mid, areas, a.worst);
+  const equivalent = computeEquivalent(a.people, a.hours);
   const saasSpend = computeSaasSpend(a.spend);
   const tier = computeTier(a, bleed.mid);
+
   return {
-    pain: a.pain,
+    areas,
+    worst: a.worst,
     tier,
     laborBleedMid: bleed.mid,
     laborBleed: { low: bleed.low, high: bleed.high },
+    blendedRate: bleed.rate,
+    splits,
+    equivalent,
     saasSpend,
-    loadedRate: LOADED_RATE[a.pain],
     assumptions: {
       people: PEOPLE_MID[a.people],
       hours: HOURS_MID[a.hours],
-      loadedRate: LOADED_RATE[a.pain],
+      blendedRate: bleed.rate,
     },
     flags: {
-      patchwork: a.tool === 'patchwork',
+      patchwork: a.tool === 'patchwork' || a.tried === 'zapier',
     },
+    frequency: a.frequency,
+    tried: a.tried,
+    volume: a.volume,
   };
 }
 

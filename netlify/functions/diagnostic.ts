@@ -18,8 +18,11 @@ import type {
   PeopleBucket,
   HoursBucket,
   ToolBucket,
+  FreqBucket,
   TeamBucket,
   SpendBucket,
+  TriedBucket,
+  VolumeBucket,
 } from "../../src/lib/diagnostic/types";
 
 /* ── helpers ─────────────────────────────────── */
@@ -37,34 +40,51 @@ const PAINS = ["reports", "leads", "invoices", "copypaste", "admin", "data"];
 const PEOPLE = ["p1", "p2_3", "p4_10", "p10plus"];
 const HOURS = ["h_lt5", "h5_15", "h15_40", "h40plus"];
 const TOOLS = ["none", "spreadsheet", "offshelf", "patchwork"];
+const FREQS = ["rarely", "monthly", "weekly", "constantly"];
 const TEAMS = ["t_solo", "t2_10", "t11_50", "t50plus"];
 const SPENDS = ["s_lt100", "s100_500", "s500_2k", "s2kplus"];
+const TRIEDS = ["nothing", "hired", "zapier", "tool"];
+const VOLS = ["v1", "v2", "v3", "v4"];
 
 // Validate + narrow the client answers. Returns null if anything is off.
 function parseAnswers(raw: Record<string, unknown>): DiagnosticAnswers | null {
-  const pain = String(raw.pain ?? "");
+  const areasRaw = Array.isArray(raw.areas) ? raw.areas.map(String) : [];
+  const areas = areasRaw.filter((a) => PAINS.includes(a));
+  const worst = String(raw.worst ?? "");
   const people = String(raw.people ?? "");
   const hours = String(raw.hours ?? "");
   const tool = String(raw.tool ?? "");
+  const frequency = String(raw.frequency ?? "");
   const team = String(raw.team ?? "");
   const spend = String(raw.spend ?? "");
+  const tried = String(raw.tried ?? "");
+  const volume = String(raw.volume ?? "");
   if (
-    !PAINS.includes(pain) ||
+    areas.length === 0 ||
+    !PAINS.includes(worst) ||
+    !areas.includes(worst) ||
     !PEOPLE.includes(people) ||
     !HOURS.includes(hours) ||
     !TOOLS.includes(tool) ||
+    !FREQS.includes(frequency) ||
     !TEAMS.includes(team) ||
-    !SPENDS.includes(spend)
+    !SPENDS.includes(spend) ||
+    !TRIEDS.includes(tried) ||
+    !VOLS.includes(volume)
   ) {
     return null;
   }
   return {
-    pain: pain as Pain,
+    areas: areas as Pain[],
+    worst: worst as Pain,
     people: people as PeopleBucket,
     hours: hours as HoursBucket,
     tool: tool as ToolBucket,
+    frequency: frequency as FreqBucket,
     team: team as TeamBucket,
     spend: spend as SpendBucket,
+    tried: tried as TriedBucket,
+    volume: volume as VolumeBucket,
   };
 }
 
@@ -102,14 +122,19 @@ async function sendInternalNotification(
         <p><strong>Tier:</strong> ${report.tier}</p>
         <p><strong>Labor bleed (range):</strong> ${fmtUsd(report.laborBleed.low)}–${fmtUsd(report.laborBleed.high)}/yr</p>
         <p><strong>Tool spend (range):</strong> ${fmtUsd(report.saasSpend.low)}–${fmtUsd(report.saasSpend.high)}/yr</p>
+        <p><strong>Equivalent:</strong> ~${report.equivalent.hoursPerYear} hrs/yr (~${report.equivalent.fullTimers} FTE)</p>
         <h3>Answers</h3>
         <ul>
-          <li>Pain: ${answers.pain}</li>
+          <li>Areas: ${answers.areas.join(", ")}</li>
+          <li>Worst: ${answers.worst}</li>
           <li>People: ${answers.people}</li>
           <li>Hours/person/wk: ${answers.hours}</li>
           <li>Runs on: ${answers.tool}</li>
+          <li>Breaks/slips: ${answers.frequency}</li>
           <li>Team: ${answers.team}</li>
           <li>Monthly tool spend: ${answers.spend}</li>
+          <li>Already tried: ${answers.tried}</li>
+          <li>Worst-area volume: ${answers.volume}</li>
         </ul>
       `,
     }),
@@ -127,13 +152,17 @@ function buildDiagnosticNotes(
 ): string {
   return [
     `[ROI Diagnostic · tier=${report.tier}`,
-    `bleed=${fmtUsd(report.laborBleed.low)}-${fmtUsd(report.laborBleed.high)}/yr`,
-    `pain=${answers.pain}`,
+    `bleed≈${fmtUsd(report.laborBleedMid)}/yr (${fmtUsd(report.laborBleed.low)}-${fmtUsd(report.laborBleed.high)})`,
+    `areas=${answers.areas.join("/")}`,
+    `worst=${answers.worst}`,
     `people=${answers.people}`,
     `hours=${answers.hours}`,
     `tool=${answers.tool}`,
+    `freq=${answers.frequency}`,
     `team=${answers.team}`,
-    `spend=${answers.spend}]`,
+    `spend=${answers.spend}`,
+    `tried=${answers.tried}`,
+    `vol=${answers.volume}]`,
   ].join(", ");
 }
 

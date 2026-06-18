@@ -15,16 +15,25 @@ async function gotoWithConsent(
 const axe = (page: Parameters<typeof test>[0]['page']) =>
   new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'best-practice'])
-    .exclude('.h-captcha') // Footer dispatch widget; low-contrast warning in non-prod
+    .exclude('.h-captcha')
     .exclude('.marquee-container')
     .exclude('.deco-text');
 
-// Answer all 6 questions (fork → depth → gates). Email gate comes AFTER, at the
-// payoff — qualified-leaning answers.
+// Answer all 10 questions (multi-area → worst → depth → gates → tried → volume).
+// Qualified-leaning, two areas, worst = reports.
 async function answerAllQuestions(page: Parameters<typeof test>[0]['page']) {
   await page.click('[data-action="start"]');
-  await expect(page.locator('[data-step="pain"]')).toBeVisible();
-  await page.click('[data-step="pain"] .diag-opt[data-value="reports"]');
+
+  await expect(page.locator('[data-step="areas"]')).toBeVisible();
+  await page.click('[data-step="areas"] .diag-opt-multi[data-value="reports"]');
+  await page.click('[data-step="areas"] .diag-opt-multi[data-value="invoices"]');
+  await page.click('[data-action="areas-continue"]');
+
+  await expect(page.locator('[data-step="worst"]')).toBeVisible();
+  // only the two selected options are shown
+  await expect(page.locator('[data-step="worst"] .diag-opt-worst[data-pain="reports"]')).toBeVisible();
+  await expect(page.locator('[data-step="worst"] .diag-opt-worst[data-pain="leads"]')).toBeHidden();
+  await page.click('[data-step="worst"] .diag-opt-worst[data-pain="reports"]');
 
   await expect(page.locator('[data-step="people"]')).toBeVisible();
   await page.click('[data-step="people"] .diag-opt[data-value="p4_10"]');
@@ -35,17 +44,25 @@ async function answerAllQuestions(page: Parameters<typeof test>[0]['page']) {
   await expect(page.locator('[data-step="tool"]')).toBeVisible();
   await page.click('[data-step="tool"] .diag-opt[data-value="patchwork"]');
 
+  await expect(page.locator('[data-step="frequency"]')).toBeVisible();
+  await page.click('[data-step="frequency"] .diag-opt[data-value="weekly"]');
+
   await expect(page.locator('[data-step="team"]')).toBeVisible();
   await page.click('[data-step="team"] .diag-opt[data-value="t11_50"]');
 
   await expect(page.locator('[data-step="spend"]')).toBeVisible();
   await page.click('[data-step="spend"] .diag-opt[data-value="s2kplus"]');
 
-  // Email gate is the LAST step before the number.
+  await expect(page.locator('[data-step="tried"]')).toBeVisible();
+  await page.click('[data-step="tried"] .diag-opt[data-value="zapier"]');
+
+  await expect(page.locator('[data-step="volume"]')).toBeVisible();
+  // the worst area's (reports) unit group is the visible one
+  await page.click('[data-vol-pain="reports"] .diag-vol-opt[data-value="v3"]');
+
   await expect(page.locator('[data-step="email"]')).toBeVisible();
 }
 
-// Walk the full flow to the report (qualified path).
 async function runQualifiedFlow(page: Parameters<typeof test>[0]['page']) {
   await answerAllQuestions(page);
   await page.fill('#diag-email', 'founder@acme.com');
@@ -55,43 +72,48 @@ async function runQualifiedFlow(page: Parameters<typeof test>[0]['page']) {
 test.describe('ROI Diagnostic', () => {
   test('renders the intro and passes accessibility', async ({ page }) => {
     await gotoWithConsent(page, '/diagnostic/');
-
     await expect(page.locator('#roi-diag')).toBeVisible();
     await expect(page.locator('[data-action="start"]')).toBeVisible();
+    const results = await axe(page).analyze();
+    expect(results.violations).toEqual([]);
+  });
+
+  test('completes the multi-area flow and shows a personalized report', async ({ page }) => {
+    await gotoWithConsent(page, '/diagnostic/');
+    await runQualifiedFlow(page);
+
+    await expect(page.locator('[data-step="report"]')).toBeVisible();
+    await expect(page.locator('#diag-number')).toHaveText(/\$[\d.,]+/);
+    await expect(page.locator('[data-tier="qualified"]')).toBeVisible();
+    await expect(page.locator('[data-tier="not_yet"]')).toBeHidden();
+    // patchwork wedge (tool=patchwork / tried=zapier)
+    await expect(page.locator('#diag-sticky-patchwork')).toBeVisible();
+    // worst-area prescription
+    await expect(page.locator('[data-pres="reports"]')).toBeVisible();
+    // per-area split has both selected areas
+    await expect(page.locator('#diag-splits li')).toHaveCount(2);
+    // headcount/hours equivalence rendered
+    await expect(page.locator('#diag-equiv')).not.toBeEmpty();
 
     const results = await axe(page).analyze();
     expect(results.violations).toEqual([]);
   });
 
-  test('completes the flow and shows a personalized number', async ({ page }) => {
+  test('single area auto-skips the "worst" question', async ({ page }) => {
     await gotoWithConsent(page, '/diagnostic/');
-    await runQualifiedFlow(page);
-
-    const report = page.locator('[data-step="report"]');
-    await expect(report).toBeVisible();
-
-    // Headline number rendered as currency.
-    await expect(page.locator('#diag-number')).toHaveText(/\$[\d.,]+/);
-    // Qualified tier branch + its CTA revealed; other tiers hidden.
-    await expect(page.locator('[data-tier="qualified"]')).toBeVisible();
-    await expect(page.locator('[data-tier="not_yet"]')).toBeHidden();
-    // Patchwork wedge line shown (tool = patchwork).
-    await expect(page.locator('#diag-sticky-patchwork')).toBeVisible();
-    // Reports prescription revealed.
-    await expect(page.locator('[data-pres="reports"]')).toBeVisible();
-
-    const results = await axe(page).analyze();
-    expect(results.violations).toEqual([]);
+    await page.click('[data-action="start"]');
+    await page.click('[data-step="areas"] .diag-opt-multi[data-value="leads"]');
+    await page.click('[data-action="areas-continue"]');
+    // worst step is skipped; we land straight on people
+    await expect(page.locator('[data-step="people"]')).toBeVisible();
+    await expect(page.locator('[data-step="worst"]')).toBeHidden();
   });
 
   test('email gate blocks an invalid address', async ({ page }) => {
     await gotoWithConsent(page, '/diagnostic/');
     await answerAllQuestions(page);
-
     await page.fill('#diag-email', 'not-an-email');
     await page.click('[data-action="email-continue"]');
-
-    // Error shown; we did not advance to the number.
     await expect(page.locator('#diag-email-error')).toBeVisible();
     await expect(page.locator('[data-step="report"]')).toBeHidden();
   });

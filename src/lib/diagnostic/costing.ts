@@ -1,8 +1,8 @@
 // ROI diagnostic — costing model. Numbers traced to docs/roi-diagnostic/08-costing-model.md.
 // Honesty rule: labor = FIRM (BLS OEWS May 2024 base median × loaded multiplier).
-// Headline is a single ≈ midpoint estimate; we show a ±40% band as fine print and
-// state plainly that the exact figure is the paid ROI Audit. (A raw bucket-edge
-// range compounds to absurd widths — e.g. $144K–$1.1M — and reads as a scam.)
+// Headline is a single ≈ midpoint + a ±40% band shown as fine print; exact = paid audit.
+// Multi-area: blended loaded rate (worst weighted ×2). Volume (Q10) is narrative
+// color only — NOT summed into the headline (the per-unit cost overlaps labor).
 
 import type {
   Pain,
@@ -10,15 +10,10 @@ import type {
   HoursBucket,
   SpendBucket,
   MoneyRange,
+  AreaSplit,
 } from './types';
 
 // Loaded $/hr per pain → role doing the work (BLS base median × 1.43, doc 08).
-//   reports   → marketing analyst/coord (13-1161) $37.00 → ≈$52.9
-//   leads     → sales rep (41-4012)              $32.11 → ≈$45.9
-//   invoices  → bookkeeping/acct clerk           $23.66 → ≈$33.8
-//   copypaste → admin/ops assistant (43-6014)    $22.82 → ≈$32.6
-//   admin     → admin/ops assistant              $22.82 → ≈$32.6
-//   data      → admin/ops assistant              $22.82 → ≈$32.6
 export const LOADED_RATE: Record<Pain, number> = {
   reports: 52.9,
   leads: 45.9,
@@ -28,7 +23,7 @@ export const LOADED_RATE: Record<Pain, number> = {
   data: 32.6,
 };
 
-// Bucket midpoints — the point estimate. People touching the task each week.
+// Bucket midpoints — the point estimate.
 export const PEOPLE_MID: Record<PeopleBucket, number> = {
   p1: 1,
   p2_3: 2.5,
@@ -36,7 +31,7 @@ export const PEOPLE_MID: Record<PeopleBucket, number> = {
   p10plus: 12,
 };
 
-// Hours/week PER PERSON on the task (midpoints).
+// Hours/week PER PERSON on this manual work (across the selected areas).
 export const HOURS_MID: Record<HoursBucket, number> = {
   h_lt5: 3.5,
   h5_15: 10,
@@ -53,28 +48,67 @@ export const SPEND_ANNUAL: Record<SpendBucket, [number, number]> = {
 };
 
 const WEEKS = 52;
-const BAND = 0.4; // ±40% credible band around the midpoint
+const BAND = 0.4; // ±40% credible band
+const PRODUCTIVE_HOURS_YEAR = 1800; // ≈ FTE productive hours (2080 − PTO/overhead)
 const round100 = (n: number) => Math.round(n / 100) * 100;
 
-export interface LaborBleed {
-  mid: number; // headline ≈ figure
-  low: number; // mid × 0.6
-  high: number; // mid × 1.4
+// Blended loaded rate across the selected areas; the WORST area is weighted ×2
+// (it dominates the prospect's pain, so it should dominate the rate).
+export function blendedRate(areas: Pain[], worst: Pain): number {
+  if (areas.length === 0) return LOADED_RATE[worst];
+  let sum = 0;
+  let weight = 0;
+  for (const p of areas) {
+    const w = p === worst ? 2 : 1;
+    sum += LOADED_RATE[p] * w;
+    weight += w;
+  }
+  // If worst somehow not in areas, still count it.
+  if (!areas.includes(worst)) {
+    sum += LOADED_RATE[worst] * 2;
+    weight += 2;
+  }
+  return sum / weight;
 }
 
-// Annual labor bleed. Point estimate from midpoints × loaded rate, plus a band.
+export interface LaborBleed {
+  mid: number;
+  low: number;
+  high: number;
+  rate: number;
+}
+
 export function computeLaborBleed(
-  pain: Pain,
+  areas: Pain[],
+  worst: Pain,
   people: PeopleBucket,
   hours: HoursBucket,
 ): LaborBleed {
-  const rate = LOADED_RATE[pain];
+  const rate = blendedRate(areas, worst);
   const mid = PEOPLE_MID[people] * HOURS_MID[hours] * WEEKS * rate;
   return {
+    rate: Math.round(rate * 10) / 10,
     mid: round100(mid),
     low: round100(mid * (1 - BAND)),
     high: round100(mid * (1 + BAND)),
   };
+}
+
+// Distribute the headline across areas by rate-weight (worst weighted ×2),
+// ordered descending = the priority order ("what to automate first").
+export function computeSplits(mid: number, areas: Pain[], worst: Pain): AreaSplit[] {
+  const weights = areas.map((p) => ({ pain: p, w: (p === worst ? 2 : 1) * LOADED_RATE[p] }));
+  const total = weights.reduce((s, x) => s + x.w, 0) || 1;
+  return weights
+    .map(({ pain, w }) => ({ pain, amount: round100((mid * w) / total) }))
+    .sort((a, b) => b.amount - a.amount);
+}
+
+// Hours/year sunk + full-time-equivalent — the non-invasive "hits harder" stat.
+export function computeEquivalent(people: PeopleBucket, hours: HoursBucket) {
+  const hoursPerYear = Math.round(PEOPLE_MID[people] * HOURS_MID[hours] * WEEKS);
+  const fullTimers = Math.round((hoursPerYear / PRODUCTIVE_HOURS_YEAR) * 10) / 10;
+  return { hoursPerYear, fullTimers };
 }
 
 export function computeSaasSpend(spend: SpendBucket): MoneyRange {
