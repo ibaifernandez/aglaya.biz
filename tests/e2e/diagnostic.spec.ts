@@ -19,15 +19,12 @@ const axe = (page: Parameters<typeof test>[0]['page']) =>
     .exclude('.marquee-container')
     .exclude('.deco-text');
 
-// Walk the 6-question flow to the report (qualified path).
-async function runQualifiedFlow(page: Parameters<typeof test>[0]['page']) {
+// Answer all 6 questions (fork → depth → gates). Email gate comes AFTER, at the
+// payoff — qualified-leaning answers.
+async function answerAllQuestions(page: Parameters<typeof test>[0]['page']) {
   await page.click('[data-action="start"]');
   await expect(page.locator('[data-step="pain"]')).toBeVisible();
   await page.click('[data-step="pain"] .diag-opt[data-value="reports"]');
-
-  await expect(page.locator('[data-step="email"]')).toBeVisible();
-  await page.fill('#diag-email', 'founder@acme.com');
-  await page.click('[data-action="email-continue"]');
 
   await expect(page.locator('[data-step="people"]')).toBeVisible();
   await page.click('[data-step="people"] .diag-opt[data-value="p4_10"]');
@@ -43,6 +40,16 @@ async function runQualifiedFlow(page: Parameters<typeof test>[0]['page']) {
 
   await expect(page.locator('[data-step="spend"]')).toBeVisible();
   await page.click('[data-step="spend"] .diag-opt[data-value="s2kplus"]');
+
+  // Email gate is the LAST step before the number.
+  await expect(page.locator('[data-step="email"]')).toBeVisible();
+}
+
+// Walk the full flow to the report (qualified path).
+async function runQualifiedFlow(page: Parameters<typeof test>[0]['page']) {
+  await answerAllQuestions(page);
+  await page.fill('#diag-email', 'founder@acme.com');
+  await page.click('[data-action="email-continue"]');
 }
 
 test.describe('ROI Diagnostic', () => {
@@ -79,15 +86,13 @@ test.describe('ROI Diagnostic', () => {
 
   test('email gate blocks an invalid address', async ({ page }) => {
     await gotoWithConsent(page, '/diagnostic/');
-    await page.click('[data-action="start"]');
-    await page.click('[data-step="pain"] .diag-opt[data-value="leads"]');
+    await answerAllQuestions(page);
 
-    await expect(page.locator('[data-step="email"]')).toBeVisible();
     await page.fill('#diag-email', 'not-an-email');
     await page.click('[data-action="email-continue"]');
 
-    // Error shown; we did not advance to the depth questions.
+    // Error shown; we did not advance to the number.
     await expect(page.locator('#diag-email-error')).toBeVisible();
-    await expect(page.locator('[data-step="people"]')).toBeHidden();
+    await expect(page.locator('[data-step="report"]')).toBeHidden();
   });
 });

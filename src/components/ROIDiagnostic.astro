@@ -375,7 +375,7 @@ const spendOpts = ['s_lt100', 's100_500', 's500_2k', 's2kplus'] as const;
     const lang = root.dataset.lang || 'en';
     const policyVersion = root.dataset.policyVersion || '';
     const steps = Array.from(root.querySelectorAll<HTMLElement>('[data-step]'));
-    const order = ['intro', 'pain', 'email', 'people', 'hours', 'tool', 'team', 'spend', 'computing', 'report'];
+    const order = ['intro', 'pain', 'people', 'hours', 'tool', 'team', 'spend', 'email', 'computing', 'report'];
     const qIndex: Record<string, number> = { pain: 1, people: 2, hours: 3, tool: 4, team: 5, spend: 6 };
     const TOTAL_Q = 6;
 
@@ -431,10 +431,7 @@ const spendOpts = ['s_lt100', 's100_500', 's500_2k', 's2kplus'] as const;
         stepEl.querySelectorAll('.diag-opt').forEach((o) => o.setAttribute('aria-pressed', String(o === btn)));
         track('diag_answer', { q: key, a: val });
         const cur = stepEl.dataset.step!;
-        setTimeout(() => {
-          if (cur === 'spend') { show('computing'); runCompute(); }
-          else next(cur);
-        }, 180);
+        setTimeout(() => next(cur), 180);
       }),
     );
 
@@ -448,7 +445,9 @@ const spendOpts = ['s_lt100', 's100_500', 's500_2k', 's2kplus'] as const;
       if (emailErr) emailErr.hidden = true;
       emailVal = v;
       track('diag_email');
-      next('email');
+      // Email is now the last gate, just before the payoff.
+      show('computing');
+      runCompute();
     }
     root.querySelector('[data-action="email-continue"]')?.addEventListener('click', submitEmail);
     emailInput?.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); submitEmail(); } });
