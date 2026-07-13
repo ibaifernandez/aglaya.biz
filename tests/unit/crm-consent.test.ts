@@ -89,3 +89,28 @@ describe('buildConsentFields', () => {
     expect(CONSENT_CONTRACT_VERSION).toBe('1.1.0');
   });
 });
+
+// SHARED cross-producer golden vector — frozen 2026-07-13. The SAME literal is
+// asserted in Scanner (backend/tests/test_consent_ledger.py) and consent-ledger-wp
+// (tests/seal-golden-test.php). GOLDEN_HASH above pins aglaya.biz's own path input;
+// THIS pins the neutral vector shared by all three producers, so a drift in ANY
+// nave's field order / separator / email normalization fails a test here too.
+// Source of truth: legal-reg-tech/docs/contracts/IMPLEMENTS.md §"El sello".
+// Do NOT edit the literal to make a red test pass — a mismatch = a producer diverged.
+const SHARED_GOLDEN_HASH =
+  'sha256:21d20c700ac844f5c02482bc758630bbac4384b89bd7088e7998bded903f9967';
+
+const SHARED_GOLDEN_INPUT = {
+  email: 'subject@example.com',
+  purpose: 'scanner-ley-21719',
+  legalBasis: 'consent' as const,
+  noticeVersion: '2026-06-01',
+  grantedAt: '2026-01-15T00:00:00Z',
+  source: 'scanner21719-web',
+};
+
+describe('cross-producer evidence_hash', () => {
+  it('matches the shared golden vector (Scanner + plugin PHP + aglaya.biz)', () => {
+    expect(buildConsentFields(SHARED_GOLDEN_INPUT).evidence_hash).toBe(SHARED_GOLDEN_HASH);
+  });
+});
