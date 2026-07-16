@@ -13,13 +13,13 @@ challenge:
   es: "Las empresas chilenas enfrentan el cumplimiento obligatorio de la Ley 21.719 pero no tienen una forma asequible de auditar su exposición digital pública antes de contratar asesoría legal."
   pt: "As empresas chilenas enfrentam conformidade obrigatória com a Lei 21.719, mas não têm uma forma acessível de auditar sua exposição digital pública antes de contratar consultoria jurídica."
 summary:
-  en: "AGLAYA built and deployed its own RegTech product: an automated scanner that visits any Chilean website, detects visible regulatory risk signals under Ley 21.719, and delivers a structured compliance audit for $12. No legal opinion. No manual review. A machine that sees what anyone can see — and turns it into an actionable technical report."
-  es: "AGLAYA construyó y desplegó su propio producto RegTech: un scanner automatizado que visita cualquier sitio web chileno, detecta señales visibles de riesgo regulatorio bajo la Ley 21.719 y entrega una auditoría de compliance estructurada por $12. Sin opinión legal. Sin revisión manual. Una máquina que ve lo que cualquiera puede ver — y lo convierte en un informe técnico accionable."
-  pt: "A AGLAYA construiu e implantou seu próprio produto RegTech: um scanner automatizado que visita qualquer site chileno, detecta sinais visíveis de risco regulatório sob a Lei 21.719 e entrega uma auditoria de compliance estruturada por $12. Sem parecer jurídico. Sem revisão manual. Uma máquina que vê o que qualquer um pode ver — e transforma isso em um relatório técnico acionável."
+  en: "AGLAYA built and deployed its own RegTech product: an automated scanner that visits any Chilean website, detects visible regulatory risk signals under Ley 21.719, and delivers a free structured compliance audit. No legal opinion. No manual review. A machine that sees what anyone can see — and turns it into an actionable technical report."
+  es: "AGLAYA construyó y desplegó su propio producto RegTech: un scanner automatizado que visita cualquier sitio web chileno, detecta señales visibles de riesgo regulatorio bajo la Ley 21.719 y entrega una auditoría de compliance estructurada y gratuita. Sin opinión legal. Sin revisión manual. Una máquina que ve lo que cualquiera puede ver — y lo convierte en un informe técnico accionable."
+  pt: "A AGLAYA construiu e implantou seu próprio produto RegTech: um scanner automatizado que visita qualquer site chileno, detecta sinais visíveis de risco regulatório sob a Lei 21.719 e entrega uma auditoria de compliance estruturada e gratuita. Sem parecer jurídico. Sem revisão manual. Uma máquina que vê o que qualquer um pode ver — e transforma isso em um relatório técnico acionável."
 strategy:
-  en: "Eligibility pre-flight + five-scan consensus engine + deterministic rule matrix + deterministic report rendering. Zero LLM dependency. Deployed on Railway + Netlify. Payments via LemonSqueezy."
-  es: "Pre-flight de elegibilidad + motor de consenso de 5 escaneos + matriz de reglas deterministas + renderizado de informe determinista. Sin dependencia de LLM. Desplegado en Railway + Netlify. Pagos vía LemonSqueezy."
-  pt: "Pre-flight de elegibilidade + motor de consenso de 5 varreduras + matriz de regras deterministas + renderização determinista de relatório. Sem dependência de LLM. Implantado no Railway + Netlify. Pagamentos via LemonSqueezy."
+  en: "Eligibility pre-flight + five-scan consensus engine + deterministic rule matrix + deterministic report rendering. Zero LLM dependency. Deployed on Railway + Netlify. Free diagnostic — no payment gate."
+  es: "Pre-flight de elegibilidad + motor de consenso de 5 escaneos + matriz de reglas deterministas + renderizado de informe determinista. Sin dependencia de LLM. Desplegado en Railway + Netlify. Diagnóstico gratis — sin pasarela de pago."
+  pt: "Pre-flight de elegibilidade + motor de consenso de 5 varreduras + matriz de regras deterministas + renderização determinista de relatório. Sem dependência de LLM. Implantado no Railway + Netlify. Diagnóstico grátis — sem gateway de pagamento."
 vision:
   en: "Compliance intelligence that any company can access — before the lawyer, before the fine."
   es: "Inteligencia de compliance que cualquier empresa puede acceder — antes del abogado, antes de la multa."
@@ -39,11 +39,11 @@ results:
       en: "Traceable evidence per audit finding"
       es: "Evidencia trazable por hallazgo de auditoría"
       pt: "Evidência rastreável por achado de auditoria"
-  - metric: "$12"
+  - metric: "$0"
     label:
-      en: "Per compliance audit — no legal opinion needed"
-      es: "Por auditoría de compliance — sin opinión legal"
-      pt: "Por auditoria de compliance — sem parecer jurídico"
+      en: "Per compliance audit — no card, no registration"
+      es: "Por auditoría de compliance — sin tarjeta, sin registro"
+      pt: "Por auditoria de compliance — sem cartão, sem cadastro"
 featured: true
 date: "2026-04"
 client_logo: "../src/assets/images/chile-flag-round-circle-icon.svg"
@@ -52,7 +52,7 @@ body_en: |
 
   Every Chilean company with a website acquired a regulatory obligation the day Ley 21.719 took effect. Most of them have no idea what that obligation looks like on their own domain — because the diagnosis costs more than they're willing to pay before they even know if there's a problem.
 
-  AGLAYA built the machine that changes that equation. A **$12 compliance audit** that sees exactly what a regulator would see: the public surface. Nothing more. Nothing less.
+  AGLAYA built the machine that changes that equation. A **free compliance audit** that sees exactly what a regulator would see: the public surface. Nothing more. Nothing less.
 
   <img src="/infographic-legal-reg-tech.jpg" alt="Ley 21.719 — System architecture and benchmark data" style="width:100%;margin:2.5rem 0;border:1px solid rgba(255,255,255,0.08);" />
 
@@ -79,7 +79,7 @@ body_en: |
     C --> D["Control matrix\nDeterministic rules · Ley 21.719"]
     D --> E["Regulatory alerts\nLinked to article · control · requirement"]
     E --> F["Claude API\nReport structuring and PDF formatting"]
-    F --> G["Audit report · $12\n100% traceable · Captured HTML evidence"]
+    F --> G["Audit report · Free\n100% traceable · Captured HTML evidence"]
   ```
 
   ### Step 3 — Rules First. Claude API Second.
@@ -96,14 +96,14 @@ body_en: |
 
   - **96%** reach rate across eligible Chilean domains
   - **100%** traceable evidence — every finding linked to a captured HTML fragment
-  - **$12** per full compliance audit — before the lawyer, before the fine
-  - Live in production · LemonSqueezy integrated · [Run a scan →](https://ley-21719-chile.aglaya.biz/)
+  - **Free** — full compliance audit, no card, no registration — before the lawyer, before the fine
+  - Live in production · Free · no registration · [Run a scan →](https://ley-21719-chile.aglaya.biz/)
 body_es: |
   ## Qué Construimos
 
   Cada empresa chilena con sitio web adquirió una obligación regulatoria el día en que entró en vigor la Ley 21.719. La mayoría no sabe cómo se ve esa obligación en su propio dominio — porque el diagnóstico cuesta más de lo que están dispuestas a pagar antes de saber siquiera si hay un problema.
 
-  AGLAYA construyó la máquina que cambia esa ecuación. Una **auditoría de compliance por $12** que ve exactamente lo que vería un regulador: la superficie pública. Nada más. Nada menos.
+  AGLAYA construyó la máquina que cambia esa ecuación. Una **auditoría de compliance gratuita** que ve exactamente lo que vería un regulador: la superficie pública. Nada más. Nada menos.
 
   <img src="/infographic-legal-reg-tech.jpg" alt="Ley 21.719 — Arquitectura del sistema y datos del benchmark" style="width:100%;margin:2.5rem 0;border:1px solid rgba(255,255,255,0.08);" />
 
@@ -130,7 +130,7 @@ body_es: |
     C --> D["Matriz de controles\nReglas deterministas · Ley 21.719"]
     D --> E["Alertas regulatorias\nVinculadas a artículo · control · requisito"]
     E --> F["Claude API\nEstructuración y formato del informe PDF"]
-    F --> G["Informe de auditoría · $12\n100% trazable · Evidencia HTML capturada"]
+    F --> G["Informe de auditoría · Gratis\n100% trazable · Evidencia HTML capturada"]
   ```
 
   ### Paso 3 — Reglas Primero. Claude API Después.
@@ -147,14 +147,14 @@ body_es: |
 
   - **96%** tasa de alcance en dominios chilenos elegibles
   - **100%** evidencia trazable — cada hallazgo vinculado a un fragmento HTML capturado
-  - **$12** por auditoría de compliance completa — antes del abogado, antes de la multa
-  - En producción · LemonSqueezy integrado · [Ejecutar un escaneo →](https://ley-21719-chile.aglaya.biz/)
+  - **Gratis** — auditoría de compliance completa, sin tarjeta, sin registro — antes del abogado, antes de la multa
+  - En producción · Gratis · sin registro · [Ejecutar un escaneo →](https://ley-21719-chile.aglaya.biz/)
 body_pt: |
   ## O Que Construímos
 
   Cada empresa chilena com um site adquiriu uma obrigação regulatória no dia em que a Lei 21.719 entrou em vigor. A maioria não sabe como essa obrigação se parece em seu próprio domínio — porque o diagnóstico custa mais do que estão dispostas a pagar antes mesmo de saber se há um problema.
 
-  A AGLAYA construiu a máquina que muda essa equação. Uma **auditoria de compliance por $12** que vê exatamente o que um regulador veria: a superfície pública. Nada mais. Nada menos.
+  A AGLAYA construiu a máquina que muda essa equação. Uma **auditoria de compliance gratuita** que vê exatamente o que um regulador veria: a superfície pública. Nada mais. Nada menos.
 
   <img src="/infographic-legal-reg-tech.jpg" alt="Lei 21.719 — Arquitetura do sistema e dados do benchmark" style="width:100%;margin:2.5rem 0;border:1px solid rgba(255,255,255,0.08);" />
 
@@ -181,7 +181,7 @@ body_pt: |
     C --> D["Matriz de controles\nRegras deterministas · Lei 21.719"]
     D --> E["Alertas regulatórios\nVinculados a artigo · controle · requisito"]
     E --> F["Claude API\nEstruturação e formatação do relatório PDF"]
-    F --> G["Relatório de auditoria · $12\n100% rastreável · Evidência HTML capturada"]
+    F --> G["Relatório de auditoria · Grátis\n100% rastreável · Evidência HTML capturada"]
   ```
 
   ### Passo 3 — Regras Primeiro. Claude API Depois.
@@ -198,6 +198,6 @@ body_pt: |
 
   - **96%** taxa de alcance em domínios chilenos elegíveis
   - **100%** evidência rastreável — cada achado vinculado a um fragmento HTML capturado
-  - **$12** por auditoria de compliance completa — antes do advogado, antes da multa
-  - Em produção · LemonSqueezy integrado · [Executar uma varredura →](https://ley-21719-chile.aglaya.biz/)
+  - **Grátis** — auditoria de compliance completa, sem cartão, sem cadastro — antes do advogado, antes da multa
+  - Em produção · Grátis · sem cadastro · [Executar uma varredura →](https://ley-21719-chile.aglaya.biz/)
 ---
