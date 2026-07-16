@@ -24,7 +24,7 @@ El cotizador termina en cuatro salidas simultáneas:
 
 1. **Precio visible en pantalla** — el usuario ve el total mientras configura.
 2. **PDF descargable** — cotización detallada con desglose de servicios y descripción de entregables.
-3. **Lead capturado en MailerLite** — email + datos del proyecto → grupo de suscripciones.
+3. **Lead capturado en MailerLite** — email + datos del proyecto → grupo `Cotizaciones`.
 4. **CTA de contacto** — tras ver el precio, el usuario puede contactar a AGLAYA (no una llamada obligatoria; es opcional y el usuario la inicia).
 
 ### Rationale
@@ -195,7 +195,7 @@ Estos son los mínimos de calidad de AGLAYA. No existe un proyecto sin ellos →
 ## 12. Decisiones técnicas y de producto
 
 ### Generación del PDF
-**Netlify Function + `pdfkit`** — equivalente Node.js de Python/reportlab (el mismo stack del PDF de Bill Capital). Generación programática: texto vectorial crispísimo, layouts precisos, branding AGLAYA completo. Sin puppeteer, sin headless Chrome, sin API externa. La Netlify Function recibe los datos del formulario, genera el PDF en memoria y lo envía por email al prospecto (vía Resend). Cold start mínimo, cero costo variable.
+**Netlify Function + `pdfkit`** — equivalente Node.js de Python/reportlab (el mismo stack del PDF de Bill Capital). Generación programática: texto vectorial crispísimo, layouts precisos, branding AGLAYA completo. Sin puppeteer, sin headless Chrome, sin API externa. La Netlify Function recibe los datos del formulario y genera el PDF en memoria. **El PDF se envía internamente a `NOTIFY_EMAIL` para revisión humana** (asunto "Review PDF before forwarding to client") antes de reenviarlo al cliente; el acuse al cliente lo dispara una automatización de MailerLite (sin el PDF adjunto). Cold start mínimo, cero costo variable.
 
 **Descartado:** `window.print()` produce resultados inconsistentes entre navegadores y no admite control de layout profesional.
 
@@ -214,8 +214,8 @@ Flujo:
 3. Último campo: "Where should we send your quote?" (email).
 4. Al submit:
    - El precio aparece confirmado en pantalla.
-   - La Netlify Function genera el PDF con pdfkit y lo envía al email del prospecto vía Resend.
-   - El lead (nombre + email + configuración del proyecto) entra en MailerLite grupo "Cotizaciones".
+   - La Netlify Function genera el PDF con pdfkit y lo envía **internamente a `NOTIFY_EMAIL`** para revisión antes de reenviar al cliente.
+   - El lead (nombre + email + configuración del proyecto) entra en MailerLite grupo "Cotizaciones"; el acuse al cliente lo maneja una automatización de MailerLite.
 
 ### Idioma v1
 **Trilingüe desde el lanzamiento: EN / ES / PT.** El i18n ya está montado en el proyecto (`src/i18n/translations.ts`). Las rutas siguen la convención existente: `/quote` (EN), `/es/quote` (ES), `/pt/quote` (PT). Todas las cadenas del cotizador van al sistema i18n — cero strings hardcodeados.
@@ -230,10 +230,10 @@ Todas las preguntas previas están resueltas. No hay pendientes antes de codear.
 |---|---|
 | MailerLite grupo cotizador | `Cotizaciones` — Group ID: `186446693070276318` |
 | Branding del PDF | AGLAYA completo: logo, rojo `#e8003d`, tipografía, tagline |
-| Email de confirmación al prospecto | Sí — enviado vía Resend con el PDF adjunto |
+| Email al prospecto | Acuse vía automatización MailerLite (sin PDF). El PDF va interno a `NOTIFY_EMAIL` para revisión humana antes de reenviar. |
 | Idioma v1 | Trilingüe: EN / ES / PT (rutas `/quote`, `/es/quote`, `/pt/quote`) |
 | Visibilidad al lanzar | Unlisted + `noindex` |
 
 ---
 
-*Última actualización: 2026-05-03*
+*Última actualización: 2026-07-15*

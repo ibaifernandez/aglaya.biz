@@ -3,8 +3,9 @@ status: active
 domain: marketing
 owner: marketing
 source_of_truth: true
-supersedes: [DISPATCH-ENTRY-PROTOCOL-v2.md (Email 0 section only)]
-last_reviewed: 2026-05-04
+supersedes: [DISPATCH-ENTRY-PROTOCOL-v2.md]
+superseded_by: []
+last_reviewed: 2026-07-15
 consumable_by_agents: true
 ---
 
@@ -26,6 +27,9 @@ consumable_by_agents: true
 | BORDERLINE | Contact form — ICP borderline | Contacto Borderline | 1 (inmediato) |
 | NO_CUALIFICADOS | Contact form — open channel / blocked | Contacto No Cualificado | 1 (inmediato) |
 | COTIZACIONES | Quote calculator | Cotización Recibida | 1 (inmediato) |
+| CONTACTO (general) | Simple `/contact` — `GENERAL_LEAD` | Variante Contacto General (Email 0) | 1 (inmediato) |
+
+> **Nota (2026-07-15):** el formulario simple `/contact` postea `inquiry_type=GENERAL_LEAD`, que `contact.ts` enruta vía `getGeneralContactGroupId()` → `MAILERLITE_CONTACTO_GROUP_ID` (grupo distinto de CUALIFICADOS). Si esa env-var no está seteada, esos leads **no** reciben email de MailerLite (el grupo filtra a vacío).
 
 ### Custom fields en uso
 
@@ -94,7 +98,7 @@ Con la migración de mayo 2026, Resend ya no envía correos a usuarios finales. 
 ```
 
 ### Exclusion rule (para envíos manuales del Dispatch)
-En cualquier campaña manual de Dispatch: excluir segmento donde `onboarding_active = 1`.
+En cualquier campaña manual de Dispatch: excluir el segmento **«En entrada»** (donde `onboarding_active = 1`).
 
 ---
 
@@ -818,7 +822,7 @@ AGLAYA
 
 ### EMAIL 0 — inmediato
 
-**Purpose:** Confirmar recepción de solicitud de cotización. Gestionar expectativa: PDF bajo revisión, llega en 24h. No enviar PDF automáticamente — revisión humana primero.
+**Purpose:** Confirmar recepción de solicitud de cotización. Gestionar expectativa: PDF bajo revisión, llega en 72h (coherente con el copy). No enviar PDF automáticamente — revisión humana primero.
 
 #### EN
 

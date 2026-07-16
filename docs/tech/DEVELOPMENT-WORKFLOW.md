@@ -15,18 +15,18 @@ Este documento define el ciclo de vida del desarrollo en AGLAYA para asegurar la
 
 ## 💻 Local Architecture
 
-### 🛡️ OrbStack / Docker Setup
-El entorno local sirve la estructura de dominios bajo `/Users/AGLAYA/Local Sites/wordpress/`.
-Cada proyecto Astro reside en una subcarpeta del dominio correspondiente:
+### 🛡️ Local Setup
+Proyecto Astro independiente (sin dependencias WordPress).
 
 - **Path:** `/Users/AGLAYA/Local Sites/aglaya.biz/`
-- **Entorno:** Independent Git Repository (No WP dependencies).
+- **Entorno:** Independent Git Repository.
+- **Node:** v23.4.0 vía nvm (`nvm use v23.4.0`); `package.json` exige `>=22.12.0`.
 
 ### ⚓ Ports
-| Servicio | URL Local |
-|---|---|
-| Development | `http://localhost:4322` |
-| Preview (Build) | `http://localhost:4321` |
+| Servicio | Comando | URL Local |
+|---|---|---|
+| Development | `npm run dev` | `http://localhost:4321` |
+| Preview (Build) | `npm run preview` | puerto que imprima Astro (4321 por defecto) |
 
 ---
 
@@ -46,10 +46,14 @@ Para cada cambio, los agentes y humanos deben seguir este "Golden Path":
    ```bash
    npx playwright test  # Todos los tests en verde
    ```
-4. **Push & Deploy:**
+4. **Branch, Push & PR (obligatorio — `main` está protegido):**
    ```bash
-   git add . && git commit -m "feat: description" && git push
+   git checkout -b feat/mi-cambio
+   git add . && git commit -m "feat: description"
+   git push origin feat/mi-cambio
+   gh pr create   # abre PR; espera los 2 checks de CI en verde; luego merge
    ```
+   > Push directo a `main` es **rechazado** por branch protection. Nunca lo intentes.
 
 ---
 

@@ -1,7 +1,7 @@
 # MASTER TASKLIST — aglaya.biz
 
 > Living document. Single source of truth for everything outstanding.
-> Last updated: **2026-06-15**. Production HEAD at creation: `5479049`.
+> Last updated: **2026-07-15**. Production HEAD: `6d71707`.
 >
 > **Owner legend:** 🤖 = AI/code (Claude) · 🧑 = founder (Ibai, manual) · 🔁 = relay to another thread (CRM / Scanner)
 > **Priority:** P0 = blocking / revenue-or-legal risk · P1 = important, do next · P2 = backlog / nice-to-have
@@ -25,7 +25,7 @@
 | ID | Task | Pri | Owner | Status | Depends on / Definition of done |
 |----|------|-----|-------|--------|-------------------------------|
 | B1 | **MailerLite E2E in prod** — submit one lead per form × 3 langs, confirm the right group + auto-reply fires. Tracked in [`docs/qa/automations-validation.csv`](qa/automations-validation.csv). (was task #9) | P0 | 🧑 | ◐ | **`/contact` ×3 + CRM PASS (2026-06-15)** — Contacto group, language branch, acuse per lang, deal+ficha all verified. **Pending:** roi-audit funnel ×3, footer dispatch ×3, quote ×3. |
-| B2 | **UTM / fbclid / gclid / landing_source pipeline** — `contact.ts` currently sends nulls (`// not implemented yet; separate PR`). Capture from URL params client-side and forward. | P1 | 🤖 | ☐ | DoD: a lead arriving with `?utm_source=...` lands those values in the CRM. File: `netlify/functions/contact.ts:351`. |
+| B2 | **UTM / fbclid / gclid / landing_source pipeline** — `contact.ts` currently sends nulls (`// not implemented yet; separate PR`). Capture from URL params client-side and forward. | P1 | 🤖 | ☐ | DoD: a lead arriving with `?utm_source=...` lands those values in the CRM. File: `netlify/functions/contact.ts:360`. |
 | B3 | Verify the **language of confirmation emails** matches submission `lang` across all forms (regression check after swap). | P2 | 🧑 | ☐ | Part of B1 matrix. |
 
 ## C. Legal / compliance
@@ -71,6 +71,7 @@
 
 ## Recently shipped (context, prune after a week)
 
-- PR #80/#81/#82 — consent ledger v1.1.0 (emission, flat payload, §3-bis conformity).
-- PR #83 — contact↔ROI swap; ROIForm deleted (closed legacy task #7).
-- PR #84 — docs.
+- **Pruned 2026-07-15** (older than a week): PR #80–#84 (consent ledger v1.1.0, contact↔ROI swap, docs).
+- PR #86–#97 — ICP qualifier UX polish + plain-language copy on `/roi-audit`.
+- PR #98/#99/#101 — ROI Diagnostic lead-magnet: research → built → **parked** (PR #99 open; see [`roi-diagnostic/PARKED.md`](roi-diagnostic/PARKED.md)).
+- PR #100 — crm-consent shared cross-producer golden vector pinned.

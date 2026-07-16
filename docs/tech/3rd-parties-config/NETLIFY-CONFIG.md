@@ -23,6 +23,9 @@ All runtime variables should be configured for the scopes they actually need.
 | `MAILERLITE_NO_CUALIFICADOS_GROUP_ID` | All scopes | Non-qualified lead group | `<group-id>` |
 | `MAILERLITE_BORDERLINE_GROUP_ID` | All scopes | Borderline lead group | `<group-id>` |
 | `MAILERLITE_CUALIFICADOS_GROUP_ID` | All scopes | Qualified lead group | `<group-id>` |
+| `MAILERLITE_COTIZACIONES_GROUP_ID` | All scopes | Quote-calculator lead group (cotizador) | `<group-id>` |
+| `CRM_API_KEY` | Builds, Functions, Runtime | CRM AGLAYA API key — `X-CRM-API-Key` header (**Sensitive**) | `<key>` |
+| `CRM_LEADS_CAPTURE_URL` | All scopes | CRM AGLAYA `/leads/capture` endpoint URL | `https://...` |
 | `PUBLIC_SENTRY_DSN` | All scopes | Public DSN for browser capture | `https://...` |
 | `SENTRY_DSN` | Builds, Functions, Runtime | Optional server-only DSN override | `https://...` |
 | `SENTRY_AUTH_TOKEN` | Builds | Auth token de Sentry para subir source maps | `sntrys_xxxxx` |
@@ -69,7 +72,7 @@ CNAME www             → aglaya.netlify.app (Proxied)
 ### HTTPS
 - Certificado Let's Encrypt activo ✅
 - Renovación automática ✅
-- Válido hasta: junio 2026
+- Válido: se auto-renueva (Let's Encrypt, sin gestión manual)
 
 ---
 
@@ -79,8 +82,10 @@ Las Netlify Functions están en `netlify/functions/`. Se despliegan automáticam
 
 | Función | Endpoint | Descripción |
 |---|---|---|
-| `contact.ts` | `/.netlify/functions/contact` | Handles all ICP/contact branches and ROI Audit context |
-| `dispatch-subscribe.ts` | `/.netlify/functions/dispatch-subscribe` | Handles footer dispatch capture + autoresponse |
+| `contact.ts` | `/.netlify/functions/contact` | Todos los submits de formulario (contact simple + ramas del embudo ICP en `/roi-audit`); dispara Resend (canary) + MailerLite + CRM |
+| `quote.ts` | `/.netlify/functions/quote` | Cotizador: genera PDF (pdfkit standalone) + notificación interna a `NOTIFY_EMAIL` + grupo Cotizaciones |
+| `dispatch-subscribe.ts` | `/.netlify/functions/dispatch-subscribe` | Alta de suscriptores del footer (dispatch) → MailerLite |
+| `_crm.ts` · `_mailerlite.ts` · `_sentry.ts` | (helpers, sin endpoint) | Dispatch al CRM + ledger de consentimiento · routing MailerLite · wrapper Sentry |
 
 ---
 

@@ -6,8 +6,7 @@ source_of_truth: false
 supersedes: []
 superseded_by:
   - docs/tech/3RD-PARTIES-CONFIG.md
-  - docs/tech/3rd-parties-config/PLATFORMS-CONFIG.md
-last_reviewed: 2026-04-15
+last_reviewed: 2026-07-15
 consumable_by_agents: true
 ---
 
@@ -19,8 +18,7 @@ Do **not** use this document to configure production.
 
 Use these instead:
 
-- `docs/tech/3RD-PARTIES-CONFIG.md` — master third-party source of truth
-- `docs/tech/3rd-parties-config/PLATFORMS-CONFIG.md` — current platform status
+- `docs/tech/3RD-PARTIES-CONFIG.md` — master third-party source of truth (incl. platform status, Sentry alerts, Migadu DNS)
 - `docs/tech/3rd-parties-config/NETLIFY-CONFIG.md` — Netlify runtime/build setup
 - `docs/ops/PRODUCTION-VALIDATION.md` — smoke tests and release criteria
 
