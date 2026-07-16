@@ -44,16 +44,12 @@ jobs:
 
       - name: Build site
         run: npm run build
-        env:
-          PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.PUBLIC_TURNSTILE_SITE_KEY }}
 
       - name: Install serve
         run: npm install -g serve
 
       - name: Run E2E + A11y tests
         run: npm run test:e2e
-        env:
-          PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.PUBLIC_TURNSTILE_SITE_KEY }}
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
