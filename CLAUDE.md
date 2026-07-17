@@ -270,4 +270,7 @@ Reglas para cualquier hilo que trabaje aquí:
 - **El capitán puede haber tocado docs de este repo** (nunca `src/` ni `netlify/`): sus commits van identificados y cada pase queda registrado en `docs/ops/CHANGELOG.md`. Si un doc contradice al código, gana el código — y avisa.
 - La verdad comercial (precios, ofertas, GTM) NO vive aquí: vive en el atlas del capitán (`atlas/gtm.md`). Este repo ejecuta y apunta.
 
+
+**Consulta al capitán EN VIVO:** MCP **`aglaya-atlas`** (disponible en toda sesión de Claude de esta máquina) — `flota_estado` · `ficha(nave)` · `contrato(nombre)` · `quien_consume` · `verdad_comercial` · `parked` · `buscar`. Responde leyendo el atlas en vivo y citando fuente. Ya no hace falta esperar un brief del capitán: pregúntale.
+
 **Último pase del capitán: 2026-07-17** — verificado el 7/7 de cohesión tras el lote #102–#107; **triángulo de firmas del canónico CERRADO** (§10: las tres naves firmaron v1.1.0 el 2026-06-13; un mes de notas rancias cruzadas, muertas hoy); huella colocada. Detalle: entradas del 17-jul en `docs/ops/CHANGELOG.md`.
