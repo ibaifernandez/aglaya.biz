@@ -165,7 +165,7 @@ A new producer (e.g. Scanner 21.719):
 | Party | Status | Implements | Reference |
 |---|---|---|---|
 | **aglaya.biz** | signed | v1.1.0 | web forms → `/leads/capture`; DPO-alias patch (`b360b5d`); **v1.1.0**: consent-ledger emission (P2) + privacy clause (P5b) + this contract (P5a); signature ledger in [`IMPLEMENTS.md`](./IMPLEMENTS.md) |
-| **CRM AGLAYA** | countersigned | v1.1.0 (consumer) | ledger + DSR + PDF export live in prod; accepts optional consent fields (backward-compatible, dedup by `evidence_hash`); formal v1.1.0 re-ack in `crm-aglaya/docs/contracts/IMPLEMENTS.md` **pending** |
+| **CRM AGLAYA** | countersigned ✓ | v1.1.0 (consumer) | ledger + DSR + PDF export live in prod; accepts optional consent fields (backward-compatible, dedup by `evidence_hash`); formal v1.1.0 re-ack **DONE 2026-06-13** (`ce0c544`, §"v1.1.0" of `crm-aglaya/docs/contracts/IMPLEMENTS.md` — verified by the AGLAYA captain 2026-07-17; this row read "pending" for a month after the fact) |
 | **Scanner 21.719** | signed | v1.1.0 | orchestrator of this rollout; emits ficha at 4 points + unsubscribe webhook, E2E in prod; `build_consent_fields`/`build_dsr_fields` are the technical source of truth |
 
 Producers run **different legal bases by design** (§2 + §9): aglaya.biz forms on
@@ -173,11 +173,13 @@ legitimate interest, Scanner 21.719 on consent under Ley 21.719 — the ledger r
 the actual `legal_basis` per entry. Each forwards its own `privacy_policy_version`;
 the CRM persists it verbatim. DPO channel `dpo@aglaya.biz` is shared.
 
-> **v1.1.0 re-sign status (updated 2026-07-17, verified by the AGLAYA captain):**
-> Scanner 21.719 **recorded v1.1.0** in its `IMPLEMENTS.md` on 2026-06-13 (its §10 row
-> above reads `signed | v1.1.0` — closed). aglaya.biz signed on merge of the
-> consent-ledger PR. **Only live pending:** CRM's formal v1.1.0 re-ack in
-> `crm-aglaya/docs/contracts/IMPLEMENTS.md` (its row reads `countersigned` meanwhile).
+> **v1.1.0 — TRIANGLE CLOSED (verified by the AGLAYA captain, 2026-07-17).** All three
+> parties signed v1.1.0 **on 2026-06-13**: aglaya.biz (its `IMPLEMENTS.md`), Scanner 21.719
+> (its `IMPLEMENTS.md`), and CRM AGLAYA (formal re-ack, `ce0c544` in its `IMPLEMENTS.md`).
+> Nothing is pending. For a month, each repo carried a stale note claiming another party
+> hadn't signed — all three notes were wrong, and all three were closed on 2026-07-17
+> (Scanner `92e9b67` · this file · CRM's mirror note in its pass). Lesson: a signature
+> lives in the signer's ledger; check THERE before claiming it's missing.
 
 ## 11. Verification log
 
