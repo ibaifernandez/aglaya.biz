@@ -173,8 +173,11 @@ legitimate interest, Scanner 21.719 on consent under Ley 21.719 — the ledger r
 the actual `legal_basis` per entry. Each forwards its own `privacy_policy_version`;
 the CRM persists it verbatim. DPO channel `dpo@aglaya.biz` is shared.
 
-> **v1.1.0 re-sign pending:** CRM and Scanner threads to record v1.1.0 in their
-> `IMPLEMENTS.md`. aglaya.biz signs here on merge of the consent-ledger PR.
+> **v1.1.0 re-sign status (updated 2026-07-17, verified by the AGLAYA captain):**
+> Scanner 21.719 **recorded v1.1.0** in its `IMPLEMENTS.md` on 2026-06-13 (its §10 row
+> above reads `signed | v1.1.0` — closed). aglaya.biz signed on merge of the
+> consent-ledger PR. **Only live pending:** CRM's formal v1.1.0 re-ack in
+> `crm-aglaya/docs/contracts/IMPLEMENTS.md` (its row reads `countersigned` meanwhile).
 
 ## 11. Verification log
 

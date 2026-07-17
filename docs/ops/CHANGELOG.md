@@ -22,6 +22,11 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Changed — 2026-07-17 (pase de cohesión del capitán AGLAYA; docs-only)
+
+- **Contract signature status brought up to reality.** The canonical contract's §10 trailing note still claimed *"CRM and Scanner threads to record v1.1.0 in their IMPLEMENTS.md"* — stale on the Scanner side: it recorded v1.1.0 on **2026-06-13** and the §10 table itself already reads `Scanner 21.719 | signed | v1.1.0`. Note rewritten to the verified state; the only live pending is CRM's **formal** v1.1.0 re-ack in its own `IMPLEMENTS.md` (its §10 row reads `countersigned` meanwhile). Same stale claim fixed in `CLAUDE.md`. Cross-checked against `legal-reg-tech/docs/contracts/IMPLEMENTS.md` (whose mirror-image stale note — "canonical hasn't flipped my row" — was closed the same day in that repo).
+- **Fleet footprint added to `CLAUDE.md`** («AGLAYA · Flota — el capitán»): pointer to the orchestrator's atlas (contract registry, per-nave fichas, fleet board) and the rules for future threads — consult the registry before structural changes; captain commits are identified and logged here. Pointer, not photocopy.
+
 ### Fixed — 2026-07-17
 
 - **Legal pages are indexed and crawlable — completing a record that was left open.** An earlier entry below (*"SEO architecture: `noindex: true` on … proof index, privacy, and cookies"*) was the last word on the subject, but that decision was reversed in two steps and neither was logged here. The full arc:
