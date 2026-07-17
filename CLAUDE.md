@@ -85,7 +85,7 @@ docs/                # Project documentation
 | `MAILERLITE_COTIZACIONES_GROUP_ID` | Server | MailerLite group id for quote calculator leads (fallback hardcoded in quote.ts) |
 
 Sentry environment tagging is inferred from Netlify deploy context by default. Avoid setting a separate public environment label unless you intentionally need to override that behavior outside Netlify.
-| `MAILERLITE_CONTACTO_GROUP_ID` | Server | Legacy fallback MailerLite group id for contact leads |
+| `MAILERLITE_CONTACTO_GROUP_ID` | Server | **Primary** MailerLite group id for the simple `/contact` form (`inquiry_type=GENERAL_LEAD`), read by `getGeneralContactGroupId()` — which has **no fallback chain**, so leaving it unset silently drops the auto-reply. Also still read as a legacy fallback inside `getContactGroupIds()` when `MAILERLITE_NO_CUALIFICADOS_GROUP_ID` is unset (vestigial — that var is set in prod). |
 | `MAILERLITE_CONTACTO_QUALIFIED_GROUP_ID` | Server | Legacy fallback MailerLite group id for qualified contact leads |
 | `MAILERLITE_CONTACTO_BORDERLINE_GROUP_ID` | Server | Legacy fallback MailerLite group id for borderline contact leads |
 | `MAILERLITE_CONTACTO_BLOCKED_GROUP_ID` | Server | Legacy fallback MailerLite group id for blocked/open-channel contact leads |
