@@ -1,0 +1,25 @@
+# ── Graphify scan exclusions — aglaya.biz ──────────
+# Persistido 2026-07-17 (pase del capitán). La exclusión del vendor existía
+# solo en caché y se perdía en cada rebuild limpio: el primer build de raíz
+# metió 716 nodos de chart.umd.min.js (49% del grafo, etiquetas e()/s()/n()).
+
+# Dependencias / builds
+node_modules/
+dist/
+.netlify/
+.astro/
+
+# Vendor de terceros (minificado — ruido sin significado para el mapa)
+*.min.js
+public/bill-capital/assets/
+
+# Binarios / media (sin valor para el mapa de arquitectura; el PDF de
+# bill-capital es además entregable de cliente — superficie PII)
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.ico
+*.woff
+*.woff2
