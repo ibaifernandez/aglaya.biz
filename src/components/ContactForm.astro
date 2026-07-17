@@ -305,10 +305,11 @@ form?.addEventListener('submit', async (e) => {
       message,
       token,
       lang,
-      // General contact (no ICP qualification) lands in the CRM as an
-      // open-channel / non-qualified lead and in the MailerLite no-cualificados
-      // group (which owns the auto-reply). Resend internal notification always
-      // fires. See contact.ts deriveCrmSource / getContactGroupIds.
+      // General contact (no ICP qualification): `icp_status` lands it in the CRM
+      // as an open-channel lead, while `inquiry_type=GENERAL_LEAD` routes it to
+      // the MailerLite Contacto group (which owns the auto-reply). Resend
+      // internal notification always fires.
+      // See contact.ts deriveCrmSource / getGeneralContactGroupId.
       icp_status: 'OPEN_CHANNEL',
       inquiry_type: 'GENERAL_LEAD',
       privacy_consent: (document.getElementById('contact-privacy-consent') as HTMLInputElement | null)?.checked ? 'true' : '',
