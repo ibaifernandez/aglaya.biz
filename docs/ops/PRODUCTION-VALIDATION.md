@@ -5,7 +5,7 @@ owner: operations
 source_of_truth: true
 supersedes: []
 superseded_by: []
-last_reviewed: 2026-04-15
+last_reviewed: 2026-07-15
 consumable_by_agents: true
 ---
 
@@ -35,7 +35,7 @@ The current production implementation is expected to behave as follows:
 - GTM only loads when `localStorage['aglaya_cookie_consent'] === 'all'`.
 - The cookie banner is shown only when the consent key does not yet exist.
 - Footer dispatch requires first name, email, privacy consent, and hCaptcha.
-- Contact flows are admission-gated, but every branch can submit a real message.
+- `/contact` is a simple `ContactForm` (name/email/message + consent → `icp_status=OPEN_CHANNEL`); the ICP qualification funnel (qualified/borderline/open-channel branches) is embedded in `/roi-audit` (post PR #83).
 - ROI Audit leads are marked with:
   - `inquiry_type = ROI_AUDIT_LEAD`
   - `entry_point = roi_audit`
@@ -167,9 +167,9 @@ location.reload();
 - Immediate user-facing email received
 - MailerLite capture or documented fallback capture succeeds
 
-### D. ICP/contact branching smoke test
+### D. ICP funnel branching smoke test (on `/roi-audit`)
 
-Run all three branches:
+Run all three branches from the ICP qualifier embedded in `/roi-audit`:
 
 - `qualified`
 - `borderline`
@@ -177,10 +177,12 @@ Run all three branches:
 
 For each branch:
 
-1. Complete the admission inputs until the correct branch appears.
+1. On `/roi-audit`, complete the ICP qualifier inputs until the correct branch appears.
 2. Fill in the form.
 3. Complete hCaptcha.
 4. Submit.
+
+Also test `/contact` separately: the simple `ContactForm` submits name/email/message + consent → `icp_status=OPEN_CHANNEL` (no branching).
 
 **Pass criteria**
 
@@ -189,17 +191,17 @@ For each branch:
 - Internal copy reaches `info@aglaya.biz`
 - Lead is routed to the correct MailerLite group when configured
 
-### E. ROI Audit flow smoke test
+### E. ROI Audit page smoke test
 
-1. Enter via `/roi-audit/`.
-2. Follow the CTA into the contact flow.
-3. Submit a valid request.
+1. Enter via `/roi-audit/` (the ICP qualification funnel is embedded on the page itself).
+2. Complete the qualifier and submit a valid request through the resulting branch.
+3. Confirm the lead is ROI-tagged.
 
 **Pass criteria**
 
-- Contact flow preserves the audit context
-- Internal notification identifies the lead as `ROI_AUDIT_LEAD`
-- User-facing confirmation uses audit-specific wording
+- Submission succeeds from within the `/roi-audit` funnel
+- Internal notification identifies the lead as ROI-tagged (`service_interest=roi_audit`)
+- User-facing confirmation uses audit-specific wording in the submission language
 
 ### F. Proof/logo smoke test
 
@@ -210,6 +212,19 @@ For each branch:
 
 - No proof-logo asset 404s
 - Card layout remains stable across locales
+
+### G. CRM dispatch smoke test
+
+1. Submit a lead through any form (`/contact` or a `/roi-audit` branch).
+2. Confirm the Resend internal notification arrives at `info@aglaya.biz` (the canary).
+3. In Sentry, confirm **no** `crm_outcome:failed|rejected|anomaly` capture for the submission (tag `stage=crm-dispatch`).
+4. Cross-check the lead appears in the CRM panel (or is an intentional `excluded:true` drop).
+
+**Pass criteria**
+
+- Internal Resend canary received
+- No `crm_outcome:{failed,rejected,anomaly}` in Sentry
+- Deal present in CRM (or intentional exclusion)
 
 ## Manual Release Certification Checklist
 
@@ -278,6 +293,7 @@ The current live implementation depends primarily on:
 - `src/components/DispatchSignupForm.astro`
 - `src/components/ICPFilter.astro`
 - `netlify/functions/contact.ts`
+- `netlify/functions/_crm.ts` (CRM dispatch + consent ledger)
 - `netlify/functions/dispatch-subscribe.ts`
 - `public/_headers`
 - `netlify.toml`

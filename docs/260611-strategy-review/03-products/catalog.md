@@ -79,7 +79,7 @@ el "entregamos en repo, es tuyo" ya planta la semilla de soberanía → upsell n
 
 ## D. Peldaños 0-1 — Línea coyuntural (Chile, Ley 21.719)
 
-- **Scanner (gratis):** escanea cualquier web chilena, detecta señales de riesgo Ley 21.719. Lead magnet. *(El "$12 por informe" QUEDA OBSOLETO — actualizar donde aparezca, p.ej. proof legal-reg-tech.)*
+- **Scanner (gratis, permanente):** escanea cualquier web chilena, detecta señales de riesgo Ley 21.719. Lead magnet. Gratuito **de forma permanente** por decisión de arquitectura **ADR-010 (2026-06-04)**; el modelo de "$12 por informe" quedó retirado.
 - **Plan de Adecuación Web ($230):** el Scanner detecta los fallos; el Plan los **arregla** — el mismo trabajo de compliance que AGLAYA ya hizo para sí misma (cookies, política de privacidad, formularios con base legal, blindaje Ley 21.719/GDPR/LGPD). Entregable propuesto: web adecuada + evidencia de cumplimiento. Garantía simple: *si tras el Plan el Scanner no baja a verde, se repite gratis.*
 
 ---
@@ -90,9 +90,9 @@ el "entregamos en repo, es tuyo" ya planta la semilla de soberanía → upsell n
 - [x] **Frontera de productización:** público y cerrado = peldaños 0-2 (Scanner, Plan $230, Web). A medida sin precio público = núcleo (Stack).
 - [x] **Módulos no-web** → cotización ex profeso; varios aún en desarrollo, se tarifican al terminarse. Sin tarifa pública.
 - [x] **ROI Audit** → se mantiene custom por scope (coherente con "todo el núcleo es a medida").
+- [x] **Scanner gratis permanente** (ADR-010, 2026-06-04) — el modelo "$12 por informe" quedó retirado; el proof `legal-reg-tech` ya refleja el precio libre (PR #105, `a4b456b`).
 
 **Diferido a capas posteriores (no bloquea):**
 - [ ] **Exposición pública del $8K/mes** → capa 5 (página servicios): ¿precio visible, "desde $X", o solo en conversación?
 - [ ] **Peldaño 2 como puerta media declarada** (recomendado) → se materializa en capa 4 (arquitectura) + capa 5.
 - [ ] **Entregable + garantía del Plan $230** → se afina al construir esa landing (capa 5).
-- [ ] **Actualizar "$12" obsoleto** del Scanner en el proof legal-reg-tech → capa 5.

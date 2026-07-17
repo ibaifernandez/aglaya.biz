@@ -7,8 +7,8 @@
 https://aglaya.biz/              → English (default locale)
 https://aglaya.biz/es/           → Spanish
 https://aglaya.biz/pt/           → Portuguese
-https://aglaya.biz/contact/      → Contact / admission flow
-https://aglaya.biz/roi-audit/    → ROI Audit service entry
+https://aglaya.biz/contact/      → Contact (simple form → OPEN_CHANNEL)
+https://aglaya.biz/roi-audit/    → ROI Audit — ICP qualification funnel
 https://aglaya.biz/proof/        → Proof index
 ```
 
@@ -33,7 +33,7 @@ Page
 │   ├── hero: { heading, subtext, cta }
 │   ├── proof: { entries[] }
 │   ├── economics: { comparison, quote, matrix }
-│   ├── admission: { ICPFilter, branchForms }
+│   ├── admission: { ICPFilter, branchForms }   # rendered on /roi-audit (post-PR #83)
 │   ├── footer: { DispatchSignupForm }
 │   └── marquee: { items[] }
 └── metadata: { canonical, hreflang[], structuredData }
@@ -45,7 +45,7 @@ Page
 
 ### Language Rules
 - **Code**: Always in English (variables, functions, comments, commit messages)
-- **User-facing content**: Always bilingual via `src/i18n/translations.ts`
+- **User-facing content**: Always trilingual (EN/ES/PT) via `src/i18n/translations.ts`
 - **Documentation**: English, unless the document is explicitly bilingual
 - **Git commits**: English, imperative mood ("Add feature", "Fix bug")
 

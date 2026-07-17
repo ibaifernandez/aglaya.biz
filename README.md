@@ -12,8 +12,8 @@ Trilingual website for **AGLAYA**, a digital marketing AI·gency. The Uncomforta
 
 **Primary Color**: `#e8003d` (brand red)
 **Secondary Color**: `#9FC243` (corporate green)
-**Background**: `#080808` (near-black)
-**Surface**: `#111111`
+**Background**: `#000000` (canvas)
+**Surface**: `#080808` / `#0f0f0f`
 **Typography**: Outfit (display/headings), Inter (body)
 
 ## Tech Stack
@@ -90,7 +90,7 @@ Sentry environment labels are derived automatically from Netlify deploy context 
 | [docs/tech/3RD-PARTIES-CONFIG.md](./docs/tech/3RD-PARTIES-CONFIG.md) | Master third-party/service configuration guide |
 | [docs/delivery/TESTING.md](./docs/delivery/TESTING.md) | Automated and manual testing strategy |
 | [docs/ops/PRODUCTION-VALIDATION.md](./docs/ops/PRODUCTION-VALIDATION.md) | Smoke tests, blockers, and production-readiness checks |
-| [docs/delivery/WEBSITE-IMPLEMENTATION-BRIEF.md](./docs/delivery/WEBSITE-IMPLEMENTATION-BRIEF.md) | Website implementation brief |
+| [docs/MASTER-TASKLIST.md](./docs/MASTER-TASKLIST.md) | Everything outstanding (single source of truth) |
 | [docs/tech/DEVELOPMENT-WORKFLOW.md](./docs/tech/DEVELOPMENT-WORKFLOW.md) | Development workflow |
 | [docs/tech/IA-RULES.md](./docs/tech/IA-RULES.md) | IA and AI interaction rules |
 | [docs/ops/CHANGELOG.md](./docs/ops/CHANGELOG.md) | Version history |

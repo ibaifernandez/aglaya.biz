@@ -3,7 +3,7 @@ status: active
 domain: operations
 owner: operations
 source_of_truth: true
-last_reviewed: 2026-04-28
+last_reviewed: 2026-07-15
 consumable_by_agents: true
 ---
 
@@ -36,13 +36,12 @@ graph TD
 | **Visual/Verbal** | `AGLAYA-VISUAL-SYSTEM.md` | `docs/brand/visual-id/AGLAYA-VISUAL-SYSTEM.md` |
 | **Marketing** | `MARKETING-OPERATING-SYSTEM.md` | `docs/brand/mkt/MARKETING-OPERATING-SYSTEM.md` |
 | **Oferta** | `SERVICE-CATALOG.md` | `docs/product/SERVICE-CATALOG.md` |
-| **Alcance Web** | `WEBSITE-IMPLEMENTATION-BRIEF.md` | `docs/delivery/WEBSITE-IMPLEMENTATION-BRIEF.md` |
 | **Ingeniería** | `3RD-PARTIES-CONFIG.md` | `docs/tech/3RD-PARTIES-CONFIG.md` |
 | **Workflow** | `DEVELOPMENT-WORKFLOW.md` | `docs/tech/DEVELOPMENT-WORKFLOW.md` |
 | **Operaciones** | `IA-RULES.md` | `docs/tech/IA-RULES.md` |
 | **Validación de Producción** | `PRODUCTION-VALIDATION.md` | `docs/ops/PRODUCTION-VALIDATION.md` |
 | **Logs** | `CHANGELOG.md` | `docs/ops/CHANGELOG.md` |
-| **Estrategia de crecimiento** | `OUTREACH-STRATEGY.md` | `docs/OUTREACH-STRATEGY.md` |
+| **Estrategia de crecimiento** | `MASTER-TASKLIST.md` §G — Growth backlog | `docs/MASTER-TASKLIST.md` |
 
 ---
 
@@ -64,17 +63,17 @@ graph TD
 - Admission/contact flows, footer dispatch, ROI Audit context, hCaptcha, Resend, and MailerLite routing are active.
 - Sentry, GTM consent gating, and security headers are documented against the live runtime.
 - Production smoke-test protocol lives in `docs/ops/PRODUCTION-VALIDATION.md`.
-- Main navigation includes: Systems · Proof · Economics · Services · ROI Audit.
-- Active proof entries: `bill-capital`, `elm-st-web`, `kanban-desk`. Legacy entries (`leben`, `norden`, `pocuro`) are noindexed and excluded from sitemap.
-- Bill Capital client showcase live at `/bill-capital/` (self-contained, CSP-compliant, PII-anonymized).
+- Main navigation (`Header.astro`): Home · The Stack · Web · ROI Audit · Services · Contact.
+- Active proof entries (6): `bill-capital`, `dj-amapola`, `elm-st-web`, `kanban-desk`, `legal-reg-tech`, `massiva`. Legacy entries (`leben`, `norden`, `pocuro`) are noindexed and excluded from sitemap.
+- Bill Capital client showcase live at `/proof/bill-capital/` (self-contained, CSP-compliant, PII-anonymized).
 - Design system v0.0.0.1 generated at `aglaya-design-system/` (external repo) — tokens, fonts, specimen cards, React components, Claude-invocable skill.
-- 12 growth lines documented in `docs/OUTREACH-STRATEGY.md`.
+- Growth backlog (9 open lines) lives in `docs/MASTER-TASKLIST.md` §G — grafted from the retired `OUTREACH-STRATEGY.md`.
 
 ---
 
 Los siguientes recursos han sido **eliminados físicamente** del repositorio para alcanzar el estado de **Pureza Absoluta**:
 - `docs/INDEX.md` (Sustituido por este README)
-- `docs/delivery/BACKLOG.md` & `ROADMAP.md` (Consolidados en el Brief)
+- `docs/delivery/BACKLOG.md` & `ROADMAP.md` (Consolidados en el Brief; el propio Brief se purgó el 2026-07-16 — ya ejecutado. Lo pendiente vive en `MASTER-TASKLIST.md`)
 - `docs/[HIST]_LEGACY/` (Eliminado)
 - `docs/archive/` (Eliminado - Zero Legacy Noise)
 

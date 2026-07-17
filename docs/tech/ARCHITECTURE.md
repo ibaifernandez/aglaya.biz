@@ -35,9 +35,9 @@ graph TD
 
 ## Runtime Flows
 
-### 1. Admission + Contact Flow
+### 1. ICP Qualification Flow (on `/roi-audit`)
 
-1. The user reaches the homepage or `/contact/`.
+1. The user reaches `/roi-audit/`, which mounts `ICPFilter.astro` (with `entryPoint`/`serviceInterest="roi_audit"`, so leads are ROI-tagged). The homepage does **not** mount the funnel.
 2. `ICPFilter.astro` evaluates:
    - manual execution percentage
    - existing data infrastructure
@@ -50,6 +50,8 @@ graph TD
    - requires explicit privacy consent
    - requires hCaptcha
    - submits to `/.netlify/functions/contact`
+
+> **`/contact/` is a separate, simpler flow (post PR #83):** a plain `ContactForm.astro` (name / email / message + consent) that posts `icp_status=OPEN_CHANNEL` to the same `/.netlify/functions/contact` — no ICP branching. The old `ROIForm.astro` fake-submit component was deleted.
 5. `contact.ts`:
    - validates payload
    - verifies hCaptcha
@@ -75,15 +77,11 @@ graph TD
    - falls back to internal notification when MailerLite is unavailable
    - sends an immediate user-facing confirmation email via Resend
 
-### 3. ROI Audit Context Flow
+### 3. ROI Audit Page (`/roi-audit`)
 
-1. The user enters via `/roi-audit/`.
-2. The CTA pushes context into the contact flow.
-3. Hidden fields propagate:
-   - `inquiry_type = ROI_AUDIT_LEAD`
-   - `entry_point = roi_audit`
-   - `service_interest = roi_audit`
-4. `contact.ts` switches both internal and external copy to audit-specific messaging.
+1. `/roi-audit/` **hosts the ICP qualification funnel** (see Flow 1) directly, after the explainer — `ICPFilter.astro` is mounted with `entryPoint`/`serviceInterest="roi_audit"`.
+2. Leads captured here are ROI-tagged (`service_interest=roi_audit`) and run through the same `/.netlify/functions/contact` pipeline (Resend canary → MailerLite + CRM best-effort).
+3. `contact.ts` renders audit-specific internal and external copy in the submission `lang`.
 
 ### 4. Analytics and Consent Flow
 
@@ -101,8 +99,10 @@ BaseLayout.astro
 └── <body>
     ├── <slot /> — Page content
     │   ├── index.astro / es/index.astro / pt/index.astro
-    │   ├── contact.astro / es/contact.astro / pt/contact.astro
-    │   ├── roi-audit.astro + localized variants
+    │   ├── contact.astro (simple ContactForm) + localized variants
+    │   ├── roi-audit.astro (hosts the ICP funnel) + localized variants
+    │   ├── services.astro / the-stack.astro + localized variants
+    │   ├── quote.astro (QuoteCalculator → /.netlify/functions/quote) + localized variants
     │   ├── proof routes + localized proof surfaces
     │   └── legal pages + localized variants
     ├── CookieBanner.astro — localStorage-based consent gate

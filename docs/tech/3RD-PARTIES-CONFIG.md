@@ -131,6 +131,13 @@ Configured in **Site settings → Environment variables**
 - **Source maps:** optional; require `SENTRY_AUTH_TOKEN` + `SENTRY_ORG` + `SENTRY_PROJECT`
 - **Privacy:** `sendDefaultPii: false` across browser, SSR, and functions
 
+**Recommended alerts** (Sentry → Project Settings → Alerts):
+
+| Alert | Condition | Action |
+|---|---|---|
+| New issue | First seen | Email to `info@aglaya.biz` |
+| Error spike | >10 events in 1h | Email to `info@aglaya.biz` |
+
 ### 📈 Google Tag Manager
 - **Status:** ✅ Active
 - **Container:** `GTM-5BVC9C5C`
@@ -150,7 +157,17 @@ Configured in **Site settings → Environment variables**
 
 ### 📦 Migadu (Email Management)
 - **Primary mailbox:** `info@aglaya.biz`
-- **DNS:** MX, SPF, DKIM, and DMARC managed via Cloudflare
+- **DNS (Cloudflare):** MX, SPF, DKIM (3 keys), and DMARC —
+
+| Tipo | Nombre | Valor |
+|---|---|---|
+| MX | `aglaya.biz` | `aspmx1.migadu.com` (prio 10) |
+| MX | `aglaya.biz` | `aspmx2.migadu.com` (prio 20) |
+| TXT | `aglaya.biz` | `v=spf1 include:spf.migadu.com ~all` |
+| TXT | `_dmarc` | `v=DMARC1; p=quarantine...` |
+| CNAME | `key1._domainkey` | `key1.aglaya.biz._domainkey...` |
+| CNAME | `key2._domainkey` | `key2.aglaya.biz._domainkey...` |
+| CNAME | `key3._domainkey` | `key3.aglaya.biz._domainkey...` |
 
 ---
 

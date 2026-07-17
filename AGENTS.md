@@ -5,7 +5,7 @@ owner: operations
 source_of_truth: true
 supersedes: []
 superseded_by: []
-last_reviewed: 2026-04-03
+last_reviewed: 2026-07-15
 consumable_by_agents: true
 ---
 
@@ -24,7 +24,7 @@ This document defines how AI agents should interact with this codebase, what rol
   - Always read a file before editing it.
   - Run `npm run build` after structural changes to verify no breakage.
   - Run `npm run test:unit` after modifying logic in `i18n/`, `netlify/functions/`, or component scripts.
-  - Maintain bilingual parity: any new user-facing string must appear in both EN and ES in `translations.ts`.
+  - Maintain trilingual parity: any new user-facing string must appear in EN, ES, and PT in `translations.ts`.
   - Follow the brand identity: use `#e8003d` for brand accents and `#9FC243` for corporate elements.
 
 ### 2. Documentation Agent
@@ -33,7 +33,7 @@ This document defines how AI agents should interact with this codebase, what rol
 - **Rules**:
   - Keep docs in sync with code changes.
   - Use imperative mood in changelogs ("Add feature", not "Added feature").
-  - Update `docs/ROADMAP.md` when milestones are completed.
+  - Update `docs/MASTER-TASKLIST.md` when milestones are completed.
   - All documentation in English unless explicitly bilingual.
   - Include brand color references in documentation when relevant.
 
@@ -54,14 +54,14 @@ This document defines how AI agents should interact with this codebase, what rol
 - **Rules**:
   - Run full test suite before declaring work complete.
   - Report Axe-core violations with severity and element selectors.
-  - Verify both `/` and `/es/` routes for bilingual content.
+  - Verify `/`, `/es/`, and `/pt/` routes for trilingual content.
   - Ensure brand colors and identity elements are consistent.
 
 ## Coordination Protocol
 
 1. **Before starting work**: Read `CLAUDE.md` for project context and conventions.
 2. **Before modifying UI**: Take a screenshot to understand current state.
-3. **After completing work**: Update `docs/CHANGELOG.md` with changes made.
+3. **After completing work**: Update `docs/ops/CHANGELOG.md` with changes made.
 4. **Conflicts**: If two agents need to modify the same file, the Code Agent takes priority; others wait.
 
 ## File Ownership
@@ -88,6 +88,6 @@ Every change must satisfy:
 - [ ] `npm run build` succeeds
 - [ ] `npm run test:unit` passes
 - [ ] Pages render correctly at mobile and desktop widths
-- [ ] Both EN and ES routes work
+- [ ] EN, ES, and PT routes work
 - [ ] No Axe-core WCAG 2AA violations
 - [ ] Brand identity elements (colors, logo) are consistent

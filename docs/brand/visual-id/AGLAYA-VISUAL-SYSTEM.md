@@ -5,7 +5,7 @@ owner: visual
 source_of_truth: true
 supersedes: []
 superseded_by: []
-last_reviewed: 2026-04-03
+last_reviewed: 2026-07-15
 consumable_by_agents: true
 ---
 
@@ -85,16 +85,20 @@ La elección de idioma no comunica presupuesto. Comunica audiencia.
 
 | Rol | Valor | Nota |
 |---|---|---|
-| Color primario | `#e8003d` | Rojo AGLAYA |
-| Fondo principal | `#080808` | Negro casi puro |
-| Superficie | `#111111` | Base para bloques y contenedores |
+| Color primario | `#e8003d` | Rojo AGLAYA (`--color-brand`) |
+| Verde corporativo | `#9fc243` | Mono/eyebrows y labels en Space Mono (`--color-corporate-green`) |
+| Fondo principal | `#000000` | Canvas negro (`--color-bg`) |
+| Superficie | `#080808` / `#0f0f0f` | Capas, tarjetas, contenedores (`--color-surface` / `--color-surface-2`) |
 | Acento para texto pequeño | `#ff4d70` | Mejor legibilidad sobre fondo oscuro |
+
+> **Fuente viva de tokens:** `src/styles/global.css` (bloque `@theme`) + el MCP `aglaya-ds` (`get_token` / `list_tokens` / `get_nonnegotiables`). Esta tabla es un reflejo; ante discrepancia, gana el token.
 
 ### Uso recomendado
 
 - `#e8003d` para impacto, acento, llamada visual y presencia de marca.
-- `#080808` como base dominante del sistema.
-- `#111111` para capas, tarjetas, contenedores o separación de profundidad.
+- `#9fc243` (Space Mono) para eyebrows, labels y microcopy estructural en mono.
+- `#000000` como canvas base del sistema.
+- `#080808` / `#0f0f0f` para capas, tarjetas, contenedores o separación de profundidad.
 - `#ff4d70` para texto pequeño o elementos que requieran contraste superior.
 
 ---
@@ -117,8 +121,9 @@ Para texto pequeño, usar `#ff4d70` sobre `#080808`.
 
 | Función | Familia | Uso |
 |---|---|---|
-| Display | Outfit 900 | Impacto, titulares, piezas de presencia |
+| Display | Outfit 900 | Impacto, titulares, piezas de presencia (UPPERCASE, tracking ajustado) |
 | Texto de cuerpo | Inter | Lectura, interfaz, sistema, claridad |
+| Mono | Space Mono | Eyebrows/labels en verde `#9fc243`, UPPERCASE, `letter-spacing` 0.3em–0.5em |
 
 ### Principio tipográfico
 
@@ -177,6 +182,9 @@ Las animaciones no deben parecer decorativas. Deben reforzar sensación de siste
 
 5. **Minimalismo con carácter**  
    Reducir no significa esterilizar. La marca necesita tensión, no frialdad vacía.
+
+6. **Cero radio de borde**  
+   Todas las esquinas son rectas (`border-radius: 0`). Única excepción: el cursor custom. Sin emoji, sin Lucide/Heroicons.
 
 ---
 

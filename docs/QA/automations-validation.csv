@@ -1,10 +1,11 @@
+# REGLA (no negociable): test_email solo puede ser una direccion de AUTO-TEST -- alias ibai600+*@gmail.com, info@aglaya.biz, info@ibaifernandez.com. NUNCA la direccion de un tercero o cliente: es dato personal y su registro de consentimiento vive en el CRM, no en un CSV de QA. Si una prueba se hizo con una direccion de tercero, redactala como ***@dominio y conserva solo el outcome + evidence_hash + purpose/basis/regime.
 form,lang,test_email,ml_group,language_field,ml_automation,ml_email_sent,ml_email_delivered,crm_lead,consent_ledger,resend_internal,validated_date,status,notes
-contact,es,ibai600+contact-es@gmail.com,[AGLAYA.biz] Contacto,es,Contacto (/contact),yes,yes,excluded (gmail+alias),emitted,yes,2026-06-15,PASS,Acuse ES recibido en inbox
-contact,en,ibai600+contacto-en@gmail.com,[AGLAYA.biz] Contacto,en,Contacto (/contact),yes,yes,excluded (gmail+alias),emitted,yes,2026-06-15,PASS,Acuse EN recibido en inbox
-contact,pt,ibai600+contact-pt@gmail.com,[AGLAYA.biz] Contacto,pt,Contacto (/contact),yes,yes,excluded (gmail+alias),emitted,yes,2026-06-15,PASS,Acuse PT recibido en inbox
-contact,es,info@ibaifernandez.com,[AGLAYA.biz] Contacto,es,Contacto (/contact),yes,not-seen,excluded (railway blocklist),emitted,yes,2026-06-15,REVIEW,MailerLite envio 08:00 (consta en Sent emails); no visto en inbox -> revisar spam. CRM excluido por blocklist (no es bug). NO sirve para verificar deal CRM.
-contact,-,EXTERNAL (no gmail+alias / no blocklist),[AGLAYA.biz] Contacto,-,Contacto (/contact),-,-,PENDING-VERIFY,PENDING-VERIFY,-,,TODO,"Falta 1 envio con email externo limpio para confirmar que SI se crea el deal+ficha en CRM. Todos los tests hasta ahora estan excluidos."
-roi-audit qualified,en,,[AGLAYA.biz] Cualificados,,(none yet?),,,,,, ,TODO,manual 80 / data=CRM / inversion 15-40K
+contact,es,ibai600+contact-es@gmail.com,[AGLAYA.biz] Contacto,es,Contacto (/contact),yes,yes,excluded (gmail+alias),emitted,yes,2026-06-15,PASS,Acuse ES recibido
+contact,en,ibai600+contacto-en@gmail.com,[AGLAYA.biz] Contacto,en,Contacto (/contact),yes,yes,excluded (gmail+alias),emitted,yes,2026-06-15,PASS,Acuse EN recibido
+contact,pt,ibai600+contact-pt@gmail.com,[AGLAYA.biz] Contacto,pt,Contacto (/contact),yes,yes,excluded (gmail+alias),emitted,yes,2026-06-15,PASS,Acuse PT recibido
+contact,es,***@gmail.com,[AGLAYA.biz] Contacto,es,Contacto (/contact),yes,yes,CREATED (deal + ficha in CRM Registro),PERSISTED (sha256:5967c... purpose=contacto basis=legitimate-interest regime=cl-21719 source=aglaya-form-open-channel),yes,2026-06-15,PASS,"Direccion de tercero REDACTADA (dato personal; su registro de consentimiento vive en el CRM, no aqui). Envio externo limpio -> confirma deal+ficha en CRM. Cierra A1 (CRM persiste los campos planos de consentimiento). Acuse ES recibido."
+contact,es,info@ibaifernandez.com,[AGLAYA.biz] Contacto,es,Contacto (/contact),yes,no (receiving-side),excluded (railway blocklist),emitted,yes,2026-06-15,PASS-NOTE,"ML status=active y envio 08:00; no llega al inbox = filtro del dominio receptor (no bug). CRM excluido por blocklist (intencional)."
+roi-audit qualified,en,,[AGLAYA.biz] Cualificados,,,,,,,, ,TODO,manual 80 / data=CRM / inversion 15-40K
 roi-audit qualified,es,,[AGLAYA.biz] Cualificados,,,,,,,, ,TODO,
 roi-audit qualified,pt,,[AGLAYA.biz] Cualificados,,,,,,,, ,TODO,
 roi-audit borderline,en,,[AGLAYA.biz] Borderline,,,,,,,, ,TODO,manual 55 / data=spreadsheet / inversion 5-15K

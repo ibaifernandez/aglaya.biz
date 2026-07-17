@@ -1,7 +1,7 @@
 # MASTER TASKLIST — aglaya.biz
 
 > Living document. Single source of truth for everything outstanding.
-> Last updated: **2026-06-15**. Production HEAD at creation: `5479049`.
+> Last updated: **2026-07-15**. Production HEAD: `6d71707`.
 >
 > **Owner legend:** 🤖 = AI/code (Claude) · 🧑 = founder (Ibai, manual) · 🔁 = relay to another thread (CRM / Scanner)
 > **Priority:** P0 = blocking / revenue-or-legal risk · P1 = important, do next · P2 = backlog / nice-to-have
@@ -25,7 +25,7 @@
 | ID | Task | Pri | Owner | Status | Depends on / Definition of done |
 |----|------|-----|-------|--------|-------------------------------|
 | B1 | **MailerLite E2E in prod** — submit one lead per form × 3 langs, confirm the right group + auto-reply fires. Tracked in [`docs/qa/automations-validation.csv`](qa/automations-validation.csv). (was task #9) | P0 | 🧑 | ◐ | **`/contact` ×3 + CRM PASS (2026-06-15)** — Contacto group, language branch, acuse per lang, deal+ficha all verified. **Pending:** roi-audit funnel ×3, footer dispatch ×3, quote ×3. |
-| B2 | **UTM / fbclid / gclid / landing_source pipeline** — `contact.ts` currently sends nulls (`// not implemented yet; separate PR`). Capture from URL params client-side and forward. | P1 | 🤖 | ☐ | DoD: a lead arriving with `?utm_source=...` lands those values in the CRM. File: `netlify/functions/contact.ts:351`. |
+| B2 | **UTM / fbclid / gclid / landing_source pipeline** — `contact.ts` currently sends nulls (`// not implemented yet; separate PR`). Capture from URL params client-side and forward. | P1 | 🤖 | ☐ | DoD: a lead arriving with `?utm_source=...` lands those values in the CRM. File: `netlify/functions/contact.ts:360`. |
 | B3 | Verify the **language of confirmation emails** matches submission `lang` across all forms (regression check after swap). | P2 | 🧑 | ☐ | Part of B1 matrix. |
 
 ## C. Legal / compliance
@@ -59,6 +59,22 @@
 | F1 | GitHub API DNS workaround still required on this machine (`curl --resolve api.github.com:443:140.82.116.6` + `gh auth token`). Fix local DNS or accept as-is. | P2 | 🧑 | ☐ | Cosmetic; `git push` over SSH works fine. |
 | F2 | Prune completed items from this list periodically; keep it lean. | P2 | 🤖 | ☐ | Standing. |
 
+## G. Growth backlog
+
+> Injertado 2026-07-16 desde `docs/OUTREACH-STRATEGY.md` (retirado: sus 12 líneas estaban 2 completadas, 2 muertas y el resto sin hogar). Sin orden definitivo; cada una es ejecutable de forma independiente.
+
+| ID | Task | Pri | Owner | Status | Depends on / Definition of done |
+|----|------|-----|-------|--------|-------------------------------|
+| G1 | **Kanban Sandbox público** — instancia del Kanban Desk con datos demo, para que el visitante explore el producto real. URL provisional `kanban.aglaya.biz/sandbox`. Origen: repo `aglaya-kanban-desk`. | P2 | 🧑+🤖 | ☐ | DoD: sandbox público navegable con datos de demostración. |
+| G2 | **Estrategia de redes sociales** — canales, formatos, frecuencia y voz (LinkedIn principal). Repurposing de casos/servicios ya existentes. | P2 | 🧑 | ☐ | DoD: calendario editorial + voz definida. |
+| G3 | **AI chatbot de cualificación** — widget conectado a la API de Claude que hace las preguntas del contacto en modo conversacional y transfiere a humano cuando el lead madura. | P2 | 🤖 | ☐ | DoD: cualifica en tiempo real y escala a humano. |
+| G4 | **Playbook descargable** — PDF 8-10 pág. "Cómo auditar tus operaciones para AI", gateado por email. Base de contenido ya existe en `/services` y `/roi-audit`. | P2 | 🧑 | ☐ | DoD: PDF + portada + CTA de descarga gateada. |
+| G5 | **Video proof** — screen recording de ~90s del Kanban Desk en acción. Sin producción compleja. Para LinkedIn, proof y propuestas. | P2 | 🧑 | ☐ | DoD: vídeo publicado y enlazado. |
+| G6 | **Propuestas automatizadas** — plantilla branded que se completa desde los datos del lead cualificado. Proceso brief → template → propuesta en <2h. | P2 | 🧑+🤖 | ☐ | DoD: plantilla operativa; propuesta en <2h. |
+| G7 | **Sistema de referidos** — formalizar lo informal: qué se ofrece a quien refiere, cómo se rastrea, cómo se comunica. | P2 | 🧑 | ☐ | DoD: documento/página con la mecánica. |
+| G8 | **Herramienta pública gratuita** — algo pequeño y útil como producto independiente (tráfico orgánico + autoridad + lead gen pasivo). | P2 | 🧑+🤖 | ☐ | DoD: herramienta pública en vivo. |
+| G9 | **Diferidos de Fase 2** — un blog (`/blog/`) y una página `/about/`; ambos se aplazaron en el brief de construcción y siguen sin existir. Decidir si se hacen. | P2 | 🧑 | ☐ | DoD: decisión explícita (construir o descartar). |
+
 ---
 
 ## Top of mind (do-next order)
@@ -71,6 +87,7 @@
 
 ## Recently shipped (context, prune after a week)
 
-- PR #80/#81/#82 — consent ledger v1.1.0 (emission, flat payload, §3-bis conformity).
-- PR #83 — contact↔ROI swap; ROIForm deleted (closed legacy task #7).
-- PR #84 — docs.
+- **Pruned 2026-07-15** (older than a week): PR #80–#84 (consent ledger v1.1.0, contact↔ROI swap, docs).
+- PR #86–#97 — ICP qualifier UX polish + plain-language copy on `/roi-audit`.
+- PR #98/#99/#101 — ROI Diagnostic lead-magnet: research → built → **parked** (PR #99 open; see [`roi-diagnostic/PARKED.md`](roi-diagnostic/PARKED.md)).
+- PR #100 — crm-consent shared cross-producer golden vector pinned.

@@ -5,7 +5,7 @@ owner: offer
 source_of_truth: true
 supersedes: [SERVICES-AI.md]
 superseded_by: []
-last_reviewed: 2026-04-03
+last_reviewed: 2026-07-15
 consumable_by_agents: true
 ---
 
@@ -14,6 +14,8 @@ consumable_by_agents: true
 > Arquitectura de servicios para el modelo de $8.000/mes.
 > No hay tiers. No hay paquetes. No hay planes. Hay sistemas.
 > **Fuente de verdad de marca:** `docs/brand/dna/BRAND-FOUNDATION.md`
+>
+> **Nota (2026-07-15):** este doc describe el modelo **retainer** ($8.000/mes, 2 clientes máx). Convive con la línea productizada más nueva (cotizador web, diagnóstico ROI, producto legal). No lo leas como el GTM completo; los precios web canónicos viven en el cotizador (`netlify/functions/quote.ts`).
 
 ---
 
@@ -43,6 +45,8 @@ El ROI Audit es el punto de entrada a AGLAYA. No es un diagnóstico gratuito de 
 - Business case: inversión vs. ahorro mensual proyectado con supuestos explícitos
 
 **Precio:** variable según alcance, superficie operativa y complejidad sistémica. El audit se cotiza tras revisión manual; no existe checkout online.
+
+> **Nota (2026-07-15):** la entrada digital al ROI Audit es hoy el **embudo de calificación ICP** en `/roi-audit` (calificación gratuita en la propia página); el audit pagado de 2 semanas es el paso siguiente. Un diagnóstico gratuito gamificado (`/diagnostic`) está construido pero **parked** (ver `docs/roi-diagnostic/PARKED.md`).
 
 **Criterio de honestidad:** Si el audit no identifica al menos $15.000/mes en trabajo automatizable, lo decimos y no proponemos retainer. Esa honestidad no es generosidad — es parte de nuestra propuesta.
 
@@ -136,7 +140,7 @@ Para clientes que no necesitan (aún) un retainer, AGLAYA acepta proyectos con a
 | Proyecto | Alcance | Precio desde |
 |---|---|---|
 | ROI Audit + roadmap de sistema | 2 semanas con el equipo cliente | Variable según alcance |
-| Web de alta conversión (Astro) | Diseño + desarrollo + SEO técnico + i18n | $5.000 |
+| Web de alta conversión (Astro) | Diseño + desarrollo + SEO técnico + i18n | desde $2.900 (cotizador: landing 2.900 / corp 4.500 / product 7.500 / e-comm 9.500) |
 | Sistema de automatización (workflow único) | Discovery + build + documentación + handoff | $4.000 |
 | AI Orchestration setup | Agente personalizado + integración + calibración | $6.000 |
 | Productive Friction session | 1 día intensivo (4h) + informe escrito | $2.500 |

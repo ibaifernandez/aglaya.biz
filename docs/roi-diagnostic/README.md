@@ -1,7 +1,9 @@
 # ROI Diagnostic — lead-magnet micro-project
 
-> **Status:** concept / documentation-first (NOT built). Created 2026-06-15.
+> **Status:** PARKED 2026-06-18 — built, working, tested; **not merged** (PR #99 open, mergeable, CI green). Created 2026-06-15.
 > Micro-project inside aglaya.biz. Born from a Socratic design debate (founder-led).
+>
+> **Resume here → [`PARKED.md`](PARKED.md)** — the breadcrumb: branch `feat/roi-diagnostic-leadmagnet`, full handoff, done-vs-pending, next moves.
 
 ## One-line
 
@@ -22,10 +24,17 @@ bespoke Stack build (five/six figures).**
 
 ## Documents in this folder
 
+- [`PARKED.md`](PARKED.md) — **resume breadcrumb** (read first): branch, handoff, done-vs-pending.
 - [`01-strategy.md`](01-strategy.md) — value ladder, positioning unlock, lead-magnet framing, the honesty guardrail.
 - [`02-problem-taxonomy.md`](02-problem-taxonomy.md) — the universe of automatable pains (the "what bleeds you" menu) + the diagnostic logic.
 - [`03-architecture-reuse.md`](03-architecture-reuse.md) — conclusions from mining legal-reg-tech: reusable patterns, what to fork/discard, proposed aglaya.biz-native design.
-- [`04-open-questions.md`](04-open-questions.md) — decisions still on the table.
+- [`04-open-questions.md`](04-open-questions.md) — decisions still on the table (most resolved at build; live pending list is in `PARKED.md`).
+- [`05-demand-research.md`](05-demand-research.md) — Phase-1 qualitative demand map (headline superseded by 06).
+- [`06-keyword-volumes.md`](06-keyword-volumes.md) — Phase-2 hard numbers: US/English is the real capturable demand; feeds the pending ad test.
+- [`07-voice-of-customer.md`](07-voice-of-customer.md) — verbatim customer lexicon for ad copy + report language.
+- [`08-costing-model.md`](08-costing-model.md) — **load-bearing**: the source numbers the shipped `src/lib/diagnostic/costing.ts` cites by path.
+- [`keyword-stats-2026-06-15-usa-english.csv`](keyword-stats-2026-06-15-usa-english.csv) — raw Keyword Planner export behind 06.
+- `09-leadmagnet-blueprint.md` — lives on the branch `feat/roi-diagnostic-leadmagnet` only (not on `main`).
 
 ## Hard guardrail (non-negotiable)
 
