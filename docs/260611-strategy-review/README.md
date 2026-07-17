@@ -17,16 +17,17 @@ que produce cada capa es el input de la siguiente.
 | 1 | [Posicionamiento](01-positioning/) | Quiénes somos, categoría, mercado, ICP, narrativa | `obviously-awesome` · `crossing-the-chasm` · `jobs-to-be-done` · `aglaya-os:brand-voice` | [`positioning-statement.md`](01-positioning/positioning-statement.md) | ✅ Cerrado (2026-06-11) |
 | 2 | [Oferta de valor](02-value-proposition/) | Por qué te eligen; mensaje matriz; el "incómodo" como ventaja | `hundred-million-offers` · `storybrand-messaging` · `made-to-stick` · `mom-test` | [`value-proposition.md`](02-value-proposition/value-proposition.md) | ✅ Cerrado (2026-06-11) |
 | 3 | [Productos](03-products/) | Catálogo: packaging, pricing, posición vs alternativas | `pricing-strategy` · `product-marketing-context` · `competitor-alternatives` · `free-tool-strategy` | [`catalog.md`](03-products/catalog.md) | ✅ Cerrado (2026-06-11) |
-| 4 | Arquitectura del sitio | Qué páginas, qué jerarquía, qué ruta de conversión | `site-architecture` · `content-strategy` · `cro-methodology` · `seo-audit` | [`sitemap.md`](../_review/strategy-review-260611/sitemap.md) · [`conversion-paths.md`](../_review/strategy-review-260611/conversion-paths.md) | ✅ Ejecutado → archivado |
-| 5 | Páginas | Cada página ejecutando su trabajo | `page-cro` · `ads-landing` · `refactoring-ui` · `copywriting` | [`page-specs.md`](../_review/strategy-review-260611/page-specs.md) | ✅ Ejecutado → archivado |
-| 6 | Formularios | Captura: usabilidad sin perder personalidad | `form-cro` · `ux-heuristics` · `signup-flow-cro` | [`form-spec.md`](../_review/strategy-review-260611/form-spec.md) | ✅ Ejecutado → archivado |
-| 7 | Automatizaciones | Qué pasa tras el submit: CRM, MailerLite, secuencias | `email-sequence` · `analytics-tracking` · `revops` | [`post-capture-flows.md`](../_review/strategy-review-260611/post-capture-flows.md) · [`mailerlite-validation.md`](../_review/strategy-review-260611/mailerlite-validation.md) | ✅ Ejecutado → archivado |
+| 4 | Arquitectura del sitio | Qué páginas, qué jerarquía, qué ruta de conversión | `site-architecture` · `content-strategy` · `cro-methodology` · `seo-audit` | — spec purgado | ✅ Ejecutado |
+| 5 | Páginas | Cada página ejecutando su trabajo | `page-cro` · `ads-landing` · `refactoring-ui` · `copywriting` | — spec purgado | ✅ Ejecutado |
+| 6 | Formularios | Captura: usabilidad sin perder personalidad | `form-cro` · `ux-heuristics` · `signup-flow-cro` | — spec purgado | ✅ Ejecutado |
+| 7 | Automatizaciones | Qué pasa tras el submit: CRM, MailerLite, secuencias | `email-sequence` · `analytics-tracking` · `revops` | — spec purgado | ✅ Ejecutado |
 | 8 | [Ventas](08-sales/) | El cierre: propuestas, outreach, ROI audit como oferta | `predictable-revenue` · `aglaya-os:proposal` · `aglaya-os:roi-audit` · `aglaya-os:outreach` | [`roi-audit-offer.md`](08-sales/roi-audit-offer.md) · [`sales-motion.md`](08-sales/sales-motion.md) | ✅ Cerrado (2026-06-11) |
 
-> **Nota de archivo (2026-07-15):** las capas 4–7 ya se **ejecutaron** en el sitio; sus specs
+> **Nota de purga (2026-07-16):** las capas 4–7 ya se **ejecutaron** en el sitio, así que sus specs
 > (`sitemap`, `conversion-paths`, `page-specs`, `form-spec`, `post-capture-flows`, `mailerlite-validation`)
-> se archivaron en [`docs/_review/strategy-review-260611/`](../_review/strategy-review-260611/). La capa 1–3 y 8
-> (rationale que perdura: positioning, value-prop, catálogo, oferta ROI, sales-motion) siguen aquí como fuente viva.
+> se **eliminaron** — el sitio construido es la fuente de verdad, y la historia de git los conserva.
+> Sus decisiones que perduran ya viven aquí: el Nav v1.1 y el encuadre de Services (changelog v1.1, abajo).
+> Las capas 1–3 y 8 (rationale: positioning, value-prop, catálogo, oferta ROI, sales-motion) siguen aquí como fuente viva.
 
 ## Cómo se usa
 

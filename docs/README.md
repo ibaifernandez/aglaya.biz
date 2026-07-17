@@ -36,13 +36,12 @@ graph TD
 | **Visual/Verbal** | `AGLAYA-VISUAL-SYSTEM.md` | `docs/brand/visual-id/AGLAYA-VISUAL-SYSTEM.md` |
 | **Marketing** | `MARKETING-OPERATING-SYSTEM.md` | `docs/brand/mkt/MARKETING-OPERATING-SYSTEM.md` |
 | **Oferta** | `SERVICE-CATALOG.md` | `docs/product/SERVICE-CATALOG.md` |
-| **Alcance Web** | `WEBSITE-IMPLEMENTATION-BRIEF.md` (archivado) | `docs/_review/build-brief-2026-03/WEBSITE-IMPLEMENTATION-BRIEF.md` |
 | **Ingeniería** | `3RD-PARTIES-CONFIG.md` | `docs/tech/3RD-PARTIES-CONFIG.md` |
 | **Workflow** | `DEVELOPMENT-WORKFLOW.md` | `docs/tech/DEVELOPMENT-WORKFLOW.md` |
 | **Operaciones** | `IA-RULES.md` | `docs/tech/IA-RULES.md` |
 | **Validación de Producción** | `PRODUCTION-VALIDATION.md` | `docs/ops/PRODUCTION-VALIDATION.md` |
 | **Logs** | `CHANGELOG.md` | `docs/ops/CHANGELOG.md` |
-| **Estrategia de crecimiento** | `OUTREACH-STRATEGY.md` (backlog archivado) | `docs/_review/outreach-backlog/OUTREACH-STRATEGY.md` |
+| **Estrategia de crecimiento** | `MASTER-TASKLIST.md` §G — Growth backlog | `docs/MASTER-TASKLIST.md` |
 
 ---
 
@@ -68,13 +67,13 @@ graph TD
 - Active proof entries (6): `bill-capital`, `dj-amapola`, `elm-st-web`, `kanban-desk`, `legal-reg-tech`, `massiva`. Legacy entries (`leben`, `norden`, `pocuro`) are noindexed and excluded from sitemap.
 - Bill Capital client showcase live at `/proof/bill-capital/` (self-contained, CSP-compliant, PII-anonymized).
 - Design system v0.0.0.1 generated at `aglaya-design-system/` (external repo) — tokens, fonts, specimen cards, React components, Claude-invocable skill.
-- 12 growth lines documented in `docs/_review/outreach-backlog/OUTREACH-STRATEGY.md` (archived backlog).
+- Growth backlog (9 open lines) lives in `docs/MASTER-TASKLIST.md` §G — grafted from the retired `OUTREACH-STRATEGY.md`.
 
 ---
 
 Los siguientes recursos han sido **eliminados físicamente** del repositorio para alcanzar el estado de **Pureza Absoluta**:
 - `docs/INDEX.md` (Sustituido por este README)
-- `docs/delivery/BACKLOG.md` & `ROADMAP.md` (Consolidados en el Brief)
+- `docs/delivery/BACKLOG.md` & `ROADMAP.md` (Consolidados en el Brief; el propio Brief se purgó el 2026-07-16 — ya ejecutado. Lo pendiente vive en `MASTER-TASKLIST.md`)
 - `docs/[HIST]_LEGACY/` (Eliminado)
 - `docs/archive/` (Eliminado - Zero Legacy Noise)
 

@@ -90,7 +90,7 @@ Sentry environment labels are derived automatically from Netlify deploy context 
 | [docs/tech/3RD-PARTIES-CONFIG.md](./docs/tech/3RD-PARTIES-CONFIG.md) | Master third-party/service configuration guide |
 | [docs/delivery/TESTING.md](./docs/delivery/TESTING.md) | Automated and manual testing strategy |
 | [docs/ops/PRODUCTION-VALIDATION.md](./docs/ops/PRODUCTION-VALIDATION.md) | Smoke tests, blockers, and production-readiness checks |
-| [docs/_review/build-brief-2026-03/WEBSITE-IMPLEMENTATION-BRIEF.md](./docs/_review/build-brief-2026-03/WEBSITE-IMPLEMENTATION-BRIEF.md) | Website implementation brief (archived) |
+| [docs/MASTER-TASKLIST.md](./docs/MASTER-TASKLIST.md) | Everything outstanding (single source of truth) |
 | [docs/tech/DEVELOPMENT-WORKFLOW.md](./docs/tech/DEVELOPMENT-WORKFLOW.md) | Development workflow |
 | [docs/tech/IA-RULES.md](./docs/tech/IA-RULES.md) | IA and AI interaction rules |
 | [docs/ops/CHANGELOG.md](./docs/ops/CHANGELOG.md) | Version history |

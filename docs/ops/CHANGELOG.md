@@ -5,7 +5,7 @@ owner: operations
 source_of_truth: true
 supersedes: []
 superseded_by: []
-last_reviewed: 2026-04-28
+last_reviewed: 2026-07-17
 consumable_by_agents: true
 ---
 
@@ -19,6 +19,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 ---
 
 ## [Unreleased]
+
+### Fixed — 2026-07-17
+
+- **Legal pages are indexed and crawlable — completing a record that was left open.** An earlier entry below (*"SEO architecture: `noindex: true` on … proof index, privacy, and cookies"*) was the last word on the subject, but that decision was reversed in two steps and neither was logged here. The full arc:
+  - **`noindex` removed from the legal notice pages** — PR #50 (`bc1a7ac`, merged `5e8832f`, 2026-05-12). `privacy.astro`, `cookies.astro` and `legal-notice.astro` (+ ES/PT variants) pass no `noindex` prop, so `BaseLayout.astro` emits the default `index, follow`.
+  - **`robots.txt` stopped blocking those same paths** — PR #103 (`00bfe68`, merged `ffba000`, 2026-07-17). Until then `robots.txt` contradicted the meta directive for ~2 months: the pages were meant to be indexed, but crawlers were disallowed from reaching them.
+  - **Net state:** legal pages (EN/ES/PT) are indexable *and* crawlable. The `noindex: true` on the legacy proof entries (`leben`, `norden`, `pocuro`) and on the proof index is **unaffected** and still stands.
+- Older entries are left exactly as written — they were true when logged. This entry supersedes them on the indexation question.
 
 ### Added — 2026-04-29
 

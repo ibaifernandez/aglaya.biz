@@ -59,6 +59,22 @@
 | F1 | GitHub API DNS workaround still required on this machine (`curl --resolve api.github.com:443:140.82.116.6` + `gh auth token`). Fix local DNS or accept as-is. | P2 | 🧑 | ☐ | Cosmetic; `git push` over SSH works fine. |
 | F2 | Prune completed items from this list periodically; keep it lean. | P2 | 🤖 | ☐ | Standing. |
 
+## G. Growth backlog
+
+> Injertado 2026-07-16 desde `docs/OUTREACH-STRATEGY.md` (retirado: sus 12 líneas estaban 2 completadas, 2 muertas y el resto sin hogar). Sin orden definitivo; cada una es ejecutable de forma independiente.
+
+| ID | Task | Pri | Owner | Status | Depends on / Definition of done |
+|----|------|-----|-------|--------|-------------------------------|
+| G1 | **Kanban Sandbox público** — instancia del Kanban Desk con datos demo, para que el visitante explore el producto real. URL provisional `kanban.aglaya.biz/sandbox`. Origen: repo `aglaya-kanban-desk`. | P2 | 🧑+🤖 | ☐ | DoD: sandbox público navegable con datos de demostración. |
+| G2 | **Estrategia de redes sociales** — canales, formatos, frecuencia y voz (LinkedIn principal). Repurposing de casos/servicios ya existentes. | P2 | 🧑 | ☐ | DoD: calendario editorial + voz definida. |
+| G3 | **AI chatbot de cualificación** — widget conectado a la API de Claude que hace las preguntas del contacto en modo conversacional y transfiere a humano cuando el lead madura. | P2 | 🤖 | ☐ | DoD: cualifica en tiempo real y escala a humano. |
+| G4 | **Playbook descargable** — PDF 8-10 pág. "Cómo auditar tus operaciones para AI", gateado por email. Base de contenido ya existe en `/services` y `/roi-audit`. | P2 | 🧑 | ☐ | DoD: PDF + portada + CTA de descarga gateada. |
+| G5 | **Video proof** — screen recording de ~90s del Kanban Desk en acción. Sin producción compleja. Para LinkedIn, proof y propuestas. | P2 | 🧑 | ☐ | DoD: vídeo publicado y enlazado. |
+| G6 | **Propuestas automatizadas** — plantilla branded que se completa desde los datos del lead cualificado. Proceso brief → template → propuesta en <2h. | P2 | 🧑+🤖 | ☐ | DoD: plantilla operativa; propuesta en <2h. |
+| G7 | **Sistema de referidos** — formalizar lo informal: qué se ofrece a quien refiere, cómo se rastrea, cómo se comunica. | P2 | 🧑 | ☐ | DoD: documento/página con la mecánica. |
+| G8 | **Herramienta pública gratuita** — algo pequeño y útil como producto independiente (tráfico orgánico + autoridad + lead gen pasivo). | P2 | 🧑+🤖 | ☐ | DoD: herramienta pública en vivo. |
+| G9 | **Diferidos de Fase 2** — un blog (`/blog/`) y una página `/about/`; ambos se aplazaron en el brief de construcción y siguen sin existir. Decidir si se hacen. | P2 | 🧑 | ☐ | DoD: decisión explícita (construir o descartar). |
+
 ---
 
 ## Top of mind (do-next order)
