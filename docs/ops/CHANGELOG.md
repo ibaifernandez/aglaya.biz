@@ -14,7 +14,9 @@ consumable_by_agents: true
 All notable changes to this project are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
-> **Versioning policy:** this project uses **dates, not semver**. Releases are tagged by date (e.g. `2026-04-28`). The `[Unreleased]` section accumulates work until a deploy milestone is named.
+> **Versioning policy:** this project uses **semver** — as practised, not as once aspired to. The release headings below (`[1.0.0]` … `[0.1.0]`) and the git tags (`v1.0.0`) are semver; no date tag was ever cut. The `[Unreleased]` section accumulates work until a release is named.
+>
+> The app carries **no `version` field** in `package.json` (it is `"private": true` and never published to npm, and nothing in the code reads it). The git tag plus this changelog are the single version record.
 
 ---
 
