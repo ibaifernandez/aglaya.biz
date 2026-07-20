@@ -44,3 +44,6 @@ docs/delivery/
 
 # Scanner infographics belong to auditoria-ley21719.cl, not here
 src/assets/images/infografia-ley-21719-*.png
+
+# Transient mutant written by tests/unit/consent-seal-guard.test.ts (deleted in finally)
+tests/unit/__seal-mutant.gen.test.ts
