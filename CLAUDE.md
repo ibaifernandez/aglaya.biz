@@ -255,9 +255,9 @@ When a Netlify build fails "exit code 2" but `npm run build` is clean locally, *
 
 aglaya.biz is a **PRODUCER** feeding the CRM AGLAYA. Any form/flow that sends leads is governed by two documents:
 
-- **Governance (canonical, wins):** [`docs/contracts/lead-capture-contract.md`](docs/contracts/lead-capture-contract.md) (currently **v1.1.0** — **triangle closed**: aglaya.biz, Scanner 21.719 and CRM AGLAYA all signed v1.1.0 on 2026-06-13, each in its own `IMPLEMENTS.md`; CRM's formal re-ack is `ce0c544`. Verified by the AGLAYA captain 2026-07-17 — nothing pending). Single source of truth for the legal-basis model (legitimate interest for inbound forms; consent only for Dispatch), the GDPR accountability record (`privacy_policy_version` / `privacy_policy_displayed_at`), §3-bis (consent + DSR ledger), §5 (erasure↔retention), the `source` taxonomy (`<product>-<channel>-<segment>`), §9 (extending to a new product), and §10 (signatories). When this contract changes, bump its version (§8) and re-sync every signatory thread. aglaya.biz's own implementation ledger: [`docs/contracts/IMPLEMENTS.md`](docs/contracts/IMPLEMENTS.md).
+- **Governance (canonical, wins):** [`docs/contracts/lead-capture-contract.md`](docs/contracts/lead-capture-contract.md) — this repo OWNS it. **Who has signed which version is state, not doc: ask `firmas()` (MCP `aglaya-atlas`)**, which answers by opening each ship's `IMPLEMENTS.md` live. Do not trust a signature status written into prose here — that is exactly how a month of stale cross-notes survived. Single source of truth for the legal-basis model (legitimate interest for inbound forms; consent only for Dispatch), the GDPR accountability record (`privacy_policy_version` / `privacy_policy_displayed_at`), §3-bis (consent + DSR ledger), §5 (erasure↔retention), the `source` taxonomy (`<product>-<channel>-<segment>`), §9 (extending to a new product), and §10 (signatories). When this contract changes, bump its version (§8) and re-sync every signatory thread. aglaya.biz's own implementation ledger: [`docs/contracts/IMPLEMENTS.md`](docs/contracts/IMPLEMENTS.md).
 
-- **Technical API:** `crm-aglaya/docs/contracts/crm-ingestion-api.md` (CRM-owned spec) — endpoints, payloads, `Idempotency-Key`. The CRM owns this; it wins on interface details. The governance contract above wins on the legal/data-protection model. **OPEN:** as of crm-ingestion-api v1.3.0 the consent fields (§3-bis) are NOT yet documented there — CRM thread to version them and confirm it accepts the flat consent payload.
+- **Technical API:** `crm-aglaya/docs/contracts/crm-ingestion-api.md` (CRM-owned spec) — endpoints, payloads, `Idempotency-Key`. The CRM owns this; it wins on interface details. The governance contract above wins on the legal/data-protection model. Its version and what it documents are state — read the file, or ask `contrato("lead-capture")` / `firmas()`. (The consent fields §3-bis live in its §10, added in v1.4.0; a note here claiming they were undocumented outlived that by five weeks.)
 
 **For a NEW form:** POST to `/leads/capture` with a `source` from your taxonomy (`aglaya-form-<segment>`) plus the GDPR fields. The CRM accepts any `source` (additive); the taxonomy and the §10 signature are mandatory. Reuse `netlify/functions/_crm.ts` (`dispatchLeadToCrm` already sends auth, GDPR fields, and `Idempotency-Key`). Do not improvise — propose contract changes in the canonical doc (§6). Do not let aglaya.biz drift from the contract version it has signed.
 
@@ -271,6 +271,17 @@ Reglas para cualquier hilo que trabaje aquí:
 - La verdad comercial (precios, ofertas, GTM) NO vive aquí: vive en el atlas del capitán (`atlas/gtm.md`). Este repo ejecuta y apunta.
 
 
-**Consulta al capitán EN VIVO:** MCP **`aglaya-atlas`** (disponible en toda sesión de Claude de esta máquina) — `flota_estado` · `ficha(nave)` · `contrato(nombre)` · `quien_consume` · `verdad_comercial` · `parked` · `buscar`. Responde leyendo el atlas en vivo y citando fuente. Ya no hace falta esperar un brief del capitán: pregúntale.
+**Consulta al capitán EN VIVO:** MCP **`aglaya-atlas`** (disponible en toda sesión de Claude de esta máquina). Responde leyendo el atlas en vivo y citando fuente. No esperes un brief: pregunta.
 
-**Último pase del capitán: 2026-07-17** — verificado el 7/7 de cohesión tras el lote #102–#107; **triángulo de firmas del canónico CERRADO** (§10: las tres naves firmaron v1.1.0 el 2026-06-13; un mes de notas rancias cruzadas, muertas hoy); huella colocada. Detalle: entradas del 17-jul en `docs/ops/CHANGELOG.md`.
+| Quieres saber | Pregunta |
+|---|---|
+| Quién ha firmado qué versión del canónico | `firmas()` — abre el `IMPLEMENTS.md` de cada nave |
+| Estado de un contrato inter-nave | `contrato(nombre)` |
+| Quién depende de lo que vas a tocar | `quien_consume` |
+| Estado de la flota / de esta nave | `flota_estado` · `ficha(nave)` · `repo_estado` |
+| Choques entre lo escrito y lo real | `contradicciones` · `flags` |
+| Precios, ofertas, GTM | `verdad_comercial` |
+| Qué está aparcado | `parked` |
+| Dónde preguntar algo que no encaja arriba | `donde_pregunto` · `buscar` |
+
+**Regla, aprendida a golpes (2026-07-20):** el estado no se escribe en prosa, se pregunta. Toda afirmación de estado fijada en un doc —«triángulo cerrado», «último pase del capitán: <fecha>», «pendiente: X»— caduca sola y sigue sonando autoritaria después de muerta. Este archivo llevaba tres. Si necesitas afirmar estado, escribe la pregunta y su tool, no la respuesta.
