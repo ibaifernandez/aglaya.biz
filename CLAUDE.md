@@ -263,12 +263,15 @@ aglaya.biz is a **PRODUCER** feeding the CRM AGLAYA. Any form/flow that sends le
 
 ## AGLAYA · Flota — el capitán
 
-Este repo es una **nave de la flota AGLAYA**. Existe un orquestador (el «capitán», repo `aglaya-orchestrator` en `/Users/AGLAYA/Local Sites/aglaya-orchestrator`) cuyo atlas es la fuente de verdad **de flota**: registro de contratos inter-nave (`atlas/contratos/README.md`), fichas por nave (`atlas/repos/aglaya.biz/`) y tablero global (`atlas/tablero.md`).
+Este repo es una **nave de la flota AGLAYA**. Existe un orquestador (el «capitán»): repo `aglaya-orchestrator`, en `/Users/AGLAYA/Local Sites/aglaya-orchestrator`. Su atlas es la fuente de verdad **de flota**.
+
+Esa es la **única ruta del capitán que este archivo escribe**. La estructura interna del atlas se reorganiza sin avisar a esta nave, así que **aquí no se citan rutas del atlas**: se pregunta por la puerta, el MCP `aglaya-atlas`, que contesta leyendo en vivo y citando su fuente. Una ruta escrita caduca; una pregunta, no.
 
 Reglas para cualquier hilo que trabaje aquí:
-- **Antes de un cambio estructural** (el contrato canónico `lead-capture` que este repo POSEE, la ficha de consentimiento, el `evidence_hash`, la taxonomía de `source`), consulta el registro de contratos del atlas — el Scanner, el CRM y el plugin dependen de lo que vas a tocar.
-- **El capitán puede haber tocado docs de este repo** (nunca `src/` ni `netlify/`): sus commits van identificados y cada pase queda registrado en `docs/ops/CHANGELOG.md`. Si un doc contradice al código, gana el código — y avisa.
-- La verdad comercial (precios, ofertas, GTM) NO vive aquí: vive en el atlas del capitán (`atlas/gtm.md`). Este repo ejecuta y apunta.
+- **Antes de un cambio estructural** (el contrato canónico `lead-capture` que este repo POSEE, la ficha de consentimiento, el `evidence_hash`, la taxonomía de `source`), pregunta `contrato("lead-capture")` y `quien_consume` — el Scanner, el CRM y el plugin dependen de lo que vas a tocar.
+- **Tu ficha, tu contrato, tu forma en la flota:** `ficha("aglaya.biz")`. Si lo que buscas no encaja en ninguna tool, `donde_pregunto("tema")` o `buscar("términos")`.
+- **El capitán puede haber tocado docs de este repo** (nunca `src/` ni `netlify/`): sus commits van identificados y cada pase queda registrado en `docs/ops/CHANGELOG.md` — ruta de ESTE repo, la única clase de ruta que aquí se escribe. Si un doc contradice al código, gana el código — y avisa.
+- La verdad comercial (precios, ofertas, GTM) NO vive aquí: vive en el atlas del capitán y se pregunta con `verdad_comercial`. Este repo ejecuta y apunta.
 
 
 **Consulta al capitán EN VIVO:** MCP **`aglaya-atlas`** (disponible en toda sesión de Claude de esta máquina). Responde leyendo el atlas en vivo y citando fuente. No esperes un brief: pregunta.
@@ -285,3 +288,5 @@ Reglas para cualquier hilo que trabaje aquí:
 | Dónde preguntar algo que no encaja arriba | `donde_pregunto` · `buscar` |
 
 **Regla, aprendida a golpes (2026-07-20):** el estado no se escribe en prosa, se pregunta. Toda afirmación de estado fijada en un doc —«triángulo cerrado», «último pase del capitán: <fecha>», «pendiente: X»— caduca sola y sigue sonando autoritaria después de muerta. Este archivo llevaba tres. Si necesitas afirmar estado, escribe la pregunta y su tool, no la respuesta.
+
+**Corolario (2026-07-26):** lo mismo vale para las **rutas ajenas**. Este archivo apuntaba a cuatro ficheros del atlas que la reorganización del capitán ya había movido, y seguían leyéndose como direcciones válidas. Regla: rutas de ESTE repo, sí —y se verifican; rutas de otra nave, solo la raíz de su repo, y el resto se pregunta al MCP.
