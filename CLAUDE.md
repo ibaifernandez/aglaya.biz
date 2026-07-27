@@ -44,7 +44,7 @@ docs/                # Project documentation
 - **Consent/DSR ledger (contract §3-bis, v1.1.0)**: every CRM-bound lead rides a consent ficha built by `buildConsentFields()` in `_crm.ts` and sent **FLAT** (top-level) in the `/leads/capture` body. `evidence_hash = sha256(email␟purpose␟legal_basis␟notice_version␟granted_at␟source)` (U+001F sep, `sha256:` prefix) — cross-producer contract, byte-identical to Scanner's `build_consent_fields`; golden locked in `tests/unit/crm-consent.test.ts`. aglaya.biz emits `legal_basis=legitimate-interest`, `regime=cl-21719`, `channel=web-form`, `status=granted`, `purpose∈{contacto,roi-audit}`. Signature ledger: [`docs/contracts/IMPLEMENTS.md`](docs/contracts/IMPLEMENTS.md).
 - **Cookie consent**: `CookieBanner.astro` rendered in `BaseLayout.astro`. Consent stored in `localStorage` (`aglaya_cookie_consent`: `all` | `essential`). No external CMP — first-party only.
 - **Styling**: Tailwind v4 via Vite plugin, NOT PostCSS. Design tokens defined in `@theme` block.
-- **Fonts**: Outfit (display/headings), Inter (body). Loaded via Google Fonts with preconnect.
+- **Fonts**: Outfit (display/headings), Inter (body), Space Mono (`--font-mono` — eyebrows, labels, form microcopy). All three loaded via Google Fonts with preconnect. A family named in a `--font-*` token but absent from that link renders as a silent fallback for every visitor who lacks it locally — guarded by `tests/unit/fonts-declared-are-loaded.test.ts`.
 
 ## Brand Identity
 - **Primary color**: `#e8003d` (brand red)
