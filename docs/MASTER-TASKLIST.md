@@ -24,7 +24,7 @@
 
 | ID | Task | Pri | Owner | Status | Depends on / Definition of done |
 |----|------|-----|-------|--------|-------------------------------|
-| B1 | **MailerLite E2E in prod** — submit one lead per form × 3 langs, confirm the right group + auto-reply fires. Tracked in [`docs/qa/automations-validation.csv`](qa/automations-validation.csv). (was task #9) | P0 | 🧑 | ◐ | **`/contact` ×3 + CRM PASS (2026-06-15)** — Contacto group, language branch, acuse per lang, deal+ficha all verified. **Pending:** roi-audit funnel ×3, footer dispatch ×3, quote ×3. |
+| B1 | **MailerLite E2E in prod** — submit one lead per form × 3 langs, confirm the right group + auto-reply fires. Tracked in [`docs/qa/automations-validation.csv`](qa/automations-validation.csv). (was task #9) | P0 | 🧑 | ◐ | **`/contact` ×3 + CRM PASS (2026-06-15)** — Contacto group, language branch, acuse per lang, deal+ficha all verified. **Pending:** roi-audit funnel ×3, footer dispatch ×3, quote ×3. **Antes de dar por roto el código:** ninguna de esas tres puede pasar si la automation de su grupo está apagada en MailerLite. Comprueba el interruptor primero (`list_automations` / dashboard) — el lead entra igual, el correo no sale. |
 | B2 | **UTM / fbclid / gclid / landing_source pipeline** — `contact.ts` currently sends nulls (`// not implemented yet; separate PR`). Capture from URL params client-side and forward. | P1 | 🤖 | ☐ | DoD: a lead arriving with `?utm_source=...` lands those values in the CRM. File: `netlify/functions/contact.ts:360`. |
 | B3 | Verify the **language of confirmation emails** matches submission `lang` across all forms (regression check after swap). | P2 | 🧑 | ☐ | Part of B1 matrix. |
 
