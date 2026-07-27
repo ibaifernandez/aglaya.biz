@@ -11,14 +11,24 @@ consumable_by_agents: true
 
 # MAILERLITE AUTOMATIONS — MASTER DOCUMENT
 
-> Fuente de verdad única para todas las automations de MailerLite de AGLAYA.
-> Incluye arquitectura, configuración exacta en UI e íntegro del contenido de cada correo.
+> Fuente de verdad única del **contenido y la configuración** de las automations
+> de MailerLite de AGLAYA: arquitectura, ajustes exactos en UI e íntegro de cada correo.
+>
+> **Qué automation está encendida NO se escribe aquí: se pregunta.** El interruptor
+> vive en MailerLite y se mueve sin tocar este fichero, así que cualquier lista de
+> «activas» fijada en prosa caduca sola y sigue sonando autoritaria después de muerta.
+> Pregunta `list_automations` (MCP de MailerLite) o mira el dashboard. Una automation
+> descrita abajo con todo detalle puede estar apagada ahora mismo — y el lead que
+> entra en su grupo no recibe nada.
 
 ---
 
 ## ARQUITECTURA GLOBAL
 
 ### Grupos → Automations
+
+Cada fila describe **a qué automation pertenece un grupo**, no que esa automation
+esté encendida hoy (ver la nota de cabecera: eso se pregunta, no se escribe).
 
 | Grupo MailerLite | Quién entra | Automation | Emails |
 |---|---|---|---|

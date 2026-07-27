@@ -60,7 +60,7 @@ graph TD
 ## ✅ Current Production Snapshot
 
 - Trilingual routes (`EN`, `ES`, `PT`) are live.
-- Admission/contact flows, footer dispatch, ROI Audit context, hCaptcha, Resend, and MailerLite routing are active.
+- Admission/contact flows, footer dispatch, ROI Audit context, hCaptcha, Resend, and MailerLite routing are **wired in code** — `netlify/functions/contact.ts` posts every lead to its MailerLite group. Whether the automation behind a group actually fires is a switch in MailerLite, not a fact about this repo: ask `list_automations` (MailerLite MCP) or the dashboard. A group whose automation is off swallows the lead silently — it lands, and no email goes out.
 - Sentry, GTM consent gating, and security headers are documented against the live runtime.
 - Production smoke-test protocol lives in `docs/ops/PRODUCTION-VALIDATION.md`.
 - Main navigation (`Header.astro`): Home · The Stack · Web · ROI Audit · Services · Contact.
