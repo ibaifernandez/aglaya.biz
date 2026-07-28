@@ -6,6 +6,16 @@ on:
   pull_request:
     branches: [main]
 
+# @aglaya/design-tokens is a git dependency on a public GitHub tag, and npm
+# resolves GitHub specs over ssh regardless of what package.json and the lockfile
+# say. Runners have no ssh key, so `npm ci` fails with "Permission denied
+# (publickey)". git's own env-var config (git >= 2.31) rewrites the URL to https
+# before npm forks git. Mirrored in netlify.toml — both installers need it.
+env:
+  GIT_CONFIG_COUNT: '1'
+  GIT_CONFIG_KEY_0: 'url.https://github.com/.insteadOf'
+  GIT_CONFIG_VALUE_0: 'ssh://git@github.com/'
+
 jobs:
   test:
     name: Unit Tests
