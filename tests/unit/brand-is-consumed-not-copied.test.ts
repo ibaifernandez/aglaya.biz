@@ -105,13 +105,37 @@ describe('the brand is consumed from @aglaya/design-tokens, not copied', () => {
     ).toBeNull();
   });
 
-  it('keeps product accents off the master surface', () => {
+  /**
+   * Two halves, because "we do not adopt the product accents" is a claim about
+   * USE, not about presence. The canon is imported as the canonical file, not an
+   * adapted copy, so its `:root` arrives whole and the eight accents are declared
+   * on this page — inert. What must never happen is this surface painting with
+   * one: no Tailwind utility for them, and no call site.
+   */
+  it('builds no Tailwind utility for a product accent', () => {
     const bridge = readFileSync(resolve(REPO_ROOT, BRIDGE), 'utf8');
     const leaked = [...bridge.matchAll(/--product-[\w-]+/g)].map((m) => m[0]);
     expect(
       leaked,
       'aglaya.biz is the marca madre: three colours, per get_nonnegotiables("master"). ' +
         'Product accents are first-class only on their own product surface.',
+    ).toEqual([]);
+  });
+
+  it('never paints with a product accent', () => {
+    const callSites = files
+      .flatMap((f) =>
+        f.text
+          .split('\n')
+          .map((line, i) => ({ line, n: i + 1 }))
+          .filter(({ line }) => /--product-[\w-]+/.test(line))
+          .map(({ n }) => `${f.path}:${n}`),
+      );
+    expect(
+      callSites,
+      'The package declares the accents; this surface must not reference one. ' +
+        'Dressing the mother brand in a product colour is the same mistake as ' +
+        'dressing a product in someone else’s, only backwards.',
     ).toEqual([]);
   });
 
