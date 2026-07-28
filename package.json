@@ -6,15 +6,23 @@
     "node": ">=22.12.0"
   },
   "scripts": {
+    "tokens:bridge": "node scripts/generate-tailwind-theme.mjs",
+    "tokens:version": "aglaya-tokens-version",
+    "tokens:mutation-proof": "bash scripts/mutation-proof.sh",
+    "prepare": "npm run tokens:bridge",
+    "predev": "npm run tokens:bridge",
     "dev": "astro dev",
+    "prebuild": "npm run tokens:bridge",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
     "test": "npm run test:unit && npm run test:e2e",
+    "pretest:unit": "npm run tokens:bridge",
     "test:unit": "vitest run",
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@aglaya/design-tokens": "git+https://github.com/ibaifernandez/aglaya-design-system.git#v1.1.0",
     "@astrojs/netlify": "^7.0.3",
     "@astrojs/sitemap": "^3.7.1",
     "@sentry/astro": "^10.48.0",

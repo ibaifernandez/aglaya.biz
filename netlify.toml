@@ -4,6 +4,16 @@
 
 [build.environment]
   NODE_VERSION = "22"
+  # @aglaya/design-tokens is a git dependency on a public GitHub tag. npm insists
+  # on resolving GitHub specs over ssh — even when package.json and the lockfile
+  # both say https — and every build runner here is keyless, so `npm ci` dies with
+  # "Permission denied (publickey)". These three are git's own env-var config
+  # (GIT_CONFIG_COUNT, git >= 2.31): they rewrite ssh to https for github.com
+  # before npm ever forks git, which the build command could not do — install
+  # runs first. The same three are set in .github/workflows/ci.yml.
+  GIT_CONFIG_COUNT = "1"
+  GIT_CONFIG_KEY_0 = "url.https://github.com/.insteadOf"
+  GIT_CONFIG_VALUE_0 = "ssh://git@github.com/"
   # SENTRY_ORG/SENTRY_PROJECT are slugs (e.g. "aglaya-biz"), not secrets, but
   # the slug collides with brand strings in source (e.g. a CRM source label),
   # which trips secrets scanning. Omit these non-secret keys from the scan.

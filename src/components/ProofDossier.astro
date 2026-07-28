@@ -89,7 +89,7 @@ const processedTitle = (input: string) => {
     <div class="flex items-center gap-4">
       <div class="flex items-center gap-2">
         <span
-          class="w-2 h-2 bg-corporate-green rounded-full animate-pulse shadow-[0_0_8px_rgba(159,194,67,0.6)]"
+          class="w-2 h-2 bg-corporate-green rounded-full animate-pulse shadow-[0_0_8px_color-mix(in_srgb,var(--color-corporate-green)_60%,transparent)]"
         ></span>
         <span class="text-white font-mono text-[9px] tracking-[0.3em] uppercase"
           >SYSTEM_INTEGRITY // {t("status.system_ok")}</span
@@ -296,9 +296,9 @@ const processedTitle = (input: string) => {
       </section>
 
       <!-- The Carousel Card (Challenge / Strategy / Vision) -->
-      <section class="p-8 lg:p-16 border-b border-white/5 bg-[#050505]">
+      <section class="p-8 lg:p-16 border-b border-white/5 bg-bg-deep">
         <div
-          class="carousel-card relative bg-[#0a0a0a] border-l-10 border-corporate-green p-10 lg:p-16 min-h-[450px] flex flex-col justify-between shadow-2xl"
+          class="carousel-card relative bg-surface-2 border-l-10 border-corporate-green p-10 lg:p-16 min-h-[450px] flex flex-col justify-between shadow-2xl"
         >
           <div class="carousel-content relative overflow-hidden">
             <!-- Slide: Challenge -->
@@ -352,7 +352,7 @@ const processedTitle = (input: string) => {
           <div class="carousel-nav flex gap-4 mt-16">
             <button
               data-target="challenge"
-              class="nav-dot w-5 h-5 bg-corporate-green border border-corporate-green transition-all hover:scale-110 active shadow-[0_0_15px_rgba(159,194,67,0.3)]"
+              class="nav-dot w-5 h-5 bg-corporate-green border border-corporate-green transition-all hover:scale-110 active shadow-[0_0_15px_color-mix(in_srgb,var(--color-corporate-green)_30%,transparent)]"
               title="Challenge"></button>
             <button
               data-target="strategy"
@@ -422,18 +422,25 @@ const processedTitle = (input: string) => {
     pre.replaceWith(div);
   });
 
+  // Mermaid renders to inline SVG attributes, so it needs literal colour values,
+  // not `var()`. Reading the computed custom property is the closest thing to a
+  // variable here: the value comes from the stylesheet the design-system package
+  // produced, so a token that moves upstream moves these diagrams too.
+  const token = (name: string) =>
+    getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
   mermaid.initialize({
     startOnLoad: false,
     theme: 'base',
     themeVariables: {
-      background:          '#050505',
+      background:          token('--color-bg-deep'),
       primaryColor:        '#111111',
       primaryTextColor:    '#ffffff',
-      primaryBorderColor:  '#9FC243',
-      lineColor:           '#9FC243',
+      primaryBorderColor:  token('--color-corporate-green'),
+      lineColor:           token('--color-corporate-green'),
       secondaryColor:      '#1a1a1a',
-      tertiaryColor:       '#0a0a0a',
-      edgeLabelBackground: '#000000',
+      tertiaryColor:       token('--color-surface-2'),
+      edgeLabelBackground: token('--color-bg'),
       fontFamily:          'monospace',
       fontSize:            '13px',
     },
@@ -483,7 +490,7 @@ const processedTitle = (input: string) => {
             "bg-corporate-green",
             "border-corporate-green",
             "active",
-            "shadow-[0_0_15px_rgba(159,194,67,0.3)]",
+            "shadow-[0_0_15px_color-mix(in_srgb,var(--color-corporate-green)_30%,transparent)]",
           );
           d.classList.add("bg-white/10", "border-white/20");
         });
@@ -491,7 +498,7 @@ const processedTitle = (input: string) => {
           "bg-corporate-green",
           "border-corporate-green",
           "active",
-          "shadow-[0_0_15px_rgba(159,194,67,0.3)]",
+          "shadow-[0_0_15px_color-mix(in_srgb,var(--color-corporate-green)_30%,transparent)]",
         );
         dot.classList.remove("bg-white/10", "border-white/20");
 

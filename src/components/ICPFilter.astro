@@ -162,7 +162,7 @@ const icpUi = {
       <div class="flex flex-col gap-2">
         <label for="icp-manual" class="text-white font-display font-black text-xl tracking-tight flex justify-between gap-4 items-baseline">
           <span>{t('contact.qualify.manual_label')}</span>
-          <span id="manual-val" class="text-[#ff4d70] font-black text-base">{t('contact.qualify.unset')}</span>
+          <span id="manual-val" class="text-brand-light font-black text-base">{t('contact.qualify.unset')}</span>
         </label>
         <p class="text-white/55 font-body text-base leading-relaxed">{t('contact.qualify.manual_caption')}</p>
       </div>
@@ -198,7 +198,7 @@ const icpUi = {
             />
             <label
               for={option.id}
-              class="icp-option-card block cursor-pointer border border-white/10 bg-[#0a0a0a] p-5 transition-all h-full"
+              class="icp-option-card block cursor-pointer border border-white/10 bg-surface-2 p-5 transition-all h-full"
             >
               <span class="block text-white font-display font-black text-base md:text-lg tracking-tight">{option.label}</span>
               <span class="block mt-1 text-white/55 font-body text-sm leading-relaxed">{option.hint}</span>
@@ -224,7 +224,7 @@ const icpUi = {
             />
             <label
               for={option.id}
-              class="icp-option-card block cursor-pointer border border-white/10 bg-[#0a0a0a] p-5 transition-all h-full"
+              class="icp-option-card block cursor-pointer border border-white/10 bg-surface-2 p-5 transition-all h-full"
             >
               <span class="block text-white font-display font-black text-base md:text-lg tracking-tight">{option.label}</span>
               <span class="block mt-1 text-white/55 font-body text-sm leading-relaxed">{option.hint}</span>
@@ -238,7 +238,7 @@ const icpUi = {
     <div
       id="icp-audit-panel"
       data-state="incomplete"
-      class="border border-white/10 bg-[#0a0a0a] p-6 md:p-8 flex flex-col gap-5"
+      class="border border-white/10 bg-surface-2 p-6 md:p-8 flex flex-col gap-5"
       aria-live="polite"
     >
       <h3 id="icp-audit-title" class="text-white font-display font-black text-2xl md:text-3xl tracking-tight">
@@ -263,7 +263,7 @@ const icpUi = {
   <div id="icp-disqualified" class="hidden flex flex-col gap-10 animate-fade-in">
     <div class="flex flex-col gap-6 text-center max-w-2xl mx-auto">
       <div class="w-20 h-20 border-2 border-brand mx-auto flex items-center justify-center">
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#e8003d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="text-brand" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
       </div>
       <h2 id="icp-disqualified-title" class="text-white font-display font-black text-3xl uppercase tracking-tighter">{t('contact.disqualified.title')}</h2>
       <p id="icp-disqualified-body" class="text-white/60 font-body text-xl leading-relaxed italic">
@@ -631,8 +631,8 @@ const icpUi = {
     height: 2px;
     background: linear-gradient(
       90deg,
-      #e8003d 0,
-      #e8003d var(--range-progress),
+      var(--color-brand) 0,
+      var(--color-brand) var(--range-progress),
       rgba(255, 255, 255, 0.12) var(--range-progress),
       rgba(255, 255, 255, 0.12) 100%
     );
@@ -645,7 +645,7 @@ const icpUi = {
 
   .icp-range::-moz-range-progress {
     height: 2px;
-    background: #e8003d;
+    background: var(--color-brand);
   }
 
   .icp-range::-webkit-slider-thumb {
@@ -653,7 +653,7 @@ const icpUi = {
     width: 18px;
     height: 18px;
     margin-top: -8px;
-    background: #e8003d;
+    background: var(--color-brand);
     border: 2px solid #ffffff;
     cursor: pointer;
     transition: transform 180ms ease, box-shadow 180ms ease;
@@ -662,7 +662,7 @@ const icpUi = {
   .icp-range::-moz-range-thumb {
     width: 18px;
     height: 18px;
-    background: #e8003d;
+    background: var(--color-brand);
     border: 2px solid #ffffff;
     cursor: pointer;
     transition: transform 180ms ease, box-shadow 180ms ease;
@@ -673,7 +673,7 @@ const icpUi = {
   .icp-range:hover::-moz-range-thumb,
   .icp-range:focus-visible::-moz-range-thumb {
     transform: scale(1.08);
-    box-shadow: 0 0 0 6px rgba(232, 0, 61, 0.16);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--color-brand) 16%, transparent);
   }
 
   .icp-panel {
@@ -695,7 +695,7 @@ const icpUi = {
   }
 
   .icp-panel--manual {
-    background: linear-gradient(135deg, rgba(232, 0, 61, 0.06), rgba(5, 5, 5, 0.96));
+    background: linear-gradient(135deg, color-mix(in srgb, var(--color-brand) 6%, transparent), rgba(5, 5, 5, 0.96));
   }
 
   .icp-panel--data {
@@ -703,7 +703,7 @@ const icpUi = {
   }
 
   .icp-panel--investment {
-    background: linear-gradient(135deg, rgba(159, 194, 67, 0.06), rgba(5, 5, 5, 0.96));
+    background: linear-gradient(135deg, color-mix(in srgb, var(--color-corporate-green) 6%, transparent), rgba(5, 5, 5, 0.96));
   }
 
   .icp-value-chip {
@@ -712,8 +712,8 @@ const icpUi = {
     justify-content: center;
     min-width: 5rem;
     padding: 0.45rem 0.7rem;
-    border: 1px solid rgba(232, 0, 61, 0.16);
-    background: rgba(232, 0, 61, 0.08);
+    border: 1px solid color-mix(in srgb, var(--color-brand) 16%, transparent);
+    background: color-mix(in srgb, var(--color-brand) 8%, transparent);
     font-size: 0.72rem;
     letter-spacing: 0.24em;
     text-transform: uppercase;
@@ -735,14 +735,14 @@ const icpUi = {
   }
 
   .icp-choice:checked + .icp-option-card {
-    border-color: rgba(232, 0, 61, 0.55);
-    background: rgba(232, 0, 61, 0.08);
-    box-shadow: 0 20px 40px rgba(232, 0, 61, 0.12);
+    border-color: color-mix(in srgb, var(--color-brand) 55%, transparent);
+    background: color-mix(in srgb, var(--color-brand) 8%, transparent);
+    box-shadow: 0 20px 40px color-mix(in srgb, var(--color-brand) 12%, transparent);
     transform: translateY(-3px);
   }
 
   .icp-choice:focus-visible + .icp-option-card {
-    outline: 2px solid #9fc243;
+    outline: 2px solid var(--color-corporate-green);
     outline-offset: 2px;
   }
 
@@ -769,13 +769,13 @@ const icpUi = {
   }
 
   .icp-console-row[data-ready='true'] {
-    color: #9fc243;
+    color: var(--color-corporate-green);
   }
 
   .icp-console-flag {
     flex: 0 0 auto;
     min-width: 2.75rem;
-    color: #e8003d;
+    color: var(--color-brand);
     font-family: var(--font-mono, monospace);
     font-size: 0.7rem;
     font-weight: 700;
@@ -784,7 +784,7 @@ const icpUi = {
   }
 
   .icp-console-row[data-ready='true'] .icp-console-flag {
-    color: #9fc243;
+    color: var(--color-corporate-green);
   }
 
   .icp-console-label {
@@ -817,13 +817,13 @@ const icpUi = {
   }
 
   #icp-audit-panel[data-state='qualified'] {
-    border-color: rgba(159, 194, 67, 0.35);
-    background: linear-gradient(180deg, rgba(159, 194, 67, 0.06), rgba(5, 5, 5, 0.98));
+    border-color: color-mix(in srgb, var(--color-corporate-green) 35%, transparent);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--color-corporate-green) 6%, transparent), rgba(5, 5, 5, 0.98));
   }
 
   #icp-audit-panel[data-state='borderline'] {
-    border-color: rgba(159, 194, 67, 0.2);
-    background: linear-gradient(180deg, rgba(159, 194, 67, 0.04), rgba(5, 5, 5, 0.98));
+    border-color: color-mix(in srgb, var(--color-corporate-green) 20%, transparent);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--color-corporate-green) 4%, transparent), rgba(5, 5, 5, 0.98));
   }
 
   #icp-audit-panel[data-state='incomplete'] {
@@ -848,14 +848,14 @@ const icpUi = {
   }
 
   #icp-evaluate:focus-visible {
-    outline: 2px solid #9fc243;
+    outline: 2px solid var(--color-corporate-green);
     outline-offset: 2px;
   }
 
   #icp-evaluate[data-state='qualified'] {
-    background: #e8003d;
+    background: var(--color-brand);
     color: #ffffff;
-    box-shadow: 0 18px 40px rgba(232, 0, 61, 0.18);
+    box-shadow: 0 18px 40px color-mix(in srgb, var(--color-brand) 18%, transparent);
   }
 
   #icp-evaluate[data-state='qualified']:hover {
@@ -863,10 +863,10 @@ const icpUi = {
   }
 
   #icp-evaluate[data-state='borderline'] {
-    background: rgba(159, 194, 67, 0.1);
-    color: #9fc243;
-    border-color: rgba(159, 194, 67, 0.25);
-    box-shadow: 0 18px 40px rgba(159, 194, 67, 0.08);
+    background: color-mix(in srgb, var(--color-corporate-green) 10%, transparent);
+    color: var(--color-corporate-green);
+    border-color: color-mix(in srgb, var(--color-corporate-green) 25%, transparent);
+    box-shadow: 0 18px 40px color-mix(in srgb, var(--color-corporate-green) 8%, transparent);
   }
 
   #icp-evaluate[data-state^='blocked'] {

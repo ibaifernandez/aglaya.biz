@@ -2,6 +2,7 @@ import type { Handler } from '@netlify/functions';
 import path from 'path';
 // @ts-expect-error — standalone build has no separate .d.ts; API is identical to main
 import PDFDocument from 'pdfkit/js/pdfkit.standalone.js';
+import { tokens } from '@aglaya/design-tokens';
 import { upsertMailerLiteSubscriber } from './_mailerlite';
 import { captureFunctionException, initFunctionSentry } from './_sentry';
 
@@ -239,8 +240,12 @@ const UI: Record<Lang, {
 // ---------------------------------------------------------------------------
 // PDF generation
 // ---------------------------------------------------------------------------
-const BRAND_RED = '#e8003d';
-const NEAR_BLACK = '#080808';
+// A PDF has no stylesheet, so pdfkit needs literal values. They are still read
+// from the package at build time — the quote PDF is a brand surface too, and a
+// red frozen in this file is the same copy the rest of this repo just stopped
+// making. The greys below are not canon tokens and stay local (see the PR).
+const BRAND_RED = tokens['--color-brand'];
+const NEAR_BLACK = tokens['--color-surface'];
 const WHITE = '#ffffff';
 const LIGHT_GRAY = '#cccccc';
 const MID_GRAY = '#888888';

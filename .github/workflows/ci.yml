@@ -6,6 +6,16 @@ on:
   pull_request:
     branches: [main]
 
+# @aglaya/design-tokens is a git dependency on a public GitHub tag, and npm
+# resolves GitHub specs over ssh regardless of what package.json and the lockfile
+# say. Runners have no ssh key, so `npm ci` fails with "Permission denied
+# (publickey)". git's own env-var config (git >= 2.31) rewrites the URL to https
+# before npm forks git. Mirrored in netlify.toml — both installers need it.
+env:
+  GIT_CONFIG_COUNT: '1'
+  GIT_CONFIG_KEY_0: 'url.https://github.com/.insteadOf'
+  GIT_CONFIG_VALUE_0: 'ssh://git@github.com/'
+
 jobs:
   test:
     name: Unit Tests
@@ -23,6 +33,27 @@ jobs:
 
       - name: Run unit tests
         run: npm run test:unit
+
+  tokens:
+    # The only check that can tell consuming the design system from copying it:
+    # move a colour at the source, rebuild without touching this repo, and see
+    # whether the pixel followed. Everything else here a good copy would pass.
+    name: Design-system mutation proof
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prove the brand is consumed, not copied
+        run: npm run tokens:mutation-proof
 
   e2e:
     name: E2E + Accessibility Tests

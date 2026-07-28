@@ -50,7 +50,7 @@ const ADDON_PRICES = {
         const complexityText = tDynamic(`quote.product.${key}.complexity`);
         const isHighComplexity = key === 'product';
         return (
-        <label class="product-card bg-[#080808] p-8 flex flex-col gap-5 cursor-pointer transition-all hover:bg-[#111] has-[:checked]:bg-[#0f0005] has-[:checked]:border-l-2 has-[:checked]:border-l-brand">
+        <label class="product-card bg-surface p-8 flex flex-col gap-5 cursor-pointer transition-all hover:bg-[#111] has-[:checked]:bg-[#0f0005] has-[:checked]:border-l-2 has-[:checked]:border-l-brand">
           <input
             type="radio"
             name="base_product"
@@ -68,7 +68,7 @@ const ADDON_PRICES = {
           </div>
           <!-- Complexity note — always present so all cards have same height -->
           <p class={`font-mono text-[10px] leading-relaxed px-3 py-2 border-l-2 flex-1 ${isHighComplexity ? 'border-brand/50 bg-brand/5' : 'text-white/50 border-white/10'}`}
-             style={isHighComplexity ? 'color:#ff4d70' : ''}>
+             style={isHighComplexity ? 'color:var(--color-brand-light)' : ''}>
             {complexityText}
           </p>
         </label>
@@ -87,7 +87,7 @@ const ADDON_PRICES = {
     <div class="flex flex-col gap-px bg-white/5 border border-white/5">
       <!-- Boolean toggles -->
       {(['blog', 'cms', 'animations', 'integration', 'infra_setup'] as const).map((key) => (
-        <label class="addon-toggle bg-[#080808] p-6 flex items-center justify-between gap-6 cursor-pointer hover:bg-[#111] transition-all">
+        <label class="addon-toggle bg-surface p-6 flex items-center justify-between gap-6 cursor-pointer hover:bg-[#111] transition-all">
           <div class="flex flex-col gap-1">
             <span class="text-white font-body font-semibold text-sm">{tDynamic(`quote.addon.${key}.name`)}</span>
             <span class="text-white/40 font-body text-xs">{tDynamic(`quote.addon.${key}.desc`)}</span>
@@ -107,7 +107,7 @@ const ADDON_PRICES = {
       ))}
 
       <!-- Monthly addon: analytics -->
-      <label class="addon-toggle bg-[#080808] p-6 flex items-center justify-between gap-6 cursor-pointer hover:bg-[#111] transition-all">
+      <label class="addon-toggle bg-surface p-6 flex items-center justify-between gap-6 cursor-pointer hover:bg-[#111] transition-all">
         <div class="flex flex-col gap-1">
           <span class="text-white font-body font-semibold text-sm">{t('quote.addon.analytics.name')}</span>
           <span class="text-white/40 font-body text-xs">{t('quote.addon.analytics.desc')}</span>
@@ -126,7 +126,7 @@ const ADDON_PRICES = {
       </label>
 
       <!-- Monthly addon: infra_monthly -->
-      <label class="addon-toggle bg-[#080808] p-6 flex items-center justify-between gap-6 cursor-pointer hover:bg-[#111] transition-all">
+      <label class="addon-toggle bg-surface p-6 flex items-center justify-between gap-6 cursor-pointer hover:bg-[#111] transition-all">
         <div class="flex flex-col gap-1">
           <span class="text-white font-body font-semibold text-sm">{t('quote.addon.infra_monthly.name')}</span>
           <span class="text-white/40 font-body text-xs">{t('quote.addon.infra_monthly.desc')}</span>
@@ -146,7 +146,7 @@ const ADDON_PRICES = {
 
       <!-- Quantity addons -->
       {(['language', 'extra_pages'] as const).map((key) => (
-        <div class="bg-[#080808] p-6 flex items-center justify-between gap-6">
+        <div class="bg-surface p-6 flex items-center justify-between gap-6">
           <div class="flex flex-col gap-1">
             <span class="text-white font-body font-semibold text-sm">{tDynamic(`quote.addon.${key}.name`)}</span>
             <span class="text-white/40 font-body text-xs">{tDynamic(`quote.addon.${key}.desc`)}</span>
@@ -164,7 +164,7 @@ const ADDON_PRICES = {
       ))}
 
       <!-- Copywriting qty -->
-      <div class="bg-[#080808] p-6 flex items-center justify-between gap-6">
+      <div class="bg-surface p-6 flex items-center justify-between gap-6">
         <div class="flex flex-col gap-1">
           <span class="text-white font-body font-semibold text-sm">{t('quote.addon.copywriting.name')}</span>
           <span class="text-white/40 font-body text-xs">{t('quote.addon.copywriting.desc')}</span>
@@ -181,7 +181,7 @@ const ADDON_PRICES = {
       </div>
 
       <!-- Revision rounds -->
-      <div class="bg-[#080808] p-6 flex items-center justify-between gap-6">
+      <div class="bg-surface p-6 flex items-center justify-between gap-6">
         <div class="flex flex-col gap-1">
           <span class="text-white font-body font-semibold text-sm">{t('quote.addon.revisions.name')}</span>
           <span class="text-white/40 font-body text-xs">{t('quote.addon.revisions.desc')}</span>
@@ -212,7 +212,7 @@ const ADDON_PRICES = {
         { key: 'fast', mult: 0.8 },
         { key: 'urgent', mult: 1.5 },
       ] as const).map(({ key, mult }) => (
-        <label class="flex-1 bg-[#080808] p-6 flex flex-col gap-2 cursor-pointer hover:bg-[#111] transition-all has-[:checked]:bg-[#0f0005] has-[:checked]:border-t-2 has-[:checked]:border-t-brand">
+        <label class="flex-1 bg-surface p-6 flex flex-col gap-2 cursor-pointer hover:bg-[#111] transition-all has-[:checked]:bg-[#0f0005] has-[:checked]:border-t-2 has-[:checked]:border-t-brand">
           <input
             type="radio"
             name="delivery"
@@ -300,7 +300,7 @@ const ADDON_PRICES = {
   </div>
 
   <!-- Always included -->
-  <div class="border border-white/5 bg-[#050505] p-8 flex flex-col gap-6">
+  <div class="border border-white/5 bg-bg-deep p-8 flex flex-col gap-6">
     <span class="text-corporate-green font-mono text-[10px] font-black tracking-[0.4em] uppercase">{t('quote.included.title')}</span>
     <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3">
       {(['seo', 'analytics', 'esp', 'responsive', 'a11y', 'git', 'revisions'] as const).map((item) => (
