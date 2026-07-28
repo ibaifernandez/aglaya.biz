@@ -47,3 +47,8 @@ src/assets/images/infografia-ley-21719-*.png
 
 # Transient mutant written by tests/unit/consent-seal-guard.test.ts (deleted in finally)
 tests/unit/__seal-mutant.gen.test.ts
+
+# Tailwind bridge, rebuilt from @aglaya/design-tokens on every install/build.
+# Committing it would re-create the copy this repo just stopped making: it would
+# pass every check except the mutation proof (scripts/mutation-proof.sh).
+src/styles/tokens.theme.generated.css

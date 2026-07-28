@@ -145,8 +145,8 @@ const t = labels[lang];
   display: flex;
 }
 .cf-field:focus-within .cf-input {
-  border-color: rgba(232,0,61,0.5);
-  background: rgba(232,0,61,0.03);
+  border-color: color-mix(in srgb, var(--color-brand) 50%, transparent);
+  background: color-mix(in srgb, var(--color-brand) 3%, transparent);
 }
 
 .cf-input {
@@ -166,7 +166,7 @@ const t = labels[lang];
 }
 .cf-input::placeholder { color: rgba(255,255,255,0.5); }
 .cf-input:focus-visible {
-  outline: 2px solid rgba(232,0,61,0.9);
+  outline: 2px solid color-mix(in srgb, var(--color-brand) 90%, transparent);
   outline-offset: 2px;
 }
 
@@ -190,7 +190,7 @@ const t = labels[lang];
   gap: 8px;
   width: 100%;
   padding: 1rem 2rem;
-  background: #e8003d;
+  background: var(--color-brand);
   color: white;
   font-family: 'Outfit', sans-serif;
   font-size: 12px;
@@ -206,7 +206,7 @@ const t = labels[lang];
 }
 .cf-btn:not(:disabled):hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 25px rgba(232,0,61,0.4);
+  box-shadow: 0 6px 25px color-mix(in srgb, var(--color-brand) 40%, transparent);
 }
 .cf-btn:not(:disabled):active { transform: scale(0.98); }
 .cf-btn:disabled { opacity: 0.5; cursor: not-allowed; }

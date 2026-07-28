@@ -21,6 +21,15 @@ import { resolve } from 'node:path';
 const REPO_ROOT = resolve(__dirname, '../..');
 const GLOBAL_CSS = resolve(REPO_ROOT, 'src/styles/global.css');
 const BASE_LAYOUT = resolve(REPO_ROOT, 'src/layouts/BaseLayout.astro');
+/**
+ * Since the brand is consumed rather than copied, both halves of this check moved
+ * into @aglaya/design-tokens: the `--font-*` tokens and the `@font-face` rules
+ * that back them. The guard did not become unnecessary — it became cross-repo.
+ * If the design system ever names a family it does not ship, this site's CI is
+ * the thing that notices, because this site is what renders the fallback.
+ */
+const CANON_CSS = resolve(REPO_ROOT, 'node_modules/@aglaya/design-tokens/colors_and_type.css');
+const BRIDGE_CSS = resolve(REPO_ROOT, 'src/styles/tokens.theme.generated.css');
 
 /** Fallbacks the browser always has; naming them fetches nothing and needs nothing. */
 const GENERIC = new Set([
@@ -54,7 +63,8 @@ export function isFetched(family: string, layout: string, css: string): boolean 
   return inLayoutUrl || inFontFace;
 }
 
-const css = readFileSync(GLOBAL_CSS, 'utf8');
+/** Everything the page actually ships as CSS, in one string. */
+const css = [CANON_CSS, BRIDGE_CSS, GLOBAL_CSS].map((f) => readFileSync(f, 'utf8')).join('\n');
 const layout = readFileSync(BASE_LAYOUT, 'utf8');
 
 describe('declared font families are actually fetched', () => {

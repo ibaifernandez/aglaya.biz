@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { tokens } from '@aglaya/design-tokens';
 import ClientRouter from 'astro/components/ClientRouter.astro';
 import CookieBanner from '../components/CookieBanner.astro';
 import CustomCursor from '../components/CustomCursor.astro';
@@ -136,7 +137,9 @@ const websiteSchema = {
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
-    <meta name="theme-color" content="#e8003d" />
+    <!-- A meta attribute cannot hold a CSS variable, so the value is injected
+         at build time from the package. Same source, different mechanism. -->
+    <meta name="theme-color" content={tokens['--color-brand']} />
     <link rel="canonical" href={canonicalURL} />
 
     <!-- hreflang — trilingual SEO, no duplicate content -->
@@ -173,13 +176,11 @@ const websiteSchema = {
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- Google Fonts: Outfit + Inter + Space Mono (--font-mono, eyebrows/labels) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Fonts: Outfit + Inter + Space Mono are served from this origin, declared
+         by @aglaya/design-tokens and emitted into /_astro/ by the build. No
+         Google Fonts link, no preconnect: the families now ride the same
+         versioned contract as the colours, and no visitor IP leaves for a third
+         party before the consent banner has said anything. -->
 
     <!-- LD+JSON — Organization + WebSite structured data -->
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />

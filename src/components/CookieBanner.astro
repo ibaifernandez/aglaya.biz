@@ -70,7 +70,7 @@ const privacyUrl = lang === 'es' ? '/es/privacidad/' : lang === 'pt' ? '/pt/priv
 
 .ck-bar {
   height: 3px;
-  background: #e8003d;
+  background: var(--color-brand);
 }
 
 .ck-inner {
@@ -136,11 +136,11 @@ const privacyUrl = lang === 'es' ? '/es/privacidad/' : lang === 'pt' ? '/pt/priv
 .ck-btn:active { transform: scale(0.98); }
 
 .ck-btn--primary {
-  background: #e8003d;
+  background: var(--color-brand);
   color: #fff;
 }
 .ck-btn--primary:hover {
-  box-shadow: 0 4px 20px rgba(232, 0, 61, 0.45);
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--color-brand) 45%, transparent);
 }
 
 .ck-btn--ghost {

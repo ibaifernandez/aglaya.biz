@@ -5,30 +5,22 @@
 
 @import "tailwindcss";
 
-/* ------ Design tokens ------ */
-@theme {
-  --color-brand:        #e8003d; /* Aglaya Red */
-  --color-brand-dark:   #b5002f;
-  --color-brand-light:  #ff4d70;
-  --color-corporate-green: #9FC243; /* Corporate Green */
-  --color-bg:           #000000; /* Pure Black / Obsidian */
-  --color-surface:      #080808;
-  --color-surface-2:    #0f0f0f;
-  --color-border:       rgba(255, 255, 255, 0.08);
-  --color-text:         #fcfcfc;
-  --color-muted:        rgba(252, 252, 252, 0.45);
-  --color-accent:       #e2e2e2; /* Technical Silver */
+/* ------ Design tokens ------
+   Not declared here. This surface CONSUMES them from @aglaya/design-tokens,
+   pinned to a git tag in package.json. No brand value is written in this repo.
 
-  --font-display: 'Outfit', 'Inter', sans-serif;
-  --font-body:    'Inter', sans-serif;
-  --font-mono:    'Space Mono', monospace;
+   Two imports, because they do different jobs:
+   1. the canon itself — `:root` with all 87 tokens, the three font families as
+      local @font-face, and the `.t-*` type primitives. Imported into `layer(base)`
+      so its `html, body { … }` rules cannot outrank Tailwind utilities (unlayered
+      CSS beats every layer, which would have silently overridden `bg-black`).
+   2. the Tailwind bridge — generated at build from the same package, never
+      committed. Tailwind v4 only builds utilities from `@theme`, and the canon
+      publishes `:root`. Names bridged, values read from the package.
 
-  --radius-none: 0px;
-  --radius-sm: 0px;
-  --radius-md: 0px;
-  --radius-lg: 0px;
-  --radius-xl: 0px;
-}
+   Proof that this is consumption and not a copy: scripts/mutation-proof.sh.  */
+@import "@aglaya/design-tokens/tokens.css" layer(base);
+@import "./tokens.theme.generated.css";
 
 /* ------ Base resets ------ */
 *,
@@ -186,9 +178,12 @@ body {
 
 /* ------ Grid background ------ */
 .bg-grid {
+  /* Derived, not copied: the red is written once, in --color-brand. An rgba()
+     with the triplet spelled out here would keep painting the old red the day
+     the token moves — same trap the canon calls out in its own borders. */
   background-image:
-    linear-gradient(rgba(232, 0, 61, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(232, 0, 61, 0.03) 1px, transparent 1px);
+    linear-gradient(color-mix(in srgb, var(--color-brand) 3%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-brand) 3%, transparent) 1px, transparent 1px);
   background-size: 60px 60px;
 }
 
@@ -212,7 +207,7 @@ body {
   left: 1rem;
   z-index: 9999;
   padding: 0.5rem 1rem;
-  background: #e8003d;
+  background: var(--color-brand);
   color: white;
   font-family: var(--font-display);
   font-size: 13px;
@@ -232,19 +227,19 @@ body {
 }
 
 main#main-content:focus-visible {
-  outline: 2px solid rgba(159, 194, 67, 0.9);
+  outline: 2px solid color-mix(in srgb, var(--color-corporate-green) 90%, transparent);
   outline-offset: 0.35rem;
 }
 
 /* Global focus-visible ring */
 :focus-visible {
-  outline: 2px solid #e8003d;
+  outline: 2px solid var(--color-brand);
   outline-offset: 3px;
   border-radius: 2px;
 }
 a:focus-visible,
 button:focus-visible {
-  outline: 2px solid #e8003d;
+  outline: 2px solid var(--color-brand);
   outline-offset: 3px;
 }
 
@@ -257,7 +252,7 @@ body::before {
   pointer-events: none;
   background: radial-gradient(
     circle 900px at var(--mouse-x, 70%) var(--mouse-y, 30%),
-    rgba(232, 0, 61, 0.10),
+    color-mix(in srgb, var(--color-brand) 10%, transparent),
     transparent 75%
   );
   opacity: 0;
