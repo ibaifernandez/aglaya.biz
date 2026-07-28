@@ -70,11 +70,21 @@ describe('the brand is consumed from @aglaya/design-tokens, not copied', () => {
         'was written on and breaks in Netlify CI, which clones this repo alone.',
     ).toMatch(/#v\d+\.\d+\.\d+$/);
     expect(spec).not.toMatch(/^(file:|link:|workspace:|portal:)/);
-    // Written as https on purpose: CI has no SSH key. (npm still normalises the
-    // lockfile's `resolved` to git+ssh for GitHub-hosted repos and falls back to
-    // https at install time — verified with GIT_SSH_COMMAND=/bin/false — but the
-    // spec a human edits should say what CI actually needs.)
     expect(spec).toMatch(/^git\+https:\/\//);
+  });
+
+  it('resolves over https in the lockfile, not ssh', () => {
+    const lock = JSON.parse(readFileSync(resolve(REPO_ROOT, 'package-lock.json'), 'utf8'));
+    const resolved: string = lock.packages?.['node_modules/@aglaya/design-tokens']?.resolved ?? '';
+    expect(
+      resolved,
+      'npm rewrites GitHub git specs to git+ssh in the lockfile even when ' +
+        'package.json says https, and `npm ci` then dies with "Permission denied ' +
+        '(publickey)" on any runner without an SSH key — GitHub Actions and Netlify ' +
+        'both. It is not theoretical: it failed on the first push of this branch. ' +
+        'After any `npm install`, rewrite it back:\n' +
+        "  perl -pi -e 's{git\\+ssh://git\\@github\\.com/}{git+https://github.com/}g' package-lock.json",
+    ).toMatch(/^git\+https:\/\//);
   });
 
   it('never commits the generated Tailwind bridge', () => {
