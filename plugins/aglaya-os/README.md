@@ -1,4 +1,4 @@
-# AGLAYA-OS v0.2.0
+# AGLAYA-OS v0.2.1
 
 > **The Operational Layer for Full-Stack Architects of Truth.**
 > Brand Integrity.
@@ -7,8 +7,9 @@
 
 **Este plugin se sirve desde este repo**, no desde la nube. El marketplace es
 [`.claude-plugin/marketplace.json`](../../.claude-plugin/marketplace.json), en la raíz de
-`aglaya.biz`. `git pull` es el despliegue; instalación y vuelta atrás en
-[`BACKUP-NOTES.md`](BACKUP-NOTES.md) §9.
+`aglaya.biz`. Desplegar es `git pull` **+ `claude plugin update`** y subir la
+`version` — la instalación se cachea, no lee el directorio en vivo. Comandos de
+ida, vuelta atrás y despliegue en [`BACKUP-NOTES.md`](BACKUP-NOTES.md) §9.
 
 ---
 

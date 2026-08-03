@@ -291,12 +291,25 @@ tocó, así que vuelve tal como estaba en v0.1.1.
 
 ### Desplegar un cambio
 
-`git pull`. Si la instalación quedó cacheada en vez de leer del directorio:
+**`git pull` NO basta.** Comprobado el 2026-08-03: aunque el marketplace es de
+tipo `directory` y apunta al repo, la instalación **copia** el plugin a
+`~/.claude/plugins/cache/aglaya-biz/aglaya-os/<versión>/` y lo clava a un commit
+(`gitCommitSha` en `~/.claude/plugins/installed_plugins.json`). El directorio de
+trabajo no se lee en vivo.
+
+El despliegue son tres pasos:
 
 ```bash
+git pull
 claude plugin marketplace update aglaya-biz
 claude plugin update aglaya-os@aglaya-biz
 ```
+
+Y **hay que subir `version` en `.claude-plugin/plugin.json`** en el mismo cambio:
+la caché se guarda en un directorio por versión, así que sin bump el instalador
+no tiene forma de saber que hay algo nuevo. Editar un fichero y no tocar la
+versión es exactamente cómo se queda uno con un plugin viejo creyendo que
+desplegó. Reinicio de sesión para que cargue lo nuevo.
 
 ### Lo que este montaje NO hace
 
