@@ -1,13 +1,12 @@
 {
-  "type": "plugin",
   "name": "aglaya-os",
   "displayName": "AGLAYA-OS",
-  "version": "0.1.1",
-  "description": "AGLAYA Business OS — Operational layer for outreach, ROI audits, proposals, case studies, and brand voice.",
+  "version": "0.2.0",
+  "description": "AGLAYA Business OS — Operational layer. Brand voice only; outreach, ROI audit, proposal and case study retired in 0.2.0.",
   "author": {
     "name": "Ibai Fernández",
     "email": "info@ibaifernandez.com"
   },
   "homepage": "https://aglaya.biz",
-  "keywords": ["aglaya", "business", "outreach", "proposal", "branding", "strategy", "digital-presence", "automation"]
+  "keywords": ["aglaya", "business", "branding", "voice"]
 }
