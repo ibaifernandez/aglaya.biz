@@ -9,6 +9,7 @@
     "tokens:bridge": "node scripts/generate-tailwind-theme.mjs",
     "tokens:version": "aglaya-tokens-version",
     "tokens:mutation-proof": "bash scripts/mutation-proof.sh",
+    "lockfile:https": "node scripts/lockfile-https.mjs",
     "prepare": "npm run tokens:bridge",
     "predev": "npm run tokens:bridge",
     "dev": "astro dev",
