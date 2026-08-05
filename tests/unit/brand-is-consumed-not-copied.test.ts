@@ -96,9 +96,10 @@ describe('the brand is consumed from @aglaya/design-tokens, not copied', () => {
    *
    * So THAT is what this asserts, and it is a stronger check than the one it
    * replaces: until now the net that does the work was only claimed in a
-   * comment, never verified. The lockfile's own spelling is still checked — as a
-   * non-blocking step in the `quality` CI job (`npm run lockfile:https --check`),
-   * where a Dependabot PR can report it without failing.
+   * comment, never verified. The lockfile's own spelling is still checkable, by
+   * `npm run lockfile:https -- --check`, which reports without writing; wiring
+   * that as a non-blocking CI step needs a token with `workflow` scope and rides
+   * in its own follow-up.
    */
   const INSTALLERS = [
     { file: '.github/workflows/ci.yml', who: 'GitHub Actions' },

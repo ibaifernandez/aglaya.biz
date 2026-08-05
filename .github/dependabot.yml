@@ -11,8 +11,10 @@ version: 2
 #     every install, Dependabot's included. It does NOT break `npm ci`: this
 #     workflow and netlify.toml both set git's `insteadOf` rewrite, which sends
 #     it over https before npm forks git (measured, and asserted by a blocking
-#     unit test). It is spelling, reported by a non-blocking CI step. Fix on the
-#     branch with:  npm run lockfile:https
+#     unit test). It is spelling, not breakage, and no longer fails a PR the
+#     robot cannot fix. Check and repair on the branch with:
+#       npm run lockfile:https -- --check     # reports, writes nothing
+#       npm run lockfile:https                # rewrites
 #
 #  2. Green CI is not enough for the framework group. Astro 6.4.8 pulls vite 8
 #     through @astrojs/netlify, and @tailwindcss/vite then dies at build with
