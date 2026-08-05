@@ -1,0 +1,63 @@
+version: 2
+
+# Dependency drift had nobody watching it. On 2026-08-05 a manual `npm audit`
+# found 42 advisories — 1 critical, 19 high — and `npm outdated` showed the
+# framework four minors behind. Neither number was discoverable without running
+# the command by hand. This file is the alarm that was missing.
+#
+# TWO THINGS TO KNOW BEFORE MERGING WHAT IT OPENS:
+#
+#  1. `npm ci` dies on this repo unless the lockfile resolves the design-tokens
+#     git dependency over https. npm rewrites it to `git+ssh` on every install,
+#     including Dependabot's. `tests/unit/brand-is-consumed-not-copied.test.ts`
+#     fails loudly when that happens — it is not a flake. Fix on the branch:
+#       perl -pi -e 's{git\+ssh://git\@github\.com/}{git+https://github.com/}g' package-lock.json
+#
+#  2. Green CI is not enough for the framework group. Astro 6.4.8 pulls vite 8
+#     through @astrojs/netlify, and @tailwindcss/vite then dies at build with
+#     "Missing field `tsconfigPaths` on BindingViteResolvePluginConfig" — a
+#     break INSIDE the same major. Run `npm run build` on any astro/vite/tailwind
+#     bump before believing it.
+
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    versioning-strategy: increase
+    ignore:
+      # Pinned to a git tag on purpose; `npm run tokens:version` reports how far
+      # behind this repo is, and moving it is a design-system decision.
+      - dependency-name: '@aglaya/design-tokens'
+    groups:
+      # One PR for the routine noise.
+      patch-and-minor:
+        patterns: ['*']
+        update-types: [minor, patch]
+        exclude-patterns:
+          - astro
+          - '@astrojs/*'
+          - vite
+          - tailwindcss
+          - '@tailwindcss/*'
+      # The build-breaking cluster, kept separate so it is reviewed on its own
+      # and never rides in on a batch of harmless patches. See note 2 above.
+      framework:
+        patterns:
+          - astro
+          - '@astrojs/*'
+          - vite
+          - tailwindcss
+          - '@tailwindcss/*'
+    labels:
+      - dependencies
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    labels:
+      - dependencies
+      - ci
