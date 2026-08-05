@@ -5,6 +5,7 @@ import ClientRouter from 'astro/components/ClientRouter.astro';
 import CookieBanner from '../components/CookieBanner.astro';
 import CustomCursor from '../components/CustomCursor.astro';
 import SentryBrowser from '../components/SentryBrowser.astro';
+import { X_DEFAULT_PATH, alternateUrlsFor } from '../i18n/routes';
 
 interface Props {
   title: string;
@@ -35,19 +36,15 @@ const ogImageAbsolute = ogImage.startsWith('http')
   ? ogImage
   : new URL(ogImage, Astro.site).href;
 
-// Derive EN path to compute alternate URLs
-const enUrl = lang === 'en'
-  ? canonicalURL.href
-  : (alternateUrl ?? new URL('/', Astro.site).href);
-const enPath = new URL(enUrl).pathname;
+// Where this same page lives in the other two languages. Derived from the path
+// by `src/i18n/routes.ts` — the one rule the sitemap reads too, so the page and
+// the map cannot drift apart. The props below stay as per-page overrides; they
+// are compared against the map by tests/e2e/sitemap-hreflang.spec.ts.
+const alternates = alternateUrlsFor(Astro.url.pathname, Astro.site!);
 
-const esUrl = lang === 'es'
-  ? canonicalURL.href
-  : (alternateUrlEs ?? new URL(enPath === '/' ? '/es/' : `/es${enPath}`, Astro.site).href);
-
-const ptUrl = lang === 'pt'
-  ? canonicalURL.href
-  : (alternateUrlPt ?? new URL(enPath === '/' ? '/pt/' : `/pt${enPath}`, Astro.site).href);
+const enUrl = lang === 'en' ? canonicalURL.href : (alternateUrl ?? alternates.en);
+const esUrl = lang === 'es' ? canonicalURL.href : (alternateUrlEs ?? alternates.es);
+const ptUrl = lang === 'pt' ? canonicalURL.href : (alternateUrlPt ?? alternates.pt);
 
 const ogLocale = lang === 'pt' ? 'pt_BR' : lang === 'es' ? 'es_ES' : 'en_US';
 const fullTitle = title;
@@ -146,7 +143,7 @@ const websiteSchema = {
     <link rel="alternate" hreflang="en" href={enUrl} />
     <link rel="alternate" hreflang="es" href={esUrl} />
     <link rel="alternate" hreflang="pt-BR" href={ptUrl} />
-    <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site).href} />
+    <link rel="alternate" hreflang="x-default" href={new URL(X_DEFAULT_PATH, Astro.site).href} />
 
     <!-- Open Graph -->
     <meta property="og:title" content={fullTitle} />
