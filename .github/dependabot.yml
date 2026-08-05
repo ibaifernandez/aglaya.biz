@@ -16,18 +16,33 @@ version: 2
 #       npm run lockfile:https -- --check     # reports, writes nothing
 #       npm run lockfile:https                # rewrites
 #
-#  2. Green CI is not enough for the framework group. Astro 6.4.8 pulls vite 8
-#     through @astrojs/netlify, and @tailwindcss/vite then dies at build with
-#     "Missing field `tsconfigPaths` on BindingViteResolvePluginConfig" — a
-#     break INSIDE the same major. Run `npm run build` on any astro/vite/tailwind
-#     bump before believing it.
+#  2. The framework group breaks the build by MORE THAN ONE ROUTE, so do not
+#     read a fix for one as a fix for the group. Two seen so far, both from
+#     bumps INSIDE the same major:
+#
+#       - @tailwindcss/vite dies with "Missing field `tsconfigPaths` on
+#         BindingViteResolvePluginConfig" when astro 6.4.8 pulls vite 8 through
+#         @astrojs/netlify. Hit locally on 2026-08-05, bumping astro alone.
+#       - the newer Astro compiler rejects markup the old one accepted:
+#         "[CompilerError] Closing tag '</a>' has no matching opening tag."
+#         This is what CI actually reproduced on the group's first PR (#132),
+#         with all five packages moving together — a different failure from the
+#         one written here first, which is why this note now lists both.
+#
+#     Neither is caught by unit tests. Run `npm run build` on any
+#     astro/vite/tailwind bump before believing a green tick.
 
 updates:
+  # MONTHLY, deliberately. Weekly opened six pull requests within minutes of
+  # being switched on, and this repo has no standing owner for the queue: a
+  # thread wires the robot, closes, and the PRs keep arriving. Twelve unattended
+  # PRs in a month is how a robot gets switched off, taking the only alarm for
+  # ageing dependencies with it. Monthly plus the open-PR cap keeps the backlog
+  # to one sitting for whoever picks it up next.
   - package-ecosystem: npm
     directory: /
     schedule:
-      interval: weekly
-      day: monday
+      interval: monthly
     open-pull-requests-limit: 5
     versioning-strategy: increase
     ignore:
