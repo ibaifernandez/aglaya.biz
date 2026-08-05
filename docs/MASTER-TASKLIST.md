@@ -1,7 +1,11 @@
 # MASTER TASKLIST — aglaya.biz
 
 > Living document. Single source of truth for everything outstanding.
-> Last updated: **2026-07-15**. Production HEAD: `6d71707`.
+> **What is merged and what is deployed is not a header, it is a question.**
+> HEAD, branches and dirty state → `repo_estado("aglaya.biz")` (MCP `aglaya-atlas`).
+> When this file last moved → `git log -1 -- docs/MASTER-TASKLIST.md`. A date and
+> a commit typed by hand here go stale the same day and keep reading current —
+> the two that used to sit on this line were three weeks out when they were removed.
 >
 > **Owner legend:** 🤖 = AI/code (Claude) · 🧑 = founder (Ibai, manual) · 🔁 = relay to another thread (CRM / Scanner)
 > **Priority:** P0 = blocking / revenue-or-legal risk · P1 = important, do next · P2 = backlog / nice-to-have
@@ -14,10 +18,7 @@
 | ID | Task | Pri | Owner | Status | Depends on / Definition of done |
 |----|------|-----|-------|--------|-------------------------------|
 | A1 | CRM confirms it **accepts the flat consent fields** on `/leads/capture` (no 422). | P0 | 🔁 CRM | ☑ | **DONE 2026-06-15** — verified in prod: `elmstproductions@gmail.com` submit landed a deal + a consent-ledger entry in the CRM Registro (purpose=contacto, legal_basis=legitimate-interest, regime=cl-21719, source=aglaya-form-open-channel, evidence_hash `sha256:5967c…`). CRM persists flat fields. |
-| A2 | CRM **versions the consent fields** in `crm-ingestion-api.md` (undocumented as of v1.3.0). | P0 | 🔁 CRM | ☐ | DoD: spec lists `purpose, legal_basis, regime, channel, status, granted_at, evidence_hash, consent_contract_version, subject_national_id` + dedup-by-`evidence_hash` behaviour. |
-| A3 | **Re-sign v1.1.0** in `crm-aglaya/docs/contracts/IMPLEMENTS.md`. | P1 | 🔁 CRM | ☐ | DoD: §10 of canonical can mark CRM `countersigned v1.1.0`. |
-| A4 | **Re-sign v1.1.0** in `legal-reg-tech/docs/contracts/IMPLEMENTS.md`. | P1 | 🔁 Scanner | ☐ | DoD: §10 marks Scanner `signed v1.1.0`. |
-| A5 | Once A1–A4 done, flip §10 of `lead-capture-contract.md` to "all three on v1.1.0" + add §11 verification-log entry. | P1 | 🤖 | ☐ | Depends: A1–A4. |
+| A2 | Signature and spec status of the OTHER producers — who has acknowledged which version of the canonical, and whether the CRM spec documents the consent fields. | — | 🔁 | 🔎 | **Not a task; a question.** Ask `firmas()` and `contrato("crm-ingestion")` (MCP `aglaya-atlas`): they open each ship's ledger live and cite the line they read. Rows A2–A5 used to sit here as ☐ with routes into two other repos — a signature lives in the signer's ledger, and reading it is one question, not four checkboxes waiting on somebody else. |
 | A6 | (If a web preference-center ever ships) emit **DSR fichas** from aglaya.biz. Today DSRs arrive via `dpo-email`/`mailerlite-unsubscribe`, handled CRM/Scanner-side. | P2 | 🤖 | ☐ | Not needed yet; documented in IMPLEMENTS.md. |
 
 ## B. Email capture & tracking

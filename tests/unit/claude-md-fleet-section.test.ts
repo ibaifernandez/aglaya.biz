@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { RULES, findStateClaims } from '../guards/state-claims';
 
 /**
  * FLEET SECTION — no fixed state claims.
@@ -22,15 +23,10 @@ import { resolve } from 'node:path';
  * check that cries wolf gets switched off, and then it guards nothing. Narrow
  * and trusted beats broad and muted. Widen only when a real regression escapes.
  *
- * WHAT THIS DOES NOT CATCH — say it plainly so nobody reads a green tick as a
- * guarantee it never gave:
- *   - Obvious, shaped claims: yes. Dates of a pass, prices, loose versions,
- *     scoreboards, ALL-CAPS verdicts, "live in prod".
- *   - Subtle prose: no. "El triángulo quedó resuelto hace poco" states just as
- *     much and matches nothing here. There is no regex for a confident sentence.
- *   - Quoted spans («…») are exempt, because the section names dead patterns in
- *     order to forbid them. A real claim smuggled inside guillemets walks past.
- * This is a tripwire on the shapes we actually got burned by, not a proof.
+ * WHERE THE RULES LIVE — `tests/guards/state-claims.ts`, since 2026-08-05, when
+ * `docs/contracts/IMPLEMENTS.md` became a second consumer. The limits of the
+ * detector (what it catches, what walks past) are documented there, next to the
+ * patterns, so they cannot drift away from them.
  */
 
 const CLAUDE_MD = resolve(__dirname, '../../CLAUDE.md');
@@ -45,77 +41,6 @@ function fleetSection(markdown: string): string {
   return next === -1 ? rest : rest.slice(0, next);
 }
 
-/**
- * Guillemets quote dead patterns by name so the rule can forbid them; scanning
- * inside them would make the section flag itself. Stripped, not ignored — see
- * the limits noted above.
- */
-function stripQuotedExamples(text: string): string {
-  return text.replace(/«[^»]*»/g, '«»');
-}
-
-type Rule = { id: string; why: string; pattern: RegExp };
-
-const RULES: Rule[] = [
-  {
-    id: 'captain-pass-date',
-    why: 'a captain-pass date is a snapshot; it is stale the day after and reads current forever',
-    pattern: /(?:últim[oa]|ultim[oa])\s+pase|pase\s+del\s+capit[áa]n/i,
-  },
-  {
-    id: 'verified-on-date',
-    why: '"verified on <date>" ages into a false guarantee — ask the tool instead',
-    pattern: /verificad[oa][^.\n]{0,40}\d{4}-\d{2}-\d{2}/i,
-  },
-  {
-    id: 'commercial-figure',
-    why: 'prices and offers live in the captain\'s atlas (atlas/gtm.md), never here — ask verdad_comercial()',
-    pattern: /(?:US\$|\$|USD|CLP|EUR)\s?\d/i,
-  },
-  {
-    id: 'pinned-version',
-    why: 'who signed which version is state — ask firmas() / contrato(), do not pin it in prose',
-    pattern: /\bv?\d+\.\d+\.\d+\b/,
-  },
-  {
-    id: 'scoreboard',
-    why: 'counts and tallies (7/7, 3 naves, 2 pendientes) are a snapshot of a moving number',
-    pattern: /\b\d+\s*\/\s*\d+\b|\b\d+\s+(?:naves|contratos|pendientes|firmantes|PRs?|issues?)\b/i,
-  },
-  {
-    id: 'shouty-verdict',
-    why: 'an ALL-CAPS verdict is the loudest way to be confidently out of date — ask flota_estado() / contradicciones()',
-    // Case-sensitive on purpose: "Estado de un contrato" in the question table is fine.
-    pattern: /\b(?:CERRAD[OA]|ABIERT[OA]|PENDIENTES?|BLOQUEAD[OA]|COMPLETAD[OA]|EN CURSO|RESUELT[OA])\b/,
-  },
-  {
-    id: 'triangle-verdict',
-    why: 'the signature triangle is exactly what rotted here before — firmas() opens each ledger live',
-    pattern: /tri[áa]ngulo[^.\n]{0,40}\b(?:cerrad|resuelt|complet)/i,
-  },
-  {
-    id: 'nothing-pending',
-    why: '"nothing pending" is unverifiable the moment it is written — ask flags() / parked()',
-    pattern: /nada\s+pendiente|sin\s+pendientes|nothing\s+pending/i,
-  },
-  {
-    id: 'live-in-prod',
-    why: 'deployment state changes without touching this file — ask repo_estado() / servicios()',
-    pattern: /encendid[oa]|activ[oa]\s+en\s+prod|live\s+en\s+prod|desplegad[oa]\s+en\s+prod|en\s+(?:producci[óo]n|prod)\s+desde/i,
-  },
-];
-
-/** Returns the rules a chunk of section text violates, with the offending line. */
-export function findStateClaims(sectionText: string): { id: string; line: string }[] {
-  const scannable = stripQuotedExamples(sectionText);
-  const hits: { id: string; line: string }[] = [];
-  for (const line of scannable.split('\n')) {
-    for (const rule of RULES) {
-      if (rule.pattern.test(line)) hits.push({ id: rule.id, line: line.trim() });
-    }
-  }
-  return hits;
-}
 
 describe('CLAUDE.md fleet section — asks state, never asserts it', () => {
   const markdown = readFileSync(CLAUDE_MD, 'utf8');

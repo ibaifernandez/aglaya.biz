@@ -3,9 +3,11 @@
 Per-repo implementation ledger for the lead-capture contract. The canonical
 contract lives in this same repo at
 [`lead-capture-contract.md`](./lead-capture-contract.md); aglaya.biz both **owns**
-and **signs** it. This file mirrors the signature for cross-repo symmetry with
-`crm-aglaya/docs/contracts/IMPLEMENTS.md` and
-`legal-reg-tech/docs/contracts/IMPLEMENTS.md`.
+and **signs** it. This file mirrors the signature for cross-repo symmetry: every
+signatory keeps a ledger of the same name in its own repo (`crm-aglaya`,
+`legal-reg-tech`). Where inside those repos, and what each one currently
+declares, is theirs to say — ask `firmas()` (MCP `aglaya-atlas`), which opens
+each ledger live and cites the line it read.
 
 ## Signed version
 
@@ -31,30 +33,36 @@ collect national IDs).
 
 ## Open / pending (cross-producer)
 
-None. Both former items were already closed on 2026-06-13 — the same day this
-file signed v1.1.0 — but the section kept asking for them until 2026-07-20.
-Verified and closed below.
+Register real debt here, and only debt that is **ours**. This ledger sits in the
+canonical contract's own repo, so anything written in this section reads as
+authoritative to every other ship.
 
-### Closed 2026-06-13 (verified 2026-07-20)
+**Do not record another ship's status here.** Whether the CRM and the Scanner
+have acknowledged the version this file signs, and whether the CRM spec
+documents the consent fields, are statements those repos make about themselves.
+They change without anyone touching this file, and a stale answer here goes on
+sounding current. Ask instead:
 
-- **CRM + Scanner re-acknowledge v1.1.0.** Both signed the same day:
-  `crm-aglaya/docs/contracts/IMPLEMENTS.md` §"v1.1.0 — 2026-06-13
-  (re-acknowledge: consent-ledger ficha + DSR)", status `ACKNOWLEDGED ✓`;
-  `legal-reg-tech/docs/contracts/IMPLEMENTS.md` — "Version implemented: v1.1.0",
-  "Acknowledged: 2026-06-13". The triangle has been closed since then.
-- **CRM versions the consent fields in `crm-ingestion-api.md`.** Done in that
-  spec's **v1.4.0** (2026-06-13): §10 "Ficha de consentimiento (consent-ledger)"
-  documents the **flat** wire convention, all §3-bis fields, `evidence_hash`
-  (canonical formula, U+001F sep, append-once dedup) and
-  `consent_contract_version`. The spec is at **v1.7.2** today; §10.2 (2026-06-30)
-  further pins `evidence_hash` as an opaque string. Nothing pending on our side.
+| Quieres saber | Pregunta |
+|---|---|
+| Qué versión del canónico declara cada firmante | `firmas()` |
+| Qué documenta hoy la API técnica del CRM | `contrato("crm-ingestion")` |
+| Estado del canónico entre naves | `contrato("lead-capture")` |
+| Quién depende de lo que vas a tocar | `quien_consume` |
 
-Why this mattered: this ledger is the canonical contract's own repo, so a stale
-"pending" here reads as authoritative to every other ship. Register real debt in
-this section; do not leave closed items standing.
+Learned the expensive way: this section once carried two entries — one about the
+signature triangle, one about the CRM versioning the consent fields — written as
+answers. Both were satisfied the same day this file signed, and both kept asking
+for 37 days anyway, five lines above a changelog that contradicted them. A
+signature lives in the signer's ledger; read it there, at the moment you need it.
 
 ## Changelog
 
+- **2026-08-05** — Cross-producer section rewritten as questions, and guarded.
+  It had regrown two verdicts about other ships' status and carried routes into
+  their repos; both are now banned by `tests/unit/implements-ledger-asks.test.ts`
+  and `tests/unit/no-foreign-routes.test.ts`, which run in CI. The sections where
+  this repo speaks about itself — including this changelog — are exempt by name.
 - **2026-07-20** — Open/pending section closed. Both items had been satisfied on
   2026-06-13; the section was stale for 37 days while the changelog five lines
   below already said "v1.1.0 signed" — a self-contradiction in the most
