@@ -73,18 +73,76 @@ describe('the brand is consumed from @aglaya/design-tokens, not copied', () => {
     expect(spec).toMatch(/^git\+https:\/\//);
   });
 
-  it('resolves over https in the lockfile, not ssh', () => {
-    const lock = JSON.parse(readFileSync(resolve(REPO_ROOT, 'package-lock.json'), 'utf8'));
-    const resolved: string = lock.packages?.['node_modules/@aglaya/design-tokens']?.resolved ?? '';
+  /**
+   * WHAT ACTUALLY KEEPS `npm ci` ALIVE ON A KEYLESS RUNNER.
+   *
+   * npm resolves GitHub git specs over ssh in the lockfile no matter what
+   * package.json says, on every install, and a runner with no ssh key then dies
+   * with "Permission denied (publickey)". This repo used to guard that by
+   * asserting the committed lockfile reads `git+https`, and by telling whoever
+   * broke it to run a perl one-liner.
+   *
+   * That guard aimed at the wrong thing, and it was about to start crying wolf:
+   * Dependabot regenerates the lockfile on every PR it opens and does not run
+   * our scripts, so its FIRST pull request would have arrived red — and a
+   * freshly wired robot whose first PR is red is a robot somebody switches off,
+   * taking the only dependency-drift alarm with it.
+   *
+   * What genuinely prevents the failure is git's own `insteadOf` rewrite, set in
+   * both installers. Measured rather than assumed, on 2026-08-05:
+   *
+   *   GIT_SSH_COMMAND=false git ls-remote ssh://git@github.com/…   → fatal
+   *   …the same call with GIT_CONFIG_COUNT/KEY_0/VALUE_0 set       → resolves
+   *
+   * So THAT is what this asserts, and it is a stronger check than the one it
+   * replaces: until now the net that does the work was only claimed in a
+   * comment, never verified. The lockfile's own spelling is still checked — as a
+   * non-blocking step in the `quality` CI job (`npm run lockfile:https --check`),
+   * where a Dependabot PR can report it without failing.
+   */
+  const INSTALLERS = [
+    { file: '.github/workflows/ci.yml', who: 'GitHub Actions' },
+    { file: 'netlify.toml', who: 'Netlify' },
+  ];
+
+  /** Does this installer config carry git's ssh→https rewrite for github.com? */
+  const hasSshRewrite = (text: string): boolean =>
+    /GIT_CONFIG_COUNT/.test(text) &&
+    /url\.https:\/\/github\.com\/\.insteadOf/.test(text) &&
+    /ssh:\/\/git@github\.com\//.test(text);
+
+  it.each(INSTALLERS)('$who rewrites ssh GitHub specs to https at install time', ({ file, who }) => {
+    const text = readFileSync(resolve(REPO_ROOT, file), 'utf8');
     expect(
-      resolved,
-      'npm rewrites GitHub git specs to git+ssh in the lockfile even when ' +
-        'package.json says https, and `npm ci` then dies with "Permission denied ' +
-        '(publickey)" on any runner without an SSH key — GitHub Actions and Netlify ' +
-        'both. It is not theoretical: it failed on the first push of this branch. ' +
-        'After any `npm install`, rewrite it back:\n' +
-        "  perl -pi -e 's{git\\+ssh://git\\@github\\.com/}{git+https://github.com/}g' package-lock.json",
-    ).toMatch(/^git\+https:\/\//);
+      hasSshRewrite(text),
+      `${file} no longer sets git's insteadOf rewrite.\n` +
+        `Without it, ${who} clones @aglaya/design-tokens over ssh with no key and\n` +
+        `\`npm ci\` dies with "Permission denied (publickey)". npm writes that ssh\n` +
+        `spec into the lockfile on every install, so this is not hypothetical —\n` +
+        `it is one \`npm install\` away, on every branch, forever.\n` +
+        `Restore:\n` +
+        `  GIT_CONFIG_COUNT=1\n` +
+        `  GIT_CONFIG_KEY_0=url.https://github.com/.insteadOf\n` +
+        `  GIT_CONFIG_VALUE_0=ssh://git@github.com/`,
+    ).toBe(true);
+  });
+
+  it('the rewrite check would notice if an installer dropped it (mutants)', () => {
+    // A predicate that answers "yes" to everything guards nothing.
+    const real = readFileSync(resolve(REPO_ROOT, '.github/workflows/ci.yml'), 'utf8');
+    expect(hasSshRewrite(real)).toBe(true);
+    expect(hasSshRewrite(real.replace(/GIT_CONFIG_COUNT/g, 'GIT_CONFIG_UNUSED'))).toBe(false);
+    expect(hasSshRewrite(real.replace(/\.insteadOf/g, '.notInsteadOf'))).toBe(false);
+    expect(hasSshRewrite('name: CI\njobs:\n  test:\n    runs-on: ubuntu-latest\n')).toBe(false);
+  });
+
+  it('offers a one-command repair for the lockfile spelling', () => {
+    // The old guidance was a perl one-liner pasted from an error message. If the
+    // script or its wiring disappears, the non-blocking CI step points at nothing.
+    expect(pkgJson.scripts?.['lockfile:https']).toBe('node scripts/lockfile-https.mjs');
+    const script = readFileSync(resolve(REPO_ROOT, 'scripts/lockfile-https.mjs'), 'utf8');
+    expect(script).toContain('--check');
+    expect(script).toMatch(/git\\?\+ssh:\\?\/\\?\/git@github\\?\.com/);
   });
 
   it('never commits the generated Tailwind bridge', () => {

@@ -80,6 +80,16 @@ jobs:
         continue-on-error: true
         run: npm run lint:md
 
+      # npm writes ssh GitHub specs into the lockfile on every install, including
+      # Dependabot's. `npm ci` survives it — ci.yml and netlify.toml both rewrite
+      # ssh to https before npm forks git, and that net is asserted by a blocking
+      # unit test — so this is spelling, not breakage, and must not fail a PR the
+      # robot cannot fix. Fix on the branch with `npm run lockfile:https`.
+      - name: Lockfile resolves over https
+        id: lockfile
+        continue-on-error: true
+        run: npm run lockfile:https -- --check
+
       - name: Report both outcomes
         if: always()
         run: |
@@ -88,6 +98,7 @@ jobs:
             echo "|---|---|"
             echo "| \`astro check\` | ${{ steps.typecheck.outcome }} |"
             echo "| \`markdownlint\` | ${{ steps.lintmd.outcome }} |"
+            echo "| lockfile https | ${{ steps.lockfile.outcome }} |"
             echo ""
             echo "Both are non-blocking. See the job log for the counts."
           } >> "$GITHUB_STEP_SUMMARY"
