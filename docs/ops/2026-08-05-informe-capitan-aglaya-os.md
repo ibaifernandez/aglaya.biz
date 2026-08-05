@@ -58,10 +58,14 @@ De ahí que ninguna búsqueda por nombre las encontrara, ni antes ni durante.
 - El único respaldo era la cuenta del proveedor. Un formateo, o una cuenta
   perdida, y desaparecían sin dejar rastro en ninguna parte de la flota.
 
-**Sigue habiendo al menos un activo en esa situación:** `ibai-brand-os`, misma
-caché, mismo marketplace, cinco skills. Es marca personal de Ibai y se trata en
-el repo de portfolio, en su propio hilo — pero mientras no aterrice en un git,
-el riesgo es idéntico al que acabamos de cerrar.
+Había un segundo activo en esa situación, `ibai-brand-os` — misma caché, mismo
+marketplace, cinco skills. **Resuelto el 2026-08-05: es marca personal de Ibai,
+queda fuera del radar de la flota y lo lleva él en un hilo del portafolio.** No
+se adopta ni se versiona aquí. Se deja anotado sólo para que un hilo futuro que
+tropiece con esa caché sepa qué es y no lo vuelva a levantar.
+
+Lo que sí queda para la flota es la clase, no el caso: hoy no hay regla sobre
+dónde deben vivir los plugins y skills de AGLAYA (§8).
 
 ---
 
@@ -193,7 +197,7 @@ o se prescinde de la nube — que es lo que se hizo aquí.
 
 ---
 
-## 8. Tres preguntas que exceden a esta nave
+## 8. Dos preguntas que exceden a esta nave
 
 1. **¿Dónde deben vivir los plugins y skills de la flota?** Hoy no hay regla, y
    la consecuencia medida es que un activo comercial estuvo cuatro meses fuera de
@@ -206,10 +210,11 @@ o se prescinde de la nube — que es lo que se hizo aquí.
    fuentes; la alternativa es que el Design System **apunte** a
    `verdad_comercial()` en vez de copiar. Decisión de arquitectura, no de esta
    nave.
-3. **¿Entra `ibai-brand-os` en el radar de la flota, o es estrictamente
-   personal?** Está fuera de todo git con el mismo riesgo que acabamos de cerrar
-   aquí. Si es personal, que se diga y se cierre; si no, alguien tiene que
-   adoptarlo.
+
+**Cerrada el 2026-08-05, y se deja escrita para que nadie la reabra:**
+`ibai-brand-os` es **estrictamente personal**. Queda fuera del radar de la flota,
+lo lleva Ibai en un hilo del portafolio, y ni se adopta ni se versiona en esta
+nave.
 
 ---
 
