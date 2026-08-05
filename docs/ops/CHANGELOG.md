@@ -22,6 +22,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Added — 2026-08-05
+
+- **`plugins/aglaya-os/` — el plugin `aglaya-os` entra al repo, se audita y se auto-hospeda.** Hasta el 2026-08-03 las cinco skills `aglaya-os:*` no existían en ningún git: vivían subidas a la cuenta de claude.ai del Operador, y en disco sólo había una caché de la app de escritorio, bajo ruta de sesión y nombrada por id opaco del plugin (por eso ninguna búsqueda por nombre las encontraba). Tres PR:
+  - **PR #120** (`40b4a1d`) — respaldo íntegro y **sin editar** de los 19 ficheros, más la auditoría inicial en `plugins/aglaya-os/BACKUP-NOTES.md`.
+  - **PR #121** (`0334981`) — **v0.2.0**. Jubiladas `outreach`, `case-study`, `proposal` y `roi-audit`: vendían un retainer de $8.000/mes con dos clientes máximo, que no es una cifra vieja sino otro negocio (contrastado en vivo con `verdad_comercial()`). Eliminado `hooks/hooks.json`, que hacía `cat context/brand-dna.md` en `SessionStart` sin filtro e inyectaba ese modelo muerto en **toda** sesión con el plugin activo, se usara la skill que se usara. Montado `.claude-plugin/marketplace.json` en la raíz: el repo pasa a servir su propio plugin.
+  - **PR #122** (`562daa5`) — **v0.2.1**. Corregido el camino de despliegue: `git pull` no basta, la instalación se cachea por versión y hay que bumpear `version` en `plugin.json`.
+- **Jubilar no fue borrar.** La última versión completa de las cuatro vive en `40b4a1d`; `BACKUP-NOTES.md` §7 registra por cada una qué hacía, la frase comercial que la jubila y el `git checkout` para recuperarla.
+- **`brand-voice` queda congelada A PROPÓSITO**, no pendiente: su arreglo depende de una decisión sobre el Design System que el Operador aún no ha tomado. La regresión que causa quitar el hook está medida ruta por ruta en `BACKUP-NOTES.md` §8 y deliberadamente no reparada.
+- **Informe al capitán:** [`docs/ops/2026-08-05-informe-capitan-aglaya-os.md`](2026-08-05-informe-capitan-aglaya-os.md) — incluye lo que excede a esta nave: dónde deben vivir los plugins de la flota, quién es dueño de las líneas rojas de lenguaje legal, y que `ibai-brand-os` sigue fuera de todo git.
+
 ### Changed — 2026-07-17 (pase de cohesión del capitán AGLAYA; docs-only)
 
 - **Contract signature status brought up to reality.** The canonical contract's §10 trailing note still claimed *"CRM and Scanner threads to record v1.1.0 in their IMPLEMENTS.md"* — stale on the Scanner side: it recorded v1.1.0 on **2026-06-13** and the §10 table itself already reads `Scanner 21.719 | signed | v1.1.0`. Note rewritten to the verified state. Same stale claim fixed in `CLAUDE.md`. Cross-checked against `legal-reg-tech/docs/contracts/IMPLEMENTS.md` (whose mirror-image stale note — "canonical hasn't flipped my row" — was closed the same day in that repo).
