@@ -30,7 +30,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
   - **PR #122** (`562daa5`) — **v0.2.1**. Corregido el camino de despliegue: `git pull` no basta, la instalación se cachea por versión y hay que bumpear `version` en `plugin.json`.
 - **Jubilar no fue borrar.** La última versión completa de las cuatro vive en `40b4a1d`; `BACKUP-NOTES.md` §7 registra por cada una qué hacía, la frase comercial que la jubila y el `git checkout` para recuperarla.
 - **`brand-voice` queda congelada A PROPÓSITO**, no pendiente: su arreglo depende de una decisión sobre el Design System que el Operador aún no ha tomado. La regresión que causa quitar el hook está medida ruta por ruta en `BACKUP-NOTES.md` §8 y deliberadamente no reparada.
-- **Informe al capitán:** [`docs/ops/2026-08-05-informe-capitan-aglaya-os.md`](2026-08-05-informe-capitan-aglaya-os.md) — incluye lo que excede a esta nave: dónde deben vivir los plugins de la flota, quién es dueño de las líneas rojas de lenguaje legal, y que `ibai-brand-os` sigue fuera de todo git.
+- **Informe al capitán:** [`docs/ops/2026-08-05-informe-capitan-aglaya-os.md`](2026-08-05-informe-capitan-aglaya-os.md) — incluye lo que excede a esta nave: dónde deben vivir los plugins de la flota y quién es dueño de las líneas rojas de lenguaje legal.
+- **Cerrado el mismo día — `ibai-brand-os` es personal.** El informe lo listaba como tercera pregunta abierta al capitán (está fuera de todo git, en la misma caché que estaba `aglaya-os`). Decisión del Operador el 2026-08-05: es marca personal de Ibai, **fuera del radar de la flota**, lo lleva él en un hilo del portafolio; ni se adopta ni se versiona aquí. La pregunta se retiró del informe en vez de dejarla abierta — un documento que sigue preguntando lo ya respondido es la misma podredumbre que este trabajo vino a quitar.
 
 ### Changed — 2026-07-17 (pase de cohesión del capitán AGLAYA; docs-only)
 
