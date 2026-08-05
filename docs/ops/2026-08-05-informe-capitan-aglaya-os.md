@@ -169,7 +169,6 @@ cliente archivado.
 | ¿Qué versión del plugin corre hoy? | `claude plugin list` en la máquina |
 | ¿Qué dice hoy la verdad comercial? | `verdad_comercial()` |
 | ¿En qué punto está la decisión de voz? | el hilo de `aglaya-design-system` |
-| ¿Respaldó ya `ibai-brand-os`? | el hilo de su repo de portfolio |
 
 ---
 
