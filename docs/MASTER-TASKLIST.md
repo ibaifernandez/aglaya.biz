@@ -1,7 +1,11 @@
 # MASTER TASKLIST — aglaya.biz
 
 > Living document. Single source of truth for everything outstanding.
-> Last updated: **2026-07-15**. Production HEAD: `6d71707`.
+> **What is merged and what is deployed is not a header, it is a question.**
+> HEAD, branches and dirty state → `repo_estado("aglaya.biz")` (MCP `aglaya-atlas`).
+> When this file last moved → `git log -1 -- docs/MASTER-TASKLIST.md`. A date and
+> a commit typed by hand here go stale the same day and keep reading current —
+> the two that used to sit on this line were three weeks out when they were removed.
 >
 > **Owner legend:** 🤖 = AI/code (Claude) · 🧑 = founder (Ibai, manual) · 🔁 = relay to another thread (CRM / Scanner)
 > **Priority:** P0 = blocking / revenue-or-legal risk · P1 = important, do next · P2 = backlog / nice-to-have
