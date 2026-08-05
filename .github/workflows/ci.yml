@@ -34,6 +34,64 @@ jobs:
       - name: Run unit tests
         run: npm run test:unit
 
+      # Coverage was installed and wired to nothing: `@vitest/coverage-v8` in
+      # devDependencies, a `coverage` block in vitest.config.ts, and no caller.
+      # Reported, not gated — no thresholds are configured, so the number is
+      # information, not a verdict. Set thresholds before making it blocking.
+      - name: Coverage report (src/i18n + netlify/functions)
+        run: npm run test:unit:coverage
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage
+          path: coverage/
+          retention-days: 7
+
+  # Two checkers that were also installed and wired to nothing. Both are RED
+  # against today's content — `astro check` reports 143 errors, `markdownlint`
+  # 857 — so they run NON-BLOCKING on purpose: the job exists to put the number
+  # on every PR instead of leaving it discoverable only by running it by hand.
+  # Gating the merge on either is a separate decision, to be taken once its
+  # backlog is burned down. Do not flip `continue-on-error` before then: a red
+  # required check that nobody can turn green is how a whole CI gets ignored.
+  quality:
+    name: Typecheck + Markdown lint (non-blocking)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck (astro check)
+        id: typecheck
+        continue-on-error: true
+        run: npm run typecheck
+
+      - name: Markdown lint
+        id: lintmd
+        continue-on-error: true
+        run: npm run lint:md
+
+      - name: Report both outcomes
+        if: always()
+        run: |
+          {
+            echo "| Check | Outcome |"
+            echo "|---|---|"
+            echo "| \`astro check\` | ${{ steps.typecheck.outcome }} |"
+            echo "| \`markdownlint\` | ${{ steps.lintmd.outcome }} |"
+            echo ""
+            echo "Both are non-blocking. See the job log for the counts."
+          } >> "$GITHUB_STEP_SUMMARY"
+
   tokens:
     # The only check that can tell consuming the design system from copying it:
     # move a colour at the source, rebuild without touching this repo, and see

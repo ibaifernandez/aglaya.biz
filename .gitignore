@@ -52,3 +52,9 @@ tests/unit/__seal-mutant.gen.test.ts
 # Committing it would re-create the copy this repo just stopped making: it would
 # pass every check except the mutation proof (scripts/mutation-proof.sh).
 src/styles/tokens.theme.generated.css
+
+# Stray Playwright run log — output, not source (was tracked until 2026-08-05)
+tests/e2e/results.txt
+
+# Coverage output (reported in CI as an artifact, never committed)
+coverage/
