@@ -127,12 +127,21 @@ gh auth login   # authenticate with GitHub
 gh pr create    # create PR from current branch
 ```
 
-### Environment note
-Node.js must be v23.4.0 (via nvm). Run before any npm/build commands:
+### Environment note — do not pin a Node version here
+
+Run whatever Node your shell already has, provided it satisfies `engines` in `package.json` (`>=22.12.0`) **and matches your machine's architecture**. No `nvm use` line, no `.nvmrc`. CI and Netlify both build on Node 22 (`.github/workflows/ci.yml`, `netlify.toml`); anything from 22.12.0 up is the contract, and `package.json` is where that contract lives — not this file.
+
+Check before you debug something else:
+
 ```bash
-export NVM_DIR="$HOME/.nvm" && source "$NVM_DIR/nvm.sh" && nvm use v23.4.0
-# package.json declares engines: { node: ">=22.12.0" } — v23.4.0 is the pinned local dev version
+node -v && node -p "process.arch"   # must match `uname -m`
 ```
+
+**Why this section says "do not pin", and why restoring a version here is not hygiene.** Until 2026-08-06 it ordered `nvm use v23.4.0` before any npm command. Measured on the author's machine that day: `uname -m` is `arm64`, `node_modules` holds `@rollup/rollup-darwin-arm64`, and nvm's v23.4.0 is an **x64** build. So the pinned interpreter could not load the project's own native binaries, and obeying this file broke the toolchain two different ways — `Cannot find module '@rollup/rollup-darwin-x64'` on `npm run build`, `Cannot find module './rolldown-binding.wasi.cjs'` on `npm run test:unit`. The shell's default Node (v24.13.1, arm64) ran everything: full build, 159/159 unit tests, 45/45 E2E.
+
+The cost was not the broken command. It was that the suite appeared unrunnable locally, which left CI as the only judge — every verification costing a published branch and a full cycle, and nobody able to break code on purpose to check that a test bites. Two separate agents hit it on 5 and 6 Aug 2026; one worked around it by hand, the other reported the suite as broken.
+
+A hand-written version in a document ages on its own and keeps sounding authoritative after it stops being true. `engines` is checked by the package manager; this line was checked by nobody.
 
 ## Do NOT
 - Modify `astro.config.mjs` without understanding the Netlify adapter implications.
