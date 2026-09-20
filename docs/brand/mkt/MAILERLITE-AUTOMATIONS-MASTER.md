@@ -5,7 +5,7 @@ owner: marketing
 source_of_truth: true
 supersedes: [DISPATCH-ENTRY-PROTOCOL-v2.md]
 superseded_by: []
-last_reviewed: 2026-07-15
+last_reviewed: 2026-09-20
 consumable_by_agents: true
 ---
 
@@ -33,13 +33,26 @@ esté encendida hoy (ver la nota de cabecera: eso se pregunta, no se escribe).
 | Grupo MailerLite | Quién entra | Automation | Emails |
 |---|---|---|---|
 | SUSCRIPCIONES | Footer dispatch signup | Dispatch Entry Protocol | 4 (Day 0/2/5/9) |
-| CUALIFICADOS | Contact form — ICP qualified | Contacto Cualificado | 1 (inmediato) |
-| BORDERLINE | Contact form — ICP borderline | Contacto Borderline | 1 (inmediato) |
-| NO_CUALIFICADOS | Contact form — open channel / blocked | Contacto No Cualificado | 1 (inmediato) |
-| COTIZACIONES | Quote calculator | Cotización Recibida | 1 (inmediato) |
 | CONTACTO (general) | Simple `/contact` — `GENERAL_LEAD` | Variante Contacto General (Email 0) | 1 (inmediato) |
+| ~~CUALIFICADOS~~ | — grupo borrado 2026-09-01 | Contacto Cualificado | 1 (huérfano) |
+| ~~BORDERLINE~~ | — grupo borrado 2026-09-01 | Contacto Borderline | 1 (huérfano) |
+| ~~NO_CUALIFICADOS~~ | — grupo borrado 2026-09-01 | Contacto No Cualificado | 1 (huérfano) |
+| ~~COTIZACIONES~~ | — grupo borrado 2026-09-01 | Cotización Recibida | 1 (huérfano) |
 
-> **Nota (2026-07-15):** el formulario simple `/contact` postea `inquiry_type=GENERAL_LEAD`, que `contact.ts` enruta vía `getGeneralContactGroupId()` → `MAILERLITE_CONTACTO_GROUP_ID` (grupo distinto de CUALIFICADOS). Si esa env-var no está seteada, esos leads **no** reciben email de MailerLite (el grupo filtra a vacío).
+> **Cuatro grupos borrados (2026-09-01) y su enrutado retirado del código.** El
+> operador eliminó CUALIFICADOS, NO_CUALIFICADOS, BORDERLINE y COTIZACIONES (cero
+> suscriptores, automations apagadas desde mayo-2026). El código dejó de escribir
+> en ellos: el embudo ICP de `/roi-audit` y el cotizador ya **no** pasan por
+> MailerLite — el lead llega por la notificación interna de Resend (bloqueante) y,
+> en el caso del embudo, al CRM. Sólo quedan dos flujos que escriben aquí:
+> footer dispatch → SUSCRIPCIONES y `/contact` simple → CONTACTO.
+>
+> Los correos de esas cuatro automations siguen redactados más abajo **a
+> propósito**: rescatarlos o tirarlos se decide aparte. No describen nada que se
+> envíe hoy. Qué grupos existen es estado: pregúntalo a MailerLite
+> (`list_resources` / dashboard), no a esta tabla.
+
+> **Nota (2026-07-15, revisada 2026-09-20):** el formulario simple `/contact` postea `inquiry_type=GENERAL_LEAD`, que `contact.ts` enruta vía `getGeneralContactGroupId()` → `MAILERLITE_CONTACTO_GROUP_ID`. Si esa env-var no está seteada, esos leads **no** reciben email de MailerLite (el grupo filtra a vacío). Es el único grupo de contacto que queda: la rama de cualificación se retiró del código al borrarse sus grupos.
 
 ### Custom fields en uso
 

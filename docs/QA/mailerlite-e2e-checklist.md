@@ -5,32 +5,37 @@
 > Highest-priority QA after the contact↔ROI swap (PR #83) — we could be losing
 > leads silently otherwise.
 >
-> Created 2026-06-15. Prod HEAD: `5479049`.
+> Created 2026-06-15. Revised 2026-09-20, after the operator deleted the four
+> qualification/quote groups and the code stopped writing to them: `/roi-audit`
+> and `/quote` no longer touch MailerLite at all, so their rows are gone from the
+> matrix below. Two flows remain: footer dispatch and the simple `/contact`.
+>
+> Which groups exist and which automations are on is **state** — ask MailerLite
+> (`list_resources` / `list_automations`), do not trust the IDs written here.
 
 ## Pre-flight — already verified ✅
 
 - All prod env vars SET (`netlify env:get … --context production`).
 - Group IDs map to the right groups:
 
-| Env var | ID | Group name |
+| Env var | ID (as read on 2026-09-20) | Group name |
 |---|---|---|
-| `MAILERLITE_SUSCRIPCIONES_GROUP_ID` | `122059327481579422` | `[AGLAYA.biz] Suscripciones` |
-| `MAILERLITE_NO_CUALIFICADOS_GROUP_ID` | `184811629055051480` | `[AGLAYA.biz] No cualificados` |
-| `MAILERLITE_CUALIFICADOS_GROUP_ID` | `184811572071237368` | `[AGLAYA.biz] Cualificados` |
-| `MAILERLITE_BORDERLINE_GROUP_ID` | `184811588007494791` | `[AGLAYA.biz] Borderline` |
-| `MAILERLITE_COTIZACIONES_GROUP_ID` | `186446693070276318` | `[AGLAYA.biz] Cotizaciones` |
+| `MAILERLITE_SUSCRIPCIONES_GROUP_ID` | `122059327481579422` | `[AGLAYA.biz] (0) Dispatch (lista de difusión)` |
 | `MAILERLITE_CONTACTO_GROUP_ID` | `190336414601184801` | `[AGLAYA.biz] Contacto` |
+
+The four retired vars (`MAILERLITE_CUALIFICADOS_GROUP_ID`,
+`MAILERLITE_NO_CUALIFICADOS_GROUP_ID`, `MAILERLITE_BORDERLINE_GROUP_ID`,
+`MAILERLITE_COTIZACIONES_GROUP_ID`) are no longer read by any code. Delete them
+from Netlify so nobody re-derives a routing that does not exist.
 
 ## Expected routing (from code)
 
 | Form | What to do in the funnel | Expected group | Sequence |
 |---|---|---|---|
 | `/contact` (simple) | just submit | **Contacto** (`MAILERLITE_CONTACTO_GROUP_ID`) | auto-reply |
-| `/roi-audit` → **qualified** | manual 80, data=CRM, investment $15K–40K | Cualificados | auto-reply |
-| `/roi-audit` → **borderline** | manual 55, data=spreadsheet, investment $5K–15K | Borderline | auto-reply |
-| `/roi-audit` → **blocked/open** | manual 20, data=none, investment <$5K | No cualificados | auto-reply |
-| footer **dispatch** | enter email, subscribe | Suscripciones | Email 0 |
-| `/quote` | complete the calculator + submit | Cotizaciones | auto-reply |
+| footer **dispatch** | enter email, subscribe | Dispatch (`MAILERLITE_SUSCRIPCIONES_GROUP_ID`) | Email 0 |
+| `/roi-audit` (any branch) | any score | **none** — MailerLite is not called | internal Resend notification + CRM |
+| `/quote` | complete the calculator + submit | **none** — MailerLite is not called | internal Resend notification with the PDF |
 
 ## Critical caveats (read before testing)
 
@@ -55,25 +60,16 @@ Legend: ☐ todo · ✅ pass · ❌ fail (note what happened)
 | 1 | /contact | EN | | ☐ | ☐ | ☐ | ☐ | ☐ |
 | 2 | /contact | ES | | ☐ | ☐ | ☐ | ☐ | ☐ |
 | 3 | /contact | PT | | ☐ | ☐ | ☐ | ☐ | ☐ |
-| 4 | /roi-audit qualified | EN | | ☐ | ☐ | ☐ | ☐ | ☐ |
-| 5 | /roi-audit qualified | ES | | ☐ | ☐ | ☐ | ☐ | ☐ |
-| 6 | /roi-audit qualified | PT | | ☐ | ☐ | ☐ | ☐ | ☐ |
-| 7 | /roi-audit borderline | EN | | ☐ | ☐ | ☐ | ☐ | ☐ |
-| 8 | /roi-audit borderline | ES | | ☐ | ☐ | ☐ | ☐ | ☐ |
-| 9 | /roi-audit borderline | PT | | ☐ | ☐ | ☐ | ☐ | ☐ |
-| 10 | /roi-audit blocked | EN | | ☐ | ☐ | ☐ | ☐ | ☐ |
-| 11 | /roi-audit blocked | ES | | ☐ | ☐ | ☐ | ☐ | ☐ |
-| 12 | /roi-audit blocked | PT | | ☐ | ☐ | ☐ | ☐ | ☐ |
-| 13 | footer dispatch | EN | | ☐ | ☐ | ☐ | n/a | n/a |
-| 14 | footer dispatch | ES | | ☐ | ☐ | ☐ | n/a | n/a |
-| 15 | footer dispatch | PT | | ☐ | ☐ | ☐ | n/a | n/a |
-| 16 | /quote | EN | | ☐ | ☐ | ☐ | ☐ | n/a |
-| 17 | /quote | ES | | ☐ | ☐ | ☐ | ☐ | n/a |
-| 18 | /quote | PT | | ☐ | ☐ | ☐ | ☐ | n/a |
+| 4 | footer dispatch | EN | | ☐ | ☐ | ☐ | n/a | n/a |
+| 5 | footer dispatch | ES | | ☐ | ☐ | ☐ | n/a | n/a |
+| 6 | footer dispatch | PT | | ☐ | ☐ | ☐ | n/a | n/a |
 
-**Minimum viable pass (do these first):** #1 (/contact EN — the new path), #4
-(qualified EN), #13 (dispatch EN). If those work, the wiring is sound; the rest
-is language/branch coverage.
+`/roi-audit` and `/quote` are no longer part of this matrix — they write nothing
+to MailerLite. Verify them against the internal Resend notification (and, for
+`/roi-audit`, the CRM) instead.
+
+**Minimum viable pass (do these first):** #1 (/contact EN) and #4 (dispatch EN).
+If those work the wiring is sound; the rest is language coverage.
 
 ## How the "Right group?" column gets verified objectively
 
@@ -88,4 +84,6 @@ the list of test emails you used.
   function logs.
 - Right group but no auto-reply → the MailerLite **automation** for that group is
   off / misconfigured (fix in MailerLite UI, not in code).
-- Wrong group → bug in `getContactGroupIds` / `icp_status` wiring (code).
+- Wrong group → bug in `getGeneralContactGroupId()` / `getDispatchGroupId()`
+  wiring (code). Any MailerLite call at all from `/roi-audit` or `/quote` is a
+  regression: `tests/unit/contact.test.ts` and `tests/unit/quote.test.ts` guard it.

@@ -127,53 +127,52 @@ describe('contact function', () => {
     expect(notifyPayload.html).toContain('ROI_AUDIT_LEAD');
   });
 
-  it('routes qualified contacts to the qualified MailerLite group when configured', async () => {
+  it('does not push ICP funnel leads to MailerLite — the segmented groups were deleted', async () => {
+    // Cualificados / No cualificados / Borderline were removed from MailerLite on
+    // 2026-09-01. Stub the retired vars anyway: if the routing ever comes back,
+    // this test goes red instead of the code silently POSTing to a dead group.
     vi.stubEnv('MAILERLITE_API_KEY', 'ml_test_123');
-    vi.stubEnv('MAILERLITE_NO_CUALIFICADOS_GROUP_ID', 'group_non_qualified');
     vi.stubEnv('MAILERLITE_CUALIFICADOS_GROUP_ID', 'group_qualified');
+    vi.stubEnv('MAILERLITE_NO_CUALIFICADOS_GROUP_ID', 'group_non_qualified');
+    vi.stubEnv('MAILERLITE_BORDERLINE_GROUP_ID', 'group_borderline');
+    vi.stubEnv('MAILERLITE_CONTACTO_GROUP_ID', 'group_contacto');
 
-    const result = await (contact.handler({
-      httpMethod: 'POST',
-      headers: { 'x-forwarded-for': '127.0.0.1' },
-      body: JSON.stringify({
-        name: 'John Doe',
-        email: 'john@example.com',
-        company: 'AGLAYA',
-        message: 'Hello AGLAYA',
-        token: 'test_token',
-        icp_status: 'QUALIFIED',
-        icp_primary_state: 'qualified',
-        privacy_consent: true,
-      }),
-    } as any, {} as any)) as any;
+    for (const funnelLead of [
+      { icp_status: 'QUALIFIED', icp_primary_state: 'qualified' },
+      { icp_status: 'BORDERLINE', icp_primary_state: 'borderline' },
+      { icp_status: 'OPEN_CHANNEL', icp_primary_state: 'blocked_data' },
+    ]) {
+      (global.fetch as ReturnType<typeof vi.fn>).mockClear();
 
-    expect(result.statusCode).toBe(200);
-
-    const fetchMock = global.fetch as ReturnType<typeof vi.fn>;
-    expect(fetchMock).toHaveBeenCalledTimes(3); // hcaptcha + internal notification + mailerlite
-    expect(fetchMock).toHaveBeenLastCalledWith(
-      'https://connect.mailerlite.com/api/subscribers',
-      expect.objectContaining({
-        method: 'POST',
-        headers: expect.objectContaining({
-          Authorization: 'Bearer ml_test_123',
+      const result = await (contact.handler({
+        httpMethod: 'POST',
+        headers: { 'x-forwarded-for': '127.0.0.1' },
+        body: JSON.stringify({
+          name: 'John Doe',
+          email: 'john@example.com',
+          company: 'AGLAYA',
+          message: 'Hello AGLAYA',
+          token: 'test_token',
+          privacy_consent: true,
+          ...funnelLead,
         }),
-      }),
-    );
+      } as any, {} as any)) as any;
 
-    const mailerLiteRequest = fetchMock.mock.calls[2]?.[1];
-    const mailerLitePayload = JSON.parse(String(mailerLiteRequest?.body));
-    expect(mailerLitePayload.groups).toEqual(['group_qualified']);
-    expect(mailerLitePayload.fields).toEqual({
-      name: 'John Doe',
-      company: 'AGLAYA',
-      language: 'en',
-    });
+      // The visitor still gets a 200 and the operator still gets the Resend
+      // notification — only the MailerLite leg is gone.
+      expect(result.statusCode).toBe(200);
+
+      const fetchMock = global.fetch as ReturnType<typeof vi.fn>;
+      const mailerLiteCalls = fetchMock.mock.calls.filter(([url]) =>
+        typeof url === 'string' && url.includes('mailerlite.com'),
+      );
+      expect(mailerLiteCalls).toEqual([]);
+      expect(fetchMock).toHaveBeenCalledTimes(2); // hcaptcha + internal notification
+    }
   });
 
   it('routes the simple /contact form (GENERAL_LEAD) to the Contacto group with language', async () => {
     vi.stubEnv('MAILERLITE_API_KEY', 'ml_test_123');
-    vi.stubEnv('MAILERLITE_NO_CUALIFICADOS_GROUP_ID', 'group_non_qualified');
     vi.stubEnv('MAILERLITE_CONTACTO_GROUP_ID', 'group_contacto');
 
     const result = await (contact.handler({
@@ -198,39 +197,10 @@ describe('contact function', () => {
       typeof url === 'string' && url.includes('mailerlite.com'),
     )?.[1];
     const mailerLitePayload = JSON.parse(String(mailerLiteRequest?.body));
-    // General contact → Contacto group, NOT no-cualificados.
+    // General contact → Contacto group, the only contact group still alive.
     expect(mailerLitePayload.groups).toEqual(['group_contacto']);
     // Language must be recorded.
     expect(mailerLitePayload.fields.language).toBe('es');
-  });
-
-  it('routes blocked contacts to the non-qualified MailerLite group when configured', async () => {
-    vi.stubEnv('MAILERLITE_API_KEY', 'ml_test_123');
-    vi.stubEnv('MAILERLITE_NO_CUALIFICADOS_GROUP_ID', 'group_non_qualified');
-    vi.stubEnv('MAILERLITE_BORDERLINE_GROUP_ID', 'group_borderline');
-    vi.stubEnv('MAILERLITE_CUALIFICADOS_GROUP_ID', 'group_qualified');
-
-    const result = await (contact.handler({
-      httpMethod: 'POST',
-      headers: { 'x-forwarded-for': '127.0.0.1' },
-      body: JSON.stringify({
-        name: 'John Doe',
-        email: 'john@example.com',
-        company: 'AGLAYA',
-        message: 'Hello AGLAYA',
-        token: 'test_token',
-        icp_status: 'OPEN_CHANNEL',
-        icp_primary_state: 'blocked_data',
-        privacy_consent: true,
-      }),
-    } as any, {} as any)) as any;
-
-    expect(result.statusCode).toBe(200);
-
-    const fetchMock = global.fetch as ReturnType<typeof vi.fn>;
-    const mailerLiteRequest = fetchMock.mock.calls[2]?.[1];
-    const mailerLitePayload = JSON.parse(String(mailerLiteRequest?.body));
-    expect(mailerLitePayload.groups).toEqual(['group_non_qualified']);
   });
 
   it('verifies hcaptcha and fails on bad token', async () => {

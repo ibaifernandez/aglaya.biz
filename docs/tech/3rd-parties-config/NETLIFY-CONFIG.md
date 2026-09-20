@@ -20,10 +20,6 @@ All runtime variables should be configured for the scopes they actually need.
 | `NOTIFY_EMAIL` | All scopes | Email destinatario de notificaciones de leads | `info@aglaya.biz` |
 | `MAILERLITE_API_KEY` | Builds, Functions, Runtime | MailerLite API auth (**Sensitive**) | `ml_xxxxxxxx` |
 | `MAILERLITE_SUSCRIPCIONES_GROUP_ID` | All scopes | Footer dispatch group | `<group-id>` |
-| `MAILERLITE_NO_CUALIFICADOS_GROUP_ID` | All scopes | Non-qualified lead group | `<group-id>` |
-| `MAILERLITE_BORDERLINE_GROUP_ID` | All scopes | Borderline lead group | `<group-id>` |
-| `MAILERLITE_CUALIFICADOS_GROUP_ID` | All scopes | Qualified lead group | `<group-id>` |
-| `MAILERLITE_COTIZACIONES_GROUP_ID` | All scopes | Quote-calculator lead group (cotizador) | `<group-id>` |
 | `CRM_API_KEY` | Builds, Functions, Runtime | CRM AGLAYA API key — `X-CRM-API-Key` header (**Sensitive**) | `<key>` |
 | `CRM_LEADS_CAPTURE_URL` | All scopes | CRM AGLAYA `/leads/capture` endpoint URL | `https://...` |
 | `PUBLIC_SENTRY_DSN` | All scopes | Public DSN for browser capture | `https://...` |

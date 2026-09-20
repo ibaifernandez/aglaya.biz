@@ -9,6 +9,9 @@ describe('quote function', () => {
 
     vi.stubEnv('RESEND_API_KEY', 're_test_123');
     vi.stubEnv('NOTIFY_EMAIL', 'info@aglaya.biz');
+    // Both retired: the "Cotizaciones" group was deleted from MailerLite on
+    // 2026-09-01 and the quote calculator no longer writes to any list. Stubbed
+    // on purpose — the handler must ignore them.
     vi.stubEnv('MAILERLITE_API_KEY', 'ml_test_123');
     vi.stubEnv('MAILERLITE_COTIZACIONES_GROUP_ID', '186446693070276318');
 
@@ -177,7 +180,7 @@ describe('quote function', () => {
     expect(resendPayload.subject).toContain('[ES]');
   });
 
-  it('captures quote lead in MailerLite with correct group and metadata', async () => {
+  it('does not write the quote lead to MailerLite — the Cotizaciones group is gone', async () => {
     const result = await (quote.handler({
       httpMethod: 'POST',
       headers: { 'x-forwarded-for': '192.168.1.1' },
@@ -195,25 +198,21 @@ describe('quote function', () => {
     expect(result.statusCode).toBe(200);
 
     const fetchMock = global.fetch as ReturnType<typeof vi.fn>;
-    // Find the MailerLite call
-    const mailerLiteCall = fetchMock.mock.calls.find(([url]) =>
+    // The quote lead used to be pushed to the MailerLite "Cotizaciones" group.
+    // That group is gone, so the handler must not call MailerLite at all — the
+    // Resend notification with the PDF attached is the only destination left.
+    const mailerLiteCalls = fetchMock.mock.calls.filter(([url]) =>
       typeof url === 'string' && url.includes('mailerlite.com'),
     );
+    expect(mailerLiteCalls).toEqual([]);
 
-    expect(mailerLiteCall).toBeTruthy();
-    const [mailerLiteUrl, mailerLiteInit] = mailerLiteCall as [string, RequestInit];
-    expect(mailerLiteUrl).toBe('https://connect.mailerlite.com/api/subscribers');
-
-    const mailerLitePayload = JSON.parse(String(mailerLiteInit.body));
-    expect(mailerLitePayload.email).toBe('maria@example.com');
-    expect(mailerLitePayload.groups).toContain('186446693070276318');
-    expect(mailerLitePayload.fields.name).toBe('Maria Gonzalez');
-    expect(mailerLitePayload.fields.company).toBe('Marketing Agency');
-    expect(mailerLitePayload.fields.language).toBe('es');
-    expect(mailerLitePayload.fields.service_interest).toBe('product');
+    const resendCalls = fetchMock.mock.calls.filter(([url]) =>
+      typeof url === 'string' && url.includes('api.resend.com'),
+    );
+    expect(resendCalls).toHaveLength(1);
   });
 
-  it('still returns 200 when Resend fails but continues with MailerLite (best effort)', async () => {
+  it('still returns 200 when Resend fails — email delivery is best effort', async () => {
     global.fetch = vi.fn().mockImplementation((url: string) => {
       if (typeof url === 'string' && url.includes('api.resend.com')) {
         return Promise.resolve({
@@ -222,7 +221,6 @@ describe('quote function', () => {
           text: () => Promise.resolve('Unauthorized'),
         });
       }
-      // MailerLite succeeds
       return Promise.resolve({
         ok: true,
         status: 200,

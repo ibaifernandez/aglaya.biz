@@ -24,7 +24,7 @@ El cotizador termina en cuatro salidas simultáneas:
 
 1. **Precio visible en pantalla** — el usuario ve el total mientras configura.
 2. **PDF descargable** — cotización detallada con desglose de servicios y descripción de entregables.
-3. **Lead capturado en MailerLite** — email + datos del proyecto → grupo `Cotizaciones`.
+3. ~~**Lead capturado en MailerLite** — email + datos del proyecto → grupo `Cotizaciones`.~~ **Retirado el 2026-09-01**: el grupo `Cotizaciones` fue borrado y el código dejó de escribir en él. Hoy el lead vive sólo en la notificación interna a `NOTIFY_EMAIL`, con el PDF adjunto.
 4. **CTA de contacto** — tras ver el precio, el usuario puede contactar a AGLAYA (no una llamada obligatoria; es opcional y el usuario la inicia).
 
 ### Rationale
@@ -215,7 +215,7 @@ Flujo:
 4. Al submit:
    - El precio aparece confirmado en pantalla.
    - La Netlify Function genera el PDF con pdfkit y lo envía **internamente a `NOTIFY_EMAIL`** para revisión antes de reenviar al cliente.
-   - El lead (nombre + email + configuración del proyecto) entra en MailerLite grupo "Cotizaciones"; el acuse al cliente lo maneja una automatización de MailerLite.
+   - ~~El lead entra en MailerLite grupo "Cotizaciones"; el acuse al cliente lo maneja una automatización.~~ Ya no: grupo borrado el 2026-09-01 y enrutado retirado del código. **El prospecto no recibe hoy ningún acuse automático** — el envío del presupuesto es manual, desde la revisión interna.
 
 ### Idioma v1
 **Trilingüe desde el lanzamiento: EN / ES / PT.** El i18n ya está montado en el proyecto (`src/i18n/translations.ts`). Las rutas siguen la convención existente: `/quote` (EN), `/es/quote` (ES), `/pt/quote` (PT). Todas las cadenas del cotizador van al sistema i18n — cero strings hardcodeados.
@@ -228,12 +228,12 @@ Todas las preguntas previas están resueltas. No hay pendientes antes de codear.
 
 | Variable | Valor |
 |---|---|
-| MailerLite grupo cotizador | `Cotizaciones` — Group ID: `186446693070276318` |
+| MailerLite grupo cotizador | ~~`Cotizaciones` — `186446693070276318`~~ — grupo borrado el 2026-09-01; el cotizador ya no escribe en MailerLite |
 | Branding del PDF | AGLAYA completo: logo, rojo `#e8003d`, tipografía, tagline |
-| Email al prospecto | Acuse vía automatización MailerLite (sin PDF). El PDF va interno a `NOTIFY_EMAIL` para revisión humana antes de reenviar. |
+| Email al prospecto | ~~Acuse vía automatización MailerLite (sin PDF).~~ Sin acuse automático desde el 2026-09-01. El PDF va interno a `NOTIFY_EMAIL` y el reenvío al cliente es manual. **Decisión pendiente del operador**: recuperar el acuse (grupo nuevo o correo directo por Resend) o dejarlo manual. |
 | Idioma v1 | Trilingüe: EN / ES / PT (rutas `/quote`, `/es/quote`, `/pt/quote`) |
 | Visibilidad al lanzar | Unlisted + `noindex` |
 
 ---
 
-*Última actualización: 2026-07-15*
+*Última actualización: 2026-09-20*

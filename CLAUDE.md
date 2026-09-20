@@ -40,6 +40,7 @@ docs/                # Project documentation
 ## Architecture Decisions
 - **i18n**: Subdirectory strategy (EN at `/`, ES at `/es/`, PT at `/pt/`). Full hreflang parity.
 - **Forms**: Client → hCaptcha validation → Netlify Function → Resend/MailerLite/CRM. Contact and ROI flows send immediate confirmations plus internal notifications; footer dispatch captures subscribers in MailerLite when configured — MailerLite owns the confirmation sequence (Email 0) directly. Resend is not involved in dispatch confirmations. Confirmation email for contact/ROI is rendered in the same language (`lang`) the form was submitted from.
+- **MailerLite reach (post 2026-09-01)**: only two flows write to MailerLite — footer dispatch (`Dispatch`) and the simple `/contact` form (`Contacto`). The ICP funnel's segmented routing (Cualificados / No cualificados / Borderline) and the quote calculator's `Cotizaciones` write were **retired**, not repointed, after the operator deleted those four groups; funnel leads reach the operator via the blocking Resend notification and the CRM, quote leads via the Resend notification with the PDF attached. Guarded by `tests/unit/contact.test.ts` and `tests/unit/quote.test.ts`, which fail if any of that routing comes back.
 - **Form routing (post PR #83, 2026-06-15)**: the **ICP qualification funnel** (`ICPFilter` → `QualifiedForm`/`BorderlineForm`/`OpenChannelForm`) lives on **`/roi-audit`** (embedded after the explainer; mounted with `entryPoint`/`serviceInterest="roi_audit"` so leads are tagged ROI). **`/contact`** is a **simple `ContactForm`** (name/email/message + consent) that posts `icp_status=OPEN_CHANNEL` + `inquiry_type=GENERAL_LEAD` → lands in the CRM as an open-channel lead (from `icp_status`) + MailerLite **Contacto** group (auto-reply; routed by `inquiry_type` via `getGeneralContactGroupId()`, NOT by `icp_status`) + Resend internal notification. All form submits hit the same `netlify/functions/contact.ts`. (The old `ROIForm.astro` fake-submit component is deleted.)
 - **Consent/DSR ledger (contract §3-bis, v1.1.0)**: every CRM-bound lead rides a consent ficha built by `buildConsentFields()` in `_crm.ts` and sent **FLAT** (top-level) in the `/leads/capture` body. `evidence_hash = sha256(email␟purpose␟legal_basis␟notice_version␟granted_at␟source)` (U+001F sep, `sha256:` prefix) — cross-producer contract, byte-identical to Scanner's `build_consent_fields`; golden locked in `tests/unit/crm-consent.test.ts`. aglaya.biz emits `legal_basis=legitimate-interest`, `regime=cl-21719`, `channel=web-form`, `status=granted`, `purpose∈{contacto,roi-audit}`. Signature ledger: [`docs/contracts/IMPLEMENTS.md`](docs/contracts/IMPLEMENTS.md).
 - **Cookie consent**: `CookieBanner.astro` rendered in `BaseLayout.astro`. Consent stored in `localStorage` (`aglaya_cookie_consent`: `all` | `essential`). No external CMP — first-party only.
@@ -80,18 +81,11 @@ docs/                # Project documentation
 | `NOTIFY_EMAIL` | Server | Lead notification recipient |
 | `MAILERLITE_API_KEY` | Server | Optional MailerLite API key for dispatch/contact list sync |
 | `MAILERLITE_SUSCRIPCIONES_GROUP_ID` | Server | Optional MailerLite group id for footer dispatch subscriptions |
-| `MAILERLITE_NO_CUALIFICADOS_GROUP_ID` | Server | Optional MailerLite group id for blocked/open-channel and non-qualified contact leads |
-| `MAILERLITE_CUALIFICADOS_GROUP_ID` | Server | Optional MailerLite group id for qualified contact leads |
-| `MAILERLITE_BORDERLINE_GROUP_ID` | Server | Optional MailerLite group id for borderline contact leads |
-| `MAILERLITE_COTIZACIONES_GROUP_ID` | Server | MailerLite group id for quote calculator leads (fallback hardcoded in quote.ts) |
-
-Sentry environment tagging is inferred from Netlify deploy context by default. Avoid setting a separate public environment label unless you intentionally need to override that behavior outside Netlify.
-| `MAILERLITE_CONTACTO_GROUP_ID` | Server | **Primary** MailerLite group id for the simple `/contact` form (`inquiry_type=GENERAL_LEAD`), read by `getGeneralContactGroupId()` — which has **no fallback chain**, so leaving it unset silently drops the auto-reply. Also still read as a legacy fallback inside `getContactGroupIds()` when `MAILERLITE_NO_CUALIFICADOS_GROUP_ID` is unset (vestigial — that var is set in prod). |
-| `MAILERLITE_CONTACTO_QUALIFIED_GROUP_ID` | Server | Legacy fallback MailerLite group id for qualified contact leads |
-| `MAILERLITE_CONTACTO_BORDERLINE_GROUP_ID` | Server | Legacy fallback MailerLite group id for borderline contact leads |
-| `MAILERLITE_CONTACTO_BLOCKED_GROUP_ID` | Server | Legacy fallback MailerLite group id for blocked/open-channel contact leads |
+| `MAILERLITE_CONTACTO_GROUP_ID` | Server | MailerLite group id for the simple `/contact` form (`inquiry_type=GENERAL_LEAD`), read by `getGeneralContactGroupId()` — no fallback chain, so leaving it unset silently drops the auto-reply. The only contact-side group left: the ICP funnel's four groups were deleted on 2026-09-01 and their routing retired (PR for card «cuatro grupos que ya no existen»). Which groups exist is state — ask MailerLite, do not trust this row. |
 | `CRM_API_KEY` | Server | CRM AGLAYA API key (paste from Railway → service `crm-aglaya` → Variables). Authenticates the `X-CRM-API-Key` header on `/leads/capture`. Unset → CRM dispatch is skipped silently. |
 | `CRM_LEADS_CAPTURE_URL` | Server | Full URL to the CRM AGLAYA `/leads/capture` endpoint. During transition: `https://crm-aglaya-production.up.railway.app/api/v1/admin/crm/leads/capture`. Post-DNS-cutover: `https://crm.aglaya.biz/api/v1/admin/crm/leads/capture`. Swap is env-var only — no code redeploy. |
+
+Sentry environment tagging is inferred from Netlify deploy context by default. Avoid setting a separate public environment label unless you intentionally need to override that behavior outside Netlify.
 
 ## Git Workflow
 

@@ -27,47 +27,13 @@ export function getDispatchGroupId(): string {
 
 /**
  * Group for the **simple /contact form** (general inbound, no ICP
- * qualification). Distinct from the funnel's no-cualificados/cualificados/etc.
- * so general "let's talk" leads get their own MailerLite sequence.
+ * qualification). The only contact-side group left: the funnel's
+ * Cualificados / No cualificados / Borderline groups were deleted from
+ * MailerLite on 2026-09-01 and their routing was retired with them, so ICP
+ * funnel leads no longer reach MailerLite at all (CRM + Resend still get them).
  */
 export function getGeneralContactGroupId(): string {
   return (process.env.MAILERLITE_CONTACTO_GROUP_ID ?? '').trim();
-}
-
-export function getContactGroupIds(icpStatus?: string, icpPrimaryState?: string): string[] {
-  const normalizedStatus = (icpStatus ?? '').trim().toUpperCase();
-  const normalizedPrimaryState = (icpPrimaryState ?? '').trim().toLowerCase();
-
-  const fallbackGroup =
-    (process.env.MAILERLITE_NO_CUALIFICADOS_GROUP_ID ??
-      process.env.MAILERLITE_CONTACTO_GROUP_ID ??
-      '').trim();
-
-  const blockedGroup =
-    (process.env.MAILERLITE_NO_CUALIFICADOS_GROUP_ID ??
-      process.env.MAILERLITE_CONTACTO_BLOCKED_GROUP_ID ??
-      '').trim() || fallbackGroup;
-  const borderlineGroup =
-    (process.env.MAILERLITE_BORDERLINE_GROUP_ID ??
-      process.env.MAILERLITE_CONTACTO_BORDERLINE_GROUP_ID ??
-      '').trim() || fallbackGroup;
-  const qualifiedGroup =
-    (process.env.MAILERLITE_CUALIFICADOS_GROUP_ID ??
-      process.env.MAILERLITE_CONTACTO_QUALIFIED_GROUP_ID ??
-      '').trim() || fallbackGroup;
-
-  if (normalizedStatus === 'QUALIFIED') return uniqueGroups([qualifiedGroup]);
-  if (normalizedStatus === 'BORDERLINE') return uniqueGroups([borderlineGroup]);
-
-  if (
-    normalizedStatus === 'OPEN_CHANNEL' ||
-    normalizedStatus.startsWith('BLOCKED') ||
-    normalizedPrimaryState.startsWith('blocked')
-  ) {
-    return uniqueGroups([blockedGroup]);
-  }
-
-  return uniqueGroups([fallbackGroup]);
 }
 
 export async function upsertMailerLiteSubscriber({

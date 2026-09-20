@@ -3,7 +3,6 @@ import path from 'path';
 // @ts-expect-error — standalone build has no separate .d.ts; API is identical to main
 import PDFDocument from 'pdfkit/js/pdfkit.standalone.js';
 import { tokens } from '@aglaya/design-tokens';
-import { upsertMailerLiteSubscriber } from './_mailerlite';
 import { captureFunctionException, initFunctionSentry } from './_sentry';
 
 // ---------------------------------------------------------------------------
@@ -517,31 +516,6 @@ async function sendQuoteNotification(
 }
 
 // ---------------------------------------------------------------------------
-// Capture lead in MailerLite — automation handles acknowledgment email to client
-// ---------------------------------------------------------------------------
-async function captureQuoteLead(
-  email: string,
-  name: string,
-  company: string,
-  lang: Lang,
-  ip: string,
-  baseProduct: string,
-): Promise<void> {
-  const groupId = (process.env.MAILERLITE_COTIZACIONES_GROUP_ID ?? '186446693070276318').trim();
-
-  await upsertMailerLiteSubscriber({
-    email,
-    ip,
-    name: name || undefined,
-    company: company || undefined,
-    language: lang,
-    groups: [groupId],
-    entry_point: 'quote_calculator',
-    service_interest: baseProduct || undefined,
-  });
-}
-
-// ---------------------------------------------------------------------------
 // Handler
 // ---------------------------------------------------------------------------
 function isValidEmail(email: string): boolean {
@@ -550,11 +524,6 @@ function isValidEmail(email: string): boolean {
 
 function hasConsent(value?: boolean | string): boolean {
   return value === true || value === 'true' || value === 'on';
-}
-
-function extractIp(event: Parameters<Handler>[0]): string {
-  const raw = event.headers['x-forwarded-for'] ?? event.headers['x-nf-client-connection-ip'] ?? '';
-  return raw.split(',')[0].trim();
 }
 
 export const handler: Handler = async (event) => {
@@ -582,7 +551,6 @@ export const handler: Handler = async (event) => {
 
   const email = (payload.email ?? '').trim().toLowerCase();
   const name = (payload.name ?? '').trim();
-  const company = (payload.company ?? '').trim();
   const lang = normalizeLang(payload.lang);
 
   if (!email || !isValidEmail(email)) {
@@ -600,17 +568,22 @@ export const handler: Handler = async (event) => {
     return { statusCode: 422, headers, body: JSON.stringify({ error: 'Could not calculate quote' }) };
   }
 
-  const ip = extractIp(event);
-
   try {
     const pdfBuffer = await generatePDF(payload, quote, lang);
 
-    const [emailSent] = await Promise.allSettled([
-      sendQuoteNotification(email, name, pdfBuffer, lang, quote.grand_total, payload.base_product ?? ''),
-      captureQuoteLead(email, name, company, lang, ip, payload.base_product ?? ''),
-    ]);
+    // The quote lead used to be pushed to the MailerLite "Cotizaciones" group as
+    // well. That group was deleted on 2026-09-01 (automation off since May 2026),
+    // so the internal Resend notification — PDF attached — is the only place a
+    // quote request lands now.
+    const emailOk = await sendQuoteNotification(
+      email,
+      name,
+      pdfBuffer,
+      lang,
+      quote.grand_total,
+      payload.base_product ?? '',
+    ).catch(() => false);
 
-    const emailOk = emailSent.status === 'fulfilled' && emailSent.value;
     if (!emailOk) {
       console.warn('[quote] Email delivery failed but continuing');
     }
