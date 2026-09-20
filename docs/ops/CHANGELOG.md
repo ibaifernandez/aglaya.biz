@@ -5,7 +5,7 @@ owner: operations
 source_of_truth: true
 supersedes: []
 superseded_by: []
-last_reviewed: 2026-07-17
+last_reviewed: 2026-09-20
 consumable_by_agents: true
 ---
 
@@ -21,6 +21,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 ---
 
 ## [Unreleased]
+
+### Changed — 2026-09-20
+
+- **El código deja de escribir a cuatro grupos de MailerLite borrados.** El 2026-09-01 el operador eliminó `[AGLAYA.biz] Cualificados`, `No cualificados`, `Borderline` y `Cotizaciones` (cero suscriptores; automations apagadas desde mayo-2026). Comprobado en vivo contra la cuenta el 2026-09-20: de los grupos de esta nave sólo sobreviven `Dispatch` y `Contacto`. El código seguía apuntando a los IDs muertos, así que cada alta devolvía 404 — capturado en Sentry (`stage=mailerlite-sync`) sin que el visitante lo notara.
+  - Retirado `getContactGroupIds()` de `netlify/functions/_mailerlite.ts`: el embudo ICP de `/roi-audit` ya no pasa por MailerLite. El lead sigue llegando por la notificación interna de Resend (bloqueante) y por el CRM.
+  - Retirado `captureQuoteLead()` de `netlify/functions/quote.ts`, con su ID `186446693070276318` **escrito a fuego** como fallback. El presupuesto sigue llegando en la notificación interna con el PDF adjunto. **Consecuencia abierta:** el prospecto del cotizador no recibe acuse automático — recuperarlo (grupo nuevo o correo directo por Resend) es decisión del operador, anotada en `docs/COTIZADOR.md`.
+  - Guardado con pruebas que muerden: si el enrutado vuelve, `tests/unit/contact.test.ts` y `tests/unit/quote.test.ts` se ponen en rojo. Auditadas rompiendo el código a mano (2 mutaciones, 2 en rojo, corrida de control verde 158/158).
+  - **Pendiente en Netlify (no lo hace el código):** borrar `MAILERLITE_CUALIFICADOS_GROUP_ID`, `MAILERLITE_NO_CUALIFICADOS_GROUP_ID`, `MAILERLITE_BORDERLINE_GROUP_ID` y `MAILERLITE_COTIZACIONES_GROUP_ID`, ya sin lector.
+  - Fuera de alcance, como pedía la tarjeta: los seis correos huérfanos dentro de las automations apagadas siguen redactados en `docs/brand/mkt/MAILERLITE-AUTOMATIONS-MASTER.md`.
+
 
 ### Added — 2026-08-05
 

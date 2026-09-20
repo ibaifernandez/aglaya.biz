@@ -73,9 +73,7 @@ Set in Netlify dashboard for production:
 | `NOTIFY_EMAIL`             | Server | Lead notification email |
 | `MAILERLITE_API_KEY`       | Server | MailerLite API key |
 | `MAILERLITE_SUSCRIPCIONES_GROUP_ID` | Server | Dispatch subscription group |
-| `MAILERLITE_NO_CUALIFICADOS_GROUP_ID` | Server | Non-qualified lead group |
-| `MAILERLITE_CUALIFICADOS_GROUP_ID` | Server | Qualified lead group |
-| `MAILERLITE_BORDERLINE_GROUP_ID` | Server | Borderline lead group |
+| `MAILERLITE_CONTACTO_GROUP_ID` | Server | Simple /contact form group (unset → no auto-reply) |
 
 Sentry environment labels are derived automatically from Netlify deploy context (`production`, `deploy-preview`, `branch-deploy`, `preview`, `development`), so no separate public environment variable is required for normal operation.
 

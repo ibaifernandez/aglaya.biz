@@ -52,9 +52,6 @@ Configured in **Site settings → Environment variables**
 | `NOTIFY_EMAIL` | All | Internal notification address (`info@aglaya.biz`) |
 | `MAILERLITE_API_KEY` | All | MailerLite API authentication |
 | `MAILERLITE_SUSCRIPCIONES_GROUP_ID` | All | Footer dispatch subscription group |
-| `MAILERLITE_NO_CUALIFICADOS_GROUP_ID` | All | Non-qualified / open-channel lead group |
-| `MAILERLITE_BORDERLINE_GROUP_ID` | All | Borderline lead group |
-| `MAILERLITE_CUALIFICADOS_GROUP_ID` | All | Qualified lead group |
 | `PUBLIC_SENTRY_DSN` | All | Public browser DSN and shared runtime fallback |
 | `SENTRY_DSN` | All | Optional server-only DSN override for Astro SSR and Netlify Functions |
 | `SENTRY_AUTH_TOKEN` | Build | Optional source-map upload token |

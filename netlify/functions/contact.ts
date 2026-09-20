@@ -1,5 +1,5 @@
 import type { Handler } from "@netlify/functions";
-import { getContactGroupIds, getGeneralContactGroupId, upsertMailerLiteSubscriber } from "./_mailerlite";
+import { getGeneralContactGroupId, upsertMailerLiteSubscriber } from "./_mailerlite";
 import {
   buildConsentFields,
   buildCrmNotes,
@@ -290,13 +290,19 @@ export const handler: Handler = async (event) => {
     });
 
     // The simple /contact form (inquiry_type=GENERAL_LEAD) is general inbound,
-    // NOT a funnel result — it gets its own MailerLite "Contacto" group/sequence.
-    // The ICP funnel keeps its segmented routing. (CRM source stays open-channel
-    // for the general form, set via icp_status; only the ML group differs.)
+    // NOT a funnel result — it goes to the MailerLite "Contacto" group, the only
+    // contact-side group that still exists.
+    //
+    // The ICP funnel used to fan out to Cualificados / No cualificados /
+    // Borderline. Those three groups were deleted from MailerLite on 2026-09-01
+    // (zero subscribers, automations off since May 2026), so that routing was
+    // retired rather than repointed: funnel leads reach the operator through the
+    // blocking Resend notification and land in the CRM, and nothing is posted to
+    // MailerLite for them. (CRM source still comes from icp_status.)
     const isGeneralContact = inquiryType === "GENERAL_LEAD";
     const mailerLiteGroups = isGeneralContact
       ? [getGeneralContactGroupId()].filter(Boolean)
-      : getContactGroupIds(icpStatus, icpPrimaryState);
+      : [];
 
     const mailerLitePromise = syncContactToMailerLite({
       email,
