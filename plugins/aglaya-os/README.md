@@ -1,3 +1,5 @@
+> **RETIRADO (2026-09-24).** Ya no lo sirve el marketplace de esta nave y nada de lo que sigue es vigente; motivo en [`BACKUP-NOTES.md`](BACKUP-NOTES.md) §10.
+
 # AGLAYA-OS v0.2.1
 
 > **The Operational Layer for Full-Stack Architects of Truth.**
