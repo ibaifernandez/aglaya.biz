@@ -26,7 +26,7 @@ const {
 } = entry.data;
 const slug = Astro.params.slug;
 
-const bodyKey = `body_${lang}` as 'body_en' | 'body_es' | 'body_pt';
+const bodyKey = `body_${lang}` as 'body_en' | 'body_es';
 const bodyContent = marked.parse(entry.data[bodyKey] || entry.data.body_es || '');
 ---
 
@@ -36,7 +36,6 @@ const bodyContent = marked.parse(entry.data[bodyKey] || entry.data.body_es || ''
   ogType="article"
   lang={lang}
   alternateUrl={new URL(`/proof/${slug}/`, Astro.site).href}
-  alternateUrlPt={new URL(`/pt/proof/${slug}/`, Astro.site).href}
   noindex={noindex ?? false}
 >
   <Header />

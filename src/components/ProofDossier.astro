@@ -4,7 +4,7 @@ import { getLangFromUrl, useTranslations } from "../i18n/utils";
 interface Props {
   title: { en: string; es: string };
   client: string;
-  industry: string | { en: string; es: string; pt?: string };
+  industry: string | { en: string; es: string };
   challenge: { en: string; es: string };
   strategy: { en: string; es: string };
   vision: { en: string; es: string };
@@ -15,7 +15,7 @@ interface Props {
   }>;
   solution_systems: string[];
   date: string;
-  lang: "en" | "es" | "pt";
+  lang: "en" | "es";
   id: string;
   heroImage?: string;
   thumbImage?: string;
@@ -375,11 +375,7 @@ const processedTitle = (input: string) => {
       <!-- Action Footer (Pinned to bottom of Right Col or inline) -->
       <section class="p-8 lg:p-16 border-t border-white/5 mt-auto">
         <a
-          href={lang === "es"
-            ? "/es/contact"
-            : lang === "pt"
-              ? "/pt/contact"
-              : "/contact"}
+          href={lang === "es" ? "/es/contact" : "/contact"}
           class="group relative inline-flex items-center gap-12 bg-brand text-white py-8 px-12 transition-all hover:bg-white hover:text-black overflow-hidden active:scale-95"
         >
           <span

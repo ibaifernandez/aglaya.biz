@@ -20,15 +20,6 @@ test.describe('Quote Calculator', () => {
     await expect(page.locator('.quote-calculator')).toBeVisible();
   });
 
-  test('should render the PT quote page', async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/pt/quote/');
-
-    await expect(page).toHaveTitle(/AGLAYA/);
-    await expect(page.locator('h1')).toBeVisible();
-    await expect(page.locator('.quote-calculator')).toBeVisible();
-  });
-
   test('should have all 4 base product options', async ({ page }) => {
     await page.goto('/quote/');
 
@@ -63,15 +54,6 @@ test.describe('ROI Audit', () => {
   test('should render the ES roi-audit page', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/es/roi-audit/');
-
-    await expect(page).toHaveTitle(/AGLAYA/);
-    await expect(page.locator('h1')).toBeVisible();
-    await expect(page.locator('h1')).toContainText(/automatizado/i);
-  });
-
-  test('should render the PT roi-audit page', async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/pt/roi-audit/');
 
     await expect(page).toHaveTitle(/AGLAYA/);
     await expect(page.locator('h1')).toBeVisible();

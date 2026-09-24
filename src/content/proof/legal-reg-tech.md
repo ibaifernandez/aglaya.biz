@@ -2,28 +2,22 @@
 title:
   en: "Regulatory Intelligence · Ley 21.719"
   es: "Inteligencia Regulatoria · Ley 21.719"
-  pt: "Inteligência Regulatória · Lei 21.719"
 client: "AGLAYA"
 industry:
   en: "RegTech / Legal Compliance"
   es: "RegTech / Compliance Legal"
-  pt: "RegTech / Compliance Legal"
 challenge:
   en: "Chilean companies face mandatory compliance with Ley 21.719 but have no affordable way to audit their public digital exposure before hiring legal counsel."
   es: "Las empresas chilenas enfrentan el cumplimiento obligatorio de la Ley 21.719 pero no tienen una forma asequible de auditar su exposición digital pública antes de contratar asesoría legal."
-  pt: "As empresas chilenas enfrentam conformidade obrigatória com a Lei 21.719, mas não têm uma forma acessível de auditar sua exposição digital pública antes de contratar consultoria jurídica."
 summary:
   en: "AGLAYA built and deployed its own RegTech product: an automated scanner that visits any Chilean website, detects visible regulatory risk signals under Ley 21.719, and delivers a free structured compliance audit. No legal opinion. No manual review. A machine that sees what anyone can see — and turns it into an actionable technical report."
   es: "AGLAYA construyó y desplegó su propio producto RegTech: un scanner automatizado que visita cualquier sitio web chileno, detecta señales visibles de riesgo regulatorio bajo la Ley 21.719 y entrega una auditoría de compliance estructurada y gratuita. Sin opinión legal. Sin revisión manual. Una máquina que ve lo que cualquiera puede ver — y lo convierte en un informe técnico accionable."
-  pt: "A AGLAYA construiu e implantou seu próprio produto RegTech: um scanner automatizado que visita qualquer site chileno, detecta sinais visíveis de risco regulatório sob a Lei 21.719 e entrega uma auditoria de compliance estruturada e gratuita. Sem parecer jurídico. Sem revisão manual. Uma máquina que vê o que qualquer um pode ver — e transforma isso em um relatório técnico acionável."
 strategy:
   en: "Eligibility pre-flight + five-scan consensus engine + deterministic rule matrix for the compliance verdict — no LLM in scoring; Claude Haiku assists semantic-check rescue + editorial polish. Deployed on Railway + Netlify. Free diagnostic — no payment gate."
   es: "Pre-flight de elegibilidad + motor de consenso de 5 escaneos + matriz de reglas determinista para el veredicto — sin LLM en la puntuación; Claude Haiku asiste en el rescate por chequeo semántico y el pulido editorial. Desplegado en Railway + Netlify. Diagnóstico gratis — sin pasarela de pago."
-  pt: "Pre-flight de elegibilidade + motor de consenso de 5 varreduras + matriz de regras determinista para o veredito — sem LLM na pontuação; Claude Haiku auxilia no resgate por verificação semântica e no polimento editorial. Implantado no Railway + Netlify. Diagnóstico grátis — sem gateway de pagamento."
 vision:
   en: "Compliance intelligence that any company can access — before the lawyer, before the fine."
   es: "Inteligencia de compliance que cualquier empresa puede acceder — antes del abogado, antes de la multa."
-  pt: "Inteligência de compliance que qualquer empresa pode acessar — antes do advogado, antes da multa."
 solution_systems:
   - Zero-Filter Diagnostics
   - Systemic Alchemy
@@ -33,17 +27,14 @@ results:
     label:
       en: "Reach rate in eligible Chilean domains"
       es: "Tasa de alcance en dominios chilenos elegibles"
-      pt: "Taxa de alcance em domínios chilenos elegíveis"
   - metric: "100%"
     label:
       en: "Traceable evidence per audit finding"
       es: "Evidencia trazable por hallazgo de auditoría"
-      pt: "Evidência rastreável por achado de auditoria"
   - metric: "$0"
     label:
       en: "Per compliance audit — no card, no registration"
       es: "Por auditoría de compliance — sin tarjeta, sin registro"
-      pt: "Por auditoria de compliance — sem cartão, sem cadastro"
 featured: true
 date: "2026-04"
 client_logo: "../src/assets/images/chile-flag-round-circle-icon.svg"
@@ -149,55 +140,4 @@ body_es: |
   - **100%** evidencia trazable — cada hallazgo vinculado a un fragmento HTML capturado
   - **Gratis** — auditoría de compliance completa, sin tarjeta, sin registro — antes del abogado, antes de la multa
   - En producción · Gratis · sin registro · [Ejecutar un escaneo →](https://ley-21719-chile.aglaya.biz/)
-body_pt: |
-  ## O Que Construímos
-
-  Cada empresa chilena com um site adquiriu uma obrigação regulatória no dia em que a Lei 21.719 entrou em vigor. A maioria não sabe como essa obrigação se parece em seu próprio domínio — porque o diagnóstico custa mais do que estão dispostas a pagar antes mesmo de saber se há um problema.
-
-  A AGLAYA construiu a máquina que muda essa equação. Uma **auditoria de compliance gratuita** que vê exatamente o que um regulador veria: a superfície pública. Nada mais. Nada menos.
-
-  <img src="/infographic-legal-reg-tech.jpg" alt="Lei 21.719 — Arquitetura do sistema e dados do benchmark" style="width:100%;margin:2.5rem 0;border:1px solid rgba(255,255,255,0.08);" />
-
-  ### Passo 1 — Pre-Flight de Elegibilidade
-
-  O sistema valida a resolução de URL e o estado do domínio antes de iniciar qualquer varredura. Domínios sem presença web ativa, com certificados inválidos ou caminhos de crawl bloqueados são filtrados antes de gastar processamento. Nenhum falso positivo de alvos fora de escopo. Nenhum ciclo desperdiçado. Nenhum relatório de risco inflado.
-
-  ### Passo 2 — Motor de Consenso de 5 Varreduras
-
-  Cada domínio elegível é varrido cinco vezes de forma independente. Os resultados são comparados e reconciliados entre as cinco passagens antes de qualquer alerta ser disparado. Um sinal que aparece em uma varredura mas não nas outras quatro não é um achado — é ruído. O motor de consenso elimina o ruído no nível arquitetônico, não no nível da interpretação.
-
-  | Sinal | Linha de Base | Otimizado |
-  |---|---|---|
-  | Conclusão da Varredura | 49,1% | 95,2% |
-  | Estabilidade da Evidência | 88,5% | 99,2% |
-  | Alcance do Alvo | 96,1% | 99,2% |
-
-  *Sobre painel de domínios após filtro de elegibilidade pre-flight.*
-
-  ```mermaid
-  flowchart TD
-    A["URL de entrada"] --> B["Pre-flight de elegibilidade\nResolução URL · estado do domínio"]
-    B --> C["Motor de consenso · 5 varreduras\nPassagens independentes + resgate por verificação semântica (Claude)"]
-    C --> D["Matriz de controles\nRegras deterministas · Lei 21.719 · sem LLM na pontuação"]
-    D --> E["Alertas regulatórios\nVinculados a artigo · controle · requisito"]
-    E --> F["Polimento editorial · Claude Haiku\nApenas redação — estrutura do relatório determinista"]
-    F --> G["Relatório de auditoria · Grátis\n100% rastreável · Evidência HTML capturada"]
-  ```
-
-  ### Passo 3 — Regras Primeiro. Claude Depois.
-
-  Os alertas regulatórios são disparados por lógica de regras deterministas aplicada contra uma matriz de controles derivada da Lei 21.719. O sistema não adivinha. Verifica. Cada alerta mapeia para um artigo específico, um controle específico, um requisito específico — e a lógica de aprovado/reprovado que converte os achados em alertas é uma matriz fixa e auditável, sem LLM na pontuação.
-
-  A Claude Haiku auxilia em dois pontos, e nenhum decide o veredito. Um **resgate por verificação semântica** relê os critérios que a passagem por palavras-chave marcou como ausentes, cortando falsos negativos. Um **polimento editorial** refina a redação do relatório determinista já construído para o PDF. O relatório não é gerado por um LLM — sua estrutura e as regras de pontuação são deterministas; o modelo apenas apura a detecção e a redação.
-
-  ### Passo 4 — Evidência Rastreável
-
-  Cada alerta está vinculado ao fragmento HTML específico capturado durante a varredura. O cliente recebe o achado *e* a evidência. Pode verificar cada item sem confiar cegamente no sistema. Uma trilha de auditoria construída para o momento em que alguém decidir questionar um achado.
-
-  ## Os Resultados
-
-  - **96%** taxa de alcance em domínios chilenos elegíveis
-  - **100%** evidência rastreável — cada achado vinculado a um fragmento HTML capturado
-  - **Grátis** — auditoria de compliance completa, sem cartão, sem cadastro — antes do advogado, antes da multa
-  - Em produção · Grátis · sem cadastro · [Executar uma varredura →](https://ley-21719-chile.aglaya.biz/)
 ---

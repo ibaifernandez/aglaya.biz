@@ -60,8 +60,8 @@ export function alternatesInHtml(html: string): Alternates {
   return found;
 }
 
-/** The four this site publishes: three languages plus the fallback. */
-const EXPECTED_HREFLANGS = ['en', 'es', 'pt-BR', 'x-default'];
+/** The three this site publishes: two languages plus the fallback. */
+const EXPECTED_HREFLANGS = ['en', 'es', 'x-default'];
 
 test.describe('sitemap language equivalents', () => {
   test('every entry declares the same alternates its page does', async ({ request }) => {
@@ -80,7 +80,8 @@ test.describe('sitemap language equivalents', () => {
 
     // Anti-vacuity: a parser that found nothing would make every comparison
     // below pass by comparing two empty objects.
-    expect(entries.length, 'no <url> entries parsed out of the sitemap').toBeGreaterThan(30);
+    // 24 entries on the EN + ES site.
+    expect(entries.length, 'no <url> entries parsed out of the sitemap').toBeGreaterThan(20);
 
     for (const entry of entries) {
       const loc = locOf(entry);
@@ -109,19 +110,17 @@ test.describe('sitemap language equivalents', () => {
       <link rel="canonical" href="https://aglaya.biz/es/contact/">
       <link rel="alternate" hreflang="en" href="https://aglaya.biz/contact/">
       <link rel="alternate" hreflang="es" href="https://aglaya.biz/es/contact/">
-      <link rel="alternate" hreflang="pt-BR" href="https://aglaya.biz/pt/contact/">
       <link rel="alternate" hreflang="x-default" href="https://aglaya.biz/">
     </head>`;
 
     const links = (...tags: string[]) => tags.join('');
     const EN = '<xhtml:link rel="alternate" hreflang="en" href="https://aglaya.biz/contact/"/>';
     const ES = '<xhtml:link rel="alternate" hreflang="es" href="https://aglaya.biz/es/contact/"/>';
-    const PT = '<xhtml:link rel="alternate" hreflang="pt-BR" href="https://aglaya.biz/pt/contact/"/>';
     const XD = '<xhtml:link rel="alternate" hreflang="x-default" href="https://aglaya.biz/"/>';
     const entry = (body: string) => `<loc>https://aglaya.biz/es/contact/</loc>${body}`;
 
     test('agrees when the map says what the page says', () => {
-      expect(alternatesInXml(entry(links(EN, ES, PT, XD)))).toEqual(alternatesInHtml(PAGE));
+      expect(alternatesInXml(entry(links(EN, ES, XD)))).toEqual(alternatesInHtml(PAGE));
     });
 
     test('an entry stripped of its alternates fails', () => {
@@ -132,7 +131,7 @@ test.describe('sitemap language equivalents', () => {
     });
 
     test('one dropped language fails', () => {
-      expect(alternatesInXml(entry(links(EN, ES, XD)))).not.toEqual(alternatesInHtml(PAGE));
+      expect(alternatesInXml(entry(links(EN, XD)))).not.toEqual(alternatesInHtml(PAGE));
     });
 
     test('the pre-existing default — English twin pointing at the home page — fails', () => {
@@ -144,14 +143,13 @@ test.describe('sitemap language equivalents', () => {
         '<link rel="alternate" hreflang="en" href="https://aglaya.biz/">',
       );
       expect(alternatesInHtml(wrong)).not.toEqual(alternatesInHtml(PAGE));
-      expect(alternatesInXml(entry(links(EN, ES, PT, XD)))).not.toEqual(alternatesInHtml(wrong));
+      expect(alternatesInXml(entry(links(EN, ES, XD)))).not.toEqual(alternatesInHtml(wrong));
     });
 
     test('the parsers are not blind (they read a real tag when there is one)', () => {
       expect(alternatesInHtml(PAGE)).toEqual({
         en: 'https://aglaya.biz/contact/',
         es: 'https://aglaya.biz/es/contact/',
-        'pt-BR': 'https://aglaya.biz/pt/contact/',
         'x-default': 'https://aglaya.biz/',
       });
       expect(urlEntries('<url><loc>a</loc></url><url><loc>b</loc></url>')).toHaveLength(2);

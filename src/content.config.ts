@@ -1,15 +1,14 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
-// Define a multilingual string that can be a single string or an object with optional en/es/pt keys
+// Define a multilingual string that can be a single string or an object with optional en/es keys
 const bilingualString = z.union([
   z.string(),
   z.object({
     en: z.string().optional(),
     es: z.string().optional(),
-    pt: z.string().optional(),
-  }).refine(data => data.en || data.es || data.pt, {
-    message: "At least one of 'en', 'es', or 'pt' must be provided"
+  }).refine(data => data.en || data.es, {
+    message: "At least one of 'en' or 'es' must be provided"
   }),
 ]);
 
@@ -42,7 +41,6 @@ const proofCollection = defineCollection({
     // Multilingual body content (replaces per-language MD files)
     body_en: z.string().optional(),
     body_es: z.string().optional(),
-    body_pt: z.string().optional(),
   }),
 });
 

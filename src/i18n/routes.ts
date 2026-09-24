@@ -20,11 +20,11 @@
  * version. A rule that reads the path cannot forget.
  */
 
-export const LOCALES = ['en', 'es', 'pt'] as const;
+export const LOCALES = ['en', 'es'] as const;
 export type Locale = (typeof LOCALES)[number];
 
-/** The hreflang value each locale is published under. Portuguese is served pt-BR. */
-export const HREFLANG: Record<Locale, string> = { en: 'en', es: 'es', pt: 'pt-BR' };
+/** The hreflang value each locale is published under. */
+export const HREFLANG: Record<Locale, string> = { en: 'en', es: 'es' };
 
 /** Where a visitor lands when no published language matches theirs. */
 export const X_DEFAULT_PATH = '/';
@@ -33,13 +33,13 @@ export type Alternates = Record<Locale, string>;
 
 /**
  * Routes whose SLUG is translated, keyed by the English path. Everything else is
- * parallel — `/es<enPath>` and `/pt<enPath>` — and needs no entry here. Keep this
+ * parallel — `/es<enPath>` — and needs no entry here. Keep this
  * table and the files under `src/pages/` in step: a translated slug that is
  * missing here resolves to a path that does not exist.
  */
 const TRANSLATED: Record<string, Alternates> = {
-  '/privacy/': { en: '/privacy/', es: '/es/privacidad/', pt: '/pt/privacidade/' },
-  '/legal-notice/': { en: '/legal-notice/', es: '/es/aviso-legal/', pt: '/pt/aviso-legal/' },
+  '/privacy/': { en: '/privacy/', es: '/es/privacidad/' },
+  '/legal-notice/': { en: '/legal-notice/', es: '/es/aviso-legal/' },
 };
 
 /** Reverse index: any localised path of a translated route back to its English path. */
@@ -91,7 +91,6 @@ export function alternatePathsFor(pathname: string): Alternates {
   return {
     en: enPath,
     es: prefixed('es', enPath),
-    pt: prefixed('pt', enPath),
   };
 }
 
@@ -101,6 +100,5 @@ export function alternateUrlsFor(pathname: string, site: URL | string): Alternat
   return {
     en: new URL(paths.en, site).href,
     es: new URL(paths.es, site).href,
-    pt: new URL(paths.pt, site).href,
   };
 }

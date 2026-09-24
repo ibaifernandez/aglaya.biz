@@ -1,7 +1,7 @@
 # CLAUDE.md — Project Instructions for AI Assistants
 
 ## Project Overview
-**AGLAYA** ("The Uncomfortable Agency") — trilingual (EN/ES/PT) digital marketing agency website built with Astro, deployed on Netlify.
+**AGLAYA** ("The Uncomfortable Agency") — bilingual (EN/ES) digital marketing agency website built with Astro, deployed on Netlify.
 
 ## Tech Stack
 - **Framework**: Astro 6.x (SSR via Netlify adapter)
@@ -25,7 +25,7 @@ npm run test:e2e   # Playwright E2E + accessibility
 ## Project Structure
 ```
 src/
-├── pages/           # Astro pages (/ = EN, /es/ = ES, /pt/ = PT)
+├── pages/           # Astro pages (/ = EN, /es/ = ES)
 ├── layouts/         # BaseLayout.astro (SEO, meta, structured data)
 ├── components/      # ContactForm.astro, CookieBanner.astro, icons/
 ├── i18n/            # translations.ts (useTranslations helper)
@@ -38,7 +38,7 @@ docs/                # Project documentation
 ```
 
 ## Architecture Decisions
-- **i18n**: Subdirectory strategy (EN at `/`, ES at `/es/`, PT at `/pt/`). Full hreflang parity.
+- **i18n**: Subdirectory strategy (EN at `/`, ES at `/es/`). Full hreflang parity.
 - **Forms**: Client → hCaptcha validation → Netlify Function → Resend/MailerLite/CRM. Contact and ROI flows send immediate confirmations plus internal notifications; footer dispatch captures subscribers in MailerLite when configured — MailerLite owns the confirmation sequence (Email 0) directly. Resend is not involved in dispatch confirmations. Confirmation email for contact/ROI is rendered in the same language (`lang`) the form was submitted from.
 - **MailerLite reach (post 2026-09-01)**: only two flows write to MailerLite — footer dispatch (`Dispatch`) and the simple `/contact` form (`Contacto`). The ICP funnel's segmented routing (Cualificados / No cualificados / Borderline) and the quote calculator's `Cotizaciones` write were **retired**, not repointed, after the operator deleted those four groups; funnel leads reach the operator via the blocking Resend notification and the CRM, quote leads via the Resend notification with the PDF attached. Guarded by `tests/unit/contact.test.ts` and `tests/unit/quote.test.ts`, which fail if any of that routing comes back.
 - **Form routing (post PR #83, 2026-06-15)**: the **ICP qualification funnel** (`ICPFilter` → `QualifiedForm`/`BorderlineForm`/`OpenChannelForm`) lives on **`/roi-audit`** (embedded after the explainer; mounted with `entryPoint`/`serviceInterest="roi_audit"` so leads are tagged ROI). **`/contact`** is a **simple `ContactForm`** (name/email/message + consent) that posts `icp_status=OPEN_CHANNEL` + `inquiry_type=GENERAL_LEAD` → lands in the CRM as an open-channel lead (from `icp_status`) + MailerLite **Contacto** group (auto-reply; routed by `inquiry_type` via `getGeneralContactGroupId()`, NOT by `icp_status`) + Resend internal notification. All form submits hit the same `netlify/functions/contact.ts`. (The old `ROIForm.astro` fake-submit component is deleted.)
@@ -59,7 +59,7 @@ docs/                # Project documentation
 - **Email tagline ES**: "La IA ejecuta. El humano estrategiza."
 
 ## Coding Conventions
-- All text must be trilingual (EN + ES + PT). Use `src/i18n/translations.ts` for all user-facing strings.
+- All text must be bilingual (EN + ES). Use `src/i18n/translations.ts` for all user-facing strings.
 - Semantic HTML with ARIA attributes. Every form field needs labels.
 - All pages must pass Axe-core WCAG 2AA audit.
 - Use Astro components (`.astro`) for static content; reserve `<script>` for client interactivity.

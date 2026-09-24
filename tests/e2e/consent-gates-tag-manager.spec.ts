@@ -11,7 +11,7 @@ import { test, expect, type Page } from '@playwright/test';
  * breach is invisible from the browser window. The site has leaked a
  * visitor's IP to a US server before the banner decided once already.
  *
- * What this guard asserts, on the three home pages (EN/ES/PT):
+ * What this guard asserts, on the two home pages (EN/ES):
  *
  *   1. NO DECISION, "essential", "rejected" → not a single request to the tag
  *      manager or to a known analytics endpoint, and no third-party origin
@@ -24,7 +24,7 @@ import { test, expect, type Page } from '@playwright/test';
  * on a third party answering, and CI has no guaranteed network.
  */
 
-const HOMES = ['/', '/es/', '/pt/'] as const;
+const HOMES = ['/', '/es/'] as const;
 const CONSENT_KEY = 'aglaya_cookie_consent';
 
 const TAG_MANAGER = /^https:\/\/www\.googletagmanager\.com\/gtm\.js/;

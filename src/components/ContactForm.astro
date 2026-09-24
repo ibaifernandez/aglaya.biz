@@ -3,7 +3,7 @@ import Send from './icons/Send.astro';
 import FormComplianceNotice from './FormComplianceNotice.astro';
 
 interface Props {
-  lang?: 'en' | 'es' | 'pt';
+  lang?: 'en' | 'es';
   hcaptchaSiteKey?: string;
 }
 
@@ -34,17 +34,6 @@ const labels = {
     submit: 'Enviar Mensaje',
     success: 'Mensaje enviado. Te contactaremos en menos de 24 horas.',
     error: 'Algo salió mal. Inténtalo de nuevo.',
-  },
-  pt: {
-    nameLabel: 'Nome',
-    namePlaceholder: 'Seu nome',
-    emailLabel: 'E-mail',
-    emailPlaceholder: 'seu@email.com',
-    messageLabel: 'Mensagem',
-    messagePlaceholder: 'Conte-nos sobre o seu projeto...',
-    submit: 'Enviar Mensagem',
-    success: 'Mensagem enviada. Entraremos em contato em até 24 horas.',
-    error: 'Algo deu errado. Tente novamente.',
   },
 };
 
