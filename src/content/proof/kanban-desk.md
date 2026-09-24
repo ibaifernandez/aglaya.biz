@@ -25,7 +25,7 @@ vision:
   es: "Poseer las herramientas que usas. Construir para restricciones reales, no demos."
   pt: "Possuir as ferramentas que você usa. Construir para restrições reais, não demos."
 solution_systems:
-  - Zero-Leak Architecture
+  - Owned Infrastructure
   - Systemic Alchemy
 results:
   - metric: "3"

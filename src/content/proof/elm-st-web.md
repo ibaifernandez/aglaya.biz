@@ -25,7 +25,7 @@ vision:
   es: "La ausencia de un framework moderno no es excusa para omitir rigor de ingeniería."
   pt: "A ausência de um framework moderno não é desculpa para omitir rigor de engenharia."
 solution_systems:
-  - Zero-Leak Architecture
+  - Owned Infrastructure
   - Systemic Alchemy
 results:
   - metric: "97"
