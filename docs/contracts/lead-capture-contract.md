@@ -1,9 +1,9 @@
 # AGLAYA Lead-Capture & Data-Protection Contract
 
-- **Version:** 1.1.0
+- **Version:** 1.1.1
 - **Status:** ACTIVE — SMOKED ✓ (lead-capture verified 2026-05-29; consent-ledger E2E pending first aglaya.biz ficha; see §11)
 - **Canonical home:** this file (`aglaya.biz/docs/contracts/lead-capture-contract.md`)
-- **Last updated:** 2026-06-13
+- **Last updated:** 2026-09-24
 
 This is the single source of truth governing how any AGLAYA product captures
 leads and consent/accountability evidence into CRM AGLAYA, and the
@@ -152,6 +152,16 @@ privacy notice must state this (aglaya.biz: section "Proof of Consent & Erasure"
   new source prefix). **Major:** breaking (field removed/retyped, behaviour
   change) → every signatory must re-acknowledge before adopting.
 
+**History.**
+
+- **v1.1.1 (2026-09-24, patch — wording only).** §10 no longer says the Scanner
+  runs on consent: its scan request is an inbound request form under §2, so it runs
+  on legitimate interest, like aglaya.biz's forms. Consent stays for voluntary
+  subscriptions. Reason: Ibai's decision of 2026-09-19 (commercial emails to people
+  who scan go on legitimate interest), which confirmed §2 and ruled §10 wrong. No
+  rule, payload or field changes; the emitted `consent_contract_version` stays
+  `"1.1.0"`.
+
 ## 9. Extending to a new product
 
 A new producer (e.g. Scanner 21.719):
@@ -168,9 +178,10 @@ A new producer (e.g. Scanner 21.719):
 | **CRM AGLAYA** | countersigned ✓ | v1.1.0 (consumer) | ledger + DSR + PDF export live in prod; accepts optional consent fields (backward-compatible, dedup by `evidence_hash`); formal v1.1.0 re-ack **DONE 2026-06-13** (`ce0c544`, §"v1.1.0" of `crm-aglaya/docs/contracts/IMPLEMENTS.md` — verified by the AGLAYA captain 2026-07-17; this row read "pending" for a month after the fact) |
 | **Scanner 21.719** | signed | v1.1.0 | orchestrator of this rollout; emits ficha at 4 points + unsubscribe webhook, E2E in prod; `build_consent_fields`/`build_dsr_fields` are the technical source of truth |
 
-Producers run **different legal bases by design** (§2 + §9): aglaya.biz forms on
-legitimate interest, Scanner 21.719 on consent under Ley 21.719 — the ledger records
-the actual `legal_basis` per entry. Each forwards its own `privacy_policy_version`;
+Producers share **the same legal-basis model** (§2 + §9): aglaya.biz forms and the
+Scanner 21.719 scan request both run on legitimate interest; consent is kept for
+voluntary subscriptions (newsletter / marketing opt-in) — the ledger records the
+actual `legal_basis` per entry. Each forwards its own `privacy_policy_version`;
 the CRM persists it verbatim. DPO channel `dpo@aglaya.biz` is shared.
 
 > **v1.1.0 — TRIANGLE CLOSED (verified by the AGLAYA captain, 2026-07-17).** All three
