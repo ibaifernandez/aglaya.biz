@@ -1,6 +1,6 @@
 # AGLAYA Lead-Capture & Data-Protection Contract
 
-- **Version:** 1.1.1
+- **Version:** 1.1.2
 - **Status:** ACTIVE — SMOKED ✓ (lead-capture verified 2026-05-29; consent-ledger E2E pending first aglaya.biz ficha; see §11)
 - **Canonical home:** this file (`aglaya.biz/docs/contracts/lead-capture-contract.md`)
 - **Last updated:** 2026-09-24
@@ -126,12 +126,12 @@ proof* — that the subject consented to a purpose on a date and, where applicab
 withdrew it later — is retained for the applicable limitation period, as a legal
 obligation and defence of claims. **Erase the use, keep the proof.** Each producer's
 privacy notice must state this (aglaya.biz: section "Proof of Consent & Erasure" in
-`/privacy/`, all three languages).
+`/privacy/`, both languages — EN and ES).
 
 ## 6. Data-subject rights
 
 - Channel: `dpo@aglaya.biz` (ACTIVE — alias created 2026-06-01, routes to `info@aglaya.biz`).
-  Privacy pages (EN/ES/PT) updated to reflect this address for DPO contact,
+  Privacy pages (EN/ES) updated to reflect this address for DPO contact,
   rights exercise, and transfer-safeguard requests.
 
 ## 7. Operational gotchas (binding)
@@ -154,6 +154,11 @@ privacy notice must state this (aglaya.biz: section "Proof of Consent & Erasure"
 
 **History.**
 
+- **v1.1.2 (2026-09-24, patch — wording only).** §5 and §6 no longer say
+  aglaya.biz's privacy pages exist in Portuguese: the site is EN + ES since
+  Ibai's decision of 2026-09-24 (`/pt/*` redirects to Spanish). The `language`
+  enum in §3 keeps `'pt'` — it governs every producer. No rule, payload or field
+  changes; the emitted `consent_contract_version` stays `"1.1.0"`.
 - **v1.1.1 (2026-09-24, patch — wording only).** §10 no longer says the Scanner
   runs on consent: its scan request is an inbound request form under §2, so it runs
   on legitimate interest, like aglaya.biz's forms. Consent stays for voluntary
