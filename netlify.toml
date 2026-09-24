@@ -19,8 +19,24 @@
   # which trips secrets scanning. Omit these non-secret keys from the scan.
   SECRETS_SCAN_OMIT_KEYS = "PUBLIC_SENTRY_DSN,SENTRY_ORG,SENTRY_PROJECT"
 
+# Portuguese is no longer published (2026-09-24): the site is EN + ES. ONE rule
+# sends every old /pt/ address to its Spanish twin; no per-page rules. Listed
+# first so no later rule can claim a /pt/ path. `force = true` because the
+# Astro Netlify adapter serves unmatched paths through its SSR function, and a
+# non-forced rule is only a fallback — the function could answer (with a 404)
+# before the redirect is consulted. With src/pages/pt/ gone there is no static
+# file for it to shadow, so forcing costs nothing. A translated slug keeps its
+# Portuguese spelling (/pt/privacidade/ -> /es/privacidade/); that miss was
+# accepted as a 404, and the /es/privacidade/ rule below happens to rescue it.
+# Guarded by tests/unit/no-portuguese.test.ts.
+[[redirects]]
+  from = "/pt/*"
+  to   = "/es/:splat"
+  status = 301
+  force = true
+
 # Redirect localized legal-page paths that the language switcher may generate
-# (switcher strips /es|/pt prefix naively; these paths don't follow the standard pattern)
+# (switcher strips the /es prefix naively; these paths don't follow the standard pattern)
 [[redirects]]
   from = "/privacidad/"
   to   = "/es/privacidad/"
@@ -28,7 +44,7 @@
 
 [[redirects]]
   from = "/privacidade/"
-  to   = "/pt/privacidade/"
+  to   = "/es/privacidad/"
   status = 301
 
 [[redirects]]
@@ -37,18 +53,8 @@
   status = 301
 
 [[redirects]]
-  from = "/pt/privacy/"
-  to   = "/pt/privacidade/"
-  status = 301
-
-[[redirects]]
   from = "/es/privacidade/"
   to   = "/es/privacidad/"
-  status = 301
-
-[[redirects]]
-  from = "/pt/privacidad/"
-  to   = "/pt/privacidade/"
   status = 301
 
 [[redirects]]
@@ -67,11 +73,6 @@
   to   = "/404/"
   status = 301
 
-[[redirects]]
-  from = "/pt/404/"
-  to   = "/404/"
-  status = 301
-
 # Legal notice redirects
 [[redirects]]
   from = "/aviso-legal/"
@@ -81,14 +82,4 @@
 [[redirects]]
   from = "/es/legal-notice/"
   to   = "/es/aviso-legal/"
-  status = 301
-
-[[redirects]]
-  from = "/pt/legal-notice/"
-  to   = "/pt/aviso-legal/"
-  status = 301
-
-[[redirects]]
-  from = "/pt/nota-legal/"
-  to   = "/pt/aviso-legal/"
   status = 301

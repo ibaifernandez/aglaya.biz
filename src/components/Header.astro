@@ -4,31 +4,22 @@ import WhatsAppIcon from './icons/WhatsApp.astro';
 import logoBlanco from '../assets/images/aglaya-logo-blanco.svg?raw';
 import spainFlag from '../assets/images/spain.svg?raw';
 import englishFlag from '../assets/images/UK.svg?raw';
-import brazilFlag from '../assets/images/Brazil.svg?raw';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const translatePath = useTranslatedPath(lang);
 
-function langSwitchPath(path: string, search: string, hash: string, targetLang: 'en' | 'es' | 'pt') {
-  const stripped = path.replace(/^\/(es|pt)(?=$|\/)/, '') || '/';
-  let newPath: string;
-  if (targetLang === 'en') {
-    newPath = stripped;
-  } else if (targetLang === 'es') {
-    newPath = stripped === '/' ? '/es/' : `/es${stripped}`;
-  } else {
-    newPath = stripped === '/' ? '/pt/' : `/pt${stripped}`;
-  }
+function langSwitchPath(path: string, search: string, hash: string, targetLang: 'en' | 'es') {
+  const stripped = path.replace(/^\/es(?=$|\/)/, '') || '/';
+  const newPath = targetLang === 'en' ? stripped : stripped === '/' ? '/es/' : `/es${stripped}`;
   return `${newPath}${search || ''}${hash || ''}`;
 }
 
 // Build switcher links for the languages we're NOT currently on
-type LangOption = { code: 'en' | 'es' | 'pt'; flag: string; label: string; href: string };
+type LangOption = { code: 'en' | 'es'; flag: string; label: string; href: string };
 const allLangs: LangOption[] = [
   { code: 'en', flag: englishFlag, label: 'Switch to English', href: langSwitchPath(Astro.url.pathname, Astro.url.search, Astro.url.hash, 'en') },
   { code: 'es', flag: spainFlag,   label: 'Cambiar a Español', href: langSwitchPath(Astro.url.pathname, Astro.url.search, Astro.url.hash, 'es') },
-  { code: 'pt', flag: brazilFlag,  label: 'Mudar para Português', href: langSwitchPath(Astro.url.pathname, Astro.url.search, Astro.url.hash, 'pt') },
 ];
 const otherLangs = allLangs.filter(l => l.code !== lang);
 
@@ -51,7 +42,7 @@ const navItems = [
         <Fragment set:html={logoBlanco} />
       </div>
       <span aria-hidden="true" class="font-mono text-[6px] text-white uppercase tracking-[0.2em] group-hover:text-white/50 transition-colors text-center">
-        {lang === 'es' ? 'La Agenc·IA Incómoda' : lang === 'pt' ? 'A Agência Desconfortável' : 'The Uncomfortable AI·gency'}
+        {lang === 'es' ? 'La Agenc·IA Incómoda' : 'The Uncomfortable AI·gency'}
       </span>
     </a>
 
@@ -61,7 +52,7 @@ const navItems = [
          the bar grew to two rows. The horizontal nav now appears only where it
          actually fits; under that width it is the same hamburger as on mobile.
          `whitespace-nowrap` is the guarantee: a label can never stack again, in
-         any of the three languages, whatever its length. -->
+         either language, whatever its length. -->
     <nav class="hidden xl:flex items-center gap-6 flex-1 justify-center">
       {navItems.map((item) => (
         <a
@@ -230,10 +221,9 @@ const navItems = [
   // Handle language switcher with View Transitions
   document.addEventListener('astro:page-load', function () {
     const switchLang = (path, targetLang) => {
-      const stripped = path.replace(/^\/(es|pt)(?=$|\/)/, '') || '/';
+      const stripped = path.replace(/^\/es(?=$|\/)/, '') || '/';
       if (targetLang === 'en') return stripped;
-      if (targetLang === 'es') return stripped === '/' ? '/es/' : `/es${stripped}`;
-      return stripped === '/' ? '/pt/' : `/pt${stripped}`;
+      return stripped === '/' ? '/es/' : `/es${stripped}`;
     };
 
     document.querySelectorAll('.lang-switcher').forEach(function (link) {

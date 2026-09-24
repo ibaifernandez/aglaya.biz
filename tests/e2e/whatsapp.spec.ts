@@ -12,7 +12,7 @@ import { test, expect } from '@playwright/test';
  *
  * So this guard asserts the three things that can actually break:
  *
- *   1. THE NUMBER. Exact, and identical in both copies and in all three
+ *   1. THE NUMBER. Exact, and identical in both copies and in both
  *      locales. `wa.me` accepts any digits; a wrong one opens a chat with
  *      nobody.
  *   2. THE BUTTON IS REACHABLE. Visible in the desktop bar at desktop width,
@@ -83,7 +83,6 @@ test.describe('Header WhatsApp button', () => {
     const labels: Array<[string, string]> = [
       ['/', 'Chat on WhatsApp'],
       ['/es/', 'Escríbenos por WhatsApp'],
-      ['/pt/', 'Fale conosco pelo WhatsApp'],
     ];
 
     for (const [path, label] of labels) {

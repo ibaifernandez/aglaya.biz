@@ -2,28 +2,22 @@
 title:
   en: "Zero-Defect Web Architecture"
   es: "Arquitectura Web Sin Defectos"
-  pt: "Arquitetura Web Sem Defeitos"
 client: "Elm St."
 industry:
   en: "Audiovisual Production"
   es: "Producción Audiovisual"
-  pt: "Produção Audiovisual"
 challenge:
   en: "A production company with ambition but a technically naked site — no CI, no monitoring, no quality gate. Anything could break silently."
   es: "Una productora con ambición pero un sitio técnicamente desnudo — sin CI, sin monitoreo, sin quality gate. Cualquier cosa podía romperse en silencio."
-  pt: "Uma produtora com ambição mas um site tecnicamente nu — sem CI, sem monitoramento, sem quality gate. Qualquer coisa podia quebrar em silêncio."
 summary:
   en: "A static HTML/CSS/JS site has no excuse to be technically fragile. We applied an 8-step blocking CI/CD pipeline — lint, Playwright E2E, visual regression with versioned baselines, axe-core a11y, Lighthouse CI per route, performance budgets — to a site that looks deceptively simple. The result: a corporate web with enterprise DNA."
   es: "Un sitio estático HTML/CSS/JS no tiene excusa para ser técnicamente frágil. Aplicamos un pipeline CI/CD bloqueante de 8 pasos — lint, Playwright E2E, regresión visual con baselines versionados, a11y axe-core, Lighthouse CI por ruta, performance budgets — a un sitio que parece engañosamente simple. El resultado: una web corporativa con ADN de enterprise."
-  pt: "Um site estático HTML/CSS/JS não tem desculpa para ser tecnicamente frágil. Aplicamos um pipeline CI/CD bloqueante de 8 passos — lint, Playwright E2E, regressão visual com baselines versionados, a11y axe-core, Lighthouse CI por rota, performance budgets — a um site que parece enganosamente simples. O resultado: uma web corporativa com DNA de enterprise."
 strategy:
   en: "8-step blocking GitHub Actions pipeline. Sentry + UptimeRobot observability layer. Bilingual ES/EN with hreflang, canonicals and parallel routes. Netlify Functions for server-side form validation with Turnstile CAPTCHA."
   es: "Pipeline GitHub Actions bloqueante de 8 pasos. Capa de observabilidad Sentry + UptimeRobot. Bilingüe ES/EN con hreflang, canonicals y rutas paralelas. Netlify Functions para validación de formulario server-side con Turnstile CAPTCHA."
-  pt: "Pipeline GitHub Actions bloqueante de 8 passos. Camada de observabilidade Sentry + UptimeRobot. Bilíngue ES/EN com hreflang, canonicals e rotas paralelas. Netlify Functions para validação de formulário server-side com Turnstile CAPTCHA."
 vision:
   en: "The absence of a modern framework is no excuse to skip engineering discipline."
   es: "La ausencia de un framework moderno no es excusa para omitir rigor de ingeniería."
-  pt: "A ausência de um framework moderno não é desculpa para omitir rigor de engenharia."
 solution_systems:
   - Owned Infrastructure
   - Systemic Alchemy
@@ -32,17 +26,14 @@ results:
     label:
       en: "Lighthouse Accessibility · desktop + mobile"
       es: "Lighthouse Accessibility · desktop + mobile"
-      pt: "Lighthouse Accessibility · desktop + mobile"
   - metric: "100"
     label:
       en: "Lighthouse SEO · desktop + mobile"
       es: "Lighthouse SEO · desktop + mobile"
-      pt: "Lighthouse SEO · desktop + mobile"
   - metric: "10/10"
     label:
       en: "Routes under blocking quality gate"
       es: "Rutas bajo quality gate bloqueante"
-      pt: "Rotas sob quality gate bloqueante"
 featured: false
 date: "2026-03"
 client_logo: "../src/assets/images/elm-st.svg"
@@ -131,51 +122,4 @@ body_es: |
   La lección que AGLAYA aplica en cada proyecto: la disciplina de ingeniería enterprise es una práctica, no un framework. Cualquier stack puede construirse para durar.
 
   [Ver el sitio →](https://elmst.ibaifernandez.com)
-body_pt: |
-  ## O Que Construímos
-
-  **elm-st-web** é o site corporativo da **Elm St.**, produtora audiovisual sediada em Bogotá, Colômbia. O site é visualmente contido — e tecnicamente implacável.
-
-  A premissa: *um site estático HTML/CSS/JS não tem desculpa para ser tecnicamente frágil.*
-
-  ### Arquitetura
-
-  - HTML/CSS/JS estático implantado no Netlify com **Netlify Functions** para validação de formulário server-side (Turnstile CAPTCHA invisível + honeypot + Resend opcional)
-  - Bilíngue **ES/EN** com hreflang, canonicals e rotas paralelas para cada página
-  - Cabeçalhos de segurança: CSP, HSTS, X-Frame-Options, controles anti mixed-content
-  - Runtime config servida com segurança — zero credenciais hardcoded no repositório
-
-  ### Pipeline CI/CD — 8 Passos Bloqueantes
-
-  Nada chega ao `main` sem passar por todos os gates. O pipeline roda a cada push, manualmente sob demanda, e em um **schedule semanal automático toda segunda-feira às 13:00 UTC**:
-
-  ```mermaid
-  flowchart LR
-    A[Lint\nHTML·JS·CSS] --> B[Netlify\nConfig] --> C[Links\nExternos] --> D[Playwright\nE2E] --> E[axe-core\nA11y] --> F[Regressão\nVisual] --> G[Lighthouse\nCI] --> H[Perf\nBudgets]
-    style A fill:#111,stroke:#9FC243,color:#fff
-    style H fill:#111,stroke:#9FC243,color:#fff
-  ```
-
-  1. **Lint HTML · JS · CSS** — validação de sintaxe e estilo
-  2. **Netlify config** — verificação estrutural do netlify.toml
-  3. **Links externos** — detecção de links quebrados
-  4. **Playwright E2E** — rotas críticas e formulário de contato em navegador real
-  5. **axe-core Acessibilidade** — WCAG 2AA sem exclusões (score: 97)
-  6. **Regressão visual** — desktop + mobile com baselines versionados
-  7. **Lighthouse CI** — 10 rotas auditadas em ambos os idiomas (SEO: 100 · A11y: 97)
-  8. **Performance budgets** — limites JSON por rota, bloqueante se ultrapassado
-
-  ### Observabilidade
-
-  - **Sentry** — captura de erros frontend por ambiente, DSN via runtime config (nunca hardcoded)
-  - **UptimeRobot** — monitoramento HTTP 24/7 com runbook de alertas P1/P2/P3
-  - **Google Search Console + Bing Webmaster Tools** — camada de indexação ativa, sitemap enviado
-
-  ## Os Resultados
-
-  Um site que parece simples e não é. **100 em SEO. 97 em Acessibilidade.** Em cada rota, nos dois idiomas, verificado a cada deploy.
-
-  A lição que a AGLAYA aplica em cada projeto: disciplina de engenharia enterprise é uma prática, não um framework. Qualquer stack pode ser construído para durar.
-
-  [Visitar o site →](https://elmst.ibaifernandez.com)
 ---
