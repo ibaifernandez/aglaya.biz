@@ -17,6 +17,19 @@ function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+// Every visitor-supplied value interpolated into the notification HTML goes
+// through this. The form is public: without it, anyone can compose the email
+// the operator reads (fake links, markup posing as the system template).
+// `isValidEmail` is not a sanitiser — it accepts `<b>x</b>@a.co`.
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function normalizeLang(lang?: string): "en" | "es" | "pt" {
   if (lang === "es" || lang === "pt") return lang;
   return "en";
@@ -89,16 +102,16 @@ async function sendInternalNotification(
       html: `
         <h2>${roiAuditLead ? "New ROI Audit request" : "New lead"} — aglaya.biz</h2>
         <p><strong>Language:</strong> ${lang.toUpperCase()}</p>
-        <p><strong>Name:</strong> ${name || "N/A"}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Company:</strong> ${company || "N/A"}</p>
-        <p><strong>Website:</strong> ${website || "N/A"}</p>
-        <p><strong>ICP Status:</strong> ${icpStatus || "N/A"}</p>
-        <p><strong>Inquiry Type:</strong> ${inquiryType || "N/A"}</p>
-        <p><strong>Entry Point:</strong> ${entryPoint || "N/A"}</p>
-        <p><strong>Service Interest:</strong> ${serviceInterest || "N/A"}</p>
+        <p><strong>Name:</strong> ${escapeHtml(name || "N/A")}</p>
+        <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+        <p><strong>Company:</strong> ${escapeHtml(company || "N/A")}</p>
+        <p><strong>Website:</strong> ${escapeHtml(website || "N/A")}</p>
+        <p><strong>ICP Status:</strong> ${escapeHtml(icpStatus || "N/A")}</p>
+        <p><strong>Inquiry Type:</strong> ${escapeHtml(inquiryType || "N/A")}</p>
+        <p><strong>Entry Point:</strong> ${escapeHtml(entryPoint || "N/A")}</p>
+        <p><strong>Service Interest:</strong> ${escapeHtml(serviceInterest || "N/A")}</p>
         <p><strong>Message:</strong></p>
-        <div style="background:#f4f4f4;padding:20px;">${message}</div>
+        <div style="background:#f4f4f4;padding:20px;">${escapeHtml(message)}</div>
       `,
     }),
   });
