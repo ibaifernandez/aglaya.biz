@@ -22,7 +22,7 @@ vision:
   es: "Soberanía de datos absoluta y visibilidad operativa sin filtros registrados."
   pt: "Soberania de dados absoluta e visibilidade operacional sem filtros."
 solution_systems:
-  - Zero-Leak Architecture
+  - Owned Infrastructure
   - Zero-Filter Diagnostics
   - Algorithmic Sovereignty
 contentImage: "/aglaya_zero_leak_flow_1775170966453_png_1775171008612.png"
@@ -50,7 +50,7 @@ client_logo_dark: "../src/assets/images/norden-white.png"
 body_en: |
   ## What We Built
 
-  Applying **Zero-Leak Architecture** and **Zero-Filter Diagnostics**, AGLAYA executed an infrastructure recovery protocol:
+  Applying **Owned Infrastructure** and **Zero-Filter Diagnostics**, AGLAYA executed an infrastructure recovery protocol:
 
   - **Architectural Decoupling**: We radically separated logic, targets, and metrics for B2B and B2C models to stop signal contamination and domain reputation sabotage.
   - **Proprietary BI Layer**: We built a local **Business Intelligence** system on top of the Brevo API. We developed an internal GUI that allows the client to own their own data snapshots and cohorts, eliminating platform dependency.
@@ -64,7 +64,7 @@ body_en: |
 body_es: |
   ## Qué Construimos
 
-  Aplicando **Zero-Leak Architecture** y **Zero-Filter Diagnostics**, AGLAYA ejecutó un protocolo de recuperación de infraestructura:
+  Aplicando **Owned Infrastructure** y **Zero-Filter Diagnostics**, AGLAYA ejecutó un protocolo de recuperación de infraestructura:
 
   - **Desacople arquitectónico**: separamos radicalmente la lógica, los objetivos y las métricas de los modelos B2B y B2C para detener la contaminación de señales y el sabotaje de la reputación del dominio.
   - **Capa de BI propia**: construimos un sistema local de **Business Intelligence** sobre API MCP de Brevo. Desarrollamos una GUI interna que permite al cliente poseer sus propias instantáneas de datos y cohortes, eliminando la dependencia de la plataforma.
@@ -78,7 +78,7 @@ body_es: |
 body_pt: |
   ## O Que Construímos
 
-  Aplicando **Zero-Leak Architecture** e **Zero-Filter Diagnostics**, a AGLAYA executou um protocolo de recuperação de infraestrutura:
+  Aplicando **Owned Infrastructure** e **Zero-Filter Diagnostics**, a AGLAYA executou um protocolo de recuperação de infraestrutura:
 
   - **Desacoplamento Arquitetônico**: Separamos radicalmente a lógica, os alvos e as métricas dos modelos B2B e B2C para interromper a contaminação de sinais e a sabotagem da reputação do domínio.
   - **Camada de BI Proprietária**: Construímos um sistema local de **Business Intelligence** sobre a API do Brevo. Desenvolvemos uma GUI interna que permite ao cliente possuir seus próprios snapshots de dados e coortes, eliminando a dependência da plataforma.

@@ -127,6 +127,57 @@ describe('contact function', () => {
     expect(notifyPayload.html).toContain('ROI_AUDIT_LEAD');
   });
 
+  it('escapes every visitor field in the internal notification HTML — markup reads as text', async () => {
+    // The form is public. Whatever a visitor types must reach the operator as
+    // text, never as markup composed into the email they trust.
+    const img = '<img src=x onerror=1>';
+    const link = '<a href="https://evil.example">x</a>';
+    const payload = `${img} ${link}`;
+    const escapedImg = '&lt;img src=x onerror=1&gt;';
+    const escapedLink = '&lt;a href=&quot;https://evil.example&quot;&gt;x&lt;/a&gt;';
+
+    const result = await (contact.handler({
+      httpMethod: 'POST',
+      headers: { 'x-forwarded-for': '127.0.0.1' },
+      body: JSON.stringify({
+        name: payload,
+        company: payload,
+        message: payload,
+        // isValidEmail accepts markup in the local part, so it is no sanitiser.
+        email: '<b>x</b>@evil.example',
+        website: payload,
+        inquiry_type: payload,
+        entry_point: payload,
+        service_interest: payload,
+        icp_status: payload,
+        token: 'test_token',
+        privacy_consent: true,
+      }),
+    } as any, {} as any)) as any;
+
+    expect(result.statusCode).toBe(200);
+
+    const fetchMock = global.fetch as ReturnType<typeof vi.fn>;
+    const notifyCall = fetchMock.mock.calls.find(([url]) => String(url).includes('api.resend.com'));
+    expect(notifyCall).toBeTruthy();
+    const html: string = JSON.parse(String(notifyCall?.[1]?.body)).html;
+
+    // No raw markup from the visitor survives anywhere in the body.
+    expect(html).not.toContain('<img');
+    expect(html).not.toContain('<a ');
+    expect(html).not.toContain('<b>');
+    expect(html).not.toContain('evil.example">');
+
+    // Each field arrives escaped, readable as text, under its own label.
+    for (const label of [
+      'Name', 'Company', 'Website', 'ICP Status', 'Inquiry Type', 'Entry Point', 'Service Interest',
+    ]) {
+      expect(html).toContain(`${label}:</strong> ${escapedImg} ${escapedLink}</p>`);
+    }
+    expect(html).toContain(`padding:20px;">${escapedImg} ${escapedLink}</div>`);
+    expect(html).toContain('Email:</strong> &lt;b&gt;x&lt;/b&gt;@evil.example</p>');
+  });
+
   it('does not push ICP funnel leads to MailerLite — the segmented groups were deleted', async () => {
     // Cualificados / No cualificados / Borderline were removed from MailerLite on
     // 2026-09-01. Stub the retired vars anyway: if the routing ever comes back,

@@ -1,8 +1,6 @@
 # AGLAYA — The Uncomfortable AI·gency
 
 ![Build Status](https://img.shields.io/github/actions/workflow/status/ibaifernandez/aglaya.biz/ci.yml?branch=main&label=build)
-![Tests](https://img.shields.io/badge/tests-100%25-brightgreen)
-![Accessibility](https://img.shields.io/badge/a11y-WCAG_2AA-hotpink)
 ![Astro](https://img.shields.io/badge/Astro-6.x-FF5D01)
 ![Tailwind](https://img.shields.io/badge/Tailwind-v4-38BDF8)
 
