@@ -47,7 +47,7 @@ const featured2 = entries.find(e => e.id === 'kanban-desk') ?? null;
         <ProofCard entry={featured} featured />
       )}
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         {midCards.map(entry => (
           <ProofCard entry={entry} />
         ))}
