@@ -92,9 +92,9 @@ export const ui = {
     'problem.grid.4.title': 'The AGLAYA Fortress',
     'problem.grid.4.body': 'With AGLAYA, we don’t create dependency; we build fortresses. We hand you the keys to your own infrastructure so that when we leave the room, the machine keeps humming. True power isn’t having a great partner—it’s having a system that doesn\'t care if that partner exists.',
     'problem.grid.5.title': 'The Data Donor Myth',
-    'problem.grid.5.body': 'Why are you so comfortable being a voluntary data donor? Every subscription you pay is a micro-bet against your own long-term relevance. You are trading your proprietary intelligence for a shiny interface, while the backend silently democratizes your competitive advantage until it becomes a commodity.',
+    'problem.grid.5.body': 'Data you hand over is data you no longer control. When your core business logic lives on someone else\'s backend, it can end up training a shared model instead of one you own. What sets you apart drifts toward the default everyone else gets. Keep the logic that makes you money in systems you control.',
     'problem.grid.6.title': 'The Cost of Sovereignty',
-    'problem.grid.6.body': 'Ownership is uncomfortable because it demands responsibility, but the alternative is digital obsolescence. Proprietary software is the only way to ensure your winning streaks remain yours and yours alone. Stop renting your future and start building the software that makes you untouchable.',
+    'problem.grid.6.body': 'Ownership is uncomfortable because it demands responsibility. It is also what keeps your advantage in your hands. When we build a system to order, the code is yours: no licence, no fee for using it. Your winning streaks stay yours, and so does the software that runs them.',
 
     /* Systems */
     'systems.heading': 'Our Architecture',
@@ -200,7 +200,7 @@ export const ui = {
     'contact.roi_audit.eyebrow': 'ROI Audit Request',
     'contact.roi_audit.heading': 'Request the ROI Audit.',
     'contact.roi_audit.description': 'Pass the qualification filter and tell us what operational surface area needs to be audited. We scope the audit manually because the investment changes with the size and complexity of the system.',
-    'contact.quote': 'Systems are not rented. They are owned.',
+    'contact.quote': 'What we build for you is not rented. It is yours.',
     'contact.eyebrow': 'The Protocol',
     'contact.label': 'Request proposal',
     'contact.qualify.eyebrow': 'A quick, honest fit check',
@@ -475,9 +475,9 @@ export const ui = {
     'problem.grid.4.title': 'La fortaleza AGLAYA',
     'problem.grid.4.body': 'Con AGLAYA, no creamos dependencia; construimos fortalezas. Te entregamos las llaves de tu propia infraestructura para que, cuando salgamos de la habitación, la máquina siga funcionando. El verdadero poder no es tener un buen socio; es tener un sistema al que no le importe si ese socio existe.',
     'problem.grid.5.title': 'El mito del donante de datos',
-    'problem.grid.5.body': '¿Por qué te sientes tan cómodo siendo un donante voluntario de datos? Cada suscripción que pagas es una micro-apuesta contra tu propia relevancia a largo plazo. Intercambias tu inteligencia propietaria por una interfaz brillante, mientras el backend democratiza silenciosamente tu ventaja competitiva hasta convertirla en una mercancía genérica.',
+    'problem.grid.5.body': 'Los datos que entregas dejan de estar bajo tu control. Cuando la lógica central de tu negocio vive en el backend de otro, puede acabar entrenando un modelo compartido en lugar de uno tuyo. Lo que te distingue se diluye hacia la configuración por defecto que reciben todos. Mantén la lógica que te hace ganar dinero en sistemas que controlas.',
     'problem.grid.6.title': 'El costo de la soberanía',
-    'problem.grid.6.body': 'La propiedad es incómoda porque exige responsabilidad, pero la alternativa es la obsolescencia digital. El software propio es la única forma de garantizar que tus rachas ganadoras sigan siendo tuyas y solo tuyas. Deja de alquilar tu futuro y empieza a construir el software que te haga intocable.',
+    'problem.grid.6.body': 'La propiedad es incómoda porque exige responsabilidad. También es lo que mantiene tu ventaja en tus manos. Cuando construimos un sistema por encargo, el código es tuyo: sin licencia y sin cuota por usarlo. Tus rachas ganadoras siguen siendo tuyas, y el software que las sostiene también.',
 
     /* Systems */
     'systems.heading': 'Nuestra Arquitectura',
@@ -577,7 +577,7 @@ export const ui = {
     'contact.roi_audit.eyebrow': 'Solicitud de ROI Audit',
     'contact.roi_audit.heading': 'Solicita el ROI Audit.',
     'contact.roi_audit.description': 'Pasa el filtro de calificación y cuéntanos qué superficie operativa hay que auditar. Calibramos el audit manualmente porque la inversión cambia según el tamaño y la complejidad del sistema.',
-    'contact.quote': 'Los sistemas no se alquilan. Se poseen.',
+    'contact.quote': 'Lo que construimos para ti no se alquila. Es tuyo.',
     'contact.eyebrow': 'El Protocolo',
     'contact.label': 'Solicitar propuesta',
     'contact.qualify.eyebrow': 'Una comprobación rápida y honesta',
@@ -851,9 +851,9 @@ export const ui = {
     'problem.grid.4.title': 'A Fortaleza AGLAYA',
     'problem.grid.4.body': 'Com a AGLAYA, não criamos dependência; construímos fortalezas. Entregamos as chaves da sua própria infraestrutura para que, quando sairmos da sala, a máquina continue girando. O verdadeiro poder não es ter um bom parceiro — é ter um sistema que não se importa se esse parceiro existe ou não.',
     'problem.grid.5.title': 'O Mito do Doador de Dados',
-    'problem.grid.5.body': 'Por que você está tão confortável sendo um doador voluntário de dados? Cada assinatura que você paga é uma micro-apuesta contra sua própria relevância a longo prazo. Você está trocando sua inteligência proprietária por uma interface bonitinha, enquanto o backend democratiza silenciosamente sua vantagem competitiva até transformá-la em uma commodity genérica.',
+    'problem.grid.5.body': 'Os dados que você entrega deixam de estar sob seu controle. Quando a lógica central do seu negócio vive no backend de outro, ela pode acabar treinando um modelo compartilhado em vez de um seu. O que te diferencia se dilui na configuração padrão que todos recebem. Mantenha a lógica que te faz ganhar dinheiro em sistemas que você controla.',
     'problem.grid.6.title': 'O Preço da Soberania',
-    'problem.grid.6.body': 'A propriedade é desconfortável porque exige responsabilidade, mas a alternativa é a obsolescência digital. O software próprio é a única forma de garantir que suas sequências de vitórias continuem sendo suas, e apenas suas. Pare de alugar seu futuro e comece a construir o software que te torna intocável.',
+    'problem.grid.6.body': 'A propriedade é desconfortável porque exige responsabilidade. Também é o que mantém sua vantagem nas suas mãos. Quando construímos um sistema sob encomenda, o código é seu: sem licença e sem mensalidade para usá-lo. Suas sequências de vitórias continuam sendo suas, e o software que as sustenta também.',
 
     /* Systems */
     'systems.heading': 'Nossa Arquitetura',
@@ -959,7 +959,7 @@ export const ui = {
     'contact.roi_audit.eyebrow': 'Solicitação de ROI Audit',
     'contact.roi_audit.heading': 'Solicite o ROI Audit.',
     'contact.roi_audit.description': 'Passe pelo filtro de qualificação e conte qual superfície operacional precisa ser auditada. Calibramos o audit manualmente porque o investimento muda conforme o tamanho e a complexidade do sistema.',
-    'contact.quote': 'Sistemas não se alugam. Possuem-se.',
+    'contact.quote': 'O que construímos para você não se aluga. É seu.',
     'contact.eyebrow': 'O Protocolo',
     'contact.label': 'Solicitar proposta',
     'contact.qualify.eyebrow': 'Uma checagem rápida e honesta',
