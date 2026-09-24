@@ -1,5 +1,7 @@
 # aglaya-os — respaldo, auditoría y decisiones
 
+> **RETIRADO (2026-09-24).** El marketplace ya no lo sirve; lo de abajo es historia. Motivo en §10.
+
 **Qué es este directorio:** la **fuente** del plugin `aglaya-os`. Desde v0.2.0 ya
 no es una fotocopia: el plugin se instala desde este repo mediante el marketplace
 local [`.claude-plugin/marketplace.json`](../../.claude-plugin/marketplace.json).
@@ -318,3 +320,49 @@ repo no la actualiza y no hay forma automática de hacerlo: `claude plugin` no
 tiene `publish` ni `upload`, y la CLI no ve el marketplace «My Uploads». Si algún
 día se quiere la nube al día, se sube a mano desde claude.ai. Mientras esté
 desactivada en la app, da igual.
+
+---
+
+## 10. Retirado entero (2026-09-24)
+
+**Decisión de Ibai del 2026-08-26: `aglaya-os` se retira entero, sin rescatar
+nada.** El 2026-09-24 se quitó su entrada de
+[`.claude-plugin/marketplace.json`](../../.claude-plugin/marketplace.json), que
+queda con la lista de plugins vacía: este marketplace ya no sirve `aglaya-os` y
+el repo deja de ser vía de reinstalación. La desinstalación de la máquina de
+Ibai es anterior (2026-08-26, `claude plugin uninstall aglaya-os@aglaya-biz`).
+Los ficheros se quedan en este directorio como registro, porque el repo no
+tiene convención de archivo y no se inventó una. **Todo lo que queda aquí es
+historia, no fuente.**
+
+Por qué:
+
+- **Cargaba en cada sesión un modelo de negocio tecleado a mano que ya no
+  existe.** `context/brand-dna.md` se declaraba fuente de verdad para todas las
+  skills y describía una agencia por retainer. No es lo que AGLAYA vende. Lo
+  que se vende es estado y se pregunta: `verdad_comercial()` del MCP
+  `aglaya-atlas`. El propio README (§3) decía que el modelo no se escribe aquí,
+  mientras el fichero de al lado lo escribía.
+- **Tres copias divergentes de la voz, sin puntero al design system.**
+  `skills/brand-voice/SKILL.md` y `commands/brand-voice.md` llevaban cada uno su
+  copia de los mandamientos de voz, y
+  `skills/brand-voice/references/voice-guidelines.md` una tercera lista distinta.
+  Ninguna apuntaba a quien posee la voz. Ya se separaban del design system en lo
+  medible: el plugin pedía inglés por defecto, y el design system mantiene
+  términos en español como decisión de marca.
+- **Vendía «Zero-Leak Architecture»**, un término que el design system tiene en
+  `forbidden_patterns`: AGLAYA no promete invulnerabilidad que no puede
+  demostrar.
+
+Se revisaron las diez secciones de `context/brand-dna.md` y **ninguna se salvó**:
+o repetían el modelo muerto, o las posee el design system, o contradecían la
+verdad comercial.
+
+**Sustituto:** el design system en vivo, por el MCP `aglaya-ds`:
+`get_voice_rules()` para las reglas y `check_voice()` para auditar un texto.
+Cubre lo que hacía `/brand-voice` y además avisa de su alcance: un resultado
+limpio no es permiso para publicar.
+
+Las secciones §1–§9 describen el plugin mientras estuvo vivo. Sus instrucciones
+de instalación, despliegue y vuelta atrás (§9) **ya no se aplican: no
+reinstalar.**
