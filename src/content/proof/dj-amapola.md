@@ -26,7 +26,7 @@ vision:
   es: "Un sitio que nunca se rompe no es un accidente. Es una disciplina. AGLAYA Web es esa disciplina — empaquetada, repetible y desplegable en cualquier vertical."
   pt: "Um site que nunca quebra não é um acidente. É uma disciplina. A AGLAYA Web é essa disciplina — empacotada, repetível e implantável em qualquer vertical."
 solution_systems:
-  - "Zero-Leak Architecture"
+  - "Owned Infrastructure"
   - "Systemic Alchemy"
 results:
   - metric: "100"

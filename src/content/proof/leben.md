@@ -26,7 +26,7 @@ thumbImage: "/aglaya_processor_macro_1775170966453_png_1775170994680.png"
 contentImage: "/aglaya_dashboard_gui_1775170966453_png_1775170982093.png"
 solution_systems:
   - Narrative Delivery
-  - Zero-Leak Architecture
+  - Owned Infrastructure
 results:
   - metric: "357%"
     label:
@@ -51,11 +51,11 @@ client_logo_dark: "../src/assets/images/leben-white.png"
 body_en: |
   ## What We Built
 
-  Applying **Narrative Delivery** and **Zero-Leak Architecture**, AGLAYA reconstructed the entire customer journey:
+  Applying **Narrative Delivery** and **Owned Infrastructure**, AGLAYA reconstructed the entire customer journey:
 
   - **Behavioral Triggers**: Implemented logic that monitors catalog interaction and triggers specific narrative sequences.
   - **Lifecycle Reconstruction**: Built automated re-engagement paths for "cold" leads based on historical intent.
-  - **System Integrity**: Established a zero-leak data flow ensuring that every interaction is recorded and acted upon without human oversight.
+  - **System Integrity**: Established a client-owned data flow ensuring that every interaction is recorded and acted upon without human oversight.
 
   ## The Results
 
@@ -65,11 +65,11 @@ body_en: |
 body_es: |
   ## Qué Construimos
 
-  Aplicando **Narrative Delivery** y **Zero-Leak Architecture**, AGLAYA reconstruyó por completo el customer journey:
+  Aplicando **Narrative Delivery** y **Owned Infrastructure**, AGLAYA reconstruyó por completo el customer journey:
 
   - **Triggers por Comportamiento**: Implementamos lógica que monitorea la interacción con el catálogo y dispara secuencias narrativas específicas.
   - **Reconstrucción del Ciclo de Vida**: Construimos rutas de reactivación automatizadas para leads "fríos" basadas en su intención histórica.
-  - **Integridad del Sistema**: Establecimos un flujo de datos sin fugas que garantiza que cada interacción sea registrada y procesada sin supervisión humana.
+  - **Integridad del Sistema**: Establecimos un flujo de datos propiedad del cliente que garantiza que cada interacción sea registrada y procesada sin supervisión humana.
 
   ## Los Resultados
 
@@ -79,11 +79,11 @@ body_es: |
 body_pt: |
   ## O Que Construímos
 
-  Aplicando **Narrative Delivery** e **Zero-Leak Architecture**, a AGLAYA reconstruiu toda a jornada do cliente:
+  Aplicando **Narrative Delivery** e **Owned Infrastructure**, a AGLAYA reconstruiu toda a jornada do cliente:
 
   - **Gatilhos Comportamentais**: Implementamos lógica que monitora a interação com o catálogo e dispara sequências narrativas específicas.
   - **Reconstrução do Ciclo de Vida**: Construímos caminhos de re-engajamento automatizados para leads "frios" com base em sua intenção histórica.
-  - **Integridade do Sistema**: Estabelecemos um fluxo de dados sem vazamentos que garante que cada interação seja registrada e processada sem supervisão humana.
+  - **Integridade do Sistema**: Estabelecemos um fluxo de dados de propriedade do cliente que garante que cada interação seja registrada e processada sem supervisão humana.
 
   ## Os Resultados
 

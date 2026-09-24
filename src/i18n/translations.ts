@@ -108,7 +108,7 @@ export const ui = {
     'systems.2.tagline': 'Systems that execute the precise action based on user behavior.',
     'systems.2.cases': 'Purchase intent synchronization, Reactive authority deployment, Progressive credibility assets',
     
-    'systems.3.title': 'Zero-Leak Architecture',
+    'systems.3.title': 'Owned Infrastructure',
     'systems.3.tagline': 'Infrastructure where data integrity and performance are non-negotiable.',
     'systems.3.cases': 'Performance capture interfaces, Digital asset shielding, Real-time data consistency',
     
@@ -488,7 +488,7 @@ export const ui = {
     'systems.2.title': 'Flujo Lógico Inevitable',
     'systems.2.tagline': 'Sistemas que ejecutan la acción correcta siempre según el comportamiento del cliente.',
     'systems.2.cases': 'Sincronización de intención de compra, Despliegue de autoridad de marca, Creación de activos de credibilidad progresiva',
-    'systems.3.title': 'Arquitectura sin goteras',
+    'systems.3.title': 'Infraestructura propia',
     'systems.3.tagline': 'Infraestructura donde hay dos máximas no negociables: la integridad de los datos y el rendimiento.',
     'systems.3.cases': 'Interfaces de captura de rendimiento, Sistemas de identidad inmutable, Blindaje y consistencia de activos',
     'systems.4.title': 'Soberanía algorítmica',
@@ -867,7 +867,7 @@ export const ui = {
     'systems.2.tagline': 'Sistemas que executam a ação precisa com base no comportamento do usuário.',
     'systems.2.cases': 'Sincronização de intenção de compra, Implantação de autoridade reativa, Ativos progressivos de credibilidade',
 
-    'systems.3.title': 'Arquitetura Sem Vazamentos',
+    'systems.3.title': 'Infraestrutura própria',
     'systems.3.tagline': 'Infraestrutura onde integridade de dados e desempenho são inegociáveis.',
     'systems.3.cases': 'Interfaces de captura de desempenho, Blindagem de ativos digitais, Consistência de dados em tempo real',
 
