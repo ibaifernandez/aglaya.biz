@@ -41,14 +41,14 @@ export default defineConfig({
       filter: (page) => {
         const noindex = [
           // Proof index (redirects to /#proof)
-          '/proof/', '/es/proof/', '/pt/proof/',
+          '/proof/', '/es/proof/',
           // Legacy proof entries (kept in repo but not published)
-          '/proof/leben/', '/es/proof/leben/', '/pt/proof/leben/',
-          '/proof/norden/', '/es/proof/norden/', '/pt/proof/norden/',
-          '/proof/pocuro/', '/es/proof/pocuro/', '/pt/proof/pocuro/',
+          '/proof/leben/', '/es/proof/leben/',
+          '/proof/norden/', '/es/proof/norden/',
+          '/proof/pocuro/', '/es/proof/pocuro/',
           // Legal/util pages — no SEO value
-          '/privacy/', '/es/privacidad/', '/pt/privacidade/',
-          '/cookies/', '/es/cookies/', '/pt/cookies/',
+          '/privacy/', '/es/privacidad/',
+          '/cookies/', '/es/cookies/',
         ];
         return !noindex.some(path => page.endsWith(path));
       },
@@ -69,7 +69,7 @@ export default defineConfig({
 
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'es', 'pt'],
+    locales: ['en', 'es'],
     routing: {
       prefixDefaultLocale: false,
     },

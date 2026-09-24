@@ -47,7 +47,8 @@ describe('where the same page lives in every language', () => {
     expect(localeOf('/')).toBe('en');
     expect(localeOf('/contact/')).toBe('en');
     expect(localeOf('/es/contact/')).toBe('es');
-    expect(localeOf('/pt/proof/massiva/')).toBe('pt');
+    // Portuguese is no longer published: a `/pt/` path is not a locale.
+    expect(localeOf('/pt/services/')).toBe('en');
   });
 
   it('is spelling-proof about the trailing slash', () => {
@@ -59,19 +60,17 @@ describe('where the same page lives in every language', () => {
     expect(alternatePathsFor('/es/roi-audit/')).toEqual({
       en: '/roi-audit/',
       es: '/es/roi-audit/',
-      pt: '/pt/roi-audit/',
     });
-    expect(alternatePathsFor('/')).toEqual({ en: '/', es: '/es/', pt: '/pt/' });
+    expect(alternatePathsFor('/')).toEqual({ en: '/', es: '/es/' });
   });
 
   it('maps the routes whose slug is itself translated', () => {
-    const legal = { en: '/legal-notice/', es: '/es/aviso-legal/', pt: '/pt/aviso-legal/' };
+    const legal = { en: '/legal-notice/', es: '/es/aviso-legal/' };
     expect(alternatePathsFor('/legal-notice/')).toEqual(legal);
     expect(alternatePathsFor('/es/aviso-legal/')).toEqual(legal);
-    expect(alternatePathsFor('/pt/aviso-legal/')).toEqual(legal);
 
-    const privacy = { en: '/privacy/', es: '/es/privacidad/', pt: '/pt/privacidade/' };
-    expect(alternatePathsFor('/pt/privacidade/')).toEqual(privacy);
+    const privacy = { en: '/privacy/', es: '/es/privacidad/' };
+    expect(alternatePathsFor('/es/privacidad/')).toEqual(privacy);
   });
 
   it('gives every language of a page the same answer', () => {
@@ -90,7 +89,7 @@ describe('where the same page lives in every language', () => {
     // `/proof/[slug]/` is dynamic: its twins are built from the same slug, and
     // the equality above already covers the shape. Only fixed routes are checked.
     const fixed = routes().filter((route) => !route.includes('['));
-    expect(fixed.length).toBeGreaterThan(20);
+    expect(fixed.length).toBeGreaterThan(15); // 20 on the EN + ES site
 
     for (const route of fixed) {
       const paths = alternatePathsFor(route);
@@ -104,14 +103,13 @@ describe('where the same page lives in every language', () => {
     expect(alternateUrlsFor('/es/aviso-legal/', 'https://aglaya.biz')).toEqual({
       en: 'https://aglaya.biz/legal-notice/',
       es: 'https://aglaya.biz/es/aviso-legal/',
-      pt: 'https://aglaya.biz/pt/aviso-legal/',
     });
   });
 
   it('publishes the hreflang values the site actually uses', () => {
-    // pt is served as pt-BR. Changing either of these renames a published
+    // Changing either of these renames a published
     // annotation on every page and in every sitemap entry at once.
-    expect(HREFLANG).toEqual({ en: 'en', es: 'es', pt: 'pt-BR' });
+    expect(HREFLANG).toEqual({ en: 'en', es: 'es' });
     expect(X_DEFAULT_PATH).toBe('/');
   });
 
@@ -119,14 +117,14 @@ describe('where the same page lives in every language', () => {
     it('does not send a translated slug down the parallel path', () => {
       // The failure this table exists to prevent: `/es/legal-notice/` is a 404.
       expect(alternatePathsFor('/legal-notice/').es).not.toBe('/es/legal-notice/');
-      expect(alternatePathsFor('/privacy/').pt).not.toBe('/pt/privacy/');
+      expect(alternatePathsFor('/privacy/').es).not.toBe('/es/privacy/');
     });
 
     it('never answers the home page for a page that is not the home page', () => {
       // The old BaseLayout default, and the reason three published pages were
-      // announcing `https://aglaya.biz/` as their English version. The three
+      // announcing `https://aglaya.biz/` as their English version. The two
       // home pages are excluded because `/` IS their honest English twin.
-      const homes = ['/', '/es/', '/pt/'];
+      const homes = ['/', '/es/'];
       for (const route of routes().filter((r) => !homes.includes(r) && !r.includes('['))) {
         expect(alternatePathsFor(route).en, `${route} fell back to the home page`).not.toBe('/');
       }
@@ -136,8 +134,9 @@ describe('where the same page lives in every language', () => {
       const all = routes();
       expect(all).toContain('/contact/');
       expect(all).toContain('/es/aviso-legal/');
-      expect(all).toContain('/pt/the-stack/');
-      expect(all.length).toBeGreaterThan(30);
+      expect(all).toContain('/es/the-stack/');
+      expect(all.some((r) => r.startsWith('/pt/')), 'a /pt/ page is published again').toBe(false);
+      expect(all.length).toBeGreaterThan(20); // 22 on the EN + ES site
     });
   });
 });

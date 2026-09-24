@@ -2,25 +2,20 @@
 title:
   en: "Infrastructure & Sovereign BI"
   es: "Infrestructura & BI Soberana"
-  pt: "Infraestrutura & BI Soberano"
 client: "NORDEN"
 industry: "Healthcare (Dental)"
 challenge:
   en: "Operational blindness and domain sabotage. A polluted CRM dragging B2C delivery to 7.56% and masking real intent signals."
   es: "Ceguera operativa y sabotaje de dominio. Un CRM contaminado reduciendo la entrega B2C al 7.56% y enmascarando las señales reales de intención."
-  pt: "Cegueira operacional e sabotagem de domínio. Um CRM contaminado arrastando a entrega B2C a 7,56% e mascarando sinais reais de intenção."
 summary:
   en: 'Years of manual chaos and "ghost leads" had turned their domain into a toxic asset. With a 7.56% Open Rate in the B2C segment, the company had lost its voice. Worst of all: they had no way of measuring the real damage because they relied on opaque third-party metrics without a proprietary data layer to expose the operational truth.'
   es: "NORDEN operaba bajo un estado de ceguera técnica. Su infraestructura de comunicación estaba centralizada en un único flujo indiferenciado, lo que provocaba una contaminación cruzada entre sus segmentos B2C y B2B. Esto no era un problema de marketing; era un fallo crítico en el diseño de sistemas."
-  pt: "Anos de caos manual e 'leads fantasma' haviam transformado o domínio em um ativo tóxico. Com 7,56% de Open Rate no segmento B2C, a empresa havia perdido sua voz. O pior: não tinham como medir o dano real porque dependiam de métricas opacas de terceiros, sem uma camada de dados própria que expusesse a verdade operacional."
 strategy:
   en: "Separation of B2B/B2C logic and implementation of a proprietary BI layer on Brevo API MCP."
   es: "Separación de lógica B2B/B2C e implementación de una capa de BI propia sobre API MCP de Brevo."
-  pt: "Separação da lógica B2B/B2C e implementação de uma camada de BI proprietária sobre API MCP do Brevo."
 vision:
   en: "Absolute data sovereignty and zero-filter operational visibility."
   es: "Soberanía de datos absoluta y visibilidad operativa sin filtros registrados."
-  pt: "Soberania de dados absoluta e visibilidade operacional sem filtros."
 solution_systems:
   - Owned Infrastructure
   - Zero-Filter Diagnostics
@@ -31,17 +26,14 @@ results:
     label:
       en: "Verified B2C Open Rate (from 7.56%)"
       es: "Open Rate B2C verificado (desde 7.56%)"
-      pt: "Open Rate B2C verificado (de 7,56%)"
   - metric: "99%"
     label:
       en: "Primary segment inbox placement"
       es: "Entrega en bandeja (Inbox placement)"
-      pt: "Entrega na caixa de entrada (segmento principal)"
   - metric: "Proprietary Software"
     label:
       en: "Hybrid Decision Engine (Deterministic & AI)"
       es: "Hybrid Decision Engine (Deterministic & AI)"
-      pt: "Hybrid Decision Engine (Deterministic & AI)"
 featured: false
 noindex: true
 date: "2025-08"
@@ -75,18 +67,4 @@ body_es: |
   - **Soberanía de datos**: el segmento B2C aumentó su tasa de apertura rastreable ponderada de **7.56% a 23.30%** tras la intervención técnica.
   - **Densidad de intención**: en la última ventana táctica, **el 66.36% del segmento activo** interactuó con la marca, validando la recuperación del canal.
   - **Mando y control**: NORDEN ya no depende de una herramienta externa para comprender su salud operativa; ahora posee una **infraestructura de reporting propia** con capacidades de auditoría en tiempo real.
-body_pt: |
-  ## O Que Construímos
-
-  Aplicando **Owned Infrastructure** e **Zero-Filter Diagnostics**, a AGLAYA executou um protocolo de recuperação de infraestrutura:
-
-  - **Desacoplamento Arquitetônico**: Separamos radicalmente a lógica, os alvos e as métricas dos modelos B2B e B2C para interromper a contaminação de sinais e a sabotagem da reputação do domínio.
-  - **Camada de BI Proprietária**: Construímos um sistema local de **Business Intelligence** sobre a API do Brevo. Desenvolvemos uma GUI interna que permite ao cliente possuir seus próprios snapshots de dados e coortes, eliminando a dependência da plataforma.
-  - **Extração de Sinais de Intenção**: Executamos uma estratégia de saneamento técnico que preservou apenas os ativos ricos em intenção, limpando o pacote de dados públicos e interrompendo a sabotagem do domínio.
-
-  ## Os Resultados
-
-  - **Soberania de Dados**: O segmento B2C aumentou sua taxa de abertura rastreável ponderada de **7,56% para 23,30%** após a intervenção técnica.
-  - **Densidade de Intenção**: Na última janela tática, **66,36% do segmento ativo** interagiu com a marca, validando a recuperação do canal.
-  - **Comando e Controle**: A NORDEN não depende mais de uma ferramenta externa para entender sua saúde operacional; agora possui uma **infraestrutura de relatórios própria** com capacidades de auditoria em tempo real.
 ---
