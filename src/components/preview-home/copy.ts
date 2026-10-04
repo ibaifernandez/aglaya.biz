@@ -48,3 +48,42 @@ export const footer = {
     { href: '/cookies/', text: 'Cookies' },
   ],
 } as const;
+
+/** T2 · the problem: four pairs, problem → way out. */
+export const problem = {
+  eyebrow: 'Where most companies get stuck',
+  title: 'Everyone talks about AI.',
+  titleEm: 'Nobody tells you where to start.',
+  visualLabel:
+    'Four scenes that go from chaos to order: AI buzzwords reduced to the three that fit; random licences turned into one bar that pays off first; rented tools brought inside a frame you own; data that stops flowing to other clouds and stays home.',
+  pairs: [
+    {
+      n: 'Problem 1 of 4',
+      problem: 'A new AI tool every week',
+      problemText: 'Chatbots, copilots, agents, automations. Everyone is selling one, and everyone says theirs is the one you need.',
+      solution: 'We tell you which ones matter',
+      solutionText: "We test the tools so you don't have to, and bring you only the few that fit how you work.",
+    },
+    {
+      n: 'Problem 2 of 4',
+      problem: 'Buying at random',
+      problemText: "Licences nobody uses, data in places it shouldn't be, and a team that stops trusting AI before it does anything useful.",
+      solution: 'Start where it pays',
+      solutionText: 'We find where your team loses the most hours, put AI right there first and grow from what works.',
+    },
+    {
+      n: 'Problem 3 of 4',
+      problem: 'Rented tools',
+      problemText: 'Most companies run on a dozen tools they rent. When the contract ends, the work those tools did for you leaves with them.',
+      solution: 'Built for you, yours to keep',
+      solutionText: 'What we build runs on systems your company controls. When we leave the room, everything keeps running.',
+    },
+    {
+      n: 'Problem 4 of 4',
+      problem: 'Your data teaches them',
+      problemText: "Every process you put on someone else's platform shows it how your business works. That knowledge stops being only yours.",
+      solution: 'Your data stays home',
+      solutionText: 'Your processes and your data live where you decide. What makes you different stays yours.',
+    },
+  ],
+} as const;

@@ -1,0 +1,182 @@
+---
+/**
+ * T2 · the problem — mock-up `section.story`: four pairs, problem → way out.
+ *
+ * Ground floor (no JavaScript, or reduced motion): the four pairs read in full,
+ * each problem struck through, each way out written, next to the drawing at
+ * rest in its final frame. That is how the HTML is served.
+ *
+ * Upper floor (./story-effects.ts): it adds `is-fx` to the section, pins the
+ * stage and plays the pairs one by one on scroll. Everything `is-fx` changes is
+ * scoped under that class, so if it never arrives nothing here is left hidden.
+ *
+ * The drawing is a separate, provisional piece (./story-drawing.ts) that will be
+ * swapped for video; this file only gives it a box.
+ */
+import { problem } from './copy';
+import { storyDrawingMarkup } from './story-drawing';
+---
+
+<section class="pv-section pv-story" id="problem" data-tramo="T2">
+  <div class="pv-wrap pv-story-head">
+    <div class="pv-eyebrow pv-mono">{problem.eyebrow}</div>
+    <h2 class="pv-sec-h">{problem.title} <em>{problem.titleEm}</em></h2>
+  </div>
+  <div class="pv-wrap pv-story-stage" data-pv-story-stage>
+    <div class="pv-story-visual">
+      <div class="pv-story-canvas" role="img" aria-label={problem.visualLabel} data-pv-story-drawing set:html={storyDrawingMarkup()} />
+    </div>
+    <div class="pv-steps-col">
+      <div class="pv-steps">
+        {problem.pairs.map((pair) => (
+          <article class="pv-step" data-pv-step>
+            <div class="pv-step-n pv-mono">{pair.n}</div>
+            <h3 class="pv-prob-h"><span class="pv-strike">{pair.problem}</span></h3>
+            <p class="pv-prob-p">{pair.problemText}</p>
+            <h3 class="pv-sol-h" aria-label={pair.solution}>
+              <span class="pv-done" aria-hidden="true">{pair.solution}</span><span class="pv-caret" aria-hidden="true"></span><span class="pv-rest" aria-hidden="true"></span>
+            </h3>
+            <p class="pv-sol-p">{pair.solutionText}</p>
+          </article>
+        ))}
+      </div>
+      <div class="pv-progress" aria-hidden="true">{problem.pairs.map(() => <i></i>)}</div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ---------- Ground floor ---------- */
+  .pv-story { background: var(--color-surface); }
+  .pv-story-head { padding-block: 90px 0; }
+
+  .pv-story-stage {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(24px, 5vw, 72px);
+    align-items: center;
+    padding-block: 48px 90px;
+  }
+  .pv-story-visual { min-width: 0; }
+  .pv-story-canvas {
+    width: 100%;
+    max-width: 520px;
+    aspect-ratio: 1;
+    margin-inline: auto;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+  }
+  .pv-story-canvas :global(svg) { display: block; width: 100%; height: 100%; }
+
+  .pv-steps-col { position: relative; min-width: 0; }
+  .pv-steps { display: grid; gap: 40px; min-width: 0; }
+  .pv-step-n { color: var(--color-brand-dark); }
+
+  .pv-prob-h {
+    margin-top: 10px;
+    font-size: clamp(24px, 3vw, 38px);
+    color: var(--color-faint);
+  }
+  /* The strike. `--strike` runs 0 → 1; the ground floor shows it done. Drawn
+     as a background on an inline box cloned per line, so a problem that wraps
+     is struck on every line (the mock-up's single bar crossed the gap between
+     two lines instead). */
+  .pv-strike {
+    padding-inline: 0.04em;
+    margin-inline: -0.04em;
+    background: linear-gradient(var(--color-brand), var(--color-brand)) no-repeat 0 55% / calc(100% * var(--strike, 1)) 0.09em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  .pv-sol-h {
+    margin-top: 22px;
+    font-size: clamp(28px, 3.6vw, 48px);
+    color: var(--color-brand-dark);
+  }
+  .pv-rest { color: color-mix(in srgb, var(--color-text) 6%, transparent); }
+  .pv-caret {
+    display: none;
+    width: 0.09em;
+    height: 0.82em;
+    background: var(--color-brand);
+    vertical-align: -0.06em;
+    margin-inline: 0.02em;
+    animation: pv-blink 1s steps(2) infinite;
+  }
+  @keyframes pv-blink { to { visibility: hidden; } }
+  .pv-prob-p,
+  .pv-sol-p {
+    color: var(--color-muted);
+    margin-top: 14px;
+    max-width: 44ch;
+    font-size: 17px;
+  }
+  .pv-progress { display: none; gap: 6px; }
+  .pv-progress i { width: 36px; height: 3px; background: var(--color-border); }
+
+  @media (max-width: 900px) {
+    .pv-story-stage { grid-template-columns: 1fr; }
+  }
+
+  /* ---------- Upper floor: only once ./story-effects.ts has taken over ----------
+     The stage is exactly one screen tall and pinned. The four pairs share one
+     grid cell, so the column is as tall as the longest pair and no taller; the
+     drawing takes every pixel that is left, square, as large as fits. */
+  .pv-story.is-fx .pv-story-stage {
+    box-sizing: border-box;
+    height: 100vh;
+    height: 100svh;
+    padding-block: 84px 40px;
+    align-items: stretch;
+  }
+  .pv-story.is-fx .pv-story-visual {
+    container-type: size;
+    min-height: 0;
+    display: grid;
+    place-items: center;
+  }
+  .pv-story.is-fx .pv-story-canvas {
+    width: min(100cqw, 100cqh);
+    max-width: none;
+    margin: 0;
+  }
+  .pv-story.is-fx .pv-steps-col { align-self: center; }
+  .pv-story.is-fx .pv-steps { gap: 0; }
+  .pv-story.is-fx .pv-step {
+    grid-area: 1 / 1;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(24px);
+    transition: opacity 0.5s, transform 0.5s, visibility 0.5s;
+  }
+  .pv-story.is-fx .pv-step.is-on { opacity: 1; visibility: visible; transform: none; }
+  .pv-story.is-fx .pv-prob-h { color: var(--color-text); }
+  .pv-story.is-fx .pv-prob-h.is-struck { color: var(--color-faint); }
+  .pv-story.is-fx .pv-caret { display: inline-block; }
+  .pv-story.is-fx .pv-progress { display: flex; margin-top: 24px; }
+  .pv-progress i.is-on { background: var(--color-brand); }
+
+  /* Laptop and up: the 1200px column of the mock-up leaves the drawing width-
+     bound (≈500px in a 900px-tall screen). The pinned stage gets the wider
+     measure and the drawing the larger share, so it is bound by height instead. */
+  @media (min-width: 901px) {
+    .pv-story.is-fx .pv-story-stage {
+      max-width: 1600px;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+    }
+  }
+  @media (max-width: 900px) {
+    .pv-story.is-fx .pv-story-stage {
+      grid-template-rows: minmax(0, 1fr) auto;
+      gap: 20px;
+      padding-block: 76px 28px;
+    }
+    .pv-story.is-fx .pv-steps-col { align-self: end; }
+    .pv-story.is-fx .pv-progress { margin-top: 16px; }
+  }
+  @media (max-width: 540px) {
+    .pv-story.is-fx .pv-prob-p,
+    .pv-story.is-fx .pv-sol-p { font-size: 15px; margin-top: 10px; }
+    .pv-story.is-fx .pv-sol-h { margin-top: 14px; }
+  }
+</style>

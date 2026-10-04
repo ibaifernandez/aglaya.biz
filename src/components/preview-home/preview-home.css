@@ -112,3 +112,14 @@ html.pv-fx-wait .pv-hook-sub,
 html.pv-fx-wait .pv-hook-ctas {
   visibility: hidden;
 }
+
+/* Section heading shared by the tramos — mock-up `.sec-h`. */
+.pv-sec-h {
+  font-size: clamp(36px, 5.4vw, 72px);
+  margin-top: 16px;
+  max-width: 16ch;
+}
+.pv-sec-h em {
+  font-style: normal;
+  color: var(--pv-brand);
+}

@@ -42,7 +42,51 @@ export function mockupHook(html: string) {
   };
 }
 
-const hook = mockupHook(readFileSync(MOCKUP, 'utf8'));
+/** T2 of the mock-up: the markup between its `<!-- T2 -->` and `<!-- T3 -->` markers. */
+export function mockupProblem(html: string) {
+  const t2 = /<!-- T2 -->([\s\S]*?)<!-- T3 -->/.exec(html)?.[1] ?? '';
+  const one = (src: string, re: RegExp) => decode(re.exec(src)?.[1] ?? '');
+  const h2 = /<h2 class="sec-h">([\s\S]*?)<\/h2>/.exec(t2)?.[1] ?? '';
+  return {
+    eyebrow: one(t2, /class="eyebrow[^"]*">([^<]+)</),
+    title: decode(h2.replace(/<[^>]+>/g, '')),
+    visual: one(t2, /id="storyVisual"[^>]*aria-label="([^"]+)"/),
+    pairs: [...t2.matchAll(/<article class="step">([\s\S]*?)<\/article>/g)].map(([, a]) => ({
+      n: one(a, /class="n mono">([^<]+)</),
+      problem: one(a, /class="prob-h">([^<]+)</),
+      problemText: one(a, /class="prob-p">([^<]+)</),
+      solution: one(a, /class="sol-h" aria-label="([^"]+)"/),
+      solutionText: one(a, /class="sol-p">([^<]+)</),
+    })),
+  };
+}
+
+const html = readFileSync(MOCKUP, 'utf8');
+const hook = mockupHook(html);
+const problem = mockupProblem(html);
+
+/** Every word of T2 is on screen: eyebrow, heading, drawing, and the four pairs in full. */
+async function expectProblemComplete(page: import('@playwright/test').Page) {
+  const t2 = page.locator('main#main-content section#problem');
+  await expect(t2).toBeVisible();
+  await expect(t2.getByText(problem.eyebrow, { exact: true })).toBeVisible();
+  await expect(t2.getByRole('heading', { level: 2, name: problem.title })).toBeVisible();
+  const drawing = t2.getByRole('img', { name: problem.visual });
+  await expect(drawing).toBeVisible();
+  expect((await drawing.boundingBox())?.height ?? 0, 'the drawing has a body').toBeGreaterThan(200);
+  for (const pair of problem.pairs) {
+    await expect(t2.getByText(pair.n, { exact: true })).toBeVisible();
+    await expect(t2.getByRole('heading', { level: 3, name: pair.problem, exact: true })).toBeVisible();
+    await expect(t2.getByText(pair.problemText, { exact: true })).toBeVisible();
+    const sol = t2.getByRole('heading', { level: 3, name: pair.solution, exact: true });
+    await expect(sol).toBeVisible();
+    // The way out is WRITTEN, not just labelled: the typed (visible) part is the
+    // whole phrase, nothing is left in the ghost that is still to be typed.
+    await expect(sol.locator('.pv-done')).toHaveText(pair.solution);
+    await expect(sol.locator('.pv-rest')).toHaveText('');
+    await expect(t2.getByText(pair.solutionText, { exact: true })).toBeVisible();
+  }
+}
 
 test.describe('new home page preview', () => {
   test('the reference mock-up yields the T1 words (the reader is not blind)', () => {
@@ -53,6 +97,20 @@ test.describe('new home page preview', () => {
     expect(hook.lines).toHaveLength(4);
     expect(hook.sub.length).toBeGreaterThan(80);
     expect(hook.ctas).toEqual(['Talk to us', "See what we've built"]);
+  });
+
+  test('the reference mock-up yields the T2 words (the reader is not blind)', () => {
+    expect(problem.eyebrow).toBe('Where most companies get stuck');
+    expect(problem.title).toBe('Everyone talks about AI. Nobody tells you where to start.');
+    expect(problem.visual.length).toBeGreaterThan(80);
+    expect(problem.pairs).toHaveLength(4);
+    expect(problem.pairs.map((p) => p.n)).toEqual(['Problem 1 of 4', 'Problem 2 of 4', 'Problem 3 of 4', 'Problem 4 of 4']);
+    for (const p of problem.pairs) {
+      expect(p.problem.length).toBeGreaterThan(5);
+      expect(p.problemText.length).toBeGreaterThan(60);
+      expect(p.solution.length).toBeGreaterThan(5);
+      expect(p.solutionText.length).toBeGreaterThan(60);
+    }
   });
 
   test('is served, noindex, and announces no language twin', async ({ request }) => {
@@ -109,12 +167,58 @@ test.describe('new home page preview', () => {
       }
     });
 
+    test('T2 is complete and visible, word for word from the mock-up', async ({ page }) => {
+      await page.goto(ROUTE);
+      await expectProblemComplete(page);
+    });
+
     test('carries the six tramos as sections with their ids', async ({ page }) => {
       await page.goto(ROUTE);
       for (const id of ['top', 'problem', 'built', 'orchestrator', 'work', 'contact']) {
         await expect(page.locator(`main#main-content > section#${id}`)).toHaveCount(1);
       }
     });
+  });
+
+  test('with reduced motion, T2 stays whole and still (no pin, no typing)', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(ROUTE);
+    await page.waitForLoadState('networkidle');
+    await expect(page.locator('section#problem')).not.toHaveClass(/is-fx/);
+    await expectProblemComplete(page);
+  });
+
+  test.describe('with motion', () => {
+    for (const [width, height] of [[1440, 900], [768, 1024], [375, 812]]) {
+      test(`T2 pins a scene that fills the screen at ${width}x${height} and plays to the last pair`, async ({ page }) => {
+        await page.setViewportSize({ width, height });
+        await page.goto(ROUTE);
+        const section = page.locator('section#problem');
+        await expect(section).toHaveClass(/is-fx/);
+
+        // Scroll to the end of the pin (4.8 screens long).
+        const top = await page.evaluate(() => {
+          const stage = document.querySelector('[data-pv-story-stage]')!;
+          return stage.parentElement!.getBoundingClientRect().top + window.scrollY;
+        });
+        await page.evaluate((y) => window.scrollTo(0, y), top + height * 4.8 * 0.995);
+
+        const last = problem.pairs[3];
+        const step = section.locator('[data-pv-step]').nth(3);
+        await expect(step).toHaveClass(/is-on/);
+        await expect(step.getByRole('heading', { level: 3, name: last.solution })).toHaveText(last.solution);
+
+        // Pinned and full: drawing + text span at least 80% of the screen under the 60px header.
+        const fill = await page.evaluate(() => {
+          const a = document.querySelector('.pv-story-canvas')!.getBoundingClientRect();
+          const b = document.querySelector('.pv-steps-col')!.getBoundingClientRect();
+          const stage = document.querySelector('[data-pv-story-stage]')!.getBoundingClientRect();
+          return { span: Math.max(a.bottom, b.bottom) - Math.min(a.top, b.top), stageTop: stage.top, vh: window.innerHeight };
+        });
+        expect(Math.abs(fill.stageTop), 'the stage is pinned to the top').toBeLessThan(2);
+        expect(fill.span / (fill.vh - 60)).toBeGreaterThan(0.8);
+      });
+    }
   });
 
   test('passes axe WCAG 2 AA with reduced motion', async ({ page }) => {

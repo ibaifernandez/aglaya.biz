@@ -16,9 +16,12 @@
  * BaseLayout mounts ClientRouter, so this (re)starts on `astro:page-load` and
  * tears everything down on `astro:before-swap`.
  *
- * Only T1 (and the header's button) move for now. Lenis smooth scrolling from
- * the mock-up is page-wide, not T1's, and arrives with the tramos that need it.
+ * T1 (and the header's button) move here; T2's pinned story lives in its
+ * sibling ./story-effects.ts and runs inside the same context, so one revert
+ * tears both down. Lenis smooth scrolling from the mock-up is page-wide and no
+ * tramo built so far needs it, so it is not loaded.
  */
+import { storyEffects } from './story-effects';
 
 type Gsap = typeof import('gsap').gsap;
 type Cleanup = () => void;
@@ -37,7 +40,8 @@ async function start() {
   teardown();
 
   const hook = document.querySelector<HTMLElement>('.pv-hook');
-  if (!hook) return;
+  const story = document.querySelector<HTMLElement>('.pv-story');
+  if (!hook && !story) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   const root = document.documentElement;
@@ -61,28 +65,34 @@ async function start() {
     window.clearTimeout(timer);
   }
   // The visitor may have navigated away while the import was in flight.
-  if (!hook.isConnected) {
+  if (!(hook ?? story)!.isConnected) {
     root.classList.remove(WAIT_CLASS);
     return;
   }
 
   gsap.registerPlugin(ScrollTrigger);
   const listeners: Cleanup[] = [];
+  let storyCleanup: Cleanup | null = null;
 
   const ctx = gsap.context(() => {
-    // T1 · entrance — values from the mock-up.
-    gsap.from('.pv-hook-line > span', { yPercent: 110, duration: 1.1, ease: 'power4.out', stagger: 0.12, delay: 0.15 });
-    gsap.from('.pv-hook-rule', { scaleX: 0, transformOrigin: 'left center', duration: 1.2, delay: 0.55, ease: 'power3.inOut' });
-    gsap.from('.pv-hook-sub, .pv-hook-ctas', { y: 24, opacity: 0, duration: 0.9, delay: 0.8, stagger: 0.12, ease: 'power3.out' });
+    if (hook) {
+      // T1 · entrance — values from the mock-up.
+      gsap.from('.pv-hook-line > span', { yPercent: 110, duration: 1.1, ease: 'power4.out', stagger: 0.12, delay: 0.15 });
+      gsap.from('.pv-hook-rule', { scaleX: 0, transformOrigin: 'left center', duration: 1.2, delay: 0.55, ease: 'power3.inOut' });
+      gsap.from('.pv-hook-sub, .pv-hook-ctas', { y: 24, opacity: 0, duration: 0.9, delay: 0.8, stagger: 0.12, ease: 'power3.out' });
 
-    // T1 · the title shrinks and fades as the hook scrolls away.
-    gsap.to('.pv-hook-title', {
-      yPercent: -10,
-      scale: 0.92,
-      opacity: 0.3,
-      ease: 'none',
-      scrollTrigger: { trigger: hook, start: 'top top', end: 'bottom top', scrub: true },
-    });
+      // T1 · the title shrinks and fades as the hook scrolls away.
+      gsap.to('.pv-hook-title', {
+        yPercent: -10,
+        scale: 0.92,
+        opacity: 0.3,
+        ease: 'none',
+        scrollTrigger: { trigger: hook, start: 'top top', end: 'bottom top', scrub: true },
+      });
+    }
+
+    // T2 · the four pairs, pinned.
+    storyCleanup = storyEffects(gsap, ScrollTrigger);
 
     // Magnetic buttons, only where there is a real pointer.
     if (window.matchMedia('(hover: hover)').matches) {
@@ -117,6 +127,7 @@ async function start() {
     root.classList.remove(WAIT_CLASS);
     listeners.forEach((off) => off());
     ctx.revert(); // kills every tween and ScrollTrigger made above, restores inline styles
+    storyCleanup?.(); // what GSAP does not own: T2's layout class, typed text, drawing
   };
 }
 
