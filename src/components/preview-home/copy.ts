@@ -49,24 +49,36 @@ export const footer = {
   ],
 } as const;
 
-/** T2 · the problem: four pairs, problem → way out — reference `docs/design/portada-nueva/t2-selector.html`. */
+/**
+ * T2 · the problem: four pairs, problem → way out — reference
+ * `docs/design/portada-nueva/t2-selector.html`. Pair 1's way out, its paragraph
+ * and its drawing's label come from `docs/design/portada-nueva/t2-anim1-tetris.html`
+ * (agreed with Ibai on 2026-10-04).
+ */
 export const problem = {
   eyebrow: 'Where most companies get stuck',
   title: 'Everyone talks about AI.',
   titleEm: 'Nobody tells you where to start.',
   /** Name of the selector (the tablist); mock-up `aria-label` of `.tabs`. */
   tabsLabel: 'Where companies get stuck',
-  /** Under the selector, shown only once it works (needs JavaScript). */
-  pick: 'Pick one',
+  /** The stage's name while pairs 2–4 are on it (the mock-up's label of the four old scenes). */
   visualLabel:
     'Four scenes that go from chaos to order: AI buzzwords reduced to the three that fit; random licences turned into one bar that pays off first; rented tools brought inside a frame you own; data that stops flowing to other clouds and stays home.',
+  /**
+   * The stage's name while pair 1 is on it: the Tetris mock-up's canvas label,
+   * followed by the words its last frame shows (mock-up `TX.en`), so the still
+   * frame reads the same to a screen reader as it does on screen.
+   */
+  tetrisLabel:
+    'Before: AI tools fall faster and faster onto your company, piling up with gaps until they overflow. After: we start from your real needs, the gaps, and each one gets the piece that fits; the rows complete and clear. The right systems, made for you. Start from your actual needs and let your company grow solid.',
   pairs: [
     {
       n: 'Problem 1 of 4',
       problem: 'A new AI tool every week',
       problemText: 'Chatbots, copilots, agents, automations. Everyone is selling one, and everyone says theirs is the one you need.',
-      solution: 'We tell you which ones matter',
-      solutionText: "We test the tools so you don't have to, and bring you only the few that fit how you work.",
+      solution: 'We make the system fit the need',
+      solutionText:
+        'Stop bending off-the-shelf tools to fit your company. We sit with each department, find what actually needs solving, and build each need a system made for it.',
     },
     {
       n: 'Problem 2 of 4',

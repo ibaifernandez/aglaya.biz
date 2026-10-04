@@ -1,0 +1,720 @@
+/**
+ * T2 · pair 1's drawing — «AGLAYA fixes your Tetris». PROVISIONAL, to be
+ * replaced by video, like ./story-drawing.ts for the other three pairs.
+ *
+ * Ported from the reference mock-up `docs/design/portada-nueva/t2-anim1-tetris.html`
+ * (English only): one deterministic `draw(T)` that paints any instant of a
+ * ≈24 s timeline on a 400 × 400 logical board.
+ *   1 off-the-shelf tools fall faster and faster onto a flat company until it
+ *     overflows · 2 fade · 3 «SO MANY TOOLS. / WHAT DID THEY SOLVE?» · 4 fade ·
+ *   5 the company shows its real shape, four irregular gaps named after a need ·
+ *   6 one made-to-measure piece per gap falls in red and fits, then turns ink
+ *     and its outline melts · 7 «THE RIGHT SYSTEMS, / MADE FOR YOU.» + the line
+ *     under it.
+ *
+ * `draw` only talks to a small subset of the Canvas 2D API (`Ctx` below), so the
+ * same code paints two surfaces:
+ *   - in the browser, a real <canvas> (`createTetris`), on a wide screen with
+ *     motion allowed — the only place it moves;
+ *   - on the server, a recorder that writes SVG (`tetrisFinalMarkup`): the last
+ *     frame, still, for the ground floor (no JavaScript), reduced motion and
+ *     phones. One drawing, two backends; the still frame cannot drift from the
+ *     animation's end.
+ *
+ * Swapping it for video means rewriting this file behind the same exports —
+ * `tetrisFinalMarkup()` a poster frame, `createTetris(host)` a <video> whose
+ * `paint(T)` seeks and whose `play()` plays from 0 — and touching nothing else.
+ *
+ * Colours and type are the canon's tokens: on the server written as
+ * `var(--color-*)`, in the browser read off the host's computed style (a
+ * canvas cannot take a `var()`). No brand value is written here.
+ */
+
+/** The pair (0-based) this drawing belongs to. */
+export const TETRIS_PAIR = 0;
+
+/* ---------- The words (mock-up `TX.en`) ---------- */
+
+const TX = {
+  bought: 'TOOLS BOUGHT',
+  built: 'SYSTEMS BUILT',
+  met: 'NEEDS MET',
+  m1: 'SO MANY TOOLS.',
+  m2a: 'WHAT DID THEY ',
+  m2b: 'SOLVE?',
+  needs: ['SALES', 'REPORTING', 'SUPPORT', 'HIRING'],
+  builtFor: 'BUILT FOR',
+  company: 'YOUR COMPANY',
+  h1: 'THE RIGHT SYSTEMS,',
+  h2: 'MADE FOR YOU.',
+  s1: 'Start from your actual needs and',
+  s2: 'let your company grow solid.',
+};
+
+/* ---------- The board and the script (mock-up, unchanged) ---------- */
+
+const COLS = 13;
+const ROWS = 14;
+const C = 22;
+const OX = 57;
+const OY = 44;
+
+type Cell = [number, number];
+const SH: Record<string, Cell[]> = {
+  I: [[0, 0], [1, 0], [2, 0], [3, 0]],
+  Iv: [[0, 0], [0, 1], [0, 2], [0, 3]],
+  O: [[0, 0], [1, 0], [0, 1], [1, 1]],
+  T: [[0, 0], [1, 0], [2, 0], [1, 1]],
+  Tu: [[1, 0], [0, 1], [1, 1], [2, 1]],
+  S: [[1, 0], [2, 0], [0, 1], [1, 1]],
+  Z: [[0, 0], [1, 0], [1, 1], [2, 1]],
+  L: [[0, 0], [0, 1], [0, 2], [1, 2]],
+  J: [[1, 0], [1, 1], [1, 2], [0, 2]],
+};
+const KEYS = Object.keys(SH);
+const NAMES = ['CHATGPT', 'COPILOT', 'ZAPIER', 'GEMINI', 'N8N', 'JASPER', 'CLAUDE', 'MAKE', 'NOTION AI', 'PERPLEXITY', 'HUBSPOT AI', 'MIDJOURNEY', 'CHATBOT', 'AGENT', 'LOVABLE', 'CURSOR', 'FIREFLIES', 'SYNTHESIA', 'GAMMA', 'RUNWAY', 'CANVA AI', 'OTTER', 'TYPEFORM AI', 'AIRTABLE AI', 'MANUS', 'GRAMMARLY', 'DEEPL', 'HEYGEN', 'ELEVENLABS', 'SORA'];
+
+/** The company's real profile (rows 9–11): depth of each gap per column, 0 = a wall. No standard tetromino fills them. */
+const DEPTH = [2, 3, 1, 0, 3, 3, 0, 1, 3, 2, 0, 2, 3];
+const gapCells = (c0: number, c1: number) => {
+  const out: Cell[] = [];
+  for (let c = c0; c <= c1; c++) for (let r = 0; r < DEPTH[c]; r++) out.push([c, 9 + r]);
+  return out;
+};
+const NEEDS = [
+  { short: TX.needs[0], cells: gapCells(0, 2) },
+  { short: TX.needs[1], cells: gapCells(4, 5) },
+  { short: TX.needs[2], cells: gapCells(7, 9) },
+  { short: TX.needs[3], cells: gapCells(11, 12) },
+];
+
+interface Drop {
+  cells: Cell[];
+  x: number;
+  y: number;
+  t0: number;
+  dur: number;
+  name: string;
+}
+
+/* BEFORE: a deterministic simulation of the falls — same pile on every load. */
+const before: Drop[] = [];
+let tEnd = 0.6;
+{
+  let seed = 7;
+  const rnd = () => {
+    seed = (seed * 9301 + 49297) % 233280;
+    return seed / 233280;
+  };
+  const grid: (string | null)[][] = [];
+  for (let r = 0; r < ROWS; r++) grid.push(new Array(COLS).fill(null));
+  for (let c = 0; c < COLS; c++) grid[12][c] = grid[13][c] = 'base';
+  const fits = (cells: Cell[], x: number, y: number) =>
+    cells.every(([dx, dy]) => {
+      const cx = x + dx;
+      const cy = y + dy;
+      return cx >= 0 && cx < COLS && cy < ROWS && !(cy >= 0 && grid[cy][cx]);
+    });
+  let dur = 0.62;
+  for (let i = 0; i < 30; i++) {
+    let k = KEYS[Math.floor(rnd() * KEYS.length)];
+    if (NAMES[i % NAMES.length] === 'PERPLEXITY') k = 'Iv'; // the last to fall: an upright bar, its name readable
+    const cells = SH[k];
+    const w = Math.max(...cells.map((p) => p[0])) + 1;
+    const x = Math.floor(rnd() * (COLS - w + 1));
+    let y = -4;
+    while (fits(cells, x, y + 1)) y++;
+    if (!fits(cells, x, y)) break;
+    const top = Math.min(...cells.map((p) => y + p[1]));
+    for (const [dx, dy] of cells) if (y + dy >= 0) grid[y + dy][x + dx] = 'tool';
+    before.push({ cells, x, y, t0: tEnd, dur, name: NAMES[i % NAMES.length] });
+    tEnd += dur + 0.06;
+    dur = Math.max(0.2, dur * 0.86);
+    if (top <= 2) break;
+  }
+}
+
+/* The script (Ibai): 1 fall · 2 fade · 3 message (≥ 1 s per 3 words) · 4 fade · 5 gaps · 6 fit · 7 close. */
+const T_OVER = tEnd + 0.5;
+const FADE = 0.8;
+const T_MSG = T_OVER + FADE + 0.2;
+const L1_HOLD = 1.2;
+const L2_HOLD = 2.0;
+const MSG_FADE = 0.6;
+const T_MSG2 = T_MSG + L1_HOLD;
+const T_MSGOUT = T_MSG2 + L2_HOLD;
+const T_GHOST = T_MSGOUT + MSG_FADE + 0.3;
+const T_FIT = T_GHOST + 1.0;
+const FIT_DUR = 0.9;
+const FIT_GAP = 0.35;
+const T_ROWS = T_FIT + NEEDS.length * (FIT_DUR + FIT_GAP) + 0.2;
+const T_HEAD = T_ROWS + 0.6;
+const T_SUB = T_HEAD + 2.0;
+
+/** Seconds from the first fall to the still last frame (≈ 24). */
+export const TETRIS_END = T_SUB + 4.0;
+
+/* ---------- Drawing ---------- */
+
+/** The part of CanvasRenderingContext2D the drawing uses — a real canvas, or the SVG recorder below. */
+export interface Ctx {
+  fillStyle: string | CanvasGradient | CanvasPattern;
+  strokeStyle: string | CanvasGradient | CanvasPattern;
+  lineWidth: number;
+  globalAlpha: number;
+  font: string;
+  textAlign: CanvasTextAlign;
+  textBaseline: CanvasTextBaseline;
+  save(): void;
+  restore(): void;
+  translate(x: number, y: number): void;
+  rotate(a: number): void;
+  fillRect(x: number, y: number, w: number, h: number): void;
+  strokeRect(x: number, y: number, w: number, h: number): void;
+  beginPath(): void;
+  rect(x: number, y: number, w: number, h: number): void;
+  moveTo(x: number, y: number): void;
+  lineTo(x: number, y: number): void;
+  fill(): void;
+  stroke(): void;
+  clip(): void;
+  setLineDash(d: number[]): void;
+  fillText(t: string, x: number, y: number): void;
+  measureText(t: string): { width: number };
+}
+
+/** Token roles, as each backend spells them. */
+export interface Palette {
+  paper: string; // --color-bg
+  ink: string; // --color-text
+  red: string; // --color-brand
+  redInk: string; // --color-brand-dark
+  tool: string; // --color-surface-3
+  well: string; // --color-border
+  faint: string; // --color-faint
+  muted: string; // --color-muted
+  mono: string; // --font-mono
+  disp: string; // --font-display
+  body: string; // --font-body
+}
+
+const ROLES: Record<keyof Palette, string> = {
+  paper: '--color-bg',
+  ink: '--color-text',
+  red: '--color-brand',
+  redInk: '--color-brand-dark',
+  tool: '--color-surface-3',
+  well: '--color-border',
+  faint: '--color-faint',
+  muted: '--color-muted',
+  mono: '--font-mono',
+  disp: '--font-display',
+  body: '--font-body',
+};
+
+const easeIn = (v: number) => v * v;
+const easeOut = (v: number) => 1 - (1 - v) * (1 - v);
+const cl = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
+const lerp = (a: number, b: number, f: number) => a + (b - a) * f;
+
+/** Paint instant `T` (seconds, clamped to 0..TETRIS_END) on a 400 × 400 board in `ctx`'s current transform. */
+export function drawTetris(ctx: Ctx, T: number, P: Palette) {
+  T = Math.max(0, Math.min(T, TETRIS_END));
+  const font = (w: number, size: number, fam: string) => `${w} ${size}px ${fam}`;
+  const textW = (txt: string, size: number) => {
+    ctx.font = font(700, size, P.mono);
+    return ctx.measureText(txt).width + 8;
+  };
+
+  /** Straight runs of a piece, in cells: [{a, b, k}]. */
+  const runs = (cells: Cell[], horiz: boolean) => {
+    const by: Record<number, number[]> = {};
+    for (const p of cells) (by[horiz ? p[1] : p[0]] ??= []).push(horiz ? p[0] : p[1]);
+    const out: { a: number; b: number; k: number }[] = [];
+    for (const key of Object.keys(by)) {
+      const v = by[+key].sort((a, b) => a - b);
+      let a = v[0];
+      let prev = v[0];
+      for (let i = 1; i <= v.length; i++) {
+        if (i < v.length && v[i] === prev + 1) {
+          prev = v[i];
+          continue;
+        }
+        out.push({ a, b: prev + 1, k: +key });
+        if (i < v.length) a = prev = v[i];
+      }
+    }
+    return out;
+  };
+  /** Label: inside the piece's longest straight run, with margin; upright if it does not fit lying down. */
+  const placeLabel = (cells: Cell[], txt: string) => {
+    const mx = cells.reduce((s, p) => s + p[0], 0) / cells.length + 0.5;
+    const my = cells.reduce((s, p) => s + p[1], 0) / cells.length + 0.5;
+    const sizes = [7.5, 6.8, 6.2];
+    const pick = (horiz: boolean) => {
+      const rs = runs(cells, horiz).sort((A, B) => {
+        const la = A.b - A.a;
+        const lb = B.b - B.a;
+        if (lb !== la) return lb - la;
+        const ca = horiz ? Math.abs(A.k + 0.5 - my) : Math.abs(A.k + 0.5 - mx);
+        const cb = horiz ? Math.abs(B.k + 0.5 - my) : Math.abs(B.k + 0.5 - mx);
+        return ca - cb;
+      });
+      for (const size of sizes)
+        for (const r of rs)
+          if (textW(txt, size) + 6 <= (r.b - r.a) * C)
+            return horiz
+              ? { cx: (r.a + r.b) / 2, cy: r.k + 0.5, size, rot: false }
+              : { cx: r.k + 0.5, cy: (r.a + r.b) / 2, size, rot: true };
+      return null;
+    };
+    return pick(true) || pick(false) || { cx: mx, cy: my, size: 6.2, rot: false };
+  };
+
+  /** One piece. Its cells are filled as ONE path, each 0.3 px larger on every side, so neighbours overlap and no seam shows when the board is scaled. */
+  const piece = (
+    cells: Cell[],
+    x: number,
+    y: number,
+    fills: [string, number][],
+    stroke: string | null,
+    strokeAlpha: number,
+    txt: string | null,
+    txtCol: string,
+    alpha: number,
+    chipBg: string | null,
+  ) => {
+    const set = new Set(cells.map((p) => `${p[0]},${p[1]}`));
+    ctx.beginPath();
+    for (const p of cells) if (y + p[1] >= -1) ctx.rect(OX + (x + p[0]) * C - 0.3, OY + (y + p[1]) * C - 0.3, C + 0.6, C + 0.6);
+    for (const [fill, a] of fills) {
+      ctx.globalAlpha = alpha * a;
+      ctx.fillStyle = fill;
+      ctx.fill();
+    }
+    if (stroke && strokeAlpha > 0) {
+      ctx.globalAlpha = alpha * strokeAlpha;
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      for (const p of cells) {
+        const X = OX + (x + p[0]) * C;
+        const Y = OY + (y + p[1]) * C;
+        if (!set.has(`${p[0]},${p[1] - 1}`)) { ctx.moveTo(X, Y); ctx.lineTo(X + C, Y); }
+        if (!set.has(`${p[0]},${p[1] + 1}`)) { ctx.moveTo(X, Y + C); ctx.lineTo(X + C, Y + C); }
+        if (!set.has(`${p[0] - 1},${p[1]}`)) { ctx.moveTo(X, Y); ctx.lineTo(X, Y + C); }
+        if (!set.has(`${p[0] + 1},${p[1]}`)) { ctx.moveTo(X + C, Y); ctx.lineTo(X + C, Y + C); }
+      }
+      ctx.stroke();
+    }
+    ctx.globalAlpha = alpha;
+    if (txt) {
+      const L = placeLabel(cells, txt);
+      ctx.save();
+      ctx.translate(OX + (x + L.cx) * C, OY + (y + L.cy) * C);
+      if (L.rot) ctx.rotate(-Math.PI / 2);
+      ctx.font = font(700, L.size, P.mono);
+      const w = ctx.measureText(txt).width + 8;
+      const h = L.size + 5;
+      if (chipBg) {
+        ctx.fillStyle = chipBg;
+        ctx.fillRect(-w / 2, -h / 2, w, h);
+      }
+      ctx.fillStyle = txtCol;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(txt, 0, 0.5);
+      ctx.restore();
+    }
+    ctx.globalAlpha = 1;
+  };
+
+  /** Over the empty well, after the fade. */
+  const message = () => {
+    const out = 1 - cl((T - T_MSGOUT) / MSG_FADE);
+    const a1 = cl((T - T_MSG) / 0.35) * out;
+    const a2 = cl((T - T_MSG2) / 0.35) * out;
+    const cx = OX + (COLS * C) / 2;
+    const maxw = COLS * C - 28;
+    const fit = (txt: string, size: number) => {
+      ctx.font = font(900, size, P.disp);
+      while (size > 10 && ctx.measureText(txt).width > maxw) ctx.font = font(900, (size -= 0.5), P.disp);
+      return size;
+    };
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.globalAlpha = a1;
+    fit(TX.m1, 24);
+    ctx.fillStyle = P.ink;
+    ctx.fillText(TX.m1, cx, OY + 3.8 * C);
+    ctx.globalAlpha = a2;
+    ctx.font = font(900, fit(TX.m2a + TX.m2b, 24), P.disp);
+    const w1 = ctx.measureText(TX.m2a).width;
+    const w2 = ctx.measureText(TX.m2b).width;
+    const x0 = cx - (w1 + w2) / 2;
+    ctx.textAlign = 'left';
+    ctx.fillStyle = P.ink;
+    ctx.fillText(TX.m2a, x0, OY + 5.2 * C);
+    ctx.fillStyle = P.red;
+    ctx.fillText(TX.m2b, x0 + w1, OY + 5.2 * C);
+    ctx.restore();
+  };
+
+  const hud = (tools: number, met: number) => {
+    let hs = 9;
+    ctx.font = font(700, hs, P.mono);
+    while (hs > 6 && ctx.measureText(`${TX.bought}  00${TX.met}  0/4`).width > COLS * C - 16) ctx.font = font(700, (hs -= 0.25), P.mono);
+    ctx.textBaseline = 'alphabetic';
+    ctx.textAlign = 'left';
+    if (tools >= 0) {
+      ctx.fillStyle = P.faint;
+      ctx.fillText(`${TX.bought}  ${tools < 10 ? '0' : ''}${tools}`, OX, 26);
+    } else {
+      ctx.fillStyle = met > 0 ? P.redInk : P.faint;
+      ctx.fillText(`${TX.built}  0${met}`, OX, 26);
+    }
+    ctx.textAlign = 'right';
+    ctx.fillStyle = met > 0 ? P.redInk : P.faint;
+    ctx.fillText(`${TX.met}  ${met}/4`, OX + COLS * C, 26);
+  };
+
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = P.paper;
+  ctx.fillRect(0, 0, 400, 400);
+  // the well
+  ctx.strokeStyle = P.well;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(OX - 0.5, OY - 0.5, COLS * C + 1, ROWS * C + 1);
+  // the company
+  const rowsGone = cl((T - T_ROWS) / 0.5);
+  ctx.fillStyle = P.ink;
+  ctx.fillRect(OX, OY + 12 * C, COLS * C, 2 * C);
+  if (T >= T_GHOST) {
+    // it shows its real shape
+    const rise = easeOut(cl((T - T_GHOST) / 0.6));
+    DEPTH.forEach((d, c) => {
+      const h = (3 - d) * C * rise;
+      if (h > 0) ctx.fillRect(OX + c * C - 0.3, OY + 12 * C - h, C + 0.6, h + 1);
+    });
+  }
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(OX, OY, COLS * C, ROWS * C);
+  ctx.clip(); // nothing shows outside the well
+  let tools = 0;
+  if (T < T_OVER + FADE) {
+    const stackAlpha = 1 - cl((T - T_OVER) / FADE);
+    for (const p of before) {
+      if (T < p.t0) continue;
+      const f = cl((T - p.t0) / p.dur);
+      if (f >= 1) tools++;
+      piece(p.cells, p.x, -4 + (p.y + 4) * easeIn(f), [[P.tool, 1]], P.ink, 1, p.name, P.paper, stackAlpha, P.ink);
+    }
+  }
+  let met = 0;
+  if (T >= T_GHOST) {
+    const ga = cl((T - T_GHOST) / 0.5);
+    NEEDS.forEach((n, i) => {
+      const tf = T_FIT + i * (FIT_DUR + FIT_GAP);
+      const f = cl((T - tf) / FIT_DUR);
+      const landed = f >= 1;
+      if (landed) met++;
+      const xs = n.cells.map((p) => p[0]);
+      if (!landed) {
+        // the gap's ghost
+        ctx.globalAlpha = ga * (1 - rowsGone);
+        ctx.setLineDash([3, 3]);
+        ctx.strokeStyle = P.red;
+        ctx.lineWidth = 1.5;
+        for (const p of n.cells) ctx.strokeRect(OX + p[0] * C + 2, OY + p[1] * C + 2, C - 4, C - 4);
+        ctx.setLineDash([]);
+        ctx.fillStyle = P.redInk;
+        ctx.font = font(700, 7, P.mono);
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'alphabetic';
+        ctx.fillText(n.short, OX + ((Math.min(...xs) + Math.max(...xs) + 1) / 2) * C, OY + 9 * C - 5);
+        ctx.globalAlpha = 1;
+      }
+      if (T >= tf) {
+        // the piece made for that gap falls, slow and guided
+        const minx = Math.min(...xs);
+        const miny = Math.min(...n.cells.map((p) => p[1]));
+        const rel = n.cells.map((p): Cell => [p[0] - minx, p[1] - miny]);
+        const y = lerp(-3, miny, easeOut(f));
+        // rows complete: it becomes part of the company (red → ink), its outline melting away
+        const k = landed ? cl((rowsGone - 0.35) / 0.65) : 0;
+        const fills: [string, number][] = k <= 0 ? [[P.red, 1]] : k >= 1 ? [[P.ink, 1]] : [[P.ink, 1], [P.red, 1 - k]];
+        piece(rel, minx, y, fills, k < 1 ? P.paper : null, 1 - k, null, '', 1, null);
+        // «BUILT FOR / <need>», on the top (widest) row
+        const cw = (Math.max(...rel.map((q) => q[0])) + 1) * C;
+        const lx = OX + minx * C + cw / 2;
+        const ly = OY + (y + 0.5) * C;
+        ctx.save();
+        ctx.fillStyle = P.paper;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        let fs = 6.4;
+        ctx.font = font(700, fs, P.mono);
+        while (fs > 4.6 && Math.max(ctx.measureText(n.short).width, ctx.measureText(TX.builtFor).width) > cw - 8) ctx.font = font(700, (fs -= 0.2), P.mono);
+        ctx.globalAlpha = 0.8;
+        ctx.fillText(TX.builtFor, lx, ly - 4.5);
+        ctx.globalAlpha = 1;
+        ctx.fillText(n.short, lx, ly + 4.5);
+        ctx.restore();
+      }
+    });
+  }
+  ctx.restore();
+
+  if (T >= T_MSG && T < T_MSGOUT + MSG_FADE) message();
+  // «YOUR COMPANY» stays put: it neither moves nor grows
+  ctx.fillStyle = P.paper;
+  ctx.font = font(900, 11, P.disp);
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(TX.company, OX + (COLS * C) / 2, OY + 13 * C);
+  const cx = OX + (COLS * C) / 2;
+  if (T >= T_HEAD) {
+    ctx.save();
+    ctx.globalAlpha = cl((T - T_HEAD) / 0.4);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    let hz = 22;
+    ctx.font = font(900, hz, P.disp);
+    while (hz > 12 && Math.max(ctx.measureText(TX.h1).width, ctx.measureText(TX.h2).width) > COLS * C - 20) ctx.font = font(900, (hz -= 0.5), P.disp);
+    ctx.fillStyle = P.redInk;
+    ctx.fillText(TX.h1, cx, OY + 3.2 * C);
+    ctx.fillStyle = P.ink;
+    ctx.fillText(TX.h2, cx, OY + 4.25 * C);
+    ctx.restore();
+  }
+  if (T >= T_SUB) {
+    ctx.save();
+    ctx.globalAlpha = cl((T - T_SUB) / 0.4);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = font(500, 10.5, P.body);
+    ctx.fillStyle = P.muted;
+    ctx.fillText(TX.s1, cx, OY + 5.6 * C);
+    ctx.fillText(TX.s2, cx, OY + 6.25 * C);
+    ctx.restore();
+  }
+  hud(T < T_GHOST ? Math.max(tools, T >= T_OVER ? before.length : 0) : -1, met);
+}
+
+/* ---------- Server side: a Canvas 2D recorder that writes SVG ---------- */
+
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const n = (v: number) => String(Math.round(v * 100) / 100);
+
+/**
+ * Text widths without a browser. Space Mono is monospaced (advance 0.612 em), so
+ * its widths are exact; the other two families only ever ask "does it fit?" on
+ * the last frame, where an estimate on the generous side gives the canvas's
+ * answer (checked by tests/e2e/preview-home.spec.ts against the real canvas).
+ */
+function measure(font: string, text: string) {
+  const m = /^\S+ ([\d.]+)px (.+)$/.exec(font);
+  const size = m ? +m[1] : 10;
+  const per = m && m[2].includes('mono') ? 0.612 : 0.62;
+  return text.length * per * size;
+}
+
+class SvgCtx implements Ctx {
+  fillStyle = '';
+  strokeStyle = '';
+  lineWidth = 1;
+  globalAlpha = 1;
+  font = '10px sans-serif';
+  textAlign: CanvasTextAlign = 'start';
+  textBaseline: CanvasTextBaseline = 'alphabetic';
+  private out: string[] = [];
+  private path: string[] = [];
+  private dash: number[] = [];
+  private m = [1, 0, 0, 1, 0, 0];
+  private stack: { m: number[]; groups: number; state: Record<string, unknown> }[] = [];
+  private groups = 0;
+  private clips = 0;
+  private defs: string[] = [];
+
+  private tf() {
+    const [a, b, c, d, e, f] = this.m;
+    return a === 1 && b === 0 && c === 0 && d === 1 && e === 0 && f === 0 ? '' : ` transform="matrix(${[a, b, c, d, e, f].map(n).join(' ')})"`;
+  }
+  private alpha() {
+    return this.globalAlpha < 1 ? ` opacity="${n(this.globalAlpha)}"` : '';
+  }
+  private paintStyle(kind: 'fill' | 'stroke') {
+    if (kind === 'fill') return ` style="fill:${this.fillStyle}"`;
+    const dash = this.dash.length ? `;stroke-dasharray:${this.dash.join(' ')}` : '';
+    return ` style="fill:none;stroke:${this.strokeStyle};stroke-width:${n(this.lineWidth)}${dash}"`;
+  }
+  save() {
+    this.stack.push({
+      m: [...this.m],
+      groups: this.groups,
+      state: { fillStyle: this.fillStyle, strokeStyle: this.strokeStyle, lineWidth: this.lineWidth, globalAlpha: this.globalAlpha, font: this.font, textAlign: this.textAlign, textBaseline: this.textBaseline, dash: this.dash },
+    });
+    this.groups = 0;
+  }
+  restore() {
+    const s = this.stack.pop();
+    if (!s) return;
+    for (; this.groups > 0; this.groups--) this.out.push('</g>');
+    this.groups = s.groups;
+    this.m = s.m;
+    Object.assign(this, s.state);
+  }
+  translate(x: number, y: number) {
+    const [a, b, c, d, e, f] = this.m;
+    this.m = [a, b, c, d, a * x + c * y + e, b * x + d * y + f];
+  }
+  rotate(r: number) {
+    const [a, b, c, d, e, f] = this.m;
+    const cs = Math.cos(r);
+    const sn = Math.sin(r);
+    this.m = [a * cs + c * sn, b * cs + d * sn, c * cs - a * sn, d * cs - b * sn, e, f];
+  }
+  fillRect(x: number, y: number, w: number, h: number) {
+    if (this.globalAlpha <= 0) return;
+    this.out.push(`<rect x="${n(x)}" y="${n(y)}" width="${n(w)}" height="${n(h)}"${this.tf()}${this.alpha()}${this.paintStyle('fill')}/>`);
+  }
+  strokeRect(x: number, y: number, w: number, h: number) {
+    if (this.globalAlpha <= 0) return;
+    this.out.push(`<rect x="${n(x)}" y="${n(y)}" width="${n(w)}" height="${n(h)}"${this.tf()}${this.alpha()}${this.paintStyle('stroke')}/>`);
+  }
+  beginPath() {
+    this.path = [];
+  }
+  rect(x: number, y: number, w: number, h: number) {
+    this.path.push(`M${n(x)} ${n(y)}h${n(w)}v${n(h)}h${n(-w)}z`);
+  }
+  moveTo(x: number, y: number) {
+    this.path.push(`M${n(x)} ${n(y)}`);
+  }
+  lineTo(x: number, y: number) {
+    this.path.push(`L${n(x)} ${n(y)}`);
+  }
+  fill() {
+    if (this.globalAlpha <= 0 || !this.path.length) return;
+    this.out.push(`<path d="${this.path.join('')}"${this.tf()}${this.alpha()}${this.paintStyle('fill')}/>`);
+  }
+  stroke() {
+    if (this.globalAlpha <= 0 || !this.path.length) return;
+    this.out.push(`<path d="${this.path.join('')}"${this.tf()}${this.alpha()}${this.paintStyle('stroke')}/>`);
+  }
+  clip() {
+    const id = `pv-tetris-clip-${this.clips++}`;
+    this.defs.push(`<clipPath id="${id}"><path d="${this.path.join('')}"${this.tf()}/></clipPath>`);
+    this.out.push(`<g clip-path="url(#${id})">`);
+    this.groups++;
+  }
+  setLineDash(d: number[]) {
+    this.dash = d;
+  }
+  fillText(t: string, x: number, y: number) {
+    if (this.globalAlpha <= 0) return;
+    const m = /^(\S+) ([\d.]+)px (.+)$/.exec(this.font);
+    const anchor = this.textAlign === 'center' ? 'middle' : this.textAlign === 'right' || this.textAlign === 'end' ? 'end' : 'start';
+    const base = this.textBaseline === 'middle' ? ' dominant-baseline="central"' : '';
+    const style = m ? `fill:${this.fillStyle};font-family:${m[3]};font-weight:${m[1]};font-size:${m[2]}px;white-space:pre` : `fill:${this.fillStyle}`;
+    this.out.push(`<text x="${n(x)}" y="${n(y)}" text-anchor="${anchor}"${base}${this.tf()}${this.alpha()} style="${esc(style)}">${esc(t)}</text>`);
+  }
+  measureText(t: string) {
+    return { width: measure(this.font, t) };
+  }
+  toString() {
+    while (this.stack.length) this.restore();
+    for (; this.groups > 0; this.groups--) this.out.push('</g>');
+    return (this.defs.length ? `<defs>${this.defs.join('')}</defs>` : '') + this.out.join('');
+  }
+}
+
+const SERVER_PALETTE = Object.fromEntries(Object.entries(ROLES).map(([k, v]) => [k, `var(${v})`])) as unknown as Palette;
+
+/**
+ * The last frame, still, as SVG — the ground floor of pair 1 (≈4.8 KB before
+ * compression). `crispEdges`: the overlapping cells hide seams on a canvas, but
+ * SVG anti-aliases each edge on its own and two half-covered pixels still let
+ * the paper through; the last frame has no slanted edge to lose.
+ */
+export function tetrisFinalMarkup(): string {
+  const ctx = new SvgCtx();
+  drawTetris(ctx, TETRIS_END, SERVER_PALETTE);
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" aria-hidden="true" focusable="false" width="100%" height="100%" shape-rendering="crispEdges" data-pv-tetris-still>${ctx}</svg>`;
+}
+
+/* ---------- Browser side: the <canvas> ---------- */
+
+export interface Tetris {
+  /** Paint instant `T` (seconds) still. */
+  paint(T: number): void;
+  /** Play the timeline from 0 to its end, then hold the last frame. */
+  play(): void;
+  /** Stop and give the host back what it held. */
+  destroy(): void;
+}
+
+export function createTetris(host: HTMLElement): Tetris {
+  const before = [...host.childNodes];
+  const cv = document.createElement('canvas');
+  cv.setAttribute('aria-hidden', 'true');
+  cv.dataset.pvTetris = '';
+  cv.style.cssText = 'display:block;width:100%;height:100%';
+  host.replaceChildren(cv);
+  const ctx = cv.getContext('2d')!;
+  const css = getComputedStyle(host);
+  const P = Object.fromEntries(Object.entries(ROLES).map(([k, v]) => [k, css.getPropertyValue(v).trim()])) as unknown as Palette;
+
+  let T = 0;
+  let raf = 0;
+  let scale = 1;
+  const render = () => {
+    ctx.setTransform(scale, 0, 0, scale, 0, 0);
+    drawTetris(ctx, T, P);
+  };
+  const size = () => {
+    const w = host.clientWidth || 400;
+    const px = Math.round(w * (window.devicePixelRatio || 1));
+    if (px !== cv.width) cv.width = cv.height = px;
+    scale = px / 400;
+  };
+  size();
+  const ro = new ResizeObserver(() => {
+    size();
+    render();
+  });
+  ro.observe(host);
+  // Repaint once the canon's faces are in (a canvas does not re-render on its own when a font arrives).
+  document.fonts
+    ?.load(`700 10px ${P.mono}`)
+    .then(() => Promise.all([document.fonts.load(`900 10px ${P.disp}`), document.fonts.load(`500 10px ${P.body}`)]))
+    .then(render, () => {});
+
+  return {
+    paint(t) {
+      cancelAnimationFrame(raf);
+      T = t;
+      render();
+    },
+    play() {
+      cancelAnimationFrame(raf);
+      const start = performance.now();
+      const loop = (now: number) => {
+        T = Math.min((now - start) / 1000, TETRIS_END);
+        render();
+        if (T < TETRIS_END) raf = requestAnimationFrame(loop);
+      };
+      T = 0;
+      render();
+      raf = requestAnimationFrame(loop);
+    },
+    destroy() {
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+      host.replaceChildren(...before);
+    },
+  };
+}
