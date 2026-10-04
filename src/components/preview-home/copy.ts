@@ -49,11 +49,15 @@ export const footer = {
   ],
 } as const;
 
-/** T2 · the problem: four pairs, problem → way out. */
+/** T2 · the problem: four pairs, problem → way out — reference `docs/design/portada-nueva/t2-selector.html`. */
 export const problem = {
   eyebrow: 'Where most companies get stuck',
   title: 'Everyone talks about AI.',
   titleEm: 'Nobody tells you where to start.',
+  /** Name of the selector (the tablist); mock-up `aria-label` of `.tabs`. */
+  tabsLabel: 'Where companies get stuck',
+  /** Under the selector, shown only once it works (needs JavaScript). */
+  pick: 'Pick one',
   visualLabel:
     'Four scenes that go from chaos to order: AI buzzwords reduced to the three that fit; random licences turned into one bar that pays off first; rented tools brought inside a frame you own; data that stops flowing to other clouds and stays home.',
   pairs: [
@@ -87,3 +91,6 @@ export const problem = {
     },
   ],
 } as const;
+
+/** T2 · the stage caption: which pair is on it, `1 / 4`. */
+export const stageCaption = (pair: number, total: number) => `${pair} / ${total}`;

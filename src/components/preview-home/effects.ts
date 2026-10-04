@@ -16,13 +16,11 @@
  * BaseLayout mounts ClientRouter, so this (re)starts on `astro:page-load` and
  * tears everything down on `astro:before-swap`.
  *
- * T1 (and the header's button) move here; T2's pinned story lives in its
- * sibling ./story-effects.ts and runs inside the same context, so one revert
- * tears both down. Lenis smooth scrolling from the mock-up is page-wide and no
- * tramo built so far needs it, so it is not loaded.
+ * T1 (and the header's button) move here. T2 needs no GSAP: its selector and
+ * its motion are ./story-selector.ts and the chunks it loads. Lenis smooth
+ * scrolling from the mock-up is page-wide and no tramo built so far needs it,
+ * so it is not loaded.
  */
-import { storyEffects } from './story-effects';
-
 type Gsap = typeof import('gsap').gsap;
 type Cleanup = () => void;
 
@@ -40,8 +38,7 @@ async function start() {
   teardown();
 
   const hook = document.querySelector<HTMLElement>('.pv-hook');
-  const story = document.querySelector<HTMLElement>('.pv-story');
-  if (!hook && !story) return;
+  if (!hook) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   const root = document.documentElement;
@@ -65,17 +62,16 @@ async function start() {
     window.clearTimeout(timer);
   }
   // The visitor may have navigated away while the import was in flight.
-  if (!(hook ?? story)!.isConnected) {
+  if (!hook.isConnected) {
     root.classList.remove(WAIT_CLASS);
     return;
   }
 
   gsap.registerPlugin(ScrollTrigger);
   const listeners: Cleanup[] = [];
-  let storyCleanup: Cleanup | null = null;
 
   const ctx = gsap.context(() => {
-    if (hook) {
+    { // T1 (a block, so its constants stay local)
       // T1 · entrance — values from the mock-up.
       gsap.from('.pv-hook-line > span', { yPercent: 110, duration: 1.1, ease: 'power4.out', stagger: 0.12, delay: 0.15 });
       gsap.from('.pv-hook-rule', { scaleX: 0, transformOrigin: 'left center', duration: 1.2, delay: 0.55, ease: 'power3.inOut' });
@@ -90,9 +86,6 @@ async function start() {
         scrollTrigger: { trigger: hook, start: 'top top', end: 'bottom top', scrub: true },
       });
     }
-
-    // T2 · the four pairs, pinned.
-    storyCleanup = storyEffects(gsap, ScrollTrigger);
 
     // Magnetic buttons, only where there is a real pointer.
     if (window.matchMedia('(hover: hover)').matches) {
@@ -127,7 +120,6 @@ async function start() {
     root.classList.remove(WAIT_CLASS);
     listeners.forEach((off) => off());
     ctx.revert(); // kills every tween and ScrollTrigger made above, restores inline styles
-    storyCleanup?.(); // what GSAP does not own: T2's layout class, typed text, drawing
   };
 }
 
