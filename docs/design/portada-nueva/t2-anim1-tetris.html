@@ -25,7 +25,7 @@ p{margin:0}
 .prob-p{color:var(--muted);margin-top:10px;font-size:15px}
 .sol-h{margin-top:16px;font-size:clamp(22px,2.2vw,30px);color:var(--brand-ink)}
 .sol-p{margin-top:10px;font-size:15px}
-.stage{position:relative;aspect-ratio:1;background:var(--bg);border:1px solid var(--line)}
+.stage{position:relative;aspect-ratio:4/5;background:var(--bg);border:1px solid var(--line)}
 .stage canvas{display:block;width:100%;height:100%}
 .ctrl{display:flex;gap:10px;align-items:center;margin-top:14px}
 .ctrl button{font:700 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--ink);background:var(--ink);color:#fff;padding:10px 12px;cursor:pointer}
@@ -48,7 +48,7 @@ p{margin:0}
       <p class="mono" style="margin-top:14px;color:var(--faint)">(textos acordados con Ibai el 2026-10-04)</p>
     </div>
     <div>
-      <div class="stage"><canvas id="cv" width="800" height="800" role="img" aria-label="Before: AI tools fall faster and faster onto your company, piling up with gaps until they overflow. After: we start from your real needs, the gaps, and each one gets the piece that fits; the rows complete and clear."></canvas></div>
+      <div class="stage"><canvas id="cv" width="800" height="1000" role="img" aria-label="Before: AI tools fall faster and faster onto your company, piling up with gaps until they overflow. After: we start from your real needs, the gaps, and each one gets the piece that fits; the rows complete and clear."></canvas></div>
       <div class="ctrl"><button id="replay" type="button">Replay</button><span class="mono" id="phase"></span></div>
     </div>
   </div>
@@ -56,14 +56,14 @@ p{margin:0}
 <script>
 (function(){
   var cv=document.getElementById('cv'),ctx=cv.getContext('2d'),S=2; // logical 400x400
-  if(new URLSearchParams(location.search).get('export')==='1'){cv.width=1080;cv.height=1080;S=1080/400;}
+  if(new URLSearchParams(location.search).get('export')==='1'){cv.width=1080;cv.height=1350;S=1080/400;}
   var CALM=matchMedia('(prefers-reduced-motion: reduce)').matches||location.hash==='#planta-baja';
   var Q=new URLSearchParams(location.search),LANG=Q.get('lang')==='es'?'es':'en',EXPORT=Q.get('export')==='1';
   var TX={
     en:{bought:'TOOLS BOUGHT',built:'SYSTEMS BUILT',met:'NEEDS MET',m1:'SO MANY TOOLS.',m2a:'WHAT DID THEY ',m2b:'SOLVE?',needs:['SALES','REPORTING','SUPPORT','HIRING'],builtFor:'BUILT FOR',company:'YOUR COMPANY',h1:'THE RIGHT SYSTEMS,',h2:'MADE FOR YOU.',s1:'Start from your actual needs and',s2:'let your company grow solid.'},
     es:{bought:'HERRAMIENTAS COMPRADAS',built:'SISTEMAS CONSTRUIDOS',met:'NECESIDADES CUBIERTAS',m1:'TANTÍSIMAS HERRAMIENTAS, PERO…',m2a:'¿VERDADERAMENTE',m2b:'CADA UNA RESUELVE UN PROBLEMA?',red:'RESUELVE',needs:['VENTAS','INFORMES','SOPORTE','RRHH'],builtFor:'HECHO PARA',company:'TU EMPRESA',h1:'LOS SISTEMAS ADECUADOS,',h2:'HECHOS PARA TI.',s1:'Empieza por tus necesidades reales',s2:'y deja que tu empresa crezca sólida.'}
   }[LANG];
-  var COLS=13,ROWS=14,C=22,OX=57,OY=44;
+  var COLS=13,ROWS=14,C=26,OX=31,OY=78; // 4:5 (400×500): casillas más grandes para llenar el alto
   var INK='#0a0a0a',RED='#e8003d',REDINK='#b5002f',MONO='"Space Mono", monospace',DISP='Outfit, sans-serif';
   var SH={I:[[0,0],[1,0],[2,0],[3,0]],Iv:[[0,0],[0,1],[0,2],[0,3]],O:[[0,0],[1,0],[0,1],[1,1]],T:[[0,0],[1,0],[2,0],[1,1]],Tu:[[1,0],[0,1],[1,1],[2,1]],S:[[1,0],[2,0],[0,1],[1,1]],Z:[[0,0],[1,0],[1,1],[2,1]],L:[[0,0],[0,1],[0,2],[1,2]],J:[[1,0],[1,1],[1,2],[0,2]]};
   var KEYS=Object.keys(SH);
@@ -179,12 +179,12 @@ p{margin:0}
       ctx.textAlign='left';ctx.fillStyle=INK;ctx.fillText(a,x0,cy+1);ctx.fillStyle=RED;ctx.fillText(b,x0+wa,cy+1);ctx.fillStyle=INK;ctx.fillText(c,x0+wa+wb,cy+1);}
     ctx.restore();}
   function hud(tools,met,label,labelCol){
-    var hs=9;ctx.font='700 '+hs+'px '+MONO;while(hs>6&&ctx.measureText(TX.bought+'  00'+TX.met+'  0/4').width>COLS*C-16){hs-=.25;ctx.font='700 '+hs+'px '+MONO;}ctx.textBaseline='alphabetic';ctx.textAlign='left';ctx.fillStyle='rgba(10,10,10,.6)';if(tools>=0)ctx.fillText(TX.bought+'  '+(tools<10?'0':'')+tools,OX,26);else{ctx.fillStyle=met>0?REDINK:'rgba(10,10,10,.6)';ctx.fillText(TX.built+'  0'+met,OX,26);}
-    ctx.textAlign='right';ctx.fillStyle=met>0?REDINK:'rgba(10,10,10,.6)';ctx.fillText(TX.met+'  '+met+'/4',OX+COLS*C,26);
+    var hs=9;ctx.font='700 '+hs+'px '+MONO;while(hs>6&&ctx.measureText(TX.bought+'  00'+TX.met+'  0/4').width>COLS*C-16){hs-=.25;ctx.font='700 '+hs+'px '+MONO;}ctx.textBaseline='alphabetic';ctx.textAlign='left';ctx.fillStyle='rgba(10,10,10,.6)';if(tools>=0)ctx.fillText(TX.bought+'  '+(tools<10?'0':'')+tools,OX,OY-16);else{ctx.fillStyle=met>0?REDINK:'rgba(10,10,10,.6)';ctx.fillText(TX.built+'  0'+met,OX,OY-16);}
+    ctx.textAlign='right';ctx.fillStyle=met>0?REDINK:'rgba(10,10,10,.6)';ctx.fillText(TX.met+'  '+met+'/4',OX+COLS*C,OY-16);
     if(label){ctx.textAlign='center';ctx.fillStyle=labelCol;ctx.font='900 18px '+DISP;ctx.fillText(label,OX+COLS*C/2,OY+4*C);}
   }
   function draw(T){
-    ctx.setTransform(S,0,0,S,0,0);ctx.clearRect(0,0,400,400);ctx.fillStyle='#fff';ctx.fillRect(0,0,400,400);
+    ctx.setTransform(S,0,0,S,0,0);ctx.clearRect(0,0,400,500);ctx.fillStyle='#fff';ctx.fillRect(0,0,400,500);
     // pozo
     ctx.strokeStyle='rgba(10,10,10,.12)';ctx.lineWidth=1;ctx.strokeRect(OX-.5,OY-.5,COLS*C+1,ROWS*C+1);
     // empresa

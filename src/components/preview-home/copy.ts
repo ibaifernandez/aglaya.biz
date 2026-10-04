@@ -103,6 +103,3 @@ export const problem = {
     },
   ],
 } as const;
-
-/** T2 · the stage caption: which pair is on it, `1 / 4`. */
-export const stageCaption = (pair: number, total: number) => `${pair} / ${total}`;

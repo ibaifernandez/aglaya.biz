@@ -93,9 +93,20 @@ export function mockupTetris(html: string) {
   };
 }
 
+/** Pair 1's board as the mock-up draws it: the logical canvas (its bitmap over its scale `S`) and the well. */
+export function mockupTetrisGeometry(html: string) {
+  const cv = /<canvas id="cv" width="(\d+)" height="(\d+)"/.exec(html);
+  const S = +(/getContext\('2d'\),S=([\d.]+)/.exec(html)?.[1] ?? NaN);
+  const g = /var COLS=(\d+),ROWS=(\d+),C=(\d+),OX=(\d+),OY=(\d+)/.exec(html);
+  const depth = (/var DEPTH=\[([^\]]+)\]/.exec(html)?.[1] ?? '').split(',').map(Number);
+  const [COLS, ROWS, C, OX, OY] = (g?.slice(1) ?? []).map(Number);
+  return { W: cv ? +cv[1] / S : NaN, H: cv ? +cv[2] / S : NaN, COLS, ROWS, C, OX, OY, depth };
+}
+
 const html = readFileSync(MOCKUP, 'utf8');
 const hook = mockupHook(html);
 const tetris = mockupTetris(readFileSync(TETRIS_MOCKUP, 'utf8'));
+const board = mockupTetrisGeometry(readFileSync(TETRIS_MOCKUP, 'utf8'));
 /** T2: the selector mock-up, with pair 1's way out as agreed for the Tetris. */
 const problem = (() => {
   const p = mockupProblem(readFileSync(SELECTOR_MOCKUP, 'utf8'));
@@ -145,6 +156,58 @@ async function expectTetrisStill(page: import('@playwright/test').Page) {
   expect(words.filter((w) => w === tetris.builtFor)).toHaveLength(4);
   expect(words.join(' '), 'the line under the headline').toContain(tetris.sub.split(' and ')[0]);
   await expect(host).toHaveAccessibleName(tetrisLabel);
+}
+
+/**
+ * The stage's box and the drawing inside it: the drawing is the board's ratio
+ * (4:5), whole inside the box and centred in it. «Whole» is measured, not
+ * assumed: the drawn element (canvas or SVG) against the box's inner edges.
+ */
+async function stageGeometry(page: import('@playwright/test').Page) {
+  return page.evaluate(() => {
+    const r = (el: Element) => el.getBoundingClientRect();
+    const host = document.querySelector<HTMLElement>('[data-pv-story-drawing]')!;
+    const box = r(host);
+    const list = r(document.querySelector('#problem .pv-list')!);
+    const drawn = host.firstElementChild!;
+    const d = r(drawn);
+    const b = host.clientLeft;
+    const inner = { left: box.left + b, right: box.right - b, top: box.top + b, bottom: box.bottom - b };
+    const cv = drawn instanceof HTMLCanvasElement ? { w: drawn.width, h: drawn.height } : null;
+    return {
+      box: { top: box.top, bottom: box.bottom, width: box.width, height: box.height },
+      list: { top: list.top, bottom: list.bottom },
+      tag: drawn.tagName.toLowerCase(),
+      ratio: d.width / d.height,
+      dx: (d.left + d.right) / 2 - (box.left + box.right) / 2,
+      dy: (d.top + d.bottom) / 2 - (box.top + box.bottom) / 2,
+      inside: d.left >= inner.left - 0.5 && d.right <= inner.right + 0.5 && d.top >= inner.top - 0.5 && d.bottom <= inner.bottom + 0.5,
+      // Touches the box on at least one axis: scaled to fit, not merely small.
+      fits: Math.min(inner.right - inner.left - d.width, inner.bottom - inner.top - d.height) < 1,
+      bitmap: cv && cv.w / cv.h,
+    };
+  });
+}
+
+function expectContained(g: Awaited<ReturnType<typeof stageGeometry>>, what: string) {
+  expect(Math.abs(g.ratio / (board.W / board.H) - 1), `${what}: the drawing is ${board.W}:${board.H}`).toBeLessThanOrEqual(0.01);
+  expect(g.inside, `${what}: the drawing is whole inside the box`).toBe(true);
+  expect(g.fits, `${what}: the drawing is scaled to fit the box`).toBe(true);
+  expect(Math.abs(g.dx), `${what}: centred across`).toBeLessThanOrEqual(2);
+  expect(Math.abs(g.dy), `${what}: centred down`).toBeLessThanOrEqual(2);
+  if (g.bitmap !== null) expect(Math.abs(g.bitmap / (board.W / board.H) - 1), `${what}: the canvas bitmap is ${board.W}:${board.H} too`).toBeLessThanOrEqual(0.01);
+}
+
+/** The stage holds the drawing and nothing else: no «1 / 4» caption, nothing that says which pair is on it. */
+async function expectNoStageCaption(page: import('@playwright/test').Page) {
+  const extra = await page.evaluate(() => {
+    const stage = document.querySelector('[data-pv-stage]')!;
+    return [...stage.children]
+      .filter((el) => !el.matches('[data-pv-story-drawing], template[data-pv-frame]'))
+      .map((el) => el.outerHTML);
+  });
+  expect(extra, 'nothing on the stage but the drawing').toEqual([]);
+  await expect(page.locator('#problem').getByText(/^\s*\d\s*\/\s*4\s*$/)).toHaveCount(0);
 }
 
 /** Every word of T2 is on screen: eyebrow, heading, drawing, and the four pairs open and resolved. */
@@ -262,6 +325,17 @@ test.describe('new home page preview', () => {
       for (const cta of hook.ctas) {
         await expect(t1.getByRole('link', { name: cta, exact: true })).toBeVisible();
       }
+    });
+
+    test('T2: no «1 / 4» on the stage, and the still frame is 4:5, whole and centred in a box as tall as the list', async ({ page }) => {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(ROUTE);
+      await expectNoStageCaption(page);
+      const g = await stageGeometry(page);
+      expect(g.tag).toBe('svg');
+      expect(Math.abs(g.box.top - g.list.top), 'box top = list top').toBeLessThanOrEqual(2);
+      expect(Math.abs(g.box.bottom - g.list.bottom), 'box bottom = list bottom').toBeLessThanOrEqual(2);
+      expectContained(g, 'no JavaScript');
     });
 
     test('T2 is complete and visible, word for word from the mock-up', async ({ page }) => {
@@ -480,17 +554,42 @@ test.describe('new home page preview', () => {
         });
       });
       const at = (text: string) => sizes.find((s) => s.text === text)!;
-      // The headline: 22px unless wider than the well minus 20 (13 × 22 − 20).
+      const { COLS, C, depth } = board;
+      // The headline: 22px unless wider than the well minus 20 (COLS × C − 20, the mock-up's board).
       for (const line of tetris.head) {
         expect(at(line).size).toBe(22);
-        expect(at(line).width, `${line} fits at 22px on the canvas too`).toBeLessThanOrEqual(266);
+        expect(at(line).width, `${line} fits at 22px on the canvas too`).toBeLessThanOrEqual(COLS * C - 20);
       }
-      // «BUILT FOR / <need>»: 6.4px unless wider than its piece minus 8.
-      const pieceWidth: Record<string, number> = { SALES: 66, REPORTING: 44, SUPPORT: 66, HIRING: 44 };
-      for (const need of tetris.needs) {
+      // «BUILT FOR / <need>»: 6.4px unless wider than its piece minus 8. A piece
+      // spans the columns between two walls (depth 0) of the company's profile.
+      const runs = depth.join(',').split(/(?:^|,)0(?:,|$)/).map((r) => r.split(',').filter(Boolean).length);
+      expect(runs, 'four gaps between the walls').toHaveLength(tetris.needs.length);
+      tetris.needs.forEach((need, i) => {
         expect(at(need).size).toBe(6.4);
-        expect(Math.max(at(need).width, at(tetris.builtFor).width), `${need} fits its piece on the canvas too`).toBeLessThanOrEqual(pieceWidth[need] - 8);
-      }
+        expect(Math.max(at(need).width, at(tetris.builtFor).width), `${need} fits its piece on the canvas too`).toBeLessThanOrEqual(runs[i] * C - 8);
+      });
+    });
+
+    test('the still frame is the mock-up\'s 4:5 board: its viewBox, its well, its HUD and «YOUR COMPANY» where the mock-up puts them', async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.goto(ROUTE);
+      const { W, H, COLS, ROWS, C, OX, OY } = board;
+      expect(W / H, 'the mock-up is 4:5').toBeCloseTo(0.8, 5);
+      const svg = page.locator('[data-pv-story-drawing] svg[data-pv-tetris-still]');
+      await expect(svg).toHaveAttribute('viewBox', `0 0 ${W} ${H}`);
+      const got = await svg.evaluate((el) => {
+        const rects = [...el.querySelectorAll('rect')].map((r) => ({ x: +r.getAttribute('x')!, y: +r.getAttribute('y')!, w: +r.getAttribute('width')!, h: +r.getAttribute('height')!, stroke: (r.getAttribute('style') ?? '').includes('stroke:') }));
+        const texts = [...el.querySelectorAll('text')].map((t) => ({ text: t.textContent ?? '', x: +t.getAttribute('x')!, y: +t.getAttribute('y')! }));
+        return { rects, texts };
+      });
+      // The paper covers the whole board: no band left unpainted.
+      expect(got.rects[0], 'paper over the whole board').toEqual({ x: 0, y: 0, w: W, h: H, stroke: false });
+      // The well: the mock-up's OX, OY, COLS × C by ROWS × C (stroked half a pixel out).
+      expect(got.rects.find((r) => r.stroke), 'the well').toEqual({ x: OX - 0.5, y: OY - 0.5, w: COLS * C + 1, h: ROWS * C + 1, stroke: true });
+      const text = (re: RegExp) => got.texts.find((t) => re.test(t.text))!;
+      expect(text(/^YOUR COMPANY$/), '«YOUR COMPANY» on the company').toMatchObject({ x: OX + (COLS * C) / 2, y: OY + 13 * C });
+      expect(text(/^NEEDS MET/), 'the HUD above the well').toMatchObject({ x: OX + COLS * C, y: OY - 16 });
+      expect(text(new RegExp(`^${tetris.head[0]}$`)), 'the closing headline').toMatchObject({ x: OX + (COLS * C) / 2, y: OY + 3.2 * C });
     });
 
     test('1440 × 900: the T2 heading, the selector and the stage fit in one screen', async ({ page }) => {
@@ -508,6 +607,25 @@ test.describe('new home page preview', () => {
         expect(box.bottom - box.top, `pair ${i + 1} open: heading → bottom of selector and stage, within ${screen}px`).toBeLessThanOrEqual(screen);
       }
       await expect(sec.locator('h2')).not.toHaveCSS('max-width', /ch|px/);
+    });
+
+    test('1440: the stage box is as tall as the list for every pair open, the drawing 4:5 inside it, and no «1 / 4»', async ({ page }) => {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(ROUTE);
+      const heights = new Set<number>();
+      for (const i of [0, 1, 2, 3, 0]) {
+        await tab(page, i).click();
+        if (i === 0) await expect(t2(page).locator('[data-pv-story-drawing] canvas')).toHaveCount(1);
+        await page.waitForTimeout(150);
+        const g = await stageGeometry(page);
+        expect(g.tag, `pair ${i + 1}: drawn as`).toBe(i === 0 ? 'canvas' : 'svg');
+        expect(Math.abs(g.box.top - g.list.top), `pair ${i + 1}: box top = list top`).toBeLessThanOrEqual(2);
+        expect(Math.abs(g.box.bottom - g.list.bottom), `pair ${i + 1}: box bottom = list bottom`).toBeLessThanOrEqual(2);
+        expectContained(g, `pair ${i + 1}`);
+        heights.add(Math.round(g.box.height));
+        await expectNoStageCaption(page);
+      }
+      expect(heights.size, 'the box follows the list when another pair opens').toBeGreaterThan(1);
     });
 
     test('1440: the stage stays in view (sticky) beside the list', async ({ page }) => {
@@ -538,14 +656,11 @@ test.describe('new home page preview', () => {
           list: document.querySelector('.pv-list')!.getBoundingClientRect().top,
         }));
         expect(order.stage).toBeLessThan(order.list);
-        // The "1 / 4" caption keeps off pair 1's top line (the HUD across the top of the board).
-        const cap = await page.evaluate(() => {
-          const st = document.querySelector('[data-pv-stage]')!.getBoundingClientRect();
-          const c = document.querySelector('[data-pv-cap]')!.getBoundingClientRect();
-          return { top: (c.top - st.top) / st.height, bottom: (c.bottom - st.top) / st.height };
-        });
-        expect(cap.top, 'caption below the HUD band (top 10% of the board)').toBeGreaterThan(0.1);
-        expect(cap.bottom, 'caption inside the stage').toBeLessThanOrEqual(1);
+        // On top of the list, the box itself is 4:5 and the drawing fills it; no «1 / 4».
+        const g = await stageGeometry(page);
+        expect(Math.abs(g.box.width / g.box.height / 0.8 - 1), 'the box is 4:5').toBeLessThanOrEqual(0.01);
+        expectContained(g, `${width}`);
+        await expectNoStageCaption(page);
 
         await sec.locator('[data-pv-stage]').scrollIntoViewIfNeeded();
         const p1 = problem.pairs[0];

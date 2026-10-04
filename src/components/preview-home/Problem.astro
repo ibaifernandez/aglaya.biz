@@ -25,7 +25,7 @@
  * and out of the DOM, each with its own name, so changing pair without the
  * motion module costs no script.
  */
-import { problem, stageCaption } from './copy';
+import { problem } from './copy';
 import { storyDrawingMarkup, STORY_PAIRS } from './story-drawing';
 import { tetrisFinalMarkup, TETRIS_PAIR } from './story-tetris';
 
@@ -64,7 +64,6 @@ const frames = Array.from({ length: STORY_PAIRS }, (_, i) => ({
       </div>
       <div class="pv-stage" data-pv-stage>
         <div class="pv-story-canvas" role="img" aria-label={frames[0].label} data-pv-story-drawing set:html={frames[0].svg}></div>
-        <span class="pv-stage-cap pv-mono" aria-hidden="true" data-pv-cap>{stageCaption(1, STORY_PAIRS)}</span>
         {frames.map((f) => <template data-pv-frame data-pv-label={f.label} set:html={f.svg}></template>)}
       </div>
     </div>
@@ -74,11 +73,13 @@ const frames = Array.from({ length: STORY_PAIRS }, (_, i) => ({
 <style>
   /* ---------- Ground floor ---------- */
   .pv-story { background: var(--color-surface); }
-  .pv-story-in { padding-block: 90px; }
+  .pv-story-in { padding-block: 60px; }
 
   .pv-board {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    /* 1.3 : 1 — the list wider than the mock-up's 1 : 1.05, so pair 1 open wraps
+       one line less and T2 fits a 1440 × 900 screen with the stage as tall as the list. */
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
     gap: clamp(24px, 4vw, 56px);
     margin-top: 48px;
     align-items: start;
@@ -153,23 +154,32 @@ const frames = Array.from({ length: STORY_PAIRS }, (_, i) => ({
   }
   @keyframes pv-blink { 50% { opacity: 0.15; } }
 
+  /* Side by side, the stage's box is as tall as the list (stretched over the
+     grid row, which the list sets), and follows it when another pair opens. */
   .pv-stage {
     position: sticky;
     top: 84px; /* under the 60px fixed header, with the mock-up's 24px of air */
     min-width: 0;
+    align-self: stretch;
   }
   .pv-story-canvas {
     width: 100%;
-    aspect-ratio: 1;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    container-type: size;
     background: var(--color-bg);
     border: 1px solid var(--color-border);
   }
-  .pv-story-canvas :global(svg) { display: block; width: 100%; height: 100%; }
-  .pv-stage-cap {
-    position: absolute;
-    left: 14px;
-    top: 12px;
-    color: var(--color-muted);
+  /* The drawing is 4:5 (./story-tetris.ts's 400 × 500 board), scaled to fit the
+     box whole and centred: never stretched, never cropped; what is left over at
+     the sides is the stage's own paper. Pairs 2–4 are square scenes, centred in
+     that same 4:5 (their SVG's own `meet`). */
+  .pv-story-canvas :global(svg),
+  .pv-story-canvas :global(canvas) {
+    display: block;
+    width: min(100cqw, 80cqh);
+    height: min(100cqh, 125cqw);
   }
 
   /* One column: the stage goes ON TOP of the list (the card asks for it; the
@@ -184,9 +194,8 @@ const frames = Array.from({ length: STORY_PAIRS }, (_, i) => ({
       width: 100%;
       justify-self: center;
     }
-    /* At this size the caption would sit on pair 1's top line (the Tetris HUD):
-       it goes to the bottom corner, which every scene leaves empty. */
-    .pv-stage-cap { top: auto; bottom: 12px; }
+    /* On top of the list, the box itself is 4:5: the drawing fills it. */
+    .pv-story-canvas { height: auto; aspect-ratio: 4 / 5; }
   }
 
   /* ---------- Selector (./story-selector.ts adds `is-sel`) ---------- */

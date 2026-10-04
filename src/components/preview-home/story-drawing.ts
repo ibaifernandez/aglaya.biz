@@ -296,7 +296,8 @@ class StaticEl implements El {
   }
 }
 
-const SVG_ATTRS = { viewBox: '0 0 400 400', 'aria-hidden': 'true', focusable: 'false', width: '100%', height: '100%' };
+// Square scenes on the 4:5 stage: centred in the extra height, never stretched.
+const SVG_ATTRS = { viewBox: '0 0 400 400', preserveAspectRatio: 'xMidYMid meet', 'aria-hidden': 'true', focusable: 'false', width: '100%', height: '100%' };
 
 /**
  * Static SVG of pair `pair` at morph `m` — the ground floor. Defaults to the

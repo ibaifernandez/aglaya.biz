@@ -4,7 +4,7 @@
  *
  * Ported from the reference mock-up `docs/design/portada-nueva/t2-anim1-tetris.html`
  * (English only): one deterministic `draw(T)` that paints any instant of a
- * ≈24 s timeline on a 400 × 400 logical board.
+ * ≈24 s timeline on a 400 × 500 logical board (4:5, the stage).
  *   1 off-the-shelf tools fall faster and faster onto a flat company until it
  *     overflows · 2 fade · 3 «SO MANY TOOLS. / WHAT DID THEY SOLVE?» · 4 fade ·
  *   5 the company shows its real shape, four irregular gaps named after a need ·
@@ -55,9 +55,12 @@ const TX = {
 
 const COLS = 13;
 const ROWS = 14;
-const C = 22;
-const OX = 57;
-const OY = 44;
+const C = 26;
+const OX = 31;
+const OY = 78;
+/** The logical board: 4:5, like the stage it fills. */
+const W = 400;
+const H = 500;
 
 type Cell = [number, number];
 const SH: Record<string, Cell[]> = {
@@ -217,7 +220,7 @@ const easeOut = (v: number) => 1 - (1 - v) * (1 - v);
 const cl = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
 const lerp = (a: number, b: number, f: number) => a + (b - a) * f;
 
-/** Paint instant `T` (seconds, clamped to 0..TETRIS_END) on a 400 × 400 board in `ctx`'s current transform. */
+/** Paint instant `T` (seconds, clamped to 0..TETRIS_END) on a W × H (400 × 500) board in `ctx`'s current transform. */
 export function drawTetris(ctx: Ctx, T: number, P: Palette) {
   T = Math.max(0, Math.min(T, TETRIS_END));
   const font = (w: number, size: number, fam: string) => `${w} ${size}px ${fam}`;
@@ -369,19 +372,19 @@ export function drawTetris(ctx: Ctx, T: number, P: Palette) {
     ctx.textAlign = 'left';
     if (tools >= 0) {
       ctx.fillStyle = P.faint;
-      ctx.fillText(`${TX.bought}  ${tools < 10 ? '0' : ''}${tools}`, OX, 26);
+      ctx.fillText(`${TX.bought}  ${tools < 10 ? '0' : ''}${tools}`, OX, OY - 16);
     } else {
       ctx.fillStyle = met > 0 ? P.redInk : P.faint;
-      ctx.fillText(`${TX.built}  0${met}`, OX, 26);
+      ctx.fillText(`${TX.built}  0${met}`, OX, OY - 16);
     }
     ctx.textAlign = 'right';
     ctx.fillStyle = met > 0 ? P.redInk : P.faint;
-    ctx.fillText(`${TX.met}  ${met}/4`, OX + COLS * C, 26);
+    ctx.fillText(`${TX.met}  ${met}/4`, OX + COLS * C, OY - 16);
   };
 
   ctx.globalAlpha = 1;
   ctx.fillStyle = P.paper;
-  ctx.fillRect(0, 0, 400, 400);
+  ctx.fillRect(0, 0, W, H);
   // the well
   ctx.strokeStyle = P.well;
   ctx.lineWidth = 1;
@@ -643,7 +646,7 @@ const SERVER_PALETTE = Object.fromEntries(Object.entries(ROLES).map(([k, v]) => 
 export function tetrisFinalMarkup(): string {
   const ctx = new SvgCtx();
   drawTetris(ctx, TETRIS_END, SERVER_PALETTE);
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" aria-hidden="true" focusable="false" width="100%" height="100%" shape-rendering="crispEdges" data-pv-tetris-still>${ctx}</svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" aria-hidden="true" focusable="false" width="100%" height="100%" shape-rendering="crispEdges" data-pv-tetris-still>${ctx}</svg>`;
 }
 
 /* ---------- Browser side: the <canvas> ---------- */
@@ -662,7 +665,7 @@ export function createTetris(host: HTMLElement): Tetris {
   const cv = document.createElement('canvas');
   cv.setAttribute('aria-hidden', 'true');
   cv.dataset.pvTetris = '';
-  cv.style.cssText = 'display:block;width:100%;height:100%';
+  // Its box (4:5, contained and centred in the host) is the host's CSS; the bitmap follows it.
   host.replaceChildren(cv);
   const ctx = cv.getContext('2d')!;
   const css = getComputedStyle(host);
@@ -676,10 +679,13 @@ export function createTetris(host: HTMLElement): Tetris {
     drawTetris(ctx, T, P);
   };
   const size = () => {
-    const w = host.clientWidth || 400;
+    const w = cv.clientWidth || host.clientWidth || W;
     const px = Math.round(w * (window.devicePixelRatio || 1));
-    if (px !== cv.width) cv.width = cv.height = px;
-    scale = px / 400;
+    if (px !== cv.width) {
+      cv.width = px;
+      cv.height = Math.round((px * H) / W);
+    }
+    scale = px / W;
   };
   size();
   const ro = new ResizeObserver(() => {
