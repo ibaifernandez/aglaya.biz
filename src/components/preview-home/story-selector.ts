@@ -21,7 +21,6 @@
  * BaseLayout mounts ClientRouter, so this (re)starts on `astro:page-load` and
  * puts the section back as served on `astro:before-swap`.
  */
-import { stageCaption } from './copy';
 import type { TextMotion } from './story-text-motion';
 import type { StoryMotion } from './story-motion';
 
@@ -45,7 +44,6 @@ function start() {
   const panels = [...section.querySelectorAll<HTMLElement>('[data-pv-panel]')];
   const host = section.querySelector<HTMLElement>('[data-pv-story-drawing]')!;
   const stage = section.querySelector<HTMLElement>('[data-pv-stage]')!;
-  const cap = section.querySelector<HTMLElement>('[data-pv-cap]')!;
   const frames = [...section.querySelectorAll<HTMLTemplateElement>('template[data-pv-frame]')];
   if (!tabs.length || tabs.length !== panels.length || frames.length !== tabs.length) return;
 
@@ -98,7 +96,6 @@ function start() {
       panels[k].classList.toggle('is-on', k === i);
     });
     if (focus) tabs[i].focus();
-    cap.textContent = stageCaption(i + 1, tabs.length);
     host.setAttribute('aria-label', labels[i]);
 
     if (prev >= 0 && played) seen.add(prev);
@@ -197,7 +194,6 @@ function start() {
     motion?.destroy();
     showFrame(0);
     section.classList.remove('is-sel', 'is-calm');
-    cap.textContent = stageCaption(1, tabs.length);
     host.setAttribute('aria-label', labels[0]);
     for (const a of ['role', 'aria-label', 'aria-orientation']) tablist.removeAttribute(a);
     tabs.forEach((tab, k) => {
