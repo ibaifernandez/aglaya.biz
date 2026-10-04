@@ -1,0 +1,34 @@
+---
+/* Footer of the new home page preview — mock-up `footer`. Same-site links are
+   relative here; the mock-up spelled them absolute because it lived off-site. */
+import { footer } from './copy';
+---
+
+<footer class="pv-footer">
+  <div class="pv-wrap pv-foot">
+    <strong class="pv-foot-brand">{footer.brand}</strong>
+    <span>{footer.year}</span>
+    {footer.links.map((link) => <a href={link.href}>{link.text}</a>)}
+  </div>
+</footer>
+
+<style>
+  .pv-footer {
+    border-top: 1px solid var(--pv-line);
+    padding-block: 28px 90px;
+    color: var(--pv-faint);
+    font-size: 14px;
+  }
+  .pv-foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    align-items: center;
+  }
+  .pv-foot a { color: var(--pv-muted); }
+  .pv-foot-brand {
+    color: var(--pv-ink);
+    font-family: var(--font-display);
+    font-weight: 900;
+  }
+</style>

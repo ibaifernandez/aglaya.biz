@@ -1,0 +1,114 @@
+/* =========================================================
+   New home page preview (/preview/home/) — shared ground floor.
+
+   Reference: docs/design/portada-nueva/portada-aglaya.html. Every colour is a
+   token of @aglaya/design-tokens in its LIGHT mode (`<html data-theme="light">`,
+   set by BaseLayout's `theme` prop). No brand value is written here: where the
+   mock-up spelled a hex, this file names the canon token that carries it.
+
+   Everything is prefixed `pv-` so nothing here can reach the current site.
+   ========================================================= */
+
+/* BaseLayout paints <body> with Tailwind's `bg-black text-white`. Those live in
+   a cascade layer; this rule is unlayered, so it wins without !important. */
+html[data-theme='light'] body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: 16px/1.6 var(--font-body);
+}
+
+.pv {
+  /* The mock-up's colour names, pointed at the canon. Aliases, not values. */
+  --pv-bg: var(--color-bg);
+  --pv-ink: var(--color-text);
+  --pv-muted: var(--color-muted);
+  --pv-faint: var(--color-faint);
+  --pv-line: var(--color-border);
+  --pv-brand: var(--color-brand);
+  --pv-brand-ink: var(--color-brand-dark);
+  --pv-green: var(--color-corporate-green);
+  /* Text on the red button. The canon has no on-brand token in light mode (its
+     --color-text turns black there), so this follows the precedent of the rest
+     of the site (`text-white` on `bg-brand`, global.css ::selection). Asked
+     upstream as `--fg-on-brand`; see the PR. */
+  --pv-on-brand: white;
+  --pv-gutter: clamp(16px, 4vw, 56px);
+  --pv-max: 1200px;
+
+  color: var(--pv-ink);
+  overflow-x: clip;
+}
+
+:where(.pv) h1,
+:where(.pv) h2,
+:where(.pv) h3 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 0.92;
+  margin: 0;
+  text-wrap: balance;
+}
+/* :where() keeps these at element specificity, so any class below beats them. */
+:where(.pv) p { margin: 0; }
+:where(.pv) a { color: inherit; }
+
+.pv-wrap {
+  max-width: var(--pv-max);
+  margin: 0 auto;
+  padding-inline: var(--pv-gutter);
+}
+
+.pv-mono {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.pv-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--pv-muted);
+}
+.pv-eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 2px;
+  background: var(--pv-green);
+  flex: none;
+}
+
+.pv-btn {
+  display: inline-block;
+  font: 700 12px/1 var(--font-mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 17px 22px;
+  border: 1px solid var(--pv-ink);
+  text-decoration: none;
+  cursor: pointer;
+  background: transparent;
+  color: var(--pv-ink);
+}
+.pv-btn span { display: inline-block; pointer-events: none; }
+.pv-btn--primary {
+  background: var(--pv-brand);
+  border-color: var(--pv-brand);
+  color: var(--pv-on-brand);
+}
+
+.pv-section { position: relative; }
+
+/* Held invisible only while ./effects.ts is fetching GSAP (it sets and clears
+   this class itself; without JavaScript, or with reduced motion, it never
+   exists). Visibility, not opacity or transform, so GSAP's end state — read off
+   the computed style — is untouched. */
+html.pv-fx-wait .pv-hook-line > span,
+html.pv-fx-wait .pv-hook-rule,
+html.pv-fx-wait .pv-hook-sub,
+html.pv-fx-wait .pv-hook-ctas {
+  visibility: hidden;
+}

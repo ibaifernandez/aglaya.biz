@@ -5,7 +5,7 @@ import ClientRouter from 'astro/components/ClientRouter.astro';
 import CookieBanner from '../components/CookieBanner.astro';
 import CustomCursor from '../components/CustomCursor.astro';
 import SentryBrowser from '../components/SentryBrowser.astro';
-import { X_DEFAULT_PATH, alternateUrlsFor } from '../i18n/routes';
+import { X_DEFAULT_PATH, alternateUrlsFor, isUnpaired } from '../i18n/routes';
 
 interface Props {
   title: string;
@@ -16,6 +16,8 @@ interface Props {
   alternateUrl?: string;
   alternateUrlEs?: string;
   noindex?: boolean;
+  /** Canon light mode (`data-theme="light"` from @aglaya/design-tokens). Dark is the default. */
+  theme?: 'light';
 }
 
 const {
@@ -27,6 +29,7 @@ const {
   alternateUrl,
   alternateUrlEs,
   noindex = false,
+  theme,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -39,6 +42,8 @@ const ogImageAbsolute = ogImage.startsWith('http')
 // the map cannot drift apart. The props below stay as per-page overrides; they
 // are compared against the map by tests/e2e/sitemap-hreflang.spec.ts.
 const alternates = alternateUrlsFor(Astro.url.pathname, Astro.site!);
+// A page published in one language only (see `isUnpaired`) announces no twins.
+const hasTwins = !isUnpaired(Astro.url.pathname);
 
 const enUrl = lang === 'en' ? canonicalURL.href : (alternateUrl ?? alternates.en);
 const esUrl = lang === 'es' ? canonicalURL.href : (alternateUrlEs ?? alternates.es);
@@ -87,7 +92,7 @@ const websiteSchema = {
 ---
 
 <!doctype html>
-<html lang={lang} class="dark">
+<html lang={lang} class={theme === 'light' ? undefined : 'dark'} data-theme={theme}>
   <head>
     <!-- Google Tag Manager — loads only when user has consented to 'all' cookies -->
     <script>
@@ -137,9 +142,13 @@ const websiteSchema = {
     <link rel="canonical" href={canonicalURL} />
 
     <!-- hreflang — bilingual SEO, no duplicate content -->
-    <link rel="alternate" hreflang="en" href={enUrl} />
-    <link rel="alternate" hreflang="es" href={esUrl} />
-    <link rel="alternate" hreflang="x-default" href={new URL(X_DEFAULT_PATH, Astro.site).href} />
+    {hasTwins && (
+      <>
+        <link rel="alternate" hreflang="en" href={enUrl} />
+        <link rel="alternate" hreflang="es" href={esUrl} />
+        <link rel="alternate" hreflang="x-default" href={new URL(X_DEFAULT_PATH, Astro.site).href} />
+      </>
+    )}
 
     <!-- Open Graph -->
     <meta property="og:title" content={fullTitle} />

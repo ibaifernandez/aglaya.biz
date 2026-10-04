@@ -9,6 +9,7 @@ import {
   alternateUrlsFor,
   enPathOf,
   localeOf,
+  isUnpaired,
 } from '../../src/i18n/routes';
 
 /**
@@ -88,7 +89,9 @@ describe('where the same page lives in every language', () => {
     const published = new Set(routes());
     // `/proof/[slug]/` is dynamic: its twins are built from the same slug, and
     // the equality above already covers the shape. Only fixed routes are checked.
-    const fixed = routes().filter((route) => !route.includes('['));
+    // A page published in one language on purpose (`isUnpaired`) announces no
+    // twin at all, so there is nothing of its to point at.
+    const fixed = routes().filter((route) => !route.includes('[') && !isUnpaired(route));
     expect(fixed.length).toBeGreaterThan(15); // 20 on the EN + ES site
 
     for (const route of fixed) {
@@ -97,6 +100,16 @@ describe('where the same page lives in every language', () => {
         expect(published, `${route} → ${locale} points at nothing`).toContain(paths[locale]);
       }
     }
+  });
+
+  it('knows which pages are published in one language and have no twin', () => {
+    expect(isUnpaired('/preview/home/')).toBe(true);
+    expect(isUnpaired('/preview/home')).toBe(true);
+    // Only the prefix is unpaired: every real page, in both languages, keeps its twin.
+    for (const route of routes().filter((r) => !r.startsWith('/preview/'))) {
+      expect(isUnpaired(route), `${route} lost its twin`).toBe(false);
+    }
+    expect(isUnpaired('/es/preview/home/')).toBe(false);
   });
 
   it('absolutises against the site origin', () => {
