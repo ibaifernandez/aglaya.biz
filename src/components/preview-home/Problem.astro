@@ -184,6 +184,9 @@ const frames = Array.from({ length: STORY_PAIRS }, (_, i) => ({
       width: 100%;
       justify-self: center;
     }
+    /* At this size the caption would sit on pair 1's top line (the Tetris HUD):
+       it goes to the bottom corner, which every scene leaves empty. */
+    .pv-stage-cap { top: auto; bottom: 12px; }
   }
 
   /* ---------- Selector (./story-selector.ts adds `is-sel`) ---------- */

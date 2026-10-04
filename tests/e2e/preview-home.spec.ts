@@ -538,6 +538,14 @@ test.describe('new home page preview', () => {
           list: document.querySelector('.pv-list')!.getBoundingClientRect().top,
         }));
         expect(order.stage).toBeLessThan(order.list);
+        // The "1 / 4" caption keeps off pair 1's top line (the HUD across the top of the board).
+        const cap = await page.evaluate(() => {
+          const st = document.querySelector('[data-pv-stage]')!.getBoundingClientRect();
+          const c = document.querySelector('[data-pv-cap]')!.getBoundingClientRect();
+          return { top: (c.top - st.top) / st.height, bottom: (c.bottom - st.top) / st.height };
+        });
+        expect(cap.top, 'caption below the HUD band (top 10% of the board)').toBeGreaterThan(0.1);
+        expect(cap.bottom, 'caption inside the stage').toBeLessThanOrEqual(1);
 
         await sec.locator('[data-pv-stage]').scrollIntoViewIfNeeded();
         const p1 = problem.pairs[0];
