@@ -19,14 +19,23 @@
  * text panels after it, so the tablist owns tabs and nothing else. The wrapper
  * is `display: contents` and the grid puts each panel right under its tab.
  *
- * The drawing is a separate, provisional piece (./story-drawing.ts) that will be
- * swapped for video. Its four final frames travel as <template>s, inert and out
- * of the DOM, so changing pair without the motion module costs no script.
+ * The drawing is two separate, provisional pieces that will be swapped for
+ * video: pair 1's Tetris (./story-tetris.ts) and the scenes of pairs 2–4
+ * (./story-drawing.ts). Their four final frames travel as <template>s, inert
+ * and out of the DOM, each with its own name, so changing pair without the
+ * motion module costs no script.
  */
 import { problem, stageCaption } from './copy';
 import { storyDrawingMarkup, STORY_PAIRS } from './story-drawing';
+import { tetrisFinalMarkup, TETRIS_PAIR } from './story-tetris';
 
-const frames = Array.from({ length: STORY_PAIRS }, (_, i) => storyDrawingMarkup(i, 1));
+/* Final frame and name of each pair: pair 1 is the Tetris (./story-tetris.ts,
+   its last frame drawn as SVG by the same code the canvas runs), pairs 2–4 the
+   provisional scenes of ./story-drawing.ts. */
+const frames = Array.from({ length: STORY_PAIRS }, (_, i) => ({
+  svg: i === TETRIS_PAIR ? tetrisFinalMarkup() : storyDrawingMarkup(i, 1),
+  label: i === TETRIS_PAIR ? problem.tetrisLabel : problem.visualLabel,
+}));
 ---
 
 <section class="pv-section pv-story" id="problem" data-tramo="T2" data-pv-story>
@@ -52,12 +61,11 @@ const frames = Array.from({ length: STORY_PAIRS }, (_, i) => storyDrawingMarkup(
             <p class="pv-sol-p">{pair.solutionText}</p>
           </div>
         ))}
-        <p class="pv-hint pv-mono" data-pv-hint hidden>{problem.pick}</p>
       </div>
       <div class="pv-stage" data-pv-stage>
-        <div class="pv-story-canvas" role="img" aria-label={problem.visualLabel} data-pv-story-drawing set:html={frames[0]} />
+        <div class="pv-story-canvas" role="img" aria-label={frames[0].label} data-pv-story-drawing set:html={frames[0].svg}></div>
         <span class="pv-stage-cap pv-mono" aria-hidden="true" data-pv-cap>{stageCaption(1, STORY_PAIRS)}</span>
-        {frames.map((svg) => <template data-pv-frame set:html={svg}></template>)}
+        {frames.map((f) => <template data-pv-frame data-pv-label={f.label} set:html={f.svg}></template>)}
       </div>
     </div>
   </div>
@@ -77,7 +85,7 @@ const frames = Array.from({ length: STORY_PAIRS }, (_, i) => storyDrawingMarkup(
   }
 
   /* One grid for tabs and panels: tab i on row 2i+1, its panel right under it
-     on row 2i+2, the hint last. The tablist wrapper does not make a box. */
+     on row 2i+2. The tablist wrapper does not make a box. */
   .pv-list { display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; }
   .pv-tabs { display: contents; }
   .pv-tab,
@@ -145,12 +153,6 @@ const frames = Array.from({ length: STORY_PAIRS }, (_, i) => storyDrawingMarkup(
   }
   @keyframes pv-blink { 50% { opacity: 0.15; } }
 
-  .pv-hint {
-    grid-row: 9;
-    margin-top: 14px;
-    color: var(--color-muted);
-  }
-
   .pv-stage {
     position: sticky;
     top: 84px; /* under the 60px fixed header, with the mock-up's 24px of air */
@@ -182,6 +184,9 @@ const frames = Array.from({ length: STORY_PAIRS }, (_, i) => storyDrawingMarkup(
       width: 100%;
       justify-self: center;
     }
+    /* At this size the caption would sit on pair 1's top line (the Tetris HUD):
+       it goes to the bottom corner, which every scene leaves empty. */
+    .pv-stage-cap { top: auto; bottom: 12px; }
   }
 
   /* ---------- Selector (./story-selector.ts adds `is-sel`) ---------- */

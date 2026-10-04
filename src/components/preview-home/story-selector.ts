@@ -13,6 +13,10 @@
  *     going from chaos to order). Below that the stage stays still.
  *   - Pair 1 starts when the stage comes into view. Nothing moves on by
  *     itself; pairs already seen stay struck through.
+ *   - Choosing the pair already on screen starts its drawing over if it is a
+ *     timeline (pair 1's, ./story-tetris.ts); the text stays as it is.
+ *   - Each frame <template> carries its own `data-pv-label`: the stage's
+ *     accessible name follows the pair on it.
  *
  * BaseLayout mounts ClientRouter, so this (re)starts on `astro:page-load` and
  * puts the section back as served on `astro:before-swap`.
@@ -42,7 +46,6 @@ function start() {
   const host = section.querySelector<HTMLElement>('[data-pv-story-drawing]')!;
   const stage = section.querySelector<HTMLElement>('[data-pv-stage]')!;
   const cap = section.querySelector<HTMLElement>('[data-pv-cap]')!;
-  const hint = section.querySelector<HTMLElement>('[data-pv-hint]')!;
   const frames = [...section.querySelectorAll<HTMLTemplateElement>('template[data-pv-frame]')];
   if (!tabs.length || tabs.length !== panels.length || frames.length !== tabs.length) return;
 
@@ -59,12 +62,12 @@ function start() {
   let io: IntersectionObserver | null = null;
   const offs: (() => void)[] = [];
 
+  const labels = frames.map((f) => f.dataset.pvLabel ?? '');
   const showFrame = (i: number) => host.replaceChildren(frames[i].content.cloneNode(true));
 
   /* ---------- ARIA ---------- */
   section.classList.add('is-sel');
   section.classList.toggle('is-calm', calm);
-  hint.hidden = false;
   tablist.setAttribute('role', 'tablist');
   tablist.setAttribute('aria-label', tablist.dataset.pvLabel ?? '');
   tablist.setAttribute('aria-orientation', 'vertical');
@@ -77,7 +80,16 @@ function start() {
   });
 
   function select(i: number, focus = false) {
-    if (i === cur) return;
+    if (i === cur) {
+      if (!started) return;
+      if (!played) {
+        // Chosen before its stage came into view: it starts now.
+        played = true;
+        text?.play(i);
+        motion?.play(i);
+      } else motion?.replay(i);
+      return;
+    }
     const prev = cur;
     cur = i;
     tabs.forEach((tab, k) => {
@@ -87,6 +99,7 @@ function start() {
     });
     if (focus) tabs[i].focus();
     cap.textContent = stageCaption(i + 1, tabs.length);
+    host.setAttribute('aria-label', labels[i]);
 
     if (prev >= 0 && played) seen.add(prev);
     if (prev >= 0) (seen.has(prev) ? text?.finished(prev) : text?.unstarted(prev));
@@ -184,8 +197,8 @@ function start() {
     motion?.destroy();
     showFrame(0);
     section.classList.remove('is-sel', 'is-calm');
-    hint.hidden = true;
     cap.textContent = stageCaption(1, tabs.length);
+    host.setAttribute('aria-label', labels[0]);
     for (const a of ['role', 'aria-label', 'aria-orientation']) tablist.removeAttribute(a);
     tabs.forEach((tab, k) => {
       for (const a of ['role', 'aria-controls', 'aria-selected', 'tabindex']) tab.removeAttribute(a);

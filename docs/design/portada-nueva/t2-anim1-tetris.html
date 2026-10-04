@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T2 · animación 1 · Tetris — maqueta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap">
+<style>
+:root{--bg:#fff;--surface:#f5f5f4;--ink:#0a0a0a;--muted:rgba(10,10,10,.68);--faint:rgba(10,10,10,.45);--line:rgba(10,10,10,.10);--brand:#e8003d;--brand-ink:#b5002f;--green:#9fc243;
+  --f-display:"Outfit","Arial Black",system-ui,sans-serif;--f-body:"Inter",system-ui,sans-serif;--f-mono:"Space Mono",ui-monospace,monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--ink);font:16px/1.6 var(--f-body);-webkit-font-smoothing:antialiased}
+h3{font-family:var(--f-display);font-weight:900;text-transform:uppercase;letter-spacing:-.02em;line-height:.92;margin:0}
+p{margin:0}
+.mono{font-family:var(--f-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase}
+.note{background:#0a0a0a;color:#fcfcfc;font:12px/1.5 var(--f-mono);padding:14px clamp(16px,4vw,56px)}
+.note b{color:var(--green)}
+.wrap{max-width:1200px;margin:0 auto;padding:48px clamp(16px,4vw,56px)}
+.board{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(24px,4vw,56px);align-items:start}
+.tab{background:var(--bg);border:1px solid var(--ink);border-left:4px solid var(--brand);padding:18px 20px}
+.n{color:var(--brand-ink)}
+.prob-h{font-size:clamp(20px,2vw,26px);margin-top:6px;color:var(--faint);text-decoration:line-through;text-decoration-color:var(--brand);text-decoration-thickness:.09em}
+.prob-p{color:var(--muted);margin-top:10px;font-size:15px}
+.sol-h{margin-top:16px;font-size:clamp(22px,2.2vw,30px);color:var(--brand-ink)}
+.sol-p{margin-top:10px;font-size:15px}
+.stage{position:relative;aspect-ratio:1;background:var(--bg);border:1px solid var(--line)}
+.stage canvas{display:block;width:100%;height:100%}
+.ctrl{display:flex;gap:10px;align-items:center;margin-top:14px}
+.ctrl button{font:700 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--ink);background:var(--ink);color:#fff;padding:10px 12px;cursor:pointer}
+.ctrl span{color:var(--faint)}
+@media (max-width:860px){.board{grid-template-columns:1fr}.stage{order:-1}}
+</style>
+</head>
+<body>
+<div class="note"><b>MAQUETA · ANIMACIÓN 1 · «AGLAYA TE ARREGLA EL TETRIS»</b> — 1 caen las herramientas · 2 fundido · 3 «So many tools. What did they solve?» · 4 fundido · 5 se revela la forma real de la empresa y cada necesidad recibe su pieza · 6 lo que encaja se integra. Cierre: «The right systems, made for you.» + «Start from your actual needs and let your company grow solid.» Sin cifra prometida.</div>
+<div class="wrap">
+  <div class="board">
+    <div>
+      <div class="tab">
+        <div class="n mono">Problem 1 of 4</div>
+        <h3 class="prob-h">A new AI tool every week</h3>
+        <p class="prob-p">Chatbots, copilots, agents, automations. Everyone is selling one, and everyone says theirs is the one you need.</p>
+        <h3 class="sol-h">We make the system fit the need</h3>
+        <p class="sol-p">Stop bending off-the-shelf tools to fit your company. We sit with each department, find what actually needs solving, and build each need a system made for it.</p>
+      </div>
+      <p class="mono" style="margin-top:14px;color:var(--faint)">(textos acordados con Ibai el 2026-10-04)</p>
+    </div>
+    <div>
+      <div class="stage"><canvas id="cv" width="800" height="800" role="img" aria-label="Before: AI tools fall faster and faster onto your company, piling up with gaps until they overflow. After: we start from your real needs, the gaps, and each one gets the piece that fits; the rows complete and clear."></canvas></div>
+      <div class="ctrl"><button id="replay" type="button">Replay</button><span class="mono" id="phase"></span></div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var cv=document.getElementById('cv'),ctx=cv.getContext('2d'),S=2; // logical 400x400
+  if(new URLSearchParams(location.search).get('export')==='1'){cv.width=1080;cv.height=1080;S=1080/400;}
+  var CALM=matchMedia('(prefers-reduced-motion: reduce)').matches||location.hash==='#planta-baja';
+  var Q=new URLSearchParams(location.search),LANG=Q.get('lang')==='es'?'es':'en',EXPORT=Q.get('export')==='1';
+  var TX={
+    en:{bought:'TOOLS BOUGHT',built:'SYSTEMS BUILT',met:'NEEDS MET',m1:'SO MANY TOOLS.',m2a:'WHAT DID THEY ',m2b:'SOLVE?',needs:['SALES','REPORTING','SUPPORT','HIRING'],builtFor:'BUILT FOR',company:'YOUR COMPANY',h1:'THE RIGHT SYSTEMS,',h2:'MADE FOR YOU.',s1:'Start from your actual needs and',s2:'let your company grow solid.'},
+    es:{bought:'HERRAMIENTAS COMPRADAS',built:'SISTEMAS CONSTRUIDOS',met:'NECESIDADES CUBIERTAS',m1:'TANTÍSIMAS HERRAMIENTAS, PERO…',m2a:'¿VERDADERAMENTE',m2b:'CADA UNA RESUELVE UN PROBLEMA?',red:'RESUELVE',needs:['VENTAS','INFORMES','SOPORTE','RRHH'],builtFor:'HECHO PARA',company:'TU EMPRESA',h1:'LOS SISTEMAS ADECUADOS,',h2:'HECHOS PARA TI.',s1:'Empieza por tus necesidades reales',s2:'y deja que tu empresa crezca sólida.'}
+  }[LANG];
+  var COLS=13,ROWS=14,C=22,OX=57,OY=44;
+  var INK='#0a0a0a',RED='#e8003d',REDINK='#b5002f',MONO='"Space Mono", monospace',DISP='Outfit, sans-serif';
+  var SH={I:[[0,0],[1,0],[2,0],[3,0]],Iv:[[0,0],[0,1],[0,2],[0,3]],O:[[0,0],[1,0],[0,1],[1,1]],T:[[0,0],[1,0],[2,0],[1,1]],Tu:[[1,0],[0,1],[1,1],[2,1]],S:[[1,0],[2,0],[0,1],[1,1]],Z:[[0,0],[1,0],[1,1],[2,1]],L:[[0,0],[0,1],[0,2],[1,2]],J:[[1,0],[1,1],[1,2],[0,2]]};
+  var KEYS=Object.keys(SH);
+  var NAMES=['CHATGPT','COPILOT','ZAPIER','GEMINI','N8N','JASPER','CLAUDE','MAKE','NOTION AI','PERPLEXITY','HUBSPOT AI','MIDJOURNEY','CHATBOT','AGENT','LOVABLE','CURSOR','FIREFLIES','SYNTHESIA','GAMMA','RUNWAY','CANVA AI','OTTER','TYPEFORM AI','AIRTABLE AI','MANUS','GRAMMARLY','DEEPL','HEYGEN','ELEVENLABS','SORA'];
+  // La empresa: base de dos filas + perfil con cuatro huecos (las necesidades)
+  function baseGrid(){var g=[];for(var r=0;r<ROWS;r++){g.push(new Array(COLS).fill(null));}
+    for(var c=0;c<COLS;c++){g[12][c]='base';g[13][c]='base';}
+    return g;}
+  // El perfil real de la empresa (capa de filas 9–11): huecos de forma IRREGULAR, propios de esta empresa.
+  // Profundidad de cada hueco por columna (0 = tabique). Ninguna pieza de serie (tetrominó) los rellena: solo una hecha a medida.
+  var DEPTH=[2,3,1, 0, 3,3, 0, 1,3,2, 0, 2,3];
+  function gapCells(c0,c1){var out=[];for(var c=c0;c<=c1;c++)for(var r=0;r<DEPTH[c];r++)out.push([c,9+r]);return out;}
+  var NEEDS=[
+    {short:TX.needs[0],cells:gapCells(0,2)},
+    {short:TX.needs[1],cells:gapCells(4,5)},
+    {short:TX.needs[2],cells:gapCells(7,9)},
+    {short:TX.needs[3],cells:gapCells(11,12)}
+  ];
+  // ANTES: simulación determinista de caídas
+  var seed=7;function rnd(){seed=(seed*9301+49297)%233280;return seed/233280;}
+  function fits(g,cells,x,y){for(var i=0;i<cells.length;i++){var cx=x+cells[i][0],cy=y+cells[i][1];if(cx<0||cx>=COLS||cy>=ROWS)return false;if(cy>=0&&g[cy][cx])return false;}return true;}
+  var before=[],g0=baseGrid(),t=0.6,dur=0.62,overflow=false;
+  for(var i=0;i<30&&!overflow;i++){
+    var k=KEYS[Math.floor(rnd()*KEYS.length)];if(NAMES[i%NAMES.length]==='PERPLEXITY')k='Iv'; // la última en caer: palo vertical, nombre legible
+    var cells=SH[k],w=Math.max.apply(null,cells.map(function(p){return p[0];}))+1;
+    var x=Math.floor(rnd()*(COLS-w+1)),y=-4;while(fits(g0,cells,x,y+1))y++;
+    if(!fits(g0,cells,x,y)){overflow=true;break;}
+    var top=Math.min.apply(null,cells.map(function(p){return y+p[1];}));
+    cells.forEach(function(p){if(y+p[1]>=0)g0[y+p[1]][x+p[0]]='tool';});
+    before.push({cells:cells,x:x,y:y,t0:t,dur:dur,name:NAMES[i%NAMES.length]});
+    t+=dur+0.06;dur=Math.max(0.2,dur*0.86);
+    if(top<=2){overflow=true;}
+  }
+  // Guion (Ibai): 1 caen las piezas · 2 fundido · 3 mensaje (≥1 s por cada 3 palabras) · 4 fundido · 5 caen bien · 6 lo demás
+  var T_OVER=t+0.5;          // la pila llega arriba; pausa breve para verla
+  var FADE=0.8;              // fundido de la pila
+  var T_MSG=T_OVER+FADE+0.2; // mensaje: línea 1 (4 palabras) y luego línea 2 (5 palabras)
+  var L1_HOLD=LANG==='es'?1.4:1.2, L2_HOLD=LANG==='es'?2.8:2.0, MSG_FADE=0.6;
+  var T_MSG2=T_MSG+L1_HOLD;
+  var T_MSGOUT=T_MSG2+L2_HOLD;
+  var T_CLEAR=T_OVER;        // (compatibilidad) la pila empieza a fundirse al desbordar
+  var T_GHOST=T_MSGOUT+MSG_FADE+0.3; // aparecen los huecos con su nombre
+  var T_FIT=T_GHOST+1.0;     // empiezan a caer las piezas elegidas
+  var FIT_DUR=0.9,FIT_GAP=0.35;
+  var T_ROWS=T_FIT+NEEDS.length*(FIT_DUR+FIT_GAP)+0.2; // filas completas
+  var T_HEAD=T_ROWS+0.6, T_SUB=T_HEAD+2.0; // 6 palabras ≥2 s · 11 palabras ≥3,7 s
+  var T_END=T_SUB+4.0;
+  function easeIn(v){return v*v;}function easeOut(v){return 1-(1-v)*(1-v);}function cl(v){return v<0?0:v>1?1:v;}
+  function cell(c,r,fill,stroke,alpha){ctx.globalAlpha=alpha==null?1:alpha;ctx.fillStyle=fill;ctx.fillRect(OX+c*C,OY+r*C,C,C);if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.strokeRect(OX+c*C+.5,OY+r*C+.5,C-1,C-1);}ctx.globalAlpha=1;}
+  function piece(cells,x,y,fill,stroke,txt,txtCol,alpha,chipBg){
+    var a=alpha==null?1:alpha,set={};cells.forEach(function(p){set[p[0]+','+p[1]]=1;});
+    ctx.globalAlpha=a;ctx.fillStyle=fill;
+    cells.forEach(function(p){if(y+p[1]>=-1)ctx.fillRect(OX+(x+p[0])*C-.3,OY+(y+p[1])*C-.3,C+.6,C+.6);});
+    if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1.5;ctx.beginPath();
+      cells.forEach(function(p){var X=OX+(x+p[0])*C,Y=OY+(y+p[1])*C;
+        if(!set[p[0]+','+(p[1]-1)]){ctx.moveTo(X,Y);ctx.lineTo(X+C,Y);}
+        if(!set[p[0]+','+(p[1]+1)]){ctx.moveTo(X,Y+C);ctx.lineTo(X+C,Y+C);}
+        if(!set[(p[0]-1)+','+p[1]]){ctx.moveTo(X,Y);ctx.lineTo(X,Y+C);}
+        if(!set[(p[0]+1)+','+p[1]]){ctx.moveTo(X+C,Y);ctx.lineTo(X+C,Y+C);}});
+      ctx.stroke();}
+    if(txt){ // etiqueta: dentro del tramo recto más largo de la pieza, con margen; si no cabe en horizontal, en vertical
+      var L=placeLabel(cells,txt);
+      var cx=OX+(x+L.cx)*C,cy=OY+(y+L.cy)*C;
+      ctx.save();ctx.translate(cx,cy);if(L.rot)ctx.rotate(-Math.PI/2);
+      ctx.font='700 '+L.size+'px '+MONO;var w=ctx.measureText(txt).width+8,h=L.size+5;
+      if(chipBg){ctx.fillStyle=chipBg;ctx.fillRect(-w/2,-h/2,w,h);}
+      ctx.fillStyle=txtCol;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(txt,0,.5);ctx.restore();}
+    ctx.globalAlpha=1;
+  }
+  function textW(txt,size){ctx.font='700 '+size+'px '+MONO;return ctx.measureText(txt).width+8;}
+  function runs(cells,horiz){ // tramos rectos: [{a,b,k}] en unidades de celda
+    var by={};cells.forEach(function(p){var k=horiz?p[1]:p[0],v=horiz?p[0]:p[1];(by[k]=by[k]||[]).push(v);});
+    var out=[];Object.keys(by).forEach(function(k){var v=by[k].sort(function(a,b){return a-b;}),a=v[0],prev=v[0];
+      for(var i=1;i<=v.length;i++){if(i<v.length&&v[i]===prev+1){prev=v[i];continue;}out.push({a:a,b:prev+1,k:+k});if(i<v.length){a=v[i];prev=v[i];}}});
+    return out;}
+  function placeLabel(cells,txt){
+    var mx=cells.reduce(function(s,p){return s+p[0];},0)/cells.length+.5,my=cells.reduce(function(s,p){return s+p[1];},0)/cells.length+.5;
+    var sizes=[7.5,6.8,6.2];
+    function pick(horiz){var rs=runs(cells,horiz).sort(function(A,B){var la=A.b-A.a,lb=B.b-B.a;if(lb!==la)return lb-la;
+        var ca=horiz?Math.abs(A.k+.5-my):Math.abs(A.k+.5-mx),cb=horiz?Math.abs(B.k+.5-my):Math.abs(B.k+.5-mx);return ca-cb;});
+      for(var si=0;si<sizes.length;si++)for(var i=0;i<rs.length;i++){if(textW(txt,sizes[si])+6<=(rs[i].b-rs[i].a)*C){var r=rs[i];
+        return horiz?{cx:(r.a+r.b)/2,cy:r.k+.5,size:sizes[si],rot:false}:{cx:r.k+.5,cy:(r.a+r.b)/2,size:sizes[si],rot:true};}}
+      return null;}
+    return pick(true)||pick(false)||{cx:mx,cy:my,size:6.2,rot:false};
+  }
+  function message(T){ // sobre el pozo vacío, tras el fundido
+    var out=1-cl((T-T_MSGOUT)/MSG_FADE),a1=cl((T-T_MSG)/0.35)*out,a2=cl((T-T_MSG2)/0.35)*out;
+    var cx=OX+COLS*C/2,maxw=COLS*C-28;
+    function fit(txt,size){ctx.font='900 '+size+'px '+DISP;while(size>10&&ctx.measureText(txt).width>maxw){size-=.5;ctx.font='900 '+size+'px '+DISP;}return size;}
+    ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.globalAlpha=a1;fit(TX.m1,LANG==='es'?20:24);ctx.fillStyle=INK;ctx.fillText(TX.m1,cx,OY+3.8*C);
+    if(LANG==='es'){ // tres líneas: el español es más largo
+      ctx.globalAlpha=a2;var sz=Math.min(fit(TX.m2a,20),fit(TX.m2b,20));ctx.font='900 '+sz+'px '+DISP;ctx.fillStyle=INK;ctx.fillText(TX.m2a,cx,OY+5.0*C);
+      var parts=TX.m2b.split(TX.red),wa=ctx.measureText(parts[0]).width,wr=ctx.measureText(TX.red).width,wb=ctx.measureText(parts[1]).width,x1=cx-(wa+wr+wb)/2;
+      ctx.textAlign='left';ctx.fillText(parts[0],x1,OY+6.1*C);ctx.fillStyle=RED;ctx.fillText(TX.red,x1+wa,OY+6.1*C);ctx.fillStyle=INK;ctx.fillText(parts[1],x1+wa+wr,OY+6.1*C);
+    } else {
+    ctx.globalAlpha=a2;var sz=fit(TX.m2a+TX.m2b,24);ctx.font='900 '+sz+'px '+DISP;
+    var w1=ctx.measureText(TX.m2a).width,w2=ctx.measureText(TX.m2b).width,x0=cx-(w1+w2)/2;
+    ctx.textAlign='left';ctx.fillStyle=INK;ctx.fillText(TX.m2a,x0,OY+5.2*C);ctx.fillStyle=RED;ctx.fillText(TX.m2b,x0+w1,OY+5.2*C);
+    }
+    ctx.restore();}
+  function tooMany(e,alpha){ // recuadro propio; «TOO MANY TOOLS» se tacha y se reescribe «TOO MANY USELESS TOOLS»
+    var cx=OX+COLS*C/2,cy=OY+4.2*C,bw=COLS*C-24,bh=58;
+    ctx.save();ctx.globalAlpha=alpha*cl(e/0.15);
+    ctx.fillStyle='#fff';ctx.fillRect(cx-bw/2,cy-bh/2,bw,bh);ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.strokeRect(cx-bw/2,cy-bh/2,bw,bh);
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    var strike=cl((e-0.45)/0.25),swap=e>0.85;
+    if(!swap){var f0=21;ctx.font='900 '+f0+'px '+DISP;while(f0>10&&ctx.measureText('TOO MANY TOOLS').width>bw-24){f0-=.5;ctx.font='900 '+f0+'px '+DISP;}ctx.fillStyle=INK;ctx.fillText('TOO MANY TOOLS',cx,cy+1);
+      var w=ctx.measureText('TOO MANY TOOLS').width;if(strike>0){ctx.fillStyle=RED;ctx.fillRect(cx-w/2-4,cy-1,(w+8)*strike,4);}}
+    else{var f=cl((e-0.85)/0.2);ctx.globalAlpha=alpha*f;var fs=21;ctx.font='900 '+fs+'px '+DISP;
+      while(fs>10&&ctx.measureText('TOO MANY USELESS TOOLS').width>bw-24){fs-=.5;ctx.font='900 '+fs+'px '+DISP;}
+      var a='TOO MANY ',b='USELESS',c=' TOOLS',wa=ctx.measureText(a).width,wb=ctx.measureText(b).width,wc=ctx.measureText(c).width,x0=cx-(wa+wb+wc)/2;
+      ctx.textAlign='left';ctx.fillStyle=INK;ctx.fillText(a,x0,cy+1);ctx.fillStyle=RED;ctx.fillText(b,x0+wa,cy+1);ctx.fillStyle=INK;ctx.fillText(c,x0+wa+wb,cy+1);}
+    ctx.restore();}
+  function hud(tools,met,label,labelCol){
+    var hs=9;ctx.font='700 '+hs+'px '+MONO;while(hs>6&&ctx.measureText(TX.bought+'  00'+TX.met+'  0/4').width>COLS*C-16){hs-=.25;ctx.font='700 '+hs+'px '+MONO;}ctx.textBaseline='alphabetic';ctx.textAlign='left';ctx.fillStyle='rgba(10,10,10,.6)';if(tools>=0)ctx.fillText(TX.bought+'  '+(tools<10?'0':'')+tools,OX,26);else{ctx.fillStyle=met>0?REDINK:'rgba(10,10,10,.6)';ctx.fillText(TX.built+'  0'+met,OX,26);}
+    ctx.textAlign='right';ctx.fillStyle=met>0?REDINK:'rgba(10,10,10,.6)';ctx.fillText(TX.met+'  '+met+'/4',OX+COLS*C,26);
+    if(label){ctx.textAlign='center';ctx.fillStyle=labelCol;ctx.font='900 18px '+DISP;ctx.fillText(label,OX+COLS*C/2,OY+4*C);}
+  }
+  function draw(T){
+    ctx.setTransform(S,0,0,S,0,0);ctx.clearRect(0,0,400,400);ctx.fillStyle='#fff';ctx.fillRect(0,0,400,400);
+    // pozo
+    ctx.strokeStyle='rgba(10,10,10,.12)';ctx.lineWidth=1;ctx.strokeRect(OX-.5,OY-.5,COLS*C+1,ROWS*C+1);
+    // empresa
+    var rowsGone=cl((T-T_ROWS)/0.5);
+    ctx.fillStyle=INK;ctx.fillRect(OX,OY+12*C,COLS*C,2*C);
+    if(T>=T_GHOST){var rise=easeOut(cl((T-T_GHOST)/0.6)); // se revela la forma real de la empresa
+      DEPTH.forEach(function(d,c){var h=(3-d)*C*rise;if(h>0){ctx.fillStyle=INK;ctx.fillRect(OX+c*C-.3,OY+12*C-h,C+.6,h+1);}});}
+    var phase='';
+    // ANTES
+    ctx.save();ctx.beginPath();ctx.rect(OX,OY,COLS*C,ROWS*C);ctx.clip(); // nada asoma fuera del pozo
+    var stackAlpha=1-cl((T-T_OVER)/FADE),tools=0;
+    if(T<T_OVER+FADE){
+      before.forEach(function(p){
+        if(T<p.t0)return;var f=cl((T-p.t0)/p.dur),yy=-4+(p.y+4)*easeIn(f);
+        if(f>=1)tools++;
+        piece(p.cells,p.x,yy,'#ececec',INK,p.name,'#fff',stackAlpha,INK);
+      });
+      phase='BEFORE · a new AI tool every week';
+    }
+    var met=0;
+    // DESPUÉS: huecos con nombre
+    if(T>=T_GHOST){
+      var ga=cl((T-T_GHOST)/0.5);
+      NEEDS.forEach(function(n,i){
+        var tf=T_FIT+i*(FIT_DUR+FIT_GAP),f=cl((T-tf)/FIT_DUR),landed=f>=1;
+        if(landed)met++;
+        if(!landed){ // fantasma del hueco
+          ctx.globalAlpha=ga*(1-rowsGone);ctx.setLineDash([3,3]);ctx.strokeStyle=RED;ctx.lineWidth=1.5;
+          n.cells.forEach(function(p){ctx.strokeRect(OX+p[0]*C+2,OY+p[1]*C+2,C-4,C-4);});ctx.setLineDash([]);
+          var xs=n.cells.map(function(p){return p[0];}),cx=OX+(Math.min.apply(null,xs)+Math.max.apply(null,xs)+1)/2*C;
+          ctx.fillStyle=REDINK;ctx.font='700 7px '+MONO;ctx.textAlign='center';ctx.textBaseline='alphabetic';ctx.fillText(n.short,cx,OY+9*C-5);ctx.globalAlpha=1;
+        }
+        if(T>=tf){ // pieza elegida para ese hueco, cae despacio y guiada
+          var minx=Math.min.apply(null,n.cells.map(function(p){return p[0];})),miny=Math.min.apply(null,n.cells.map(function(p){return p[1];}));
+          var rel=n.cells.map(function(p){return [p[0]-minx,p[1]-miny];});
+          var y=lerp(-3,miny,easeOut(f));
+          // Filas completas: la pieza se integra en la empresa (rojo -> tinta), conservando el nombre de la necesidad
+          var k=landed?cl((rowsGone-0.35)/0.65):0,fill=k>0?mix(RED,INK,k):RED;
+          piece(rel,minx,y,fill,k<1?'rgba(255,255,255,'+(1-k).toFixed(3)+')':null,null,null,1); // el contorno se funde al integrarse
+          // etiqueta de la herramienta a medida: «BUILT FOR / <necesidad>», en la fila superior (la más ancha)
+          var cw=(Math.max.apply(null,rel.map(function(q){return q[0];}))+1)*C,lx=OX+minx*C+cw/2,ly=OY+(y+0.5)*C;
+          ctx.save();ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';
+          var fs=6.4;ctx.font='700 '+fs+'px '+MONO;while(fs>4.6&&Math.max(ctx.measureText(n.short).width,ctx.measureText(TX.builtFor).width)>cw-8){fs-=.2;ctx.font='700 '+fs+'px '+MONO;}
+          ctx.globalAlpha=.8;ctx.fillText(TX.builtFor,lx,ly-4.5);ctx.globalAlpha=1;ctx.fillText(n.short,lx,ly+4.5);ctx.restore();
+        }
+      });
+      phase=T<T_FIT?'AFTER · we map your company: its real gaps':(T<T_ROWS?'AFTER · one piece per need':'AFTER · everything fits');
+    }
+    ctx.restore();
+    var label=null,lc=RED;
+    if(T>=T_MSG&&T<T_MSGOUT+MSG_FADE){message(T);phase='BEFORE · …';}
+    // La empresa ha crecido: su rótulo sube y gana tamaño
+    ctx.fillStyle='#fcfcfc';ctx.font='900 11px '+DISP;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(TX.company,OX+COLS*C/2,OY+13*C); // fijo: no se mueve ni crece
+    if(T>=T_HEAD){var ah=cl((T-T_HEAD)/0.4),cx=OX+COLS*C/2;ctx.save();ctx.globalAlpha=ah;ctx.textAlign='center';ctx.textBaseline='middle';
+      var hz=22;ctx.font='900 '+hz+'px '+DISP;while(hz>12&&Math.max(ctx.measureText(TX.h1).width,ctx.measureText(TX.h2).width)>COLS*C-20){hz-=.5;ctx.font='900 '+hz+'px '+DISP;}ctx.fillStyle=REDINK;ctx.fillText(TX.h1,cx,OY+3.2*C);ctx.fillStyle=INK;ctx.fillText(TX.h2,cx,OY+4.25*C);ctx.restore();}
+    if(T>=T_SUB){var as=cl((T-T_SUB)/0.4),cx2=OX+COLS*C/2;ctx.save();ctx.globalAlpha=as;ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.font='500 10.5px Inter, sans-serif';ctx.fillStyle='rgba(10,10,10,.72)';
+      ctx.fillText(TX.s1,cx2,OY+5.6*C);ctx.fillText(TX.s2,cx2,OY+6.25*C);ctx.restore();}
+    hud(T<T_GHOST?Math.max(tools,before.length*(T>=T_OVER?1:0)):-1,met,label,lc);
+    document.getElementById('phase').textContent=phase;
+  }
+  function lerp(a,b,f){return a+(b-a)*f;}
+  function mix(a,b,f){var A=[1,3,5].map(function(i){return parseInt(a.substr(i,2),16);}),B=[1,3,5].map(function(i){return parseInt(b.substr(i,2),16);});return 'rgb('+A.map(function(v,i){return Math.round(lerp(v,B[i],f));}).join(',')+')';}
+  var start=0,raf=0;
+  function loop(now){var T=(now-start)/1000;draw(Math.min(T,T_END));if(T<T_END)raf=requestAnimationFrame(loop);}
+  function play(){cancelAnimationFrame(raf);start=performance.now();raf=requestAnimationFrame(loop);}
+  document.getElementById('replay').addEventListener('click',function(){CALM?draw(T_END):play();});
+  if(EXPORT){window.__draw=function(T){draw(T);};window.__T_END=T_END;}
+  var go=function(){ if(EXPORT){window.__ready=true;return;} var mt=location.hash.match(/^#t=([\d.]+)/); if(mt){draw(+mt[1]);return;} if(CALM){draw(T_END);return;} new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting&&!start)play();});},{threshold:.5}).observe(cv); draw(0); };
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(go);else go();
+})();
+</script>
+</body>
+</html>
