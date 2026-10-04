@@ -1,46 +1,64 @@
 ---
 /**
- * T2 · the problem — mock-up `section.story`: four pairs, problem → way out.
+ * T2 · the problem — reference `docs/design/portada-nueva/t2-selector.html`:
+ * the four pairs as a selector on the left, one stage on the right.
  *
- * Ground floor (no JavaScript, or reduced motion): the four pairs read in full,
- * each problem struck through, each way out written, next to the drawing at
- * rest in its final frame. That is how the HTML is served.
+ * Ground floor (no JavaScript): the four pairs read in full, each problem struck
+ * through, each way out written, next to the drawing of pair 1 at rest in its
+ * final frame. That is how the HTML is served.
  *
- * Upper floor (./story-effects.ts): it adds `is-fx` to the section, pins the
- * stage and plays the pairs one by one on scroll. Everything `is-fx` changes is
- * scoped under that class, so if it never arrives nothing here is left hidden.
+ * Three floors above it, each its own file so each is only downloaded where it
+ * runs:
+ *   ./story-selector.ts     the tabs (ARIA, keyboard, which pair is open, the
+ *                           still frame on the stage). Always, with JavaScript.
+ *   ./story-text-motion.ts  the strike and the typing. Not with reduced motion.
+ *   ./story-motion.ts       the drawing going from chaos to order. Only on a
+ *                           wide screen (> 860px) and not with reduced motion.
+ *
+ * Tabs and panels: the tabs live in their own wrapper (the tablist), the four
+ * text panels after it, so the tablist owns tabs and nothing else. The wrapper
+ * is `display: contents` and the grid puts each panel right under its tab.
  *
  * The drawing is a separate, provisional piece (./story-drawing.ts) that will be
- * swapped for video; this file only gives it a box.
+ * swapped for video. Its four final frames travel as <template>s, inert and out
+ * of the DOM, so changing pair without the motion module costs no script.
  */
-import { problem } from './copy';
-import { storyDrawingMarkup } from './story-drawing';
+import { problem, stageCaption } from './copy';
+import { storyDrawingMarkup, STORY_PAIRS } from './story-drawing';
+
+const frames = Array.from({ length: STORY_PAIRS }, (_, i) => storyDrawingMarkup(i, 1));
 ---
 
-<section class="pv-section pv-story" id="problem" data-tramo="T2">
-  <div class="pv-wrap pv-story-head">
+<section class="pv-section pv-story" id="problem" data-tramo="T2" data-pv-story>
+  <div class="pv-wrap pv-story-in">
     <div class="pv-eyebrow pv-mono">{problem.eyebrow}</div>
     <h2 class="pv-sec-h">{problem.title} <em>{problem.titleEm}</em></h2>
-  </div>
-  <div class="pv-wrap pv-story-stage" data-pv-story-stage>
-    <div class="pv-story-visual">
-      <div class="pv-story-canvas" role="img" aria-label={problem.visualLabel} data-pv-story-drawing set:html={storyDrawingMarkup()} />
-    </div>
-    <div class="pv-steps-col">
-      <div class="pv-steps">
-        {problem.pairs.map((pair) => (
-          <article class="pv-step" data-pv-step>
-            <div class="pv-step-n pv-mono">{pair.n}</div>
-            <h3 class="pv-prob-h"><span class="pv-strike">{pair.problem}</span></h3>
+    <div class="pv-board">
+      <div class="pv-list">
+        <div class="pv-tabs" data-pv-tabs data-pv-label={problem.tabsLabel}>
+          {problem.pairs.map((pair, i) => (
+            <h3 class="pv-tab" id={`pv-tab-${i}`} data-pv-tab style={`--row: ${i * 2 + 1}`}>
+              <span class="pv-tab-n pv-mono">{pair.n}</span>{' '}
+              <span class="pv-prob-h"><span class="pv-strike">{pair.problem}</span></span>
+            </h3>
+          ))}
+        </div>
+        {problem.pairs.map((pair, i) => (
+          <div class="pv-panel" id={`pv-panel-${i}`} data-pv-panel style={`--row: ${i * 2 + 2}`}>
             <p class="pv-prob-p">{pair.problemText}</p>
             <h3 class="pv-sol-h" aria-label={pair.solution}>
               <span class="pv-done" aria-hidden="true">{pair.solution}</span><span class="pv-caret" aria-hidden="true"></span><span class="pv-rest" aria-hidden="true"></span>
             </h3>
             <p class="pv-sol-p">{pair.solutionText}</p>
-          </article>
+          </div>
         ))}
+        <p class="pv-hint pv-mono" data-pv-hint hidden>{problem.pick}</p>
       </div>
-      <div class="pv-progress" aria-hidden="true">{problem.pairs.map(() => <i></i>)}</div>
+      <div class="pv-stage" data-pv-stage>
+        <div class="pv-story-canvas" role="img" aria-label={problem.visualLabel} data-pv-story-drawing set:html={frames[0]} />
+        <span class="pv-stage-cap pv-mono" aria-hidden="true" data-pv-cap>{stageCaption(1, STORY_PAIRS)}</span>
+        {frames.map((svg) => <template data-pv-frame set:html={svg}></template>)}
+      </div>
     </div>
   </div>
 </section>
@@ -48,39 +66,46 @@ import { storyDrawingMarkup } from './story-drawing';
 <style>
   /* ---------- Ground floor ---------- */
   .pv-story { background: var(--color-surface); }
-  .pv-story-head { padding-block: 90px 0; }
+  .pv-story-in { padding-block: 90px; }
 
-  .pv-story-stage {
+  .pv-board {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(24px, 5vw, 72px);
-    align-items: center;
-    padding-block: 48px 90px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: clamp(24px, 4vw, 56px);
+    margin-top: 48px;
+    align-items: start;
   }
-  .pv-story-visual { min-width: 0; }
-  .pv-story-canvas {
-    width: 100%;
-    max-width: 520px;
-    aspect-ratio: 1;
-    margin-inline: auto;
+
+  /* One grid for tabs and panels: tab i on row 2i+1, its panel right under it
+     on row 2i+2, the hint last. The tablist wrapper does not make a box. */
+  .pv-list { display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; }
+  .pv-tabs { display: contents; }
+  .pv-tab,
+  .pv-panel { grid-row: var(--row); grid-column: 1; }
+
+  /* A pair is one card: the tab is its top, the panel its bottom. */
+  .pv-tab {
+    margin-top: 12px;
     background: var(--color-bg);
     border: 1px solid var(--color-border);
+    border-bottom: 0;
+    border-left: 4px solid transparent;
+    padding: 18px 20px 0;
+    /* The h3 base (line-height .92, uppercase display) is the mock-up's .prob-h. */
+    font-size: clamp(20px, 2vw, 26px);
+    transition: border-color 0.25s, box-shadow 0.25s;
   }
-  .pv-story-canvas :global(svg) { display: block; width: 100%; height: 100%; }
-
-  .pv-steps-col { position: relative; min-width: 0; }
-  .pv-steps { display: grid; gap: 40px; min-width: 0; }
-  .pv-step-n { color: var(--color-brand-dark); }
-
-  .pv-prob-h {
-    margin-top: 10px;
-    font-size: clamp(24px, 3vw, 38px);
-    color: var(--color-faint);
+  .pv-tab[id='pv-tab-0'] { margin-top: 0; }
+  .pv-tab-n {
+    display: block;
+    color: var(--color-brand-dark);
+    line-height: 1.6;
+    margin-bottom: 6px;
   }
+  .pv-prob-h { color: var(--color-faint); }
   /* The strike. `--strike` runs 0 → 1; the ground floor shows it done. Drawn
      as a background on an inline box cloned per line, so a problem that wraps
-     is struck on every line (the mock-up's single bar crossed the gap between
-     two lines instead). */
+     is struck line by line. */
   .pv-strike {
     padding-inline: 0.04em;
     margin-inline: -0.04em;
@@ -88,9 +113,24 @@ import { storyDrawingMarkup } from './story-drawing';
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
   }
+
+  .pv-panel {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-top: 0;
+    border-left: 4px solid transparent;
+    padding: 2px 20px 18px;
+  }
+  .pv-prob-p,
+  .pv-sol-p {
+    margin-top: 10px;
+    font-size: 15px;
+  }
+  .pv-prob-p { color: var(--color-muted); }
+  .pv-sol-p { color: var(--color-text); }
   .pv-sol-h {
-    margin-top: 22px;
-    font-size: clamp(28px, 3.6vw, 48px);
+    margin-top: 16px;
+    font-size: clamp(22px, 2.2vw, 30px);
     color: var(--color-brand-dark);
   }
   .pv-rest { color: color-mix(in srgb, var(--color-text) 6%, transparent); }
@@ -103,80 +143,75 @@ import { storyDrawingMarkup } from './story-drawing';
     margin-inline: 0.02em;
     animation: pv-blink 1s steps(2) infinite;
   }
-  @keyframes pv-blink { to { visibility: hidden; } }
-  .pv-prob-p,
-  .pv-sol-p {
-    color: var(--color-muted);
+  @keyframes pv-blink { 50% { opacity: 0.15; } }
+
+  .pv-hint {
+    grid-row: 9;
     margin-top: 14px;
-    max-width: 44ch;
-    font-size: 17px;
-  }
-  .pv-progress { display: none; gap: 6px; }
-  .pv-progress i { width: 36px; height: 3px; background: var(--color-border); }
-
-  @media (max-width: 900px) {
-    .pv-story-stage { grid-template-columns: 1fr; }
+    color: var(--color-muted);
   }
 
-  /* ---------- Upper floor: only once ./story-effects.ts has taken over ----------
-     The stage is exactly one screen tall and pinned. The four pairs share one
-     grid cell, so the column is as tall as the longest pair and no taller; the
-     drawing takes every pixel that is left, square, as large as fits. */
-  .pv-story.is-fx .pv-story-stage {
-    box-sizing: border-box;
-    height: 100vh;
-    height: 100svh;
-    padding-block: 84px 40px;
-    align-items: stretch;
+  .pv-stage {
+    position: sticky;
+    top: 84px; /* under the 60px fixed header, with the mock-up's 24px of air */
+    min-width: 0;
   }
-  .pv-story.is-fx .pv-story-visual {
-    container-type: size;
-    min-height: 0;
-    display: grid;
-    place-items: center;
+  .pv-story-canvas {
+    width: 100%;
+    aspect-ratio: 1;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
   }
-  .pv-story.is-fx .pv-story-canvas {
-    width: min(100cqw, 100cqh);
-    max-width: none;
-    margin: 0;
+  .pv-story-canvas :global(svg) { display: block; width: 100%; height: 100%; }
+  .pv-stage-cap {
+    position: absolute;
+    left: 14px;
+    top: 12px;
+    color: var(--color-muted);
   }
-  .pv-story.is-fx .pv-steps-col { align-self: center; }
-  .pv-story.is-fx .pv-steps { gap: 0; }
-  .pv-story.is-fx .pv-step {
-    grid-area: 1 / 1;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(24px);
-    transition: opacity 0.5s, transform 0.5s, visibility 0.5s;
+
+  /* One column: the stage goes ON TOP of the list (the card asks for it; the
+     mock-up left it below) and stops being sticky. */
+  @media (max-width: 860px) {
+    .pv-board { grid-template-columns: minmax(0, 1fr); }
+    .pv-stage {
+      order: -1;
+      position: relative;
+      top: 0;
+      max-width: 440px;
+      width: 100%;
+      justify-self: center;
+    }
   }
-  .pv-story.is-fx .pv-step.is-on { opacity: 1; visibility: visible; transform: none; }
+
+  /* ---------- Selector (./story-selector.ts adds `is-sel`) ---------- */
+  .pv-story.is-sel .pv-tab { cursor: pointer; }
+  .pv-story.is-sel .pv-tab:hover { border-color: var(--color-border-strong); }
+  .pv-story.is-sel .pv-tab[aria-selected='true'] {
+    border-color: var(--color-text);
+    border-left-color: var(--color-brand);
+    box-shadow: 0 24px 50px -30px color-mix(in srgb, var(--color-text) 35%, transparent);
+  }
+  .pv-story.is-sel .pv-panel.is-on {
+    border-color: var(--color-text);
+    border-left-color: var(--color-brand);
+  }
+  .pv-story.is-sel .pv-tab:focus-visible,
+  .pv-story.is-sel .pv-panel:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 3px;
+  }
+  /* Motion allowed: only the chosen pair is open. A closed tab is a whole card. */
+  .pv-story.is-sel:not(.is-calm) .pv-panel:not(.is-on) { display: none; }
+  .pv-story.is-sel:not(.is-calm) .pv-tab:not([aria-selected='true']) {
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 18px;
+  }
+
+  /* ---------- Text motion (./story-text-motion.ts adds `is-fx`) ---------- */
   .pv-story.is-fx .pv-prob-h { color: var(--color-text); }
   .pv-story.is-fx .pv-prob-h.is-struck { color: var(--color-faint); }
-  .pv-story.is-fx .pv-caret { display: inline-block; }
-  .pv-story.is-fx .pv-progress { display: flex; margin-top: 24px; }
-  .pv-progress i.is-on { background: var(--color-brand); }
-
-  /* Laptop and up: the 1200px column of the mock-up leaves the drawing width-
-     bound (≈500px in a 900px-tall screen). The pinned stage gets the wider
-     measure and the drawing the larger share, so it is bound by height instead. */
-  @media (min-width: 901px) {
-    .pv-story.is-fx .pv-story-stage {
-      max-width: 1600px;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
-    }
-  }
-  @media (max-width: 900px) {
-    .pv-story.is-fx .pv-story-stage {
-      grid-template-rows: minmax(0, 1fr) auto;
-      gap: 20px;
-      padding-block: 76px 28px;
-    }
-    .pv-story.is-fx .pv-steps-col { align-self: end; }
-    .pv-story.is-fx .pv-progress { margin-top: 16px; }
-  }
-  @media (max-width: 540px) {
-    .pv-story.is-fx .pv-prob-p,
-    .pv-story.is-fx .pv-sol-p { font-size: 15px; margin-top: 10px; }
-    .pv-story.is-fx .pv-sol-h { margin-top: 14px; }
-  }
+  .pv-story.is-fx .pv-sol-h.is-typing .pv-caret { display: inline-block; }
+  .pv-story.is-fx .pv-sol-p { opacity: 0; transition: opacity 0.5s; }
+  .pv-story.is-fx .pv-sol-p.is-on { opacity: 1; }
 </style>
