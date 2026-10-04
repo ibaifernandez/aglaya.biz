@@ -1,0 +1,73 @@
+---
+/* Header of the new home page preview — mock-up `header.nav`. */
+import { nav } from './copy';
+---
+
+<header class="pv-nav">
+  <div class="pv-wrap pv-nav-in">
+    <a class="pv-logo" href="#top">{nav.logo}</a>
+    <nav class="pv-links" aria-label={nav.label}>
+      {nav.links.map((link) => <a href={link.href}>{link.text}</a>)}
+    </nav>
+    <div class="pv-lang"><b>{nav.langCurrent}</b><span>/</span><span>{nav.langOther}</span></div>
+    <a class="pv-btn pv-btn--primary pv-nav-cta" href={nav.cta.href} data-pv-magnet><span>{nav.cta.text}</span></a>
+  </div>
+</header>
+
+<style>
+  .pv-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    padding-top: env(safe-area-inset-top, 0px);
+    background: color-mix(in srgb, var(--color-bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--pv-line);
+  }
+  .pv-nav-in {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    height: 60px;
+  }
+  .pv-logo {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 20px;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+  .pv-links {
+    display: flex;
+    gap: 22px;
+    margin-left: auto;
+  }
+  .pv-links a {
+    font: 500 14px var(--font-body);
+    text-decoration: none;
+    color: var(--pv-muted);
+  }
+  .pv-links a:hover { color: var(--pv-ink); }
+  .pv-lang {
+    font: 700 11px var(--font-mono);
+    letter-spacing: 0.12em;
+    display: flex;
+    gap: 6px;
+    color: var(--pv-faint);
+  }
+  .pv-lang b { color: var(--pv-ink); }
+  .pv-nav-cta {
+    padding: 12px 14px;
+    font-size: 11px;
+  }
+
+  @media (max-width: 900px) {
+    .pv-links { display: none; }
+  }
+  @media (max-width: 540px) {
+    .pv-nav-cta { display: none; }
+  }
+</style>

@@ -42,6 +42,20 @@ const TRANSLATED: Record<string, Alternates> = {
   '/legal-notice/': { en: '/legal-notice/', es: '/es/aviso-legal/' },
 };
 
+/**
+ * Path prefixes published in ONE language on purpose, with no twin. A page under
+ * one of these declares no `<link rel="alternate" hreflang>` at all (BaseLayout
+ * asks `isUnpaired`): announcing `/es/preview/…` would send a crawler to a 404.
+ * They are kept out of the sitemap by the filter in `astro.config.mjs`.
+ */
+const UNPAIRED_PREFIXES = ['/preview/'];
+
+/** True for a page that has no language twin and must not announce one. */
+export function isUnpaired(pathname: string): boolean {
+  const path = normalise(pathname);
+  return UNPAIRED_PREFIXES.some((prefix) => path.startsWith(prefix));
+}
+
 /** Reverse index: any localised path of a translated route back to its English path. */
 const EN_PATH_OF: ReadonlyMap<string, string> = new Map(
   Object.entries(TRANSLATED).flatMap(([enPath, paths]) =>
