@@ -321,6 +321,35 @@ test.describe('new home page preview', () => {
     expect(hook.ctas).toEqual(['Talk to us', "See what we've built"]);
   });
 
+  // Card 75d4eda9: Ibai reads the T1 paragraph better across the whole container,
+  // so it carries no `max-width` (it used to stop at 56ch).
+  for (const [w, h] of [[1440, 900], [768, 1024], [375, 812]] as const) {
+    test(`${w}: the T1 paragraph spans its container, with no max-width and no sideways scroll`, async ({ page }) => {
+      await page.setViewportSize({ width: w, height: h });
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.goto(ROUTE);
+      const sub = page.locator('main#main-content section#top').getByText(hook.sub, { exact: true });
+      await expect(sub).toBeVisible();
+      const m = await sub.evaluate((el) => {
+        const cs = getComputedStyle(el);
+        const parent = el.parentElement as HTMLElement;
+        const pcs = getComputedStyle(parent);
+        const inner = parent.clientWidth - parseFloat(pcs.paddingLeft) - parseFloat(pcs.paddingRight);
+        return {
+          maxWidth: cs.maxWidth,
+          width: el.getBoundingClientRect().width,
+          inner,
+          lines: Math.round(el.getBoundingClientRect().height / parseFloat(cs.lineHeight)),
+          sideways: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+        };
+      });
+      expect(m.maxWidth).toBe('none');
+      expect(Math.abs(m.width - m.inner), `paragraph ${m.width}px vs container ${m.inner}px`).toBeLessThanOrEqual(1);
+      expect(m.sideways, 'no horizontal scroll').toBeLessThanOrEqual(0);
+      if (w === 1440) expect(m.lines, 'two lines at 1440, as in Ibai’s capture').toBe(2);
+    });
+  }
+
   test('the reference mock-ups yield the T2 words (the reader is not blind)', () => {
     expect(problem.eyebrow).toBe('Where most companies get stuck');
     expect(problem.title).toBe('Everyone talks about AI. Nobody tells you where to start.');
