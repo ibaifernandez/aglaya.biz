@@ -16,14 +16,16 @@ import { fileURLToPath } from 'node:url';
  *   - its T2 a selector (WAI-ARIA tabs) where nothing moves on by itself, whose
  *     motion is only downloaded where it runs; pair 1's drawing the «Tetris»
  *     timeline, which starts over every time the pair is chosen, and whose last
- *     frame stands still wherever it does not move;
+ *     frame stands still wherever it does not move; pair 2's the «heat map»
+ *     timeline, the same way;
  *   - its T2 heading, selector and stage inside one 1440 × 900 screen;
  *   - WCAG 2 AA clean with reduced motion.
  *
  * The words are not copied into this file. They are read out of the reference
  * mock-ups committed at docs/design/portada-nueva/ — portada-aglaya.html (T1,
- * and the drawing's label), t2-selector.html (T2) and t2-anim1-tetris.html
- * (pair 1's way out, its paragraph, and its drawing) — built page against
+ * and the drawing's label), t2-selector.html (T2), t2-anim1-tetris.html
+ * (pair 1's way out, its paragraph, and its drawing) and t2-anim2-heatmap.html
+ * (pair 2's drawing) — built page against
  * reference artefact, so the page cannot drift from the mock-up while this
  * suite stays green, and the suite cannot agree with the page just because
  * both were edited together.
@@ -35,6 +37,7 @@ const ROUTE = '/preview/home/';
 const MOCKUP = fileURLToPath(new URL('../../docs/design/portada-nueva/portada-aglaya.html', import.meta.url));
 const SELECTOR_MOCKUP = fileURLToPath(new URL('../../docs/design/portada-nueva/t2-selector.html', import.meta.url));
 const TETRIS_MOCKUP = fileURLToPath(new URL('../../docs/design/portada-nueva/t2-anim1-tetris.html', import.meta.url));
+const HEATMAP_MOCKUP = fileURLToPath(new URL('../../docs/design/portada-nueva/t2-anim2-heatmap.html', import.meta.url));
 
 const decode = (s: string) => s.replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
 
@@ -103,10 +106,65 @@ export function mockupTetrisGeometry(html: string) {
   return { W: cv ? +cv[1] / S : NaN, H: cv ? +cv[2] / S : NaN, COLS, ROWS, C, OX, OY, depth };
 }
 
+/** Pair 2's drawing as the mock-up writes it: the words of its timeline (`TX.en`). */
+export function mockupHeatmap(html: string) {
+  const en = /\ben:\{([\s\S]*?)\},\s*es:\{/.exec(html)?.[1] ?? '';
+  const tx = (k: string) => new RegExp(`\\b${k}:'([^']+)'`).exec(en)?.[1] ?? '';
+  const list = (k: string) => [...(new RegExp(`\\b${k}:\\[([^\\]]+)\\]`).exec(en)?.[1] ?? '').matchAll(/'([^']+)'/g)].map((m) => m[1]);
+  return {
+    close: [tx('c1'), tx('c2')],
+    m1: tx('m1'),
+    m2a: tx('m2a'),
+    words: list('words'),
+    rows: list('rows'),
+    days: list('days'),
+    sys: tx('sys'),
+    built: tx('built'),
+    saved: tx('saved'),
+    trust: tx('trust'),
+    unusedL: tx('unusedL'),
+  };
+}
+
+/**
+ * Pair 2's board as the mock-up lays it out: the logical canvas, the 50 px its
+ * 400-wide composition is moved down, the grid's cells, and the rules of
+ * `closingFit()` (start size, step, widest line allowed) on which `layout()`
+ * hangs the grid and the department names.
+ */
+export function mockupHeatmapGeometry(html: string) {
+  const cv = /<canvas id="cv" width="(\d+)" height="(\d+)"/.exec(html);
+  const S = +(/getContext\('2d'\),S=([\d.]+)/.exec(html)?.[1] ?? NaN);
+  const g = /var GX=(\d+),GY=(\d+),CW=(\d+),CH=(\d+);/.exec(html);
+  const [, GY, CW, CH] = (g?.slice(1) ?? []).map(Number);
+  const fit = /function closingFit\(\)\{var fz=(\d+);[\s\S]*?measureText\(TX\.c2\)\.width\)>(\d+)\)\{fz-=([\d.]+);/.exec(html);
+  return {
+    W: cv ? +cv[1] / S : NaN,
+    H: cv ? +cv[2] / S : NaN,
+    DY: +(/ctx\.translate\(0,(\d+)\);\s*\/\/ 4:5/.exec(html)?.[1] ?? NaN),
+    GY,
+    CW,
+    CH,
+    fz0: fit ? +fit[1] : NaN,
+    maxW: fit ? +fit[2] : NaN,
+    step: fit ? +fit[3] : NaN,
+    /** The two lines of the close sit at GY + 4·CH + 66 and one line (fz · 1.15) below. */
+    closeY: +(/fillText\(TX\.c1,200,GY\+4\*CH\+(\d+)\)/.exec(html)?.[1] ?? NaN),
+    layout: /function layout\(\)\{var cf=closingFit\(\),w=\(200-cf\.left\)\*2;GX=cf\.left\+w-5\*CW;\}/.test(html),
+    namesAtLeft: /var LBL=closingFit\(\)\.left;/.test(html),
+  };
+}
+
+/** The stage's name with pair 2 on it — set word for word on card 6e837be0 (the mock-up's canvas label describes an earlier drawing). */
+const HEATMAP_LABEL =
+  "Before: the monthly AI bill keeps growing, most licences go unused, and the team's trust in AI drops. After: the week's lost hours by department; one AI system on each hot spot until it cools down, licences go to zero and trust rises. Start where it pays, then grow from what works.";
+
 const html = readFileSync(MOCKUP, 'utf8');
 const hook = mockupHook(html);
 const tetris = mockupTetris(readFileSync(TETRIS_MOCKUP, 'utf8'));
 const board = mockupTetrisGeometry(readFileSync(TETRIS_MOCKUP, 'utf8'));
+const heatmap = mockupHeatmap(readFileSync(HEATMAP_MOCKUP, 'utf8'));
+const heat = mockupHeatmapGeometry(readFileSync(HEATMAP_MOCKUP, 'utf8'));
 /** T2: the selector mock-up, with pair 1's way out as agreed for the Tetris. */
 const problem = (() => {
   const p = mockupProblem(readFileSync(SELECTOR_MOCKUP, 'utf8'));
@@ -121,7 +179,7 @@ const PICK = /pick one/i;
 
 /** The chunks of T2's motion, as Vite names them after their source files. */
 const TEXT_CHUNK = /\/_astro\/story-text-motion\.[^/]*\.js$/;
-const DRAWING_CHUNK = /\/_astro\/story-(motion|drawing|tetris)\.[^/]*\.js$/;
+const DRAWING_CHUNK = /\/_astro\/story-(motion|drawing|tetris|heatmap|svg-recorder)\.[^/]*\.js$/;
 
 /** Every script URL the page asks for, from before the first byte. */
 function scriptRequests(page: import('@playwright/test').Page) {
@@ -156,6 +214,22 @@ async function expectTetrisStill(page: import('@playwright/test').Page) {
   expect(words.filter((w) => w === tetris.builtFor)).toHaveLength(4);
   expect(words.join(' '), 'the line under the headline').toContain(tetris.sub.split(' and ')[0]);
   await expect(host).toHaveAccessibleName(tetrisLabel);
+}
+
+/** Pair 2's last frame, still, is what the stage holds: the heat-map SVG, the close, the cooled grid, no canvas. */
+async function expectHeatmapStill(page: import('@playwright/test').Page) {
+  const host = t2(page).locator('[data-pv-story-drawing]');
+  await expect(host.locator('svg[data-pv-heatmap-still]')).toHaveCount(1);
+  await expect(host.locator('canvas')).toHaveCount(0);
+  const words = (await host.locator('svg text').allTextContents()).map((w) => w.trim());
+  for (const w of [...heatmap.close, ...heatmap.rows, ...heatmap.days, heatmap.trust]) expect(words, `the last frame says ${w}`).toContain(w);
+  // The markers at their final value: four systems, every hot spot cooled to 0H, no unused licence left.
+  expect(words).toContain(`${heatmap.built}  04`);
+  expect(words).toContain(`${heatmap.unusedL}  0`);
+  expect(words.filter((w) => w === '0H')).toHaveLength(8);
+  // Nothing of the timeline's middle stays on the last frame.
+  for (const w of [heatmap.m1, heatmap.m2a, ...heatmap.words, `${heatmap.sys} #1`]) expect(words, `${w} is gone by the end`).not.toContain(w);
+  await expect(host).toHaveAccessibleName(HEATMAP_LABEL);
 }
 
 /**
@@ -263,6 +337,15 @@ test.describe('new home page preview', () => {
     expect(tetris.sub).toBe('Start from your actual needs and let your company grow solid.');
     expect(tetris.builtFor).toBe('BUILT FOR');
     expect(tetris.needs).toEqual(['SALES', 'REPORTING', 'SUPPORT', 'HIRING']);
+    // Pair 2's drawing, read off the heat-map mock-up (card 6e837be0).
+    expect(heatmap.close).toEqual(['START WHERE IT PAYS.', 'THEN GROW FROM WHAT WORKS.']);
+    expect(heatmap.m2a).toBe('AND NOTHING GOT');
+    expect(heatmap.words).toEqual(['FASTER.', 'CHEAPER.', 'SIMPLER.', 'MORE EFFICIENT.', 'BETTER.']);
+    expect(heatmap.rows).toEqual(['SALES', 'OPS', 'FINANCE', 'SUPPORT']);
+    expect(heatmap.days).toHaveLength(5);
+    expect(heatmap.sys).toBe('AI SYSTEM');
+    expect([heatmap.built, heatmap.saved, heatmap.trust, heatmap.unusedL].every((w) => w.length > 5)).toBe(true);
+    expect(heat).toMatchObject({ W: 400, H: 500, DY: 50, GY: 96, CW: 56, CH: 40, fz0: 22, maxW: 360, step: 0.5, closeY: 66, layout: true, namesAtLeft: true });
     expect(problem.pairs).toHaveLength(4);
     expect(problem.pairs.map((p) => p.n)).toEqual(['Problem 1 of 4', 'Problem 2 of 4', 'Problem 3 of 4', 'Problem 4 of 4']);
     for (const p of problem.pairs) {
@@ -348,6 +431,20 @@ test.describe('new home page preview', () => {
       await expectTetrisStill(page);
     });
 
+    test('T2: pair 2\'s last frame is served too, still, under its own name', async ({ page }) => {
+      await page.goto(ROUTE);
+      const frame = page.locator('template[data-pv-frame]').nth(1);
+      await expect(frame).toHaveAttribute('data-pv-label', HEATMAP_LABEL);
+      // What the selector would put on the stage: put it there, as it would, and read it.
+      await page.evaluate(() => {
+        const host = document.querySelector('[data-pv-story-drawing]')!;
+        const t = document.querySelectorAll<HTMLTemplateElement>('template[data-pv-frame]')[1];
+        host.replaceChildren(t.content.cloneNode(true));
+        host.setAttribute('aria-label', t.dataset.pvLabel ?? '');
+      });
+      await expectHeatmapStill(page);
+    });
+
     test('nothing says "pick one", in the page or in what it serves', async ({ page }) => {
       const res = await page.goto(ROUTE);
       expect(await res!.text()).not.toMatch(PICK);
@@ -387,6 +484,23 @@ test.describe('new home page preview', () => {
 
     expect(scripts.some((u) => u.includes('home.astro')), 'the page script ran (the check is not vacuous)').toBe(true);
     expect(scripts.filter((u) => TEXT_CHUNK.test(u) || DRAWING_CHUNK.test(u))).toEqual([]);
+  });
+
+  test('with reduced motion, pair 2 shows its last frame, still, chosen once or twice', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    const scripts = scriptRequests(page);
+    await page.goto(ROUTE);
+    await page.waitForLoadState('networkidle');
+    await tab(page, 1).click();
+    await expect(tab(page, 1)).toHaveAttribute('aria-selected', 'true');
+    expect(await stageShowsFinalFrame(page, 1)).toBe(true);
+    await expectHeatmapStill(page);
+    await expectProblemComplete(page, HEATMAP_LABEL);
+    await tab(page, 1).click();
+    await page.waitForTimeout(300);
+    expect(await stageShowsFinalFrame(page, 1), 'chosen again: still the last frame').toBe(true);
+    expect(scripts.filter((u) => DRAWING_CHUNK.test(u))).toEqual([]);
   });
 
   test.describe('with motion', () => {
@@ -486,7 +600,7 @@ test.describe('new home page preview', () => {
       await page.setViewportSize({ width: 1440, height: 900 });
       await page.goto(ROUTE);
       const sec = t2(page);
-      const canvas = sec.locator('[data-pv-story-drawing] canvas');
+      const canvas = sec.locator('[data-pv-story-drawing] canvas[data-pv-tetris]');
       await expect(canvas).toHaveCount(1);
       await expect(sec.locator('[data-pv-story-drawing]')).toHaveAccessibleName(tetrisLabel);
       /** How much of the well is painted (non-white), and a fingerprint of the frame. */
@@ -523,12 +637,120 @@ test.describe('new home page preview', () => {
       // Leaving for pair 2 puts its own drawing on the stage; coming back starts the timeline from 0.
       await tab(page, 1).click();
       await expect(canvas).toHaveCount(0);
-      await expect(sec.locator('[data-pv-story-drawing] svg')).toHaveCount(1);
-      await expect(sec.locator('[data-pv-story-drawing]')).toHaveAccessibleName(drawingLabel);
+      await expect(sec.locator('[data-pv-story-drawing] canvas[data-pv-heatmap]')).toHaveCount(1);
+      await expect(sec.locator('[data-pv-story-drawing]')).toHaveAccessibleName(HEATMAP_LABEL);
       await tab(page, 0).click();
       await expect(canvas).toHaveCount(1);
       await page.waitForTimeout(150);
       expect((await frame()).ink, 'from the start').toBeLessThan(piled.ink - 0.01);
+    });
+
+    test('1440: pair 2 is the heat-map timeline: it starts when chosen, and choosing it again starts it over', async ({ page }) => {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(ROUTE);
+      const sec = t2(page);
+      await sec.locator('[data-pv-stage]').scrollIntoViewIfNeeded();
+      await expect(sec.locator('[data-pv-story-drawing] canvas[data-pv-tetris]')).toHaveCount(1);
+      await tab(page, 1).click();
+      const canvas = sec.locator('[data-pv-story-drawing] canvas[data-pv-heatmap]');
+      await expect(canvas).toHaveCount(1);
+      await expect(sec.locator('[data-pv-story-drawing] canvas')).toHaveCount(1);
+      await expect(sec.locator('[data-pv-story-drawing]')).toHaveAccessibleName(HEATMAP_LABEL);
+      /** A fingerprint of the frame, and how much of it is the brand red (the «UNUSED» stamps, later the heat). */
+      const frame = () =>
+        canvas.evaluate((cv: HTMLCanvasElement) => {
+          const { data } = cv.getContext('2d')!.getImageData(0, 0, cv.width, cv.height);
+          let red = 0;
+          let hash = 0;
+          for (let i = 0; i < data.length; i += 4) {
+            if (data[i] > 150 && data[i + 1] < 120) red++;
+            hash = (hash * 31 + data[i] + data[i + 1] * 3 + data[i + 2] * 7) | 0;
+          }
+          return { red: red / (cv.width * cv.height), hash };
+        });
+
+      // From the start: the empty bill, nothing stamped yet.
+      await page.waitForTimeout(150);
+      const start = await frame();
+      expect(start.red, 'nothing stamped at the start').toBe(0);
+      // It moves: lines land on the bill and get stamped «UNUSED».
+      await page.waitForTimeout(3000);
+      const later = await frame();
+      expect(later.hash, 'the canvas moves').not.toBe(start.hash);
+      expect(later.red, 'the bill has been stamped').toBeGreaterThan(0.002);
+
+      // Chosen again while on screen: it starts over — the very first frame again.
+      await tab(page, 1).click();
+      await page.waitForTimeout(150);
+      const again = await frame();
+      expect(again.red, 'back to an unstamped bill').toBe(0);
+      expect(again.hash, 'the same frame it started on').toBe(start.hash);
+      await page.waitForTimeout(3000);
+      expect((await frame()).red, 'and it plays again').toBeGreaterThan(0.002);
+
+      // Pair 1 untouched by it: back there, its own timeline from 0.
+      await tab(page, 0).click();
+      await expect(sec.locator('[data-pv-story-drawing] canvas[data-pv-tetris]')).toHaveCount(1);
+      await expect(canvas).toHaveCount(0);
+      await expect(sec.locator('[data-pv-story-drawing]')).toHaveAccessibleName(tetrisLabel);
+    });
+
+    test('pair 2\'s still frame is the mock-up\'s layout: names start where «THEN» starts, the grid ends where the close ends, the counters and the bar span the grid', async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.goto(ROUTE);
+      await tab(page, 1).click();
+      const svg = page.locator('[data-pv-story-drawing] svg[data-pv-heatmap-still]');
+      await expect(svg).toHaveAttribute('viewBox', `0 0 ${heat.W} ${heat.H}`);
+      const { W, DY, GY, CW, CH, fz0, maxW, step, closeY } = heat;
+      const got = await svg.evaluate(async (el, { close, fz0, maxW, step }) => {
+        // The mock-up's closingFit(), run on the real canvas with the canon's face.
+        const css = getComputedStyle(document.documentElement);
+        const disp = css.getPropertyValue('--font-display').trim();
+        await document.fonts.load(`900 22px ${disp}`);
+        const ctx = document.createElement('canvas').getContext('2d')!;
+        let fz = fz0;
+        ctx.font = `900 ${fz}px ${disp}`;
+        while (fz > 12 && Math.max(ctx.measureText(close[0]).width, ctx.measureText(close[1]).width) > maxW) ctx.font = `900 ${(fz -= step)}px ${disp}`;
+        const w2 = ctx.measureText(close[1]).width;
+        const texts = [...el.querySelectorAll('text')].map((t) => {
+          const b = (t as SVGTextElement).getBBox();
+          return { text: t.textContent ?? '', x: +t.getAttribute('x')!, y: +t.getAttribute('y')!, tf: t.getAttribute('transform'), size: parseFloat((t as SVGTextElement).style.fontSize), left: b.x, right: b.x + b.width };
+        });
+        const rects = [...el.querySelectorAll('rect')].map((r) => ({ x: +r.getAttribute('x')!, y: +r.getAttribute('y')!, w: +r.getAttribute('width')!, h: +r.getAttribute('height')!, tf: r.getAttribute('transform'), style: r.getAttribute('style') ?? '' }));
+        return { fz, w2, texts, rects };
+      }, { close: heatmap.close, fz0, maxW, step });
+      const text = (t: string) => got.texts.find((x) => x.text === t)!;
+      // Everything but the paper is the mock-up's 400-wide composition moved DY down: its own
+      // coordinates (x, y and the rendered box) are the mock-up's, the move is the transform.
+      expect(got.rects[0], 'paper over the whole board').toMatchObject({ x: 0, y: 0, w: W, h: heat.H, tf: null });
+      const moved = `matrix(1 0 0 1 0 ${DY})`;
+      expect(got.texts.every((t) => t.tf === moved) && got.rects.slice(1).every((r) => r.tf === moved), `all of it moved ${DY} down`).toBe(true);
+      const left = W / 2 - got.w2 / 2;
+      const gridEnd = W / 2 + got.w2 / 2;
+      const GX = gridEnd - 5 * CW;
+      // The close: the size closingFit() gives on the canvas, where the mock-up puts it.
+      expect(text(heatmap.close[0]).size, 'the close at the canvas\'s size').toBe(got.fz);
+      expect(text(heatmap.close[1]).size).toBe(got.fz);
+      expect(text(heatmap.close[0])).toMatchObject({ x: W / 2, y: GY + 4 * CH + closeY });
+      expect(text(heatmap.close[1]).y).toBeCloseTo(GY + 4 * CH + closeY + got.fz * 1.15, 1);
+      // As drawn: «THEN …» starts at `left` and ends at the grid's end (the rendered box, ±1 px).
+      expect(Math.abs(text(heatmap.close[1]).left - left), '«THEN» starts where the server put the names').toBeLessThanOrEqual(1);
+      expect(Math.abs(text(heatmap.close[1]).right - gridEnd), 'the close ends where the grid ends').toBeLessThanOrEqual(1);
+      // The department names start where «THEN» starts.
+      for (const name of heatmap.rows) expect(Math.abs(text(name).x - left), `${name} starts at «THEN»`).toBeLessThanOrEqual(0.5);
+      // The grid: 4 × 5 cells of CW × CH (2 px of paper around each), ending where the close ends.
+      const cells = got.rects.filter((r) => Math.abs(r.w - (CW - 4)) < 0.01 && Math.abs(r.h - (CH - 4)) < 0.01);
+      expect(cells, 'twenty cells').toHaveLength(20);
+      expect(Math.abs(Math.min(...cells.map((c) => c.x)) - 2 - GX), 'the grid starts at GX').toBeLessThanOrEqual(0.5);
+      expect(Math.abs(Math.max(...cells.map((c) => c.x + c.w)) + 2 - gridEnd), 'the grid ends where the close ends').toBeLessThanOrEqual(0.5);
+      expect(Math.min(...cells.map((c) => c.y)) - 2).toBeCloseTo(GY, 1);
+      // The counters above and the trust bar below span the grid exactly.
+      expect(Math.abs(text(`${heatmap.built}  04`).x - GX), 'SYSTEMS BUILT starts at the grid').toBeLessThanOrEqual(0.5);
+      expect(Math.abs(got.texts.find((t) => t.text.startsWith(heatmap.saved))!.x - gridEnd), 'HOURS SAVED ends at the grid\'s end').toBeLessThanOrEqual(0.5);
+      expect(Math.abs(text(`${heatmap.unusedL}  0`).x - GX), 'the licences start at the grid').toBeLessThanOrEqual(0.5);
+      const track = got.rects.filter((r) => Math.abs(r.h - 6) < 0.01 && r.style.includes('--color-surface-3'));
+      expect(track, 'one trust track').toHaveLength(1);
+      expect(Math.abs(track[0].x + track[0].w - gridEnd), 'the trust bar ends at the grid\'s end').toBeLessThanOrEqual(0.5);
     });
 
     test('1440: the still frame is drawn at the type sizes the canvas would use', async ({ page }) => {
@@ -615,10 +837,10 @@ test.describe('new home page preview', () => {
       const heights = new Set<number>();
       for (const i of [0, 1, 2, 3, 0]) {
         await tab(page, i).click();
-        if (i === 0) await expect(t2(page).locator('[data-pv-story-drawing] canvas')).toHaveCount(1);
+        if (i <= 1) await expect(t2(page).locator('[data-pv-story-drawing] canvas')).toHaveCount(1);
         await page.waitForTimeout(150);
         const g = await stageGeometry(page);
-        expect(g.tag, `pair ${i + 1}: drawn as`).toBe(i === 0 ? 'canvas' : 'svg');
+        expect(g.tag, `pair ${i + 1}: drawn as`).toBe(i <= 1 ? 'canvas' : 'svg');
         expect(Math.abs(g.box.top - g.list.top), `pair ${i + 1}: box top = list top`).toBeLessThanOrEqual(2);
         expect(Math.abs(g.box.bottom - g.list.bottom), `pair ${i + 1}: box bottom = list bottom`).toBeLessThanOrEqual(2);
         expectContained(g, `pair ${i + 1}`);
@@ -683,6 +905,17 @@ test.describe('new home page preview', () => {
         await expect(sec.getByText(p4.solutionText, { exact: true })).toBeVisible();
         await expect(sec.getByText(p4.problem, { exact: true }).locator('xpath=..')).toHaveClass(/is-struck/);
         await expect(sec.getByText(p1.problem, { exact: true }).locator('xpath=..')).toHaveClass(/is-struck/);
+
+        // Pair 2: its last frame, still — chosen once or twice — while its text plays.
+        await tab(page, 1).click();
+        const sol2 = sec.getByRole('heading', { level: 3, name: problem.pairs[1].solution });
+        expect(await sol2.locator('.pv-rest').textContent(), 'pair 2\'s way out is being written').not.toBe('');
+        expect(await stageShowsFinalFrame(page, 1)).toBe(true);
+        await expectHeatmapStill(page);
+        await tab(page, 1).click();
+        await page.waitForTimeout(300);
+        expect(await stageShowsFinalFrame(page, 1), 'no motion in pair 2\'s drawing').toBe(true);
+        await expect(sol2.locator('.pv-done')).toHaveText(problem.pairs[1].solution, { timeout: 5000 });
 
         expect(scripts.some((u) => TEXT_CHUNK.test(u)), 'text motion downloaded').toBe(true);
         expect(scripts.filter((u) => DRAWING_CHUNK.test(u)), 'drawing motion NOT downloaded').toEqual([]);

@@ -14,7 +14,8 @@
  *   - Pair 1 starts when the stage comes into view. Nothing moves on by
  *     itself; pairs already seen stay struck through.
  *   - Choosing the pair already on screen starts its drawing over if it is a
- *     timeline (pair 1's, ./story-tetris.ts); the text stays as it is.
+ *     timeline (pair 1's, ./story-tetris.ts, and pair 2's, ./story-heatmap.ts);
+ *     the text stays as it is.
  *   - Each frame <template> carries its own `data-pv-label`: the stage's
  *     accessible name follows the pair on it.
  *

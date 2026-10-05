@@ -19,22 +19,25 @@
  * text panels after it, so the tablist owns tabs and nothing else. The wrapper
  * is `display: contents` and the grid puts each panel right under its tab.
  *
- * The drawing is two separate, provisional pieces that will be swapped for
- * video: pair 1's Tetris (./story-tetris.ts) and the scenes of pairs 2–4
- * (./story-drawing.ts). Their four final frames travel as <template>s, inert
+ * The drawing is three separate, provisional pieces that will be swapped for
+ * video: pair 1's Tetris (./story-tetris.ts), pair 2's heat map
+ * (./story-heatmap.ts) and the scenes of pairs 3–4 (./story-drawing.ts). Their
+ * four final frames travel as <template>s, inert
  * and out of the DOM, each with its own name, so changing pair without the
  * motion module costs no script.
  */
 import { problem } from './copy';
 import { storyDrawingMarkup, STORY_PAIRS } from './story-drawing';
 import { tetrisFinalMarkup, TETRIS_PAIR } from './story-tetris';
+import { heatmapFinalMarkup, HEATMAP_PAIR } from './story-heatmap';
 
-/* Final frame and name of each pair: pair 1 is the Tetris (./story-tetris.ts,
-   its last frame drawn as SVG by the same code the canvas runs), pairs 2–4 the
-   provisional scenes of ./story-drawing.ts. */
+/* Final frame and name of each pair: pair 1 is the Tetris (./story-tetris.ts),
+   pair 2 the heat map (./story-heatmap.ts) — each last frame drawn as SVG by
+   the same code its canvas runs — and pairs 3–4 the provisional scenes of
+   ./story-drawing.ts. */
 const frames = Array.from({ length: STORY_PAIRS }, (_, i) => ({
-  svg: i === TETRIS_PAIR ? tetrisFinalMarkup() : storyDrawingMarkup(i, 1),
-  label: i === TETRIS_PAIR ? problem.tetrisLabel : problem.visualLabel,
+  svg: i === TETRIS_PAIR ? tetrisFinalMarkup() : i === HEATMAP_PAIR ? heatmapFinalMarkup() : storyDrawingMarkup(i, 1),
+  label: i === TETRIS_PAIR ? problem.tetrisLabel : i === HEATMAP_PAIR ? problem.heatmapLabel : problem.visualLabel,
 }));
 ---
 
@@ -171,10 +174,11 @@ const frames = Array.from({ length: STORY_PAIRS }, (_, i) => ({
     background: var(--color-bg);
     border: 1px solid var(--color-border);
   }
-  /* The drawing is 4:5 (./story-tetris.ts's 400 × 500 board), scaled to fit the
-     box whole and centred: never stretched, never cropped; what is left over at
-     the sides is the stage's own paper. Pairs 2–4 are square scenes, centred in
-     that same 4:5 (their SVG's own `meet`). */
+  /* The drawing is 4:5 (the 400 × 500 board of ./story-tetris.ts and
+     ./story-heatmap.ts), scaled to fit the box whole and centred: never
+     stretched, never cropped; what is left over at the sides is the stage's own
+     paper. Pairs 3–4 are square scenes, centred in that same 4:5 (their SVG's
+     own `meet`). */
   .pv-story-canvas :global(svg),
   .pv-story-canvas :global(canvas) {
     display: block;
