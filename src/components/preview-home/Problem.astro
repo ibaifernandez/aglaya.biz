@@ -217,7 +217,7 @@ const frames = Array.from({ length: STORY_PAIRS }, (_, i) => ({
   .pv-story.is-sel .pv-tab:focus-visible,
   .pv-story.is-sel .pv-panel:focus-visible {
     outline: 2px solid var(--color-brand);
-    outline-offset: 3px;
+    outline-offset: 0;
   }
   /* Motion allowed: only the chosen pair is open. A closed tab is a whole card. */
   .pv-story.is-sel:not(.is-calm) .pv-panel:not(.is-on) { display: none; }
