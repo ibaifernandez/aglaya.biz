@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T2 · animación 2 · Mapa de calor — maqueta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap">
+<style>
+:root{--bg:#fff;--surface:#f5f5f4;--ink:#0a0a0a;--muted:rgba(10,10,10,.68);--faint:rgba(10,10,10,.45);--line:rgba(10,10,10,.10);--brand:#e8003d;--brand-ink:#b5002f;--green:#9fc243;
+  --f-display:"Outfit","Arial Black",system-ui,sans-serif;--f-body:"Inter",system-ui,sans-serif;--f-mono:"Space Mono",ui-monospace,monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--ink);font:16px/1.6 var(--f-body);-webkit-font-smoothing:antialiased}
+h3{font-family:var(--f-display);font-weight:900;text-transform:uppercase;letter-spacing:-.02em;line-height:.92;margin:0}
+p{margin:0}
+.mono{font-family:var(--f-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase}
+.note{background:#0a0a0a;color:#fcfcfc;font:12px/1.5 var(--f-mono);padding:14px clamp(16px,4vw,56px)}
+.note b{color:var(--green)}
+.wrap{max-width:1200px;margin:0 auto;padding:48px clamp(16px,4vw,56px)}
+.board{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(24px,4vw,56px);align-items:start}
+.tab{background:var(--bg);border:1px solid var(--ink);border-left:4px solid var(--brand);padding:18px 20px}
+.n{color:var(--brand-ink)}
+.prob-h{font-size:clamp(20px,2vw,26px);margin-top:6px;color:var(--faint);text-decoration:line-through;text-decoration-color:var(--brand);text-decoration-thickness:.09em}
+.prob-p{color:var(--muted);margin-top:10px;font-size:15px}
+.sol-h{margin-top:16px;font-size:clamp(22px,2.2vw,30px);color:var(--brand-ink)}
+.sol-p{margin-top:10px;font-size:15px}
+.stage{position:relative;aspect-ratio:4/5;background:var(--bg);border:1px solid var(--line)}
+.stage canvas{display:block;width:100%;height:100%}
+.ctrl{display:flex;gap:10px;align-items:center;margin-top:14px}
+.ctrl button{font:700 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--ink);background:var(--ink);color:#fff;padding:10px 12px;cursor:pointer}
+.ctrl span{color:var(--faint)}
+@media (max-width:860px){.board{grid-template-columns:1fr}.stage{order:-1}}
+</style>
+</head>
+<body>
+<div class="note"><b>MAQUETA · ANIMACIÓN 2 · «EL MAPA DE CALOR DE TU SEMANA»</b> — Antes: la factura mensual de IA crece línea a línea, casi todo «UNUSED», y la confianza del equipo baja (aún no se sabe dónde se pierden las horas). Mensaje. Después: se mide primero, se ataca el foco más caliente, se enfría, y se crece desde lo que funciona.</div>
+<div class="wrap">
+  <div class="board">
+    <div>
+      <div class="tab">
+        <div class="n mono">Problem 2 of 4</div>
+        <h3 class="prob-h">Buying at random</h3>
+        <p class="prob-p">Licences nobody uses, data in places it shouldn't be, and a team that stops trusting AI before it does anything useful.</p>
+        <h3 class="sol-h">Start where it pays</h3>
+        <p class="sol-p">We find where your team loses the most hours, put AI right there first and grow from what works.</p>
+      </div>
+      <p class="mono" style="margin-top:14px;color:var(--faint)">(texto actual de la pareja 2, sin tocar)</p>
+    </div>
+    <div>
+      <div class="stage"><canvas id="cv" width="800" height="1000" role="img" aria-label="Before: licences land at random on quiet parts of your team's week while the hours really lost keep burning, and the team's trust in AI drops. After: we measure first, put one system on the hottest spot, it cools down, and we grow from there."></canvas></div>
+      <div class="ctrl"><button id="replay" type="button">Replay</button><span class="mono" id="phase"></span></div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var cv=document.getElementById('cv'),ctx=cv.getContext('2d'),S=2;
+  var Q=new URLSearchParams(location.search),EXPORT=Q.get('export')==='1';
+  if(EXPORT){cv.width=1080;cv.height=1350;S=1080/400;}
+  var LANG=Q.get('lang')==='es'?'es':'en';
+  var TX={
+    en:{rows:['SALES','OPS','FINANCE','SUPPORT'],days:['MON','TUE','WED','THU','FRI'],start:'START HERE',next:'NEXT',bill:'MONTHLY AI BILL',seats:'SEATS USED',perMonth:'$ / MONTH',unused:'UNUSED',total:'TOTAL',money:function(v){return '$'+v.toLocaleString('en-US')+' / MONTH';},price:function(v){return '$'+v;},
+        lic:'LICENCES PAID',saved:'HOURS SAVED / WEEK',built:'SYSTEMS BUILT',trust:'TEAM TRUST IN AI',unusedL:'UNUSED LICENCES',gains:['Every lead followed up the same day.','Orders go through without re-typing.','Month-end closes without the scramble.','Customers answered in minutes.'],m1:'A BIGGER BILL EVERY MONTH.',m2a:'AND NOTHING GOT',words:['FASTER.','CHEAPER.','SIMPLER.','MORE EFFICIENT.','BETTER.'],measure:'WE MEASURE FIRST',sys:'AI SYSTEM',c1:'START WHERE IT PAYS.',c2:'THEN GROW FROM WHAT WORKS.'},
+    es:{rows:['VENTAS','OPERACIONES','FINANZAS','SOPORTE'],days:['LUN','MAR','MIÉ','JUE','VIE'],start:'EMPIEZA AQUÍ',next:'SIGUIENTE',bill:'FACTURA MENSUAL DE IA',seats:'PUESTOS USADOS',perMonth:'€ / MES',unused:'SIN USO',total:'TOTAL',money:function(v){return v.toLocaleString('es-ES')+' € / MES';},price:function(v){return v+' €';},
+        lic:'LICENCIAS PAGADAS',saved:'HORAS AHORRADAS / SEMANA',built:'SISTEMAS CONSTRUIDOS',trust:'CONFIANZA DEL EQUIPO EN LA IA',unusedL:'LICENCIAS SIN USO',gains:['Cada lead, atendido el mismo día.','Pedidos que fluyen sin teclear dos veces.','Cierres de mes sin carreras.','Clientes atendidos en minutos.'],m1:'CADA MES, UNA FACTURA MÁS GRANDE.',m2a:'Y NADA ES',words:['MÁS RÁPIDO.','MÁS BARATO.','MÁS SENCILLO.','MÁS EFICIENTE.','MEJOR.'],measure:'PRIMERO, MEDIMOS',sys:'SISTEMA IA',c1:'EMPIEZA DONDE RINDE.',c2:'Y CRECE DESDE LO QUE FUNCIONA.'}
+  }[LANG];
+  var CALM=matchMedia('(prefers-reduced-motion: reduce)').matches||location.hash==='#planta-baja';
+  var INK='#0a0a0a',RED='#e8003d',REDINK='#b5002f',MONO='"Space Mono", monospace',DISP='Outfit, sans-serif',BODY='Inter, sans-serif';
+  // La semana del equipo: filas = departamentos, columnas = días. Calor = horas perdidas en trabajo manual.
+  var ROWSN=TX.rows,DAYS=TX.days;
+  var GX=92,GY=96,CW=56,CH=40;
+  var HEAT=[ // horas perdidas por casilla (0–6)
+    [6,5,1,0.5,1],
+    [1,0.5,5,4,1],
+    [0.5,1,0.5,3,4],
+    [1,3,3,1,0.5]];
+  var CLUSTERS=[ // de mayor a menor: el orden en que se atacan
+    {cells:[[0,0],[0,1]],hours:11,tag:TX.start},
+    {cells:[[1,2],[1,3]],hours:9,tag:TX.next},
+    {cells:[[2,3],[2,4]],hours:7,tag:TX.next},
+    {cells:[[3,1],[3,2]],hours:6,tag:TX.next}];
+  // ANTES: la factura mensual de IA. Se compra sin medir: casi todo sin usar.
+  var BILL=[['CHATGPT TEAM',3,10,300],['COPILOT',1,8,240],['JASPER',0,5,245],['NOTION AI',2,12,120],['ZAPIER',1,1,70],['GEMINI',0,10,200],['SYNTHESIA',0,3,270],['OTTER',1,6,100],['MIDJOURNEY',0,4,120]];
+  var LIC=BILL.map(function(){return [0,0];});
+  var tb=0.6,dur=0.6,before=[];
+  LIC.forEach(function(c,i){before.push({r:c[0],c:c[1],t0:tb,dur:dur});tb+=dur+0.12;dur=Math.max(0.28,dur*0.88);});
+  var T_B_END=tb+0.6,FADE=0.8,T_MSG=T_B_END+FADE+0.2,L1=(LANG==='es'?2.0:1.8),WORD=0.7,L2=0.5+5*0.7+0.9,MSG_OUT=T_MSG+L1+L2,MSG_FADE=0.6;
+  var T_A=MSG_OUT+MSG_FADE+0.2;          // vuelve la semana, sin licencias
+  var T_SCAN=T_A+0.6,SCAN_DUR=1.6;       // se mide primero
+  var STEP=3.2;                          // por foco: marcar · colocar · enfriar
+  var T_K0=T_SCAN+SCAN_DUR+0.3;
+  var T_CAP=T_K0+CLUSTERS.length*STEP+1.8,CAP2=1.8,T_END=T_CAP+CAP2+3.2;
+  function cl(v){return v<0?0:v>1?1:v;}function ease(v){return v<.5?2*v*v:1-Math.pow(-2*v+2,2)/2;}function lerp(a,b,f){return a+(b-a)*f;}
+  function mix(a,b,f){var A=[1,3,5].map(function(i){return parseInt(a.substr(i,2),16);}),B=[1,3,5].map(function(i){return parseInt(b.substr(i,2),16);});return 'rgb('+A.map(function(v,i){return Math.round(lerp(v,B[i],f));}).join(',')+')';}
+  function heatCol(h){return h<=0.01?'#f4f4f4':mix('#f4f4f4','#e8003d',Math.pow(h/6,1.1));}
+  function cellXY(r,c){return {x:GX+c*CW,y:GY+r*CH};}
+  function coolOf(T,r,c){ // 1 = enfriada del todo
+    for(var k=0;k<CLUSTERS.length;k++){var t0=T_K0+k*STEP;var hit=CLUSTERS[k].cells.some(function(q){return q[0]===r&&q[1]===c;});
+      if(hit)return ease(cl((T-(t0+1.5))/1.0));}
+    return 0;}
+  function savedAt(T){var s=0;CLUSTERS.forEach(function(k,i){var t0=T_K0+i*STEP;s+=k.hours*ease(cl((T-(t0+1.5))/1.0));});return Math.round(s);}
+  function trustAt(T){ // baja con cada licencia, sube con cada foco resuelto
+    var v=0.62;before.forEach(function(b){v-=0.05*cl((T-b.t0-b.dur)/0.3);});
+    CLUSTERS.forEach(function(k,i){var t0=T_K0+i*STEP;v+=0.22*ease(cl((T-(t0+1.6))/1.0));});return Math.max(0.05,Math.min(0.95,v));}
+  function closingFit(){var fz=22;ctx.font='900 '+fz+'px '+DISP;while(fz>12&&Math.max(ctx.measureText(TX.c1).width,ctx.measureText(TX.c2).width)>360){fz-=.5;ctx.font='900 '+fz+'px '+DISP;}return {fz:fz,left:200-ctx.measureText(TX.c2).width/2};}
+  function drawGrid(T,alpha,showLic,scanX){
+    ctx.save();ctx.globalAlpha=alpha;
+    var LBL=closingFit().left; // los departamentos empiezan donde empieza la última línea del cierre
+    ctx.font='700 8px '+MONO;ctx.fillStyle='rgba(10,10,10,.55)';ctx.textAlign='left';ctx.textBaseline='middle';
+    ROWSN.forEach(function(n,r){ctx.fillText(n,LBL,GY+r*CH+CH/2);});
+    ctx.textAlign='center';DAYS.forEach(function(d,c){ctx.fillText(d,GX+c*CW+CW/2,GY-10);});
+    var pulse=0.5+0.5*Math.sin(T*5);
+    for(var r=0;r<4;r++)for(var c=0;c<5;c++){
+      var p=cellXY(r,c),h=HEAT[r][c]*(1-coolOf(T,r,c));
+      var hot=HEAT[r][c]>=3&&coolOf(T,r,c)<0.05;
+      ctx.fillStyle=heatCol(h);ctx.fillRect(p.x+2,p.y+2,CW-4,CH-4);
+      if(hot&&T<T_A){ctx.globalAlpha=alpha*0.25*pulse;ctx.fillStyle='#fff';ctx.fillRect(p.x+2,p.y+2,CW-4,CH-4);ctx.globalAlpha=alpha;}
+      var revealed=scanX==null||p.x+CW/2<=scanX;
+      if(HEAT[r][c]>=3&&revealed){ctx.fillStyle=h>2.5?'#fff':'rgba(10,10,10,.5)';ctx.font='700 9px '+MONO;ctx.fillText(Math.round(h)+'H',p.x+CW/2,p.y+CH/2);}
+    }
+    if(showLic){before.forEach(function(b){if(T<b.t0)return;var f=cl((T-b.t0)/b.dur),p=cellXY(b.r,b.c);
+      var y=lerp(-20,p.y+CH/2,f*f);ctx.fillStyle=INK;ctx.fillRect(p.x+CW/2-19,y-7,38,14);ctx.fillStyle='#fff';ctx.font='700 7px '+MONO;ctx.fillText('$ LICENCE',p.x+CW/2,y+.5);});}
+    ctx.restore();
+  }
+  function drawBill(T,alpha){
+    var X=40,W=320,Y=GY-34+22,RH=17; // centrada en el lienzo
+    ctx.save();ctx.globalAlpha=alpha;
+    ctx.fillStyle=INK;ctx.fillRect(X,Y,W,22);ctx.fillStyle='#fff';ctx.font='700 9px '+MONO;ctx.textAlign='left';ctx.textBaseline='middle';
+    ctx.fillText(TX.bill,X+8,Y+11);ctx.textAlign='right';ctx.fillText(TX.seats,X+W-70,Y+11);ctx.fillText(TX.perMonth,X+W-8,Y+11);
+    // el esqueleto de la factura está desde el principio: filas vacías esperando sus líneas
+    for(var e=0;e<BILL.length;e++){var ey=Y+26+e*RH;ctx.fillStyle=e%2?'#fcfcfc':'#f7f7f7';ctx.fillRect(X,ey,W,RH-1);
+      ctx.fillStyle='#ececec';ctx.fillRect(X+8,ey+RH/2-1.5,60,3);ctx.fillRect(X+W-100,ey+RH/2-1.5,28,3);ctx.fillRect(X+W-38,ey+RH/2-1.5,30,3);}
+    var total=0;
+    before.forEach(function(b,i){ if(T<b.t0)return; var f=cl((T-b.t0)/b.dur),L=BILL[i],y=Y+26+i*RH;
+      ctx.globalAlpha=alpha*cl(f*1.6);
+      ctx.fillStyle=i%2?'#fafafa':'#f2f2f2';ctx.fillRect(X,y,W,RH-1);
+      ctx.fillStyle=INK;ctx.font='700 8px '+MONO;ctx.textAlign='left';ctx.fillText(L[0],X+8,y+RH/2);
+      ctx.textAlign='right';ctx.fillText(L[1]+' / '+L[2],X+W-70,y+RH/2);ctx.fillText(TX.price(L[3]),X+W-8,y+RH/2);
+      if(f>=1)total+=L[3];
+      var unused=L[1]/L[2]<0.35;
+      if(unused&&f>=1){var st=cl((T-b.t0-b.dur)/0.18),sx=X+W*0.47;ctx.save();ctx.globalAlpha=alpha*st;ctx.translate(sx,y+RH/2);ctx.rotate(-0.08);var sc=1.6-0.6*st;ctx.scale(sc,sc);
+        ctx.strokeStyle=RED;ctx.lineWidth=1.3;ctx.strokeRect(-24,-6,48,12);ctx.fillStyle=RED;ctx.font='700 7.5px '+MONO;ctx.textAlign='center';ctx.fillText(TX.unused,0,.5);ctx.restore();}
+    });
+    var ty=Y+26+BILL.length*RH+4;ctx.globalAlpha=alpha;ctx.fillStyle=INK;ctx.fillRect(X,ty,W,2);
+    ctx.font='900 13px '+DISP;ctx.textAlign='left';ctx.fillText(TX.total,X+8,ty+14);ctx.textAlign='right';ctx.fillStyle=total>0?REDINK:INK;ctx.fillText(TX.money(total),X+W-8,ty+14);
+    ctx.restore();
+  }
+  function hud(T,lic,saved,phaseAfter){
+    // en el antes, todo alineado con la factura (que empieza 40 px antes que la cuadrícula)
+    var LX=phaseAfter?GX:40,LW=phaseAfter?5*CW:320,HY=phaseAfter?52:52+22;
+    var hs=9;ctx.font='700 '+hs+'px '+MONO;while(hs>6&&ctx.measureText(TX.built+'  00'+TX.saved+'  00').width>LW-12){hs-=.25;ctx.font='700 '+hs+'px '+MONO;}ctx.textBaseline='alphabetic';ctx.textAlign='left';
+    if(!phaseAfter){ctx.fillStyle='rgba(10,10,10,.6)';ctx.fillText(TX.lic+'  '+(lic<10?'0':'')+lic,LX,HY);}
+    else{ctx.fillStyle=saved>0?REDINK:'rgba(10,10,10,.6)';ctx.fillText(TX.built+'  0'+CLUSTERS.filter(function(k,i){return T>=T_K0+i*STEP+1.5;}).length,LX,HY);}
+    ctx.textAlign='right';ctx.fillStyle=saved>0?REDINK:'rgba(10,10,10,.6)';ctx.fillText(TX.saved+'  '+saved,LX+LW,HY);
+    // confianza del equipo
+    var tr=trustAt(T),y=(T<T_A?GY+4*CH+52+22:GY+4*CH+22);
+    if(!phaseAfter){
+      ctx.textAlign='left';ctx.fillStyle='rgba(10,10,10,.6)';ctx.fillText(TX.trust,LX,y-6);
+      ctx.fillStyle='#ececec';ctx.fillRect(LX,y,LW,6);ctx.fillStyle=tr<0.35?RED:INK;ctx.fillRect(LX,y,LW*tr,6);
+    } else {
+      // Después: no solo horas. A la izquierda, las licencias sin uso que se cancelan (más barato, más sencillo); a la derecha, la confianza (mejor).
+      var half=(LW-16)/2,UN=BILL.filter(function(L){return L[1]/L[2]<0.35;}).length,done=0;
+      CLUSTERS.forEach(function(k,i){if(T>=T_K0+i*STEP+1.6)done++;});
+      var left=Math.max(0,UN-Math.round(done*UN/CLUSTERS.length));
+      ctx.textAlign='left';ctx.fillStyle=left<UN?REDINK:'rgba(10,10,10,.6)';ctx.fillText(TX.unusedL+'  '+left,LX,y-6);
+      var cw=Math.min(14,(half-(UN-1)*3)/UN);
+      for(var u=0;u<UN;u++){var ux=LX+u*(cw+3),gone=u>=left;ctx.fillStyle=gone?'#ececec':INK;ctx.fillRect(ux,y-1,cw,8);
+        if(gone){ctx.strokeStyle=RED;ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(ux-1,y+7);ctx.lineTo(ux+cw+1,y-1);ctx.stroke();}}
+      var RX=LX+half+16;ctx.fillStyle='rgba(10,10,10,.6)';ctx.save();var ts=parseFloat(ctx.font);while(ts>5.5&&ctx.measureText(TX.trust).width>half){ts-=.25;ctx.font='700 '+ts+'px '+MONO;}ctx.fillText(TX.trust,RX,y-6);ctx.restore();
+      ctx.fillStyle='#ececec';ctx.fillRect(RX,y,half,6);ctx.fillStyle=tr<0.35?RED:INK;ctx.fillRect(RX,y,half*tr,6);
+    }
+  }
+  function draw(T){
+    ctx.setTransform(S,0,0,S,0,0);ctx.fillStyle='#fff';ctx.fillRect(0,0,400,500);ctx.translate(0,50); // 4:5: la composición de 400 centrada en 500
+    var phase='',lic=0;before.forEach(function(b){if(T>=b.t0+b.dur)lic++;});
+    // ANTES
+    if(T<T_B_END+FADE){var a=1-cl((T-T_B_END)/FADE);drawBill(T,a);phase='BEFORE · buying at random';}
+    // MENSAJE
+    if(T>=T_MSG&&T<MSG_OUT+MSG_FADE){var out=1-cl((T-MSG_OUT)/MSG_FADE),a1=cl((T-T_MSG)/0.35)*out,a2=cl((T-T_MSG-L1)/0.35)*out;
+      ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='900 21px '+DISP;
+      var mz=21;ctx.font='900 '+mz+'px '+DISP;while(mz>11&&ctx.measureText(TX.m1).width>364){mz-=.5;ctx.font='900 '+mz+'px '+DISP;}
+      var yb=GY+1.2*CH+7; // centrado entre el contador de arriba y la barra de abajo
+      ctx.globalAlpha=a1;ctx.fillStyle=INK;ctx.fillText(TX.m1,200,yb);
+      ctx.globalAlpha=a2;ctx.fillText(TX.m2a,200,yb+1.05*CH);
+      // la palabra que rota: no es solo rapidez, son todos los valores (y acaba en el que los resume)
+      var e2=T-T_MSG-L1-0.5,wi=Math.max(0,Math.min(TX.words.length-1,Math.floor(e2/WORD))),wl=e2-wi*WORD,roll=wi<TX.words.length-1||wl<WORD?cl(wl/0.16):1;
+      if(e2>=0){ctx.save();ctx.beginPath();ctx.rect(0,yb+1.55*CH,400,1.05*CH);ctx.clip();
+        var wy=yb+2.1*CH;ctx.fillStyle=RED;ctx.globalAlpha=a2;
+        ctx.fillText(TX.words[wi],200,wy+(1-ease(roll))*CH*0.9);
+        if(wi>0&&roll<1){ctx.globalAlpha=a2*(1-roll);ctx.fillText(TX.words[wi-1],200,wy-ease(roll)*CH*0.9);}
+        ctx.restore();}
+      ctx.restore();phase='BEFORE · …';}
+    // DESPUÉS
+    var after=T>=T_A;
+    if(after){var a2b=cl((T-T_A)/0.5);
+      var scanX=T<T_SCAN?GX:(T<T_SCAN+SCAN_DUR?lerp(GX,GX+5*CW,cl((T-T_SCAN)/SCAN_DUR)):null);
+      drawGrid(T,a2b,false,scanX);
+      if(T>=T_SCAN&&T<T_SCAN+SCAN_DUR+0.4){var sa=1-cl((T-T_SCAN-SCAN_DUR)/0.4),sx=lerp(GX,GX+5*CW,cl((T-T_SCAN)/SCAN_DUR));
+        ctx.save();ctx.globalAlpha=sa;ctx.fillStyle=RED;ctx.fillRect(sx-1,GY-2,2,4*CH+4);ctx.font='700 8px '+MONO;ctx.textAlign='center';ctx.fillStyle=REDINK;if(false)ctx.fillText(TX.measure,GX+2.5*CW,GY+4*CH+50);ctx.restore();}
+      CLUSTERS.forEach(function(k,i){var t0=T_K0+i*STEP;if(T<t0)return;
+        var mark=cl((T-t0)/0.4),done=T>=t0+2.5,fade=done?1-cl((T-t0-2.5)/0.5):1;
+        var xs=k.cells.map(function(q){return q[1];}),ys=k.cells.map(function(q){return q[0];});
+        var x0=GX+Math.min.apply(null,xs)*CW,y0=GY+Math.min.apply(null,ys)*CH,w=(Math.max.apply(null,xs)-Math.min.apply(null,xs)+1)*CW,h=(Math.max.apply(null,ys)-Math.min.apply(null,ys)+1)*CH;
+        ctx.save();ctx.globalAlpha=mark*fade;ctx.strokeStyle=INK;ctx.lineWidth=2.5;ctx.strokeRect(x0,y0,w,h);
+        ctx.font='700 8px '+MONO;var tag=k.tag+' · '+k.hours+'H',tw=ctx.measureText(tag).width+10;
+        ctx.textAlign='center';ctx.textBaseline='middle';
+        // el sistema que se coloca justo ahí
+        var drop=cl((T-t0-0.8)/0.5);if(drop>0){var cy=lerp(y0-20,y0+h/2,ease(drop));ctx.globalAlpha=fade*Math.min(1,drop*2);
+          ctx.fillStyle=RED;var sysL=TX.sys+' #'+(i+1),sw=Math.max(60,ctx.measureText(sysL).width+12);var chx=Math.min(Math.max(x0+w/2,GX+sw/2),GX+5*CW-sw/2);ctx.fillRect(chx-sw/2,cy-8,sw,16);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(sysL,chx,cy+.5);}
+        ctx.restore();});
+      phase=T<T_K0?'AFTER · measure first':(T<T_CAP?'AFTER · start where it pays, then the next':'AFTER · grow from what works');
+    }
+    hud(T,after?0:lic,after?savedAt(T):0,after);
+    // Beneficio de cada área: aparece al enfriarse su foco, lo sustituye el siguiente, el último se funde antes del cierre
+    if(after){CLUSTERS.forEach(function(k,i){
+        var tin=T_K0+i*STEP+0.8, tout=(i<CLUSTERS.length-1)?T_K0+(i+1)*STEP+0.4:T_CAP-0.6; // entra con su «AI SYSTEM», sale justo antes del siguiente
+        var fin=cl((T-tin)/0.4),fout=cl((T-tout)/0.35),ga=fin*(1-fout);if(ga<=0)return;
+        var dy=(1-ease(fin))*8-ease(fout)*8,gy=GY+4*CH+64+dy,dept=ROWSN[k.cells[0][0]];
+        ctx.save();ctx.globalAlpha=ga;ctx.textAlign='center';ctx.textBaseline='middle';
+        ctx.font='700 9px '+MONO;ctx.fillStyle=REDINK;ctx.fillText(dept,200,gy);
+        var gz=16;ctx.font='900 '+gz+'px '+DISP;while(gz>10&&ctx.measureText(TX.gains[i].toUpperCase()).width>360){gz-=.5;ctx.font='900 '+gz+'px '+DISP;}
+        ctx.fillStyle=INK;ctx.fillText(TX.gains[i].toUpperCase(),200,gy+18);ctx.restore();});}
+    // CIERRE
+    if(T>=T_CAP){var c1=cl((T-T_CAP)/0.4),c2=cl((T-T_CAP-CAP2)/0.4);ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';
+      var fz=22;ctx.font='900 '+fz+'px '+DISP;while(fz>12&&Math.max(ctx.measureText(TX.c1).width,ctx.measureText(TX.c2).width)>360){fz-=.5;ctx.font='900 '+fz+'px '+DISP;}
+      ctx.globalAlpha=c1;ctx.fillStyle=REDINK;ctx.fillText(TX.c1,200,GY+4*CH+66);
+      ctx.globalAlpha=c2;ctx.fillStyle=INK;ctx.fillText(TX.c2,200,GY+4*CH+66+fz*1.15);ctx.restore();}
+    var el=document.getElementById('phase');if(el)el.textContent=phase;
+  }
+  var start=0,raf=0;
+  function loop(now){var T=(now-start)/1000;draw(Math.min(T,T_END));if(T<T_END)raf=requestAnimationFrame(loop);}
+  function play(){cancelAnimationFrame(raf);start=performance.now();raf=requestAnimationFrame(loop);}
+  document.getElementById('replay').addEventListener('click',function(){CALM?draw(T_END):play();});
+  if(EXPORT){window.__draw=function(T){draw(T);};window.__T_END=T_END;}
+  function layout(){var cf=closingFit(),w=(200-cf.left)*2;GX=cf.left+w-5*CW;} // cuadrícula termina donde termina el cierre
+  layout();
+  var go=function(){ layout(); if(EXPORT){window.__ready=true;return;} var mt=location.hash.match(/^#t=([\d.]+)/); if(mt){draw(+mt[1]);return;} if(CALM){draw(T_END);return;}
+    new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting&&!start)play();});},{threshold:.5}).observe(cv); draw(0); };
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(go);else go();
+})();
+</script>
+</body>
+</html>

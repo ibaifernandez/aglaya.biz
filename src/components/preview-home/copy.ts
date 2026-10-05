@@ -61,7 +61,7 @@ export const problem = {
   titleEm: 'Nobody tells you where to start.',
   /** Name of the selector (the tablist); mock-up `aria-label` of `.tabs`. */
   tabsLabel: 'Where companies get stuck',
-  /** The stage's name while pairs 2–4 are on it (the mock-up's label of the four old scenes). */
+  /** The stage's name while pairs 3–4 are on it (the mock-up's label of the four old scenes). */
   visualLabel:
     'Four scenes that go from chaos to order: AI buzzwords reduced to the three that fit; random licences turned into one bar that pays off first; rented tools brought inside a frame you own; data that stops flowing to other clouds and stays home.',
   /**
@@ -71,6 +71,15 @@ export const problem = {
    */
   tetrisLabel:
     'Before: AI tools fall faster and faster onto your company, piling up with gaps until they overflow. After: we start from your real needs, the gaps, and each one gets the piece that fits; the rows complete and clear. The right systems, made for you. Start from your actual needs and let your company grow solid.',
+  /**
+   * The stage's name while pair 2 is on it — «the heat map of your week»
+   * (docs/design/portada-nueva/t2-anim2-heatmap.html). Not the mock-up's canvas
+   * label, which describes an earlier version of the drawing: this one, set
+   * word for word on card 6e837be0, says what the timeline shows and ends on
+   * the words its last frame stands on.
+   */
+  heatmapLabel:
+    "Before: the monthly AI bill keeps growing, most licences go unused, and the team's trust in AI drops. After: the week's lost hours by department; one AI system on each hot spot until it cools down, licences go to zero and trust rises. Start where it pays, then grow from what works.",
   pairs: [
     {
       n: 'Problem 1 of 4',
