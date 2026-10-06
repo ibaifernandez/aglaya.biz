@@ -14,7 +14,10 @@
  * Colours are the canon's tokens; where the sketch spelled a hex, this file
  * names the token that carries it.
  */
-import { built, type Mini } from './copy';
+import { copyFor, type Lang, type Mini } from './copy';
+
+const { lang = 'en' } = Astro.props as { lang?: Lang };
+const { built } = copyFor(lang);
 
 const cards = [
   { row: 0, wide: true, ...built.wide, ours: null as string | null },

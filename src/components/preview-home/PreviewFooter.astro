@@ -1,7 +1,10 @@
 ---
 /* Footer of the new home page preview — mock-up `footer`. Same-site links are
    relative here; the mock-up spelled them absolute because it lived off-site. */
-import { footer } from './copy';
+import { copyFor, type Lang } from './copy';
+
+const { lang = 'en' } = Astro.props as { lang?: Lang };
+const { footer } = copyFor(lang);
 ---
 
 <footer class="pv-footer">

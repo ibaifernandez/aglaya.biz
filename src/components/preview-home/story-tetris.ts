@@ -3,7 +3,7 @@
  * replaced by video, like ./story-heatmap.ts (pair 2) and ./story-plugs.ts (pair 3).
  *
  * Ported from the reference mock-up `docs/design/portada-nueva/t2-anim1-tetris.html`
- * (English only): one deterministic `draw(T)` that paints any instant of a
+ * (English and Spanish, `TX.en` / `TX.es`): one deterministic `draw(T)` that paints any instant of a
  * ≈24 s timeline on a 400 × 500 logical board (4:5, the stage).
  *   1 off-the-shelf tools fall faster and faster onto a flat company until it
  *     overflows · 2 fade · 3 «SO MANY TOOLS. / WHAT DID THEY SOLVE?» · 4 fade ·
@@ -38,23 +38,48 @@ export type { Ctx };
 /** The pair (0-based) this drawing belongs to. */
 export const TETRIS_PAIR = 0;
 
-/* ---------- The words (mock-up `TX.en`) ---------- */
+/* ---------- The words (mock-up `TX.en` / `TX.es`) ---------- */
 
-const TX = {
-  bought: 'TOOLS BOUGHT',
-  built: 'SYSTEMS BUILT',
-  met: 'NEEDS MET',
-  m1: 'SO MANY TOOLS.',
-  m2a: 'WHAT DID THEY ',
-  m2b: 'SOLVE?',
-  needs: ['SALES', 'REPORTING', 'SUPPORT', 'HIRING'],
-  builtFor: 'BUILT FOR',
-  company: 'YOUR COMPANY',
-  h1: 'THE RIGHT SYSTEMS,',
-  h2: 'MADE FOR YOU.',
-  s1: 'Start from your real needs and',
-  s2: 'let your company grow solid.',
+export type Lang = 'en' | 'es';
+
+const WORDS = {
+  en: {
+    bought: 'TOOLS BOUGHT',
+    built: 'SYSTEMS BUILT',
+    met: 'NEEDS MET',
+    m1: 'SO MANY TOOLS.',
+    m2a: 'WHAT DID THEY ',
+    m2b: 'SOLVE?',
+    needs: ['SALES', 'REPORTING', 'SUPPORT', 'HIRING'],
+    builtFor: 'BUILT FOR',
+    company: 'YOUR COMPANY',
+    h1: 'THE RIGHT SYSTEMS,',
+    h2: 'MADE FOR YOU.',
+    s1: 'Start from your real needs and',
+    s2: 'let your company grow solid.',
+    red: '',
+  },
+  es: {
+    bought: 'HERRAMIENTAS COMPRADAS',
+    built: 'SISTEMAS CONSTRUIDOS',
+    met: 'NECESIDADES CUBIERTAS',
+    m1: 'TANTÍSIMAS HERRAMIENTAS, PERO…',
+    m2a: '¿VERDADERAMENTE',
+    m2b: 'CADA UNA RESUELVE UN PROBLEMA?',
+    needs: ['VENTAS', 'INFORMES', 'SOPORTE', 'RRHH'],
+    builtFor: 'HECHO PARA',
+    company: 'TU EMPRESA',
+    h1: 'LOS SISTEMAS ADECUADOS,',
+    h2: 'HECHOS PARA TI.',
+    s1: 'Empieza por tus necesidades reales',
+    s2: 'y deja que tu empresa crezca sólida.',
+    /** The word of `m2b` drawn in red (the Spanish question takes three lines). */
+    red: 'RESUELVE',
+  },
 };
+/** The words of the language being drawn — set by `useLang()` at the top of every draw. */
+let LANG: Lang = 'en';
+let TX = WORDS.en;
 
 /* ---------- The board and the script (mock-up, unchanged) ---------- */
 
@@ -89,12 +114,11 @@ const gapCells = (c0: number, c1: number) => {
   for (let c = c0; c <= c1; c++) for (let r = 0; r < DEPTH[c]; r++) out.push([c, 9 + r]);
   return out;
 };
-const NEEDS = [
-  { short: TX.needs[0], cells: gapCells(0, 2) },
-  { short: TX.needs[1], cells: gapCells(4, 5) },
-  { short: TX.needs[2], cells: gapCells(7, 9) },
-  { short: TX.needs[3], cells: gapCells(11, 12) },
-];
+/** The four gaps; their names are `TX.needs[i]`. */
+const NEEDS = [gapCells(0, 2), gapCells(4, 5), gapCells(7, 9), gapCells(11, 12)].map((cells, i) => ({
+  get short() { return TX.needs[i]; },
+  cells,
+}));
 
 interface Drop {
   cells: Cell[];
@@ -146,21 +170,33 @@ let tEnd = 0.6;
 const T_OVER = tEnd + 0.5;
 const FADE = 0.8;
 const T_MSG = T_OVER + FADE + 0.2;
-const L1_HOLD = 1.2;
-const L2_HOLD = 2.0;
 const MSG_FADE = 0.6;
-const T_MSG2 = T_MSG + L1_HOLD;
-const T_MSGOUT = T_MSG2 + L2_HOLD;
-const T_GHOST = T_MSGOUT + MSG_FADE + 0.3;
-const T_FIT = T_GHOST + 1.0;
 const FIT_DUR = 0.9;
 const FIT_GAP = 0.35;
-const T_ROWS = T_FIT + NEEDS.length * (FIT_DUR + FIT_GAP) + 0.2;
-const T_HEAD = T_ROWS + 0.6;
-const T_SUB = T_HEAD + 2.0;
+/** The message is held longer in Spanish, which has more words (mock-up: 1.4 / 2.8 s against 1.2 / 2.0). */
+const script = (l1Hold: number, l2Hold: number) => {
+  const T_MSG2 = T_MSG + l1Hold;
+  const T_MSGOUT = T_MSG2 + l2Hold;
+  const T_GHOST = T_MSGOUT + MSG_FADE + 0.3;
+  const T_FIT = T_GHOST + 1.0;
+  const T_ROWS = T_FIT + NEEDS.length * (FIT_DUR + FIT_GAP) + 0.2;
+  const T_HEAD = T_ROWS + 0.6;
+  const T_SUB = T_HEAD + 2.0;
+  return { T_MSG2, T_MSGOUT, T_GHOST, T_FIT, T_ROWS, T_HEAD, T_SUB, END: T_SUB + 4.0 };
+};
+const SCRIPTS = { en: script(1.2, 2.0), es: script(1.4, 2.8) };
+let { T_MSG2, T_MSGOUT, T_GHOST, T_FIT, T_ROWS, T_HEAD, T_SUB } = SCRIPTS.en;
 
-/** Seconds from the first fall to the still last frame (≈ 24). */
-export const TETRIS_END = T_SUB + 4.0;
+/** Draw in `lang` from now on: its words and its timings. */
+function useLang(lang: Lang) {
+  LANG = lang;
+  TX = WORDS[lang];
+  ({ T_MSG2, T_MSGOUT, T_GHOST, T_FIT, T_ROWS, T_HEAD, T_SUB } = SCRIPTS[lang]);
+}
+
+/** Seconds from the first fall to the still last frame (≈ 24 in English). */
+export const tetrisEnd = (lang: Lang = 'en') => SCRIPTS[lang].END;
+export const TETRIS_END = tetrisEnd('en');
 
 /* ---------- Drawing ---------- */
 
@@ -199,8 +235,9 @@ const cl = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
 const lerp = (a: number, b: number, f: number) => a + (b - a) * f;
 
 /** Paint instant `T` (seconds, clamped to 0..TETRIS_END) on a W × H (400 × 500) board in `ctx`'s current transform. */
-export function drawTetris(ctx: Ctx, T: number, P: Palette) {
-  T = Math.max(0, Math.min(T, TETRIS_END));
+export function drawTetris(ctx: Ctx, T: number, P: Palette, lang: Lang = 'en') {
+  useLang(lang);
+  T = Math.max(0, Math.min(T, SCRIPTS[lang].END));
   const font = (w: number, size: number, fam: string) => `${w} ${size}px ${fam}`;
   const textW = (txt: string, size: number) => {
     ctx.font = font(700, size, P.mono);
@@ -326,10 +363,29 @@ export function drawTetris(ctx: Ctx, T: number, P: Palette) {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.globalAlpha = a1;
-    fit(TX.m1, 24);
+    fit(TX.m1, LANG === 'es' ? 20 : 24);
     ctx.fillStyle = P.ink;
     ctx.fillText(TX.m1, cx, OY + 3.8 * C);
     ctx.globalAlpha = a2;
+    if (LANG === 'es') {
+      // Three lines: the Spanish is longer. «RESUELVE» in red, in the middle of the last one.
+      ctx.font = font(900, Math.min(fit(TX.m2a, 20), fit(TX.m2b, 20)), P.disp);
+      ctx.fillStyle = P.ink;
+      ctx.fillText(TX.m2a, cx, OY + 5.0 * C);
+      const [pa, pb] = TX.m2b.split(TX.red);
+      const wa = ctx.measureText(pa).width;
+      const wr = ctx.measureText(TX.red).width;
+      const wb = ctx.measureText(pb).width;
+      const x1 = cx - (wa + wr + wb) / 2;
+      ctx.textAlign = 'left';
+      ctx.fillText(pa, x1, OY + 6.1 * C);
+      ctx.fillStyle = P.red;
+      ctx.fillText(TX.red, x1 + wa, OY + 6.1 * C);
+      ctx.fillStyle = P.ink;
+      ctx.fillText(pb, x1 + wa + wr, OY + 6.1 * C);
+      ctx.restore();
+      return;
+    }
     ctx.font = font(900, fit(TX.m2a + TX.m2b, 24), P.disp);
     const w1 = ctx.measureText(TX.m2a).width;
     const w2 = ctx.measureText(TX.m2b).width;
@@ -495,15 +551,17 @@ const SERVER_PALETTE = Object.fromEntries(Object.entries(ROLES).map(([k, v]) => 
  * SVG anti-aliases each edge on its own and two half-covered pixels still let
  * the paper through; the last frame has no slanted edge to lose.
  */
-export function tetrisFinalMarkup(): string {
+export function tetrisFinalMarkup(lang: Lang = 'en'): string {
   const ctx = new SvgCtx();
-  drawTetris(ctx, TETRIS_END, SERVER_PALETTE);
+  drawTetris(ctx, tetrisEnd(lang), SERVER_PALETTE, lang);
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" aria-hidden="true" focusable="false" width="100%" height="100%" shape-rendering="crispEdges" data-pv-tetris-still>${ctx}</svg>`;
 }
 
 /* ---------- Browser side: the <canvas> ---------- */
 
 export interface Tetris {
+  /** Seconds of the timeline, in the host's language. */
+  end: number;
   /** Paint instant `T` (seconds) still. */
   paint(T: number): void;
   /** Play the timeline from 0 to its end, then hold the last frame. */
@@ -520,6 +578,9 @@ export function createTetris(host: HTMLElement): Tetris {
   // Its box (4:5, contained and centred in the host) is the host's CSS; the bitmap follows it.
   host.replaceChildren(cv);
   const ctx = cv.getContext('2d')!;
+  const lang: Lang = host.closest('[lang]')?.getAttribute('lang') === 'es' ? 'es' : 'en';
+  cv.dataset.pvLang = lang; // which words it draws, readable from outside
+  const END = tetrisEnd(lang);
   const css = getComputedStyle(host);
   const P = Object.fromEntries(Object.entries(ROLES).map(([k, v]) => [k, css.getPropertyValue(v).trim()])) as unknown as Palette;
 
@@ -528,7 +589,7 @@ export function createTetris(host: HTMLElement): Tetris {
   let scale = 1;
   const render = () => {
     ctx.setTransform(scale, 0, 0, scale, 0, 0);
-    drawTetris(ctx, T, P);
+    drawTetris(ctx, T, P, lang);
   };
   const size = () => {
     const w = cv.clientWidth || host.clientWidth || W;
@@ -552,6 +613,7 @@ export function createTetris(host: HTMLElement): Tetris {
     .then(render, () => {});
 
   return {
+    end: END,
     paint(t) {
       cancelAnimationFrame(raf);
       T = t;
@@ -561,9 +623,9 @@ export function createTetris(host: HTMLElement): Tetris {
       cancelAnimationFrame(raf);
       const start = performance.now();
       const loop = (now: number) => {
-        T = Math.min((now - start) / 1000, TETRIS_END);
+        T = Math.min((now - start) / 1000, END);
         render();
-        if (T < TETRIS_END) raf = requestAnimationFrame(loop);
+        if (T < END) raf = requestAnimationFrame(loop);
       };
       T = 0;
       render();

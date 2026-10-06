@@ -9,8 +9,9 @@ import { fileURLToPath } from 'node:url';
  * What it must be, before anything else is built on it:
  *   - served, `noindex`, and out of the sitemap — a preview nobody links to and
  *     no search engine is told about;
- *   - English only, so it announces NO language twin (an `es` alternate would
- *     point at `/es/preview/home/`, which does not exist);
+ *   - in English here and in Spanish at `/es/preview/home/` (card 26bcd318),
+ *     the two linked to each other only by the header's «EN / ES», and neither
+ *     announcing the other as a language twin (both are noindex);
  *   - its T1 and T2 readable in full with JavaScript OFF — the effects are an
  *     upper floor, never the floor;
  *   - its T2 a selector (WAI-ARIA tabs) where nothing moves on by itself, whose
@@ -537,7 +538,8 @@ test.describe('new home page preview', () => {
     const html = await res.text();
 
     expect(html).toMatch(/<meta name="robots" content="noindex[^"]*"/);
-    expect(html, 'an es alternate points at a page that does not exist').not.toMatch(/hreflang="es"/);
+    // Its Spanish twin exists, but both are noindex: an alternate would point at a page search engines are told to drop.
+    expect(html, 'no es alternate').not.toMatch(/<link[^>]*hreflang="es"/);
     expect(html, 'a one-language preview declares no alternates at all').not.toMatch(/rel="alternate"[^>]*hreflang/);
     expect(html).toMatch(/<html[^>]*data-theme="light"/);
   });
@@ -556,7 +558,7 @@ test.describe('new home page preview', () => {
     // Anti-vacuity: an empty map would trivially not contain the preview.
     expect(locs.length).toBeGreaterThan(20);
     expect(locs.some((loc) => loc.endsWith('/contact/')), 'the parser reads real entries').toBe(true);
-    expect(locs.filter((loc) => new URL(loc).pathname.startsWith('/preview/'))).toEqual([]);
+    expect(locs.filter((loc) => /^\/(es\/)?preview\//.test(new URL(loc).pathname))).toEqual([]);
   });
 
   test('the current home page links nowhere near it', async ({ request }) => {
@@ -671,7 +673,7 @@ test.describe('new home page preview', () => {
     await expectTetrisStill(page);
     await expect(page.getByText(PICK)).toHaveCount(0);
 
-    expect(scripts.some((u) => u.includes('home.astro')), 'the page script ran (the check is not vacuous)').toBe(true);
+    expect(scripts.some((u) => u.includes('PreviewPage.astro')), 'the page script ran (the check is not vacuous)').toBe(true);
     expect(scripts.filter((u) => TEXT_CHUNK.test(u) || DRAWING_CHUNK.test(u))).toEqual([]);
   });
 
@@ -1363,6 +1365,318 @@ test.describe('new home page preview', () => {
   test('passes axe WCAG 2 AA with reduced motion', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto(ROUTE);
+    const results = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .analyze();
+    expect(results.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target).join(', ')}`)).toEqual([]);
+  });
+});
+
+/* =====================================================================
+ * THE SPANISH PREVIEW (`/es/preview/home/`) — card 26bcd318.
+ *
+ * Its words are the delineante's translation, WORD FOR WORD from the card
+ * (copied here from the card, not from the page). The words inside the three
+ * drawings are the mock-ups' `TX.es`, read out of the committed mock-ups.
+ * ===================================================================== */
+
+const ES_ROUTE = '/es/preview/home/';
+
+/** A mock-up's `TX.es`, read like `TX.en` above (JS string literals, '…' with \' inside or "…"). */
+function mockupEs(html: string) {
+  const es = /\bes:\{([\s\S]*?)\}\s*\}\[LANG\]/.exec(html)?.[1] ?? '';
+  const unq = (s: string) => s.replace(/\\'/g, "'");
+  const tx = (k: string) => unq(new RegExp(`\\b${k}:'((?:[^'\\\\]|\\\\.)+)'`).exec(es)?.[1] ?? '');
+  const list = (k: string) =>
+    [...(new RegExp(`\\b${k}:\\[([^\\]]+)\\]`).exec(es)?.[1] ?? '').matchAll(/'((?:[^'\\]|\\.)+)'|"([^"]+)"/g)].map((m) => unq(m[1] ?? m[2]));
+  return { tx, list };
+}
+const tetrisEs = mockupEs(readFileSync(TETRIS_MOCKUP, 'utf8'));
+const heatmapEs = mockupEs(readFileSync(HEATMAP_MOCKUP, 'utf8'));
+const plugsEs = mockupEs(readFileSync(PLUGS_MOCKUP, 'utf8'));
+
+/** Card 26bcd318, word for word. */
+const ES = {
+  title: 'AGLAYA — vista previa',
+  description: 'Vista previa de la nueva portada de AGLAYA.',
+  nav: ['Lo que hemos construido', 'El Orchestrator', 'Cómo trabajamos'],
+  cta: 'Hablemos',
+  hook: {
+    eyebrow: 'IA para empresas que quieren seguir siendo independientes',
+    lines: ['La agencia', 'ha muerto.', 'Larga vida', 'al sistema.'],
+    sub: 'Llevamos la IA a tu empresa: unas horas para una tarea puntual, un proyecto cuando necesitas un sistema concreto o un stack completo cuando tu empresa está lista para su próximo gran paso. Trabajamos con un equipo de agentes de IA sujeto a reglas, auditorías y control humano. Todo lo que construimos es tuyo, y está diseñado para seguir funcionando sin nosotros.',
+    ctas: ['Hablemos', 'Mira lo que hemos construido'],
+  },
+  problem: {
+    eyebrow: 'Donde se atasca la mayoría de las empresas',
+    title: 'Todos te venden herramientas de IA. Nadie empieza por tu empresa.',
+    tabsLabel: 'Donde se atascan las empresas',
+    pairs: [
+      {
+        n: 'Problema 1 de 3',
+        problem: 'Una herramienta de IA nueva cada semana',
+        problemText: 'Chatbots, copilotos, agentes, automatizaciones. Cada uno promete ser el que importa. Pero lo que de verdad importa es tu empresa.',
+        solution: 'Hacemos que el sistema encaje con la necesidad',
+        solutionText: 'Deja de forzar herramientas genéricas para que encajen en tu empresa. Nos sentamos con cada departamento, vemos qué hay que resolver y construimos para cada necesidad un sistema hecho a su medida.',
+      },
+      {
+        n: 'Problema 2 de 3',
+        problem: 'Comprar a ciegas',
+        problemText: 'Licencias que nadie usa, una factura que crece cada mes y un equipo que deja de confiar en la IA antes de que sirva para algo.',
+        solution: 'Empieza donde rinde',
+        solutionText: 'Buscamos dónde pierde más horas tu equipo y ponemos la IA justo ahí primero. Las licencias que nadie usa, fuera. Después crecemos desde lo que funciona.',
+      },
+      {
+        n: 'Problema 3 de 3',
+        problem: 'Herramientas alquiladas',
+        problemText: 'Tu empresa funciona con herramientas que alquilas. Si al proveedor lo compran, cierra o cambia sus condiciones, el trabajo que hacían por ti se para con ellas.',
+        solution: 'Hecho para ti, y es tuyo',
+        solutionText: 'Lo que construimos funciona sobre infraestructura que controla tu empresa. No nos pagas alquiler por ello: es un activo tuyo.',
+      },
+    ],
+    labels: [
+      'Antes: las herramientas de IA caen cada vez más rápido sobre tu empresa y se amontonan dejando huecos hasta desbordarla. Después: empezamos por tus necesidades reales, los huecos, y cada una recibe un sistema hecho para ella que encaja en su sitio. Los sistemas adecuados, hechos para ti. Empieza por tus necesidades reales y deja que tu empresa crezca sólida.',
+      'Antes: la factura mensual de IA no para de crecer, la mayoría de las licencias no se usan y la confianza del equipo en la IA cae. Después: las horas perdidas de la semana por departamento; un sistema de IA en cada punto caliente hasta que se enfría, las licencias sin uso bajan a cero y la confianza sube. Empieza donde rinde y crece desde lo que funciona.',
+      'Antes: cada proceso de tu empresa funciona enchufado a un proveedor externo al que alquilas; uno a uno, al proveedor lo compran, cierra, cambia sus condiciones o su plan, tira del cable y el proceso se para. Después: tu empresa lo trae dentro y construye un sistema por proceso, un activo digital propio; los mismos avisos caen sobre el techo y nada se para. Hecho para ti, y es tuyo. Se acabó el alquiler: lo que construimos pasa a ser un activo de tu empresa.',
+    ],
+  },
+  built: {
+    eyebrow: 'Lo que hemos construido',
+    title: 'Hecho para nosotros. El siguiente, el tuyo.',
+    lede: 'Cada sistema que construimos para hacer funcionar AGLAYA, contado como lo que haría por tu empresa.',
+    depthWord: 'CAPACIDADES',
+    more: 'Mira cómo funciona',
+    ours: 'NUESTRO',
+    cards: [
+      { title: 'Orchestrator', text: 'Nuestra sala de control. Mantiene un mapa vivo de cada sistema que usamos y de las reglas entre ellos, y dirige a los agentes de IA que trabajan en ellos: cada uno con su papel, sus permisos y sus auditorías, y una persona que aprueba. Cualquiera puede usar la IA. Así es como se dirige una empresa con ella.' },
+      { title: 'Una boca de leads que funciona', text: 'Algo gratuito que resuelve un problema pequeño y real a tus visitantes. Ellos se llevan algo útil. Tú, un lead que ya ha visto en qué eres bueno.' },
+      { title: 'Prospección con IA', text: 'Lee tus fuentes de datos y le dice a tu equipo comercial a quién escribir, cómo, por qué y cuándo, y si uno a uno o en campaña.' },
+      { title: 'Un CRM propio', text: 'Tu base de clientes en infraestructura que controlas, sin pagar por usuario. Y cada contacto lleva el registro de cómo y cuándo aceptó saber de ti.' },
+      { title: 'Automatizaciones en orden', text: 'Toda tu maquinaria de email en un solo sitio: por dónde entra cada contacto, qué automatización activa y un aviso cuando tu plataforma y tu web dejan de cuadrar. Se acabó rebuscar en tu plataforma de email para averiguarlo.' },
+      { title: 'Un tablero para personas y agentes de IA', text: 'Cada tarea se convierte en una tarjeta en la que trabajan personas y agentes: organizar, construir, revisar, decidir. Cada paso queda escrito en la tarjeta, así que siempre sabes quién hizo qué y por qué.' },
+      { title: 'Una sola fuente para tu marca', text: 'Tus colores, tu tipografía y tu voz en un solo sitio, que leen todas tus plataformas y los agentes de IA que escriben por ti. Lo cambias una vez y todas las páginas lo siguen.' },
+    ],
+  },
+  footer: [
+    ['Privacidad', '/es/privacidad/'],
+    ['Aviso legal', '/es/aviso-legal/'],
+    ['Cookies', '/es/cookies/'],
+  ],
+};
+
+/** What each ES still frame must say: the mock-ups' `TX.es` words of its last frame. */
+const ES_STILL = [
+  { sel: 'svg[data-pv-tetris-still]', words: [tetrisEs.tx('h1'), tetrisEs.tx('h2'), tetrisEs.tx('company'), ...tetrisEs.list('needs')], gone: ['THE RIGHT SYSTEMS,'] },
+  { sel: 'svg[data-pv-heatmap-still]', words: [heatmapEs.tx('c1'), heatmapEs.tx('c2'), ...heatmapEs.list('rows'), ...heatmapEs.list('days'), heatmapEs.tx('trust')], gone: ['START WHERE IT PAYS.'] },
+  { sel: 'svg[data-pv-plugs-still]', words: [plugsEs.tx('c1'), plugsEs.tx('c2'), ...plugsEs.list('c3'), ...plugsEs.list('procs'), plugsEs.tx('company')], gone: ['BUILT FOR YOU.'] },
+];
+
+/** Put pair `i`'s served still frame on the stage, as the selector would. */
+async function showFrame(page: import('@playwright/test').Page, i: number) {
+  await page.evaluate((k) => {
+    const host = document.querySelector('[data-pv-story-drawing]')!;
+    const t = document.querySelectorAll<HTMLTemplateElement>('template[data-pv-frame]')[k];
+    host.replaceChildren(t.content.cloneNode(true));
+    host.setAttribute('aria-label', t.dataset.pvLabel ?? '');
+  }, i);
+}
+
+async function expectStillEs(page: import('@playwright/test').Page, i: number) {
+  const host = t2(page).locator('[data-pv-story-drawing]');
+  const f = ES_STILL[i];
+  await expect(host.locator(f.sel)).toHaveCount(1);
+  await expect(host.locator('canvas')).toHaveCount(0);
+  const words = (await host.locator('svg text').allTextContents()).map((w) => w.trim());
+  for (const w of f.words) expect(words, `the Spanish last frame says ${w}`).toContain(w);
+  for (const w of f.gone) expect(words, `no English: ${w}`).not.toContain(w);
+  await expect(host).toHaveAccessibleName(ES.problem.labels[i]);
+}
+
+test.describe('new home page preview, in Spanish', () => {
+  test('the readers are not blind (the card and the mock-ups yield the Spanish words)', () => {
+    expect(tetrisEs.tx('h1')).toBe('LOS SISTEMAS ADECUADOS,');
+    expect(tetrisEs.list('needs')).toEqual(['VENTAS', 'INFORMES', 'SOPORTE', 'RRHH']);
+    expect(heatmapEs.tx('c2')).toBe('Y CRECE DESDE LO QUE FUNCIONA.');
+    expect(heatmapEs.list('rows')).toEqual(['VENTAS', 'OPERACIONES', 'FINANZAS', 'SOPORTE']);
+    expect(plugsEs.tx('c1')).toBe('HECHO PARA TI.');
+    expect(plugsEs.list('c3')).toEqual(['Se acabó el alquiler: lo que construimos', 'pasa a ser un activo de tu empresa.']);
+    expect(ES.built.cards).toHaveLength(t3.cards.length);
+  });
+
+  test('is served in Spanish, noindex, light, and announces no language twin', async ({ request }) => {
+    const res = await request.get(ES_ROUTE);
+    expect(res.status()).toBe(200);
+    const html = await res.text();
+    expect(html).toMatch(/<html[^>]*lang="es"/);
+    expect(html).toMatch(/<html[^>]*data-theme="light"/);
+    expect(html).toMatch(/<meta name="robots" content="noindex[^"]*"/);
+    expect(html, 'no alternates at all').not.toMatch(/<link[^>]*rel="alternate"[^>]*hreflang|<link[^>]*hreflang[^>]*rel="alternate"/);
+    expect(decode(html)).toContain(`<title>${ES.title}</title>`);
+    expect(decode(html)).toContain(`content="${ES.description}"`);
+    expect(html).not.toContain('fonts.googleapis.com');
+  });
+
+  test('«EN / ES» links the two previews to each other, and nothing else of the site links to either', async ({ page, request }) => {
+    for (const [from, to, name] of [[ROUTE, ES_ROUTE, 'ES'], [ES_ROUTE, ROUTE, 'EN']] as const) {
+      await page.goto(from);
+      const lang = page.locator('header .pv-lang');
+      const link = lang.getByRole('link');
+      await expect(link).toHaveCount(1);
+      await expect(link).toHaveText(name);
+      await expect(link).toHaveAttribute('href', to);
+      // The only link from one preview to the other.
+      expect(await page.locator(`a[href="${to}"]`).count()).toBe(1);
+      await link.click();
+      await expect(page).toHaveURL(new RegExp(`${to.replace(/\//g, '\\/')}$`));
+    }
+    for (const path of ['/', '/es/', '/es/contact/']) {
+      const html = await (await request.get(path)).text();
+      expect(html, `${path} links to a preview`).not.toMatch(/\/(es\/)?preview\//);
+    }
+  });
+
+  test('the English preview did not change language: still English words, «EN» current', async ({ page }) => {
+    await page.goto(ROUTE);
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    await expect(page.locator('header .pv-lang b')).toHaveText('EN');
+    await expect(t2(page).getByText(ES.problem.pairs[0].problem)).toHaveCount(0);
+  });
+
+  test.describe('with JavaScript off', () => {
+    test.use({ javaScriptEnabled: false });
+
+    test('T1, T2 and T3 read in full, word for word from the card, and the footer is Spanish', async ({ page }) => {
+      await page.goto(ES_ROUTE);
+      const header = page.locator('header.pv-nav');
+      for (const t of ES.nav) await expect(header.getByRole('link', { name: t, exact: true })).toBeVisible();
+      await expect(header.getByRole('link', { name: ES.cta, exact: true })).toBeVisible();
+
+      const t1 = page.locator('main#main-content section#top');
+      await expect(t1.getByText(ES.hook.eyebrow, { exact: true })).toBeVisible();
+      await expect(t1.getByRole('heading', { level: 1, name: ES.hook.lines.join(' ') })).toBeVisible();
+      for (const line of ES.hook.lines) await expect(t1.getByText(line, { exact: true })).toBeVisible();
+      await expect(t1.getByText(ES.hook.sub, { exact: true })).toBeVisible();
+      for (const cta of ES.hook.ctas) await expect(t1.getByRole('link', { name: cta, exact: true })).toBeVisible();
+
+      const sec = t2(page);
+      await expect(sec.getByText(ES.problem.eyebrow, { exact: true })).toBeVisible();
+      await expect(sec.getByRole('heading', { level: 2, name: ES.problem.title })).toBeVisible();
+      for (const pair of ES.problem.pairs) {
+        await expect(sec.getByText(pair.n, { exact: true })).toBeVisible();
+        await expect(sec.getByText(pair.problem, { exact: true })).toBeVisible();
+        await expect(sec.getByText(pair.problemText, { exact: true })).toBeVisible();
+        await expect(sec.getByRole('heading', { level: 3, name: pair.solution, exact: true })).toBeVisible();
+        await expect(sec.getByText(pair.solutionText, { exact: true })).toBeVisible();
+      }
+      await expect(sec.locator('.pv-prob-p em').first()).toHaveText('el que');
+      await expect(sec.locator('.pv-prob-p strong').first()).toHaveText('de verdad');
+
+      const t3s = page.locator('main#main-content section#built');
+      await expect(t3s.getByText(ES.built.eyebrow, { exact: true })).toBeVisible();
+      await expect(t3s.getByRole('heading', { level: 2, name: ES.built.title })).toBeVisible();
+      await expect(t3s.getByText(ES.built.lede, { exact: true })).toBeVisible();
+      await expect(t3s.locator('.pv-depth-word')).toContainText(ES.built.depthWord);
+      const cards = t3s.locator('[data-pv-row]');
+      await expect(cards).toHaveCount(ES.built.cards.length);
+      for (const [i, c] of ES.built.cards.entries()) {
+        await expect(cards.nth(i).getByRole('heading', { level: 3, name: c.title, exact: true })).toBeVisible();
+        await expect(cards.nth(i).getByText(c.text, { exact: true })).toBeVisible();
+        await expect(cards.nth(i).getByText(ES.built.more)).toBeVisible();
+        // «NUESTRO · <tool>», the tool's name untranslated, like the English card's.
+        if (i > 0) await expect(cards.nth(i).locator('.pv-ours')).toHaveText(`${ES.built.ours.charAt(0)}${ES.built.ours.slice(1).toLowerCase()} · ${t3.cards[i].ours.replace(/^Ours · /, '')}`);
+      }
+      await expect(t3s.getByRole('link')).toHaveCount(0);
+
+      for (const [text, href] of ES.footer) await expect(page.locator('footer').getByRole('link', { name: text, exact: true })).toHaveAttribute('href', href);
+      for (const id of ['top', 'problem', 'built', 'orchestrator', 'work', 'contact']) {
+        await expect(page.locator(`main#main-content > section#${id}`)).toHaveCount(1);
+      }
+    });
+
+    test('the three still frames are in Spanish, each under its Spanish name', async ({ page }) => {
+      await page.goto(ES_ROUTE);
+      await expectStillEs(page, 0);
+      for (const i of [1, 2]) {
+        await showFrame(page, i);
+        await expectStillEs(page, i);
+      }
+    });
+  });
+
+  test('every word of the Spanish still frames fits the 400-wide board, measured with the real faces', async ({ page }) => {
+    // The server writes the still frames without a browser; Spanish is longer, so
+    // check against the canvas's own measure that no line runs off the board.
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(ES_ROUTE);
+    for (const i of [0, 1, 2]) {
+      await showFrame(page, i);
+      const off = await page.evaluate(async () => {
+        const css = getComputedStyle(document.documentElement);
+        const texts = [...document.querySelectorAll<SVGTextElement>('[data-pv-story-drawing] svg text')];
+        await document.fonts.ready;
+        const ctx = document.createElement('canvas').getContext('2d')!;
+        const out: string[] = [];
+        for (const t of texts) {
+          const fam = css.getPropertyValue(t.style.fontFamily.replace(/^var\((--[^)]+)\)$/, '$1')).trim();
+          const font = `${t.style.fontWeight} ${parseFloat(t.style.fontSize)}px ${fam}`;
+          await document.fonts.load(font);
+          ctx.font = font;
+          const w = ctx.measureText(t.textContent ?? '').width;
+          const m = (t.getAttribute('transform') ?? '').match(/matrix\(([^)]+)\)/)?.[1].split(/[ ,]+/).map(Number);
+          if (m && (m[1] !== 0 || m[2] !== 0)) continue; // rotated labels: placed in their piece by measure already
+          const x = +(t.getAttribute('x') ?? 0) + (m ? m[4] : 0);
+          const a = t.getAttribute('text-anchor') ?? 'start';
+          const [l, r] = a === 'middle' ? [x - w / 2, x + w / 2] : a === 'end' ? [x - w, x] : [x, x + w];
+          if (l < -0.5 || r > 400.5) out.push(`${t.textContent} [${l.toFixed(1)}, ${r.toFixed(1)}]`);
+        }
+        return out;
+      });
+      expect(off, `pair ${i + 1}: nothing off the board`).toEqual([]);
+    }
+  });
+
+  for (const [w, h] of [[1440, 900], [375, 812]] as const) {
+    test(`${w}: with reduced motion, the Spanish page is whole and still, the selector changes the Spanish still frame, nothing scrolls sideways`, async ({ page }) => {
+      await page.setViewportSize({ width: w, height: h });
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      const scripts = scriptRequests(page);
+      await page.goto(ES_ROUTE);
+      await page.waitForLoadState('networkidle');
+      await expectStillEs(page, 0);
+      await tab(page, 2).click();
+      await expect(tab(page, 2)).toHaveAttribute('aria-selected', 'true');
+      await expectStillEs(page, 2);
+      await tab(page, 1).click();
+      await expectStillEs(page, 1);
+      const m = await page.evaluate(() => ({
+        sideways: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+        moved: [...document.querySelectorAll<HTMLElement>('#built [data-pv-row], #built [data-pv-tilt]')].filter((e) => getComputedStyle(e).transform !== 'none').length,
+      }));
+      expect(m.sideways, 'no horizontal scroll').toBeLessThanOrEqual(0);
+      expect(m.moved, 'T3 still').toBe(0);
+      expect(scripts.filter((u) => TEXT_CHUNK.test(u) || DRAWING_CHUNK.test(u))).toEqual([]);
+    });
+  }
+
+  test('1440: with motion, the three timelines play on the canvas in Spanish', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    const scripts = scriptRequests(page);
+    await page.goto(ES_ROUTE);
+    await t2(page).scrollIntoViewIfNeeded();
+    const host = t2(page).locator('[data-pv-story-drawing]');
+    await expect(host.locator('canvas[data-pv-tetris]')).toHaveCount(1, { timeout: 10_000 });
+    expect(scripts.some((u) => DRAWING_CHUNK.test(u)), 'drawing motion downloaded').toBe(true);
+    // Each canvas reads its language off the page and says which one it draws.
+    for (const [i, attr] of [[0, 'data-pv-tetris'], [1, 'data-pv-heatmap'], [2, 'data-pv-plugs']] as const) {
+      await tab(page, i).click();
+      await expect(host.locator(`canvas[${attr}]`)).toHaveAttribute('data-pv-lang', 'es');
+      await expect(host).toHaveAccessibleName(ES.problem.labels[i]);
+    }
+  });
+
+  test('passes axe WCAG 2 AA with reduced motion', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(ES_ROUTE);
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
       .analyze();

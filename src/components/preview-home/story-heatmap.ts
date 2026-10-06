@@ -37,9 +37,11 @@ import { SvgCtx, measure as monoMeasure, type Ctx, type Measure } from './story-
 /** The pair (0-based) this drawing belongs to. */
 export const HEATMAP_PAIR = 1;
 
-/* ---------- The words (mock-up `TX.en`) ---------- */
+/* ---------- The words (mock-up `TX.en` / `TX.es`) ---------- */
 
-const TX = {
+export type Lang = 'en' | 'es';
+
+const EN = {
   rows: ['SALES', 'OPS', 'FINANCE', 'SUPPORT'],
   days: ['MON', 'TUE', 'WED', 'THU', 'FRI'],
   start: 'START HERE',
@@ -64,6 +66,36 @@ const TX = {
   c1: 'START WHERE IT PAYS.',
   c2: 'THEN GROW FROM WHAT WORKS.',
 };
+const WORDS: Record<Lang, typeof EN> = {
+  en: EN,
+  es: {
+    rows: ['VENTAS', 'OPERACIONES', 'FINANZAS', 'SOPORTE'],
+    days: ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE'],
+    start: 'EMPIEZA AQUÍ',
+    next: 'SIGUIENTE',
+    bill: 'FACTURA MENSUAL DE IA',
+    seats: 'PUESTOS USADOS',
+    perMonth: '€ / MES',
+    unused: 'SIN USO',
+    total: 'TOTAL',
+    money: (v: number) => `${v.toLocaleString('es-ES')} € / MES`,
+    price: (v: number) => `${v} €`,
+    lic: 'LICENCIAS PAGADAS',
+    saved: 'HORAS AHORRADAS / SEMANA',
+    built: 'SISTEMAS CONSTRUIDOS',
+    trust: 'CONFIANZA DEL EQUIPO EN LA IA',
+    unusedL: 'LICENCIAS SIN USO',
+    gains: ['Cada lead, atendido el mismo día.', 'Pedidos que fluyen sin teclear dos veces.', 'Cierres de mes sin carreras.', 'Clientes atendidos en minutos.'],
+    m1: 'CADA MES, UNA FACTURA MÁS GRANDE.',
+    m2a: 'Y NADA ES',
+    words: ['MÁS RÁPIDO.', 'MÁS BARATO.', 'MÁS SENCILLO.', 'MÁS EFICIENTE.', 'MEJOR.'],
+    sys: 'SISTEMA IA',
+    c1: 'EMPIEZA DONDE RINDE.',
+    c2: 'Y CRECE DESDE LO QUE FUNCIONA.',
+  },
+};
+/** The words of the language being drawn — set by `useLang()` at the top of every draw. */
+let TX = EN;
 
 /* ---------- The board and the script (mock-up, unchanged) ---------- */
 
@@ -84,10 +116,10 @@ const HEAT = [
 type Cell = [number, number];
 /** Hottest first: the order they are tackled in. */
 const CLUSTERS: { cells: Cell[]; hours: number; tag: string }[] = [
-  { cells: [[0, 0], [0, 1]], hours: 11, tag: TX.start },
-  { cells: [[1, 2], [1, 3]], hours: 9, tag: TX.next },
-  { cells: [[2, 3], [2, 4]], hours: 7, tag: TX.next },
-  { cells: [[3, 1], [3, 2]], hours: 6, tag: TX.next },
+  { cells: [[0, 0], [0, 1]], hours: 11, get tag() { return TX.start; } },
+  { cells: [[1, 2], [1, 3]], hours: 9, get tag() { return TX.next; } },
+  { cells: [[2, 3], [2, 4]], hours: 7, get tag() { return TX.next; } },
+  { cells: [[3, 1], [3, 2]], hours: 6, get tag() { return TX.next; } },
 ];
 /** BEFORE: the monthly bill — [name, seats used, seats paid, $ / month]. Bought without measuring: mostly unused. */
 const BILL: [string, number, number, number][] = [
@@ -117,24 +149,36 @@ let tb = 0.6;
 const T_B_END = tb + 0.6;
 const FADE = 0.8;
 const T_MSG = T_B_END + FADE + 0.2;
-const L1 = 1.8;
 const WORD = 0.7;
 const L2 = 0.5 + 5 * 0.7 + 0.9;
-const MSG_OUT = T_MSG + L1 + L2;
 const MSG_FADE = 0.6;
-/** The week comes back, without licences. */
-const T_A = MSG_OUT + MSG_FADE + 0.2;
-/** Measured first. */
-const T_SCAN = T_A + 0.6;
 const SCAN_DUR = 1.6;
 /** Per hot spot: mark · drop · cool. */
 const STEP = 3.2;
-const T_K0 = T_SCAN + SCAN_DUR + 0.3;
-const T_CAP = T_K0 + CLUSTERS.length * STEP + 1.8;
 const CAP2 = 1.8;
+/** The first line is held longer in Spanish (mock-up: 2.0 s against 1.8). Everything after it follows. */
+const script = (L1: number) => {
+  const MSG_OUT = T_MSG + L1 + L2;
+  /** The week comes back, without licences. */
+  const T_A = MSG_OUT + MSG_FADE + 0.2;
+  /** Measured first. */
+  const T_SCAN = T_A + 0.6;
+  const T_K0 = T_SCAN + SCAN_DUR + 0.3;
+  const T_CAP = T_K0 + CLUSTERS.length * STEP + 1.8;
+  return { L1, MSG_OUT, T_A, T_SCAN, T_K0, T_CAP, END: T_CAP + CAP2 + 3.2 };
+};
+const SCRIPTS = { en: script(1.8), es: script(2.0) };
+let { L1, MSG_OUT, T_A, T_SCAN, T_K0, T_CAP } = SCRIPTS.en;
 
-/** Seconds from the first bill line to the still last frame (≈ 36). */
-export const HEATMAP_END = T_CAP + CAP2 + 3.2;
+/** Draw in `lang` from now on: its words and its timings. */
+function useLang(lang: Lang) {
+  TX = WORDS[lang];
+  ({ L1, MSG_OUT, T_A, T_SCAN, T_K0, T_CAP } = SCRIPTS[lang]);
+}
+
+/** Seconds from the first bill line to the still last frame (≈ 36 in English). */
+export const heatmapEnd = (lang: Lang = 'en') => SCRIPTS[lang].END;
+export const HEATMAP_END = heatmapEnd('en');
 
 /* ---------- Drawing ---------- */
 
@@ -193,8 +237,9 @@ function trustAt(T: number) {
 }
 
 /** Paint instant `T` (seconds, clamped to 0..HEATMAP_END) on a W × H (400 × 500) board in `ctx`'s current transform. */
-export function drawHeatmap(ctx: Ctx, T: number, P: Palette) {
-  T = Math.max(0, Math.min(T, HEATMAP_END));
+export function drawHeatmap(ctx: Ctx, T: number, P: Palette, lang: Lang = 'en') {
+  useLang(lang);
+  T = Math.max(0, Math.min(T, SCRIPTS[lang].END));
   const font = (w: number, size: number, fam: string) => `${w} ${size}px ${fam}`;
 
   /** The closing's size, and where its last (longest) line starts. */
@@ -545,8 +590,11 @@ export function drawHeatmap(ctx: Ctx, T: number, P: Palette) {
  * tests/e2e/preview-home.spec.ts (it fails if the face or the words change).
  */
 const DISPLAY_900_EM: Record<string, number> = {
-  [TX.c1]: 11.241,
-  [TX.c2]: 16.959,
+  [EN.c1]: 11.241,
+  [EN.c2]: 16.959,
+  // Spanish, measured the same way (canvas, Outfit 900 at 100px) on 2026-10-06.
+  [WORDS.es.c1]: 12.033,
+  [WORDS.es.c2]: 17.599,
 };
 const serverMeasure: Measure = (font, text) => {
   const m = /^900 ([\d.]+)px (.+)$/.exec(font);
@@ -561,9 +609,9 @@ const SERVER_PALETTE: Palette = {
 };
 
 /** The last frame, still, as SVG — the ground floor of pair 2. */
-export function heatmapFinalMarkup(): string {
+export function heatmapFinalMarkup(lang: Lang = 'en'): string {
   const ctx = new SvgCtx({ idPrefix: 'pv-heatmap-clip', measure: serverMeasure });
-  drawHeatmap(ctx, HEATMAP_END, SERVER_PALETTE);
+  drawHeatmap(ctx, heatmapEnd(lang), SERVER_PALETTE, lang);
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" aria-hidden="true" focusable="false" width="100%" height="100%" data-pv-heatmap-still>${ctx}</svg>`;
 }
 
@@ -581,6 +629,8 @@ function rgbOf(c: string): [number, number, number] {
 }
 
 export interface Heatmap {
+  /** Seconds of the timeline, in the host's language. */
+  end: number;
   /** Paint instant `T` (seconds) still. */
   paint(T: number): void;
   /** Play the timeline from 0 to its end, then hold the last frame. */
@@ -597,6 +647,9 @@ export function createHeatmap(host: HTMLElement): Heatmap {
   // Its box (4:5, contained and centred in the host) is the host's CSS; the bitmap follows it.
   host.replaceChildren(cv);
   const ctx = cv.getContext('2d')!;
+  const lang: Lang = host.closest('[lang]')?.getAttribute('lang') === 'es' ? 'es' : 'en';
+  cv.dataset.pvLang = lang; // which words it draws, readable from outside
+  const END = heatmapEnd(lang);
   const css = getComputedStyle(host);
   const tok = Object.fromEntries(Object.entries(ROLES).map(([k, v]) => [k, css.getPropertyValue(v).trim()])) as Record<Role, string>;
   const cold = rgbOf(tok.cold);
@@ -611,7 +664,7 @@ export function createHeatmap(host: HTMLElement): Heatmap {
   let scale = 1;
   const render = () => {
     ctx.setTransform(scale, 0, 0, scale, 0, 0);
-    drawHeatmap(ctx, T, P);
+    drawHeatmap(ctx, T, P, lang);
   };
   const size = () => {
     const w = cv.clientWidth || host.clientWidth || W;
@@ -635,6 +688,7 @@ export function createHeatmap(host: HTMLElement): Heatmap {
     .then(render, () => {});
 
   return {
+    end: END,
     paint(t) {
       cancelAnimationFrame(raf);
       T = t;
@@ -644,9 +698,9 @@ export function createHeatmap(host: HTMLElement): Heatmap {
       cancelAnimationFrame(raf);
       const start = performance.now();
       const loop = (now: number) => {
-        T = Math.min((now - start) / 1000, HEATMAP_END);
+        T = Math.min((now - start) / 1000, END);
         render();
-        if (T < HEATMAP_END) raf = requestAnimationFrame(loop);
+        if (T < END) raf = requestAnimationFrame(loop);
       };
       T = 0;
       render();

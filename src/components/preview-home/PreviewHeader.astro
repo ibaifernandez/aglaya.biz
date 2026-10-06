@@ -1,6 +1,10 @@
 ---
-/* Header of the new home page preview — mock-up `header.nav`. */
-import { nav } from './copy';
+/* Header of the new home page preview — mock-up `header.nav`. «EN / ES» links
+   the two previews to each other: the only place either is linked from. */
+import { copyFor, type Lang } from './copy';
+
+const { lang = 'en' } = Astro.props as { lang?: Lang };
+const { nav } = copyFor(lang);
 ---
 
 <header class="pv-nav">
@@ -9,7 +13,7 @@ import { nav } from './copy';
     <nav class="pv-links" aria-label={nav.label}>
       {nav.links.map((link) => <a href={link.href}>{link.text}</a>)}
     </nav>
-    <div class="pv-lang"><b>{nav.langCurrent}</b><span>/</span><span>{nav.langOther}</span></div>
+    <div class="pv-lang"><b>{nav.langCurrent}</b><span aria-hidden="true">/</span><a href={nav.langOtherHref} hreflang={nav.langOtherCode} lang={nav.langOtherCode} aria-label={nav.langOtherName}>{nav.langOther}</a></div>
     <a class="pv-btn pv-btn--primary pv-nav-cta" href={nav.cta.href} data-pv-magnet><span>{nav.cta.text}</span></a>
   </div>
 </header>
@@ -59,6 +63,8 @@ import { nav } from './copy';
     color: var(--pv-faint);
   }
   .pv-lang b { color: var(--pv-ink); }
+  .pv-lang a { color: inherit; text-decoration: none; }
+  .pv-lang a:hover { color: var(--pv-ink); }
   .pv-nav-cta {
     padding: 12px 14px;
     font-size: 11px;

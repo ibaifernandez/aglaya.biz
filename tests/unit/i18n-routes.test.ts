@@ -102,14 +102,16 @@ describe('where the same page lives in every language', () => {
     }
   });
 
-  it('knows which pages are published in one language and have no twin', () => {
+  it('knows which pages announce no twin (the noindex home preview, in both languages)', () => {
     expect(isUnpaired('/preview/home/')).toBe(true);
     expect(isUnpaired('/preview/home')).toBe(true);
-    // Only the prefix is unpaired: every real page, in both languages, keeps its twin.
-    for (const route of routes().filter((r) => !r.startsWith('/preview/'))) {
+    expect(isUnpaired('/es/preview/home/')).toBe(true);
+    // Only the two prefixes are unpaired: every real page, in both languages, keeps its twin.
+    const previews = routes().filter((r) => /^\/(es\/)?preview\//.test(r));
+    expect(previews, 'both previews are routes (the check is not vacuous)').toEqual(['/es/preview/home/', '/preview/home/']);
+    for (const route of routes().filter((r) => !previews.includes(r))) {
       expect(isUnpaired(route), `${route} lost its twin`).toBe(false);
     }
-    expect(isUnpaired('/es/preview/home/')).toBe(false);
   });
 
   it('absolutises against the site origin', () => {

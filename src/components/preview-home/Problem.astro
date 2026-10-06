@@ -25,19 +25,21 @@
  * frames travel as <template>s, inert and out of the DOM, each with its own
  * name, so changing pair without the motion module costs no script.
  */
-import { problem, rich } from './copy';
+import { copyFor, rich, type Lang } from './copy';
 import { tetrisFinalMarkup, TETRIS_PAIR } from './story-tetris';
 import { heatmapFinalMarkup, HEATMAP_PAIR } from './story-heatmap';
 import { plugsFinalMarkup, PLUGS_PAIR } from './story-plugs';
 
 /* Final frame and name of each pair — each last frame drawn as SVG by the same
    code its canvas runs. */
-const PIECES: Record<number, { svg: () => string; label: string }> = {
+const { lang = 'en' } = Astro.props as { lang?: Lang };
+const { problem } = copyFor(lang);
+const PIECES: Record<number, { svg: (l: Lang) => string; label: string }> = {
   [TETRIS_PAIR]: { svg: tetrisFinalMarkup, label: problem.tetrisLabel },
   [HEATMAP_PAIR]: { svg: heatmapFinalMarkup, label: problem.heatmapLabel },
   [PLUGS_PAIR]: { svg: plugsFinalMarkup, label: problem.plugsLabel },
 };
-const frames = problem.pairs.map((_, i) => ({ svg: PIECES[i].svg(), label: PIECES[i].label }));
+const frames = problem.pairs.map((_, i) => ({ svg: PIECES[i].svg(lang), label: PIECES[i].label }));
 ---
 
 <section class="pv-section pv-story" id="problem" data-tramo="T2" data-pv-story>
