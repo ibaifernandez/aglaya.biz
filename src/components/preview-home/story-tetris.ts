@@ -1,6 +1,6 @@
 /**
  * T2 · pair 1's drawing — «AGLAYA fixes your Tetris». PROVISIONAL, to be
- * replaced by video, like ./story-drawing.ts for the other three pairs.
+ * replaced by video, like ./story-heatmap.ts (pair 2) and ./story-plugs.ts (pair 3).
  *
  * Ported from the reference mock-up `docs/design/portada-nueva/t2-anim1-tetris.html`
  * (English only): one deterministic `draw(T)` that paints any instant of a

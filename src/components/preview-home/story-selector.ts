@@ -1,12 +1,12 @@
 /**
- * T2 · the selector (first floor of ./Problem.astro): the four pairs become
+ * T2 · the selector (first floor of ./Problem.astro): the three pairs become
  * tabs, the WAI-ARIA tabs pattern — tablist / tab / tabpanel, arrows, Home and
  * End, a roving tabindex, selection follows focus.
  *
  * What runs where:
  *   - Always (with JavaScript): this file. Choosing a pair opens its panel and
  *     puts that pair's final frame on the stage (cloned from a <template>).
- *   - Reduced motion: nothing else is downloaded. All four pairs stay open and
+ *   - Reduced motion: nothing else is downloaded. All three pairs stay open and
  *     resolved, as served; the selector only changes the still drawing.
  *   - Motion allowed, any width: ./story-text-motion.ts (strike + typing).
  *   - Motion allowed and wider than 860px: ./story-motion.ts too (the drawing

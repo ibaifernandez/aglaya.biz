@@ -1,13 +1,10 @@
 /**
- * T2 · the drawing's motion. Three pieces share the stage:
+ * T2 · the drawing's motion. Three timelines share the stage, one per pair:
  *   - pair 1: ./story-tetris.ts, a <canvas> timeline of ≈24 s;
  *   - pair 2: ./story-heatmap.ts, a <canvas> timeline of ≈36 s;
- *     each starts from 0 every time its pair is chosen — chosen again while on
- *     screen too;
- *   - pairs 3–4: ./story-drawing.ts, whose scene holds its chaos for a moment,
- *     then settles into order and stays there (timings of
- *     docs/design/portada-nueva/t2-selector.html).
- * Nothing moves on by itself.
+ *   - pair 3: ./story-plugs.ts, a <canvas> timeline of ≈35 s.
+ * Each starts from 0 every time its pair is chosen — chosen again while on
+ * screen too. Nothing moves on by itself.
  *
  * Its own chunk, imported by ./story-selector.ts only on a wide screen
  * (> 860px) with motion allowed. On a phone, or with reduced motion, it is
@@ -16,27 +13,24 @@
  * Talks to each drawing only through its public interface; whichever is not on
  * screen is unmounted, so the host holds one of them at a time.
  */
-import { createStoryDrawing, type StoryDrawing } from './story-drawing';
 import { createTetris, TETRIS_END, TETRIS_PAIR } from './story-tetris';
 import { createHeatmap, HEATMAP_END, HEATMAP_PAIR } from './story-heatmap';
+import { createPlugs, PLUGS_END, PLUGS_PAIR } from './story-plugs';
 
 const clamp = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
 
-/** Seconds of chaos before the scene starts to settle, and how long settling takes. */
-const HOLD = 0.9;
-const SETTLE = 1.8;
-
-/** What a timeline drawing offers (./story-tetris.ts, ./story-heatmap.ts). */
+/** What a timeline drawing offers (./story-tetris.ts, ./story-heatmap.ts, ./story-plugs.ts). */
 interface Timeline {
   paint(T: number): void;
   play(): void;
   destroy(): void;
 }
 
-/** The pairs whose drawing is a timeline: how to mount it, and how long it lasts. */
+/** Each pair's drawing: how to mount it, and how long it lasts. */
 const TIMELINES: Record<number, { create: (host: HTMLElement) => Timeline; end: number }> = {
   [TETRIS_PAIR]: { create: createTetris, end: TETRIS_END },
   [HEATMAP_PAIR]: { create: createHeatmap, end: HEATMAP_END },
+  [PLUGS_PAIR]: { create: createPlugs, end: PLUGS_END },
 };
 
 export interface StoryMotion {
@@ -44,66 +38,37 @@ export interface StoryMotion {
   still(i: number, m: number): void;
   /** Play pair `i` from its start. */
   play(i: number): void;
-  /** Pair `i`, already on screen, was chosen again: a timeline starts over; a scene that settles stays settled. */
+  /** Pair `i`, already on screen, was chosen again: its timeline starts over. */
   replay(i: number): void;
   /** Stop and give the host back what it held. */
   destroy(): void;
 }
 
 export function createStoryMotion(host: HTMLElement): StoryMotion {
-  let drawing: StoryDrawing | null = null;
   let timeline: { pair: number; t: Timeline } | null = null;
-  let raf = 0;
 
-  /** Mount the piece pair `i` needs; returns its timeline if it has one. */
-  const mount = (i: number): Timeline | null => {
-    const spec = TIMELINES[i];
-    if (spec) {
-      if (timeline?.pair !== i) {
-        drawing?.destroy();
-        drawing = null;
-        timeline?.t.destroy();
-        timeline = { pair: i, t: spec.create(host) };
-      }
-      return timeline.t;
-    }
-    if (!drawing) {
+  /** Mount the piece pair `i` needs. */
+  const mount = (i: number): Timeline => {
+    if (timeline?.pair !== i) {
       timeline?.t.destroy();
-      timeline = null;
-      drawing = createStoryDrawing(host);
+      timeline = { pair: i, t: TIMELINES[i].create(host) };
     }
-    return null;
+    return timeline.t;
   };
 
   return {
     still(i, m) {
-      cancelAnimationFrame(raf);
-      const t = mount(i);
-      if (t) t.paint(clamp(m) * TIMELINES[i].end);
-      else drawing!.paint(i, m, i);
+      mount(i).paint(clamp(m) * TIMELINES[i].end);
     },
     play(i) {
-      cancelAnimationFrame(raf);
-      const t = mount(i);
-      if (t) return t.play();
-      const start = performance.now();
-      const loop = (now: number) => {
-        const e = (now - start) / 1000;
-        const m = clamp((e - HOLD) / SETTLE);
-        drawing!.paint(i, m, e / 40 + i);
-        if (m < 1) raf = requestAnimationFrame(loop);
-      };
-      raf = requestAnimationFrame(loop);
+      mount(i).play();
     },
     replay(i) {
-      if (TIMELINES[i]) this.play(i);
+      this.play(i);
     },
     destroy() {
-      cancelAnimationFrame(raf);
       timeline?.t.destroy();
-      drawing?.destroy();
       timeline = null;
-      drawing = null;
     },
   };
 }
