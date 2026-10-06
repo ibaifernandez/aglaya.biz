@@ -1,7 +1,7 @@
 /**
  * T2 · pair 2's drawing — «the heat map of your week». PROVISIONAL, to be
- * replaced by video, like ./story-tetris.ts (pair 1) and ./story-drawing.ts
- * (pairs 3–4).
+ * replaced by video, like ./story-tetris.ts (pair 1) and ./story-plugs.ts
+ * (pair 3).
  *
  * Ported from the reference mock-up `docs/design/portada-nueva/t2-anim2-heatmap.html`
  * (English only; the Spanish is for the video): one deterministic `draw(T)`

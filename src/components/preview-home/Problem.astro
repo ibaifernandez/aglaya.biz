@@ -1,9 +1,9 @@
 ---
 /**
  * T2 · the problem — reference `docs/design/portada-nueva/t2-selector.html`:
- * the four pairs as a selector on the left, one stage on the right.
+ * the three pairs as a selector on the left, one stage on the right.
  *
- * Ground floor (no JavaScript): the four pairs read in full, each problem struck
+ * Ground floor (no JavaScript): the three pairs read in full, each problem struck
  * through, each way out written, next to the drawing of pair 1 at rest in its
  * final frame. That is how the HTML is served.
  *
@@ -15,30 +15,29 @@
  *   ./story-motion.ts       the drawing going from chaos to order. Only on a
  *                           wide screen (> 860px) and not with reduced motion.
  *
- * Tabs and panels: the tabs live in their own wrapper (the tablist), the four
+ * Tabs and panels: the tabs live in their own wrapper (the tablist), the three
  * text panels after it, so the tablist owns tabs and nothing else. The wrapper
  * is `display: contents` and the grid puts each panel right under its tab.
  *
  * The drawing is three separate, provisional pieces that will be swapped for
  * video: pair 1's Tetris (./story-tetris.ts), pair 2's heat map
- * (./story-heatmap.ts) and the scenes of pairs 3–4 (./story-drawing.ts). Their
- * four final frames travel as <template>s, inert
- * and out of the DOM, each with its own name, so changing pair without the
- * motion module costs no script.
+ * (./story-heatmap.ts) and pair 3's plugs (./story-plugs.ts). Their three final
+ * frames travel as <template>s, inert and out of the DOM, each with its own
+ * name, so changing pair without the motion module costs no script.
  */
 import { problem } from './copy';
-import { storyDrawingMarkup, STORY_PAIRS } from './story-drawing';
 import { tetrisFinalMarkup, TETRIS_PAIR } from './story-tetris';
 import { heatmapFinalMarkup, HEATMAP_PAIR } from './story-heatmap';
+import { plugsFinalMarkup, PLUGS_PAIR } from './story-plugs';
 
-/* Final frame and name of each pair: pair 1 is the Tetris (./story-tetris.ts),
-   pair 2 the heat map (./story-heatmap.ts) — each last frame drawn as SVG by
-   the same code its canvas runs — and pairs 3–4 the provisional scenes of
-   ./story-drawing.ts. */
-const frames = Array.from({ length: STORY_PAIRS }, (_, i) => ({
-  svg: i === TETRIS_PAIR ? tetrisFinalMarkup() : i === HEATMAP_PAIR ? heatmapFinalMarkup() : storyDrawingMarkup(i, 1),
-  label: i === TETRIS_PAIR ? problem.tetrisLabel : i === HEATMAP_PAIR ? problem.heatmapLabel : problem.visualLabel,
-}));
+/* Final frame and name of each pair — each last frame drawn as SVG by the same
+   code its canvas runs. */
+const PIECES: Record<number, { svg: () => string; label: string }> = {
+  [TETRIS_PAIR]: { svg: tetrisFinalMarkup, label: problem.tetrisLabel },
+  [HEATMAP_PAIR]: { svg: heatmapFinalMarkup, label: problem.heatmapLabel },
+  [PLUGS_PAIR]: { svg: plugsFinalMarkup, label: problem.plugsLabel },
+};
+const frames = problem.pairs.map((_, i) => ({ svg: PIECES[i].svg(), label: PIECES[i].label }));
 ---
 
 <section class="pv-section pv-story" id="problem" data-tramo="T2" data-pv-story>
@@ -174,11 +173,10 @@ const frames = Array.from({ length: STORY_PAIRS }, (_, i) => ({
     background: var(--color-bg);
     border: 1px solid var(--color-border);
   }
-  /* The drawing is 4:5 (the 400 × 500 board of ./story-tetris.ts and
-     ./story-heatmap.ts), scaled to fit the box whole and centred: never
-     stretched, never cropped; what is left over at the sides is the stage's own
-     paper. Pairs 3–4 are square scenes, centred in that same 4:5 (their SVG's
-     own `meet`). */
+  /* The drawing is 4:5 (the 400 × 500 board of ./story-tetris.ts,
+     ./story-heatmap.ts and ./story-plugs.ts), scaled to fit the box whole and
+     centred: never stretched, never cropped; what is left over at the sides is
+     the stage's own paper. */
   .pv-story-canvas :global(svg),
   .pv-story-canvas :global(canvas) {
     display: block;

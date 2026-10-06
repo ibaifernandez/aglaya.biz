@@ -17,15 +17,18 @@ import { fileURLToPath } from 'node:url';
  *     motion is only downloaded where it runs; pair 1's drawing the «Tetris»
  *     timeline, which starts over every time the pair is chosen, and whose last
  *     frame stands still wherever it does not move; pair 2's the «heat map»
- *     timeline, the same way;
+ *     timeline and pair 3's «the plugs», the same way;
+ *   - THREE pairs: Ibai dropped the selector mock-up's fourth («Your data
+ *     teaches them») on 2026-10-06 (card 544e2a13); the decision rules over
+ *     that mock-up, which stays as the historical reference;
  *   - its T2 heading, selector and stage inside one 1440 × 900 screen;
  *   - WCAG 2 AA clean with reduced motion.
  *
  * The words are not copied into this file. They are read out of the reference
- * mock-ups committed at docs/design/portada-nueva/ — portada-aglaya.html (T1,
- * and the drawing's label), t2-selector.html (T2), t2-anim1-tetris.html
- * (pair 1's way out, its paragraph, and its drawing) and t2-anim2-heatmap.html
- * (pair 2's drawing) — built page against
+ * mock-ups committed at docs/design/portada-nueva/ — portada-aglaya.html (T1),
+ * t2-selector.html (T2, minus its fourth pair), t2-anim1-tetris.html (pair 1's
+ * way out, its paragraph, and its drawing), t2-anim2-heatmap.html (pair 2's
+ * drawing) and t2-anim3-plugs.html (pair 3's drawing) — built page against
  * reference artefact, so the page cannot drift from the mock-up while this
  * suite stays green, and the suite cannot agree with the page just because
  * both were edited together.
@@ -38,6 +41,7 @@ const MOCKUP = fileURLToPath(new URL('../../docs/design/portada-nueva/portada-ag
 const SELECTOR_MOCKUP = fileURLToPath(new URL('../../docs/design/portada-nueva/t2-selector.html', import.meta.url));
 const TETRIS_MOCKUP = fileURLToPath(new URL('../../docs/design/portada-nueva/t2-anim1-tetris.html', import.meta.url));
 const HEATMAP_MOCKUP = fileURLToPath(new URL('../../docs/design/portada-nueva/t2-anim2-heatmap.html', import.meta.url));
+const PLUGS_MOCKUP = fileURLToPath(new URL('../../docs/design/portada-nueva/t2-anim3-plugs.html', import.meta.url));
 
 const decode = (s: string) => s.replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
 
@@ -52,12 +56,6 @@ export function mockupHook(html: string) {
     sub: one(/<p class="sub">([^<]+)<\/p>/),
     ctas: [...(/class="ctas">([\s\S]*?)<\/div>/.exec(t1)?.[1] ?? '').matchAll(/<span>([^<]+)<\/span>/g)].map((m) => decode(m[1])),
   };
-}
-
-/** The drawing's label: T2 of portada-aglaya.html, between its `<!-- T2 -->` and `<!-- T3 -->` markers. */
-export function mockupDrawingLabel(html: string) {
-  const t2 = /<!-- T2 -->([\s\S]*?)<!-- T3 -->/.exec(html)?.[1] ?? '';
-  return decode(/id="storyVisual"[^>]*aria-label="([^"]+)"/.exec(t2)?.[1] ?? '');
 }
 
 /** T2 as a selector: `section.story` of t2-selector.html. */
@@ -155,6 +153,40 @@ export function mockupHeatmapGeometry(html: string) {
   };
 }
 
+/** Pair 3's drawing as the mock-up writes it: its card texts, the canvas's label, and the words of its timeline (`TX.en`). */
+export function mockupPlugs(html: string) {
+  const one = (re: RegExp) => decode((re.exec(html)?.[1] ?? '').replace(/&#39;/g, "'"));
+  const en = /\ben:\{([\s\S]*?)\},\s*es:\{/.exec(html)?.[1] ?? '';
+  // JS string literals as the mock-up writes them: '…' (with \' inside) or "…".
+  const unq = (s: string) => s.replace(/\\'/g, "'");
+  const tx = (k: string) => unq(new RegExp(`\\b${k}:'((?:[^'\\\\]|\\\\.)+)'`).exec(en)?.[1] ?? '');
+  const list = (k: string) =>
+    [...(new RegExp(`\\b${k}:\\[([^\\]]+)\\]`).exec(en)?.[1] ?? '').matchAll(/'((?:[^'\\]|\\.)+)'|"([^"]+)"/g)].map((m) => unq(m[1] ?? m[2]));
+  const g = /var FX=(\d+),FY=(\d+),FH=(\d+),WALL0=(\d+),WALL1=(\d+),PITCH=(\d+),CARD_X=(\d+),CARD_W=(\d+),CARD_H=(\d+)/.exec(html);
+  const [FX, FY, FH, WALL0, WALL1, PITCH, CARD_X, CARD_W, CARD_H] = (g?.slice(1) ?? []).map(Number);
+  return {
+    problem: one(/class="prob-h">([^<]+)</),
+    problemText: one(/class="prob-p">([^<]+)</),
+    solution: one(/class="sol-h">([^<]+)</),
+    solutionText: one(/class="sol-p">([^<]+)</),
+    label: one(/id="cv"[^>]*aria-label="([^"]+)"/),
+    close: [tx('c1'), tx('c2')],
+    under: list('c3'),
+    owned: tx('owned'),
+    live: tx('live'),
+    yours: tx('yours'),
+    sys: tx('sys'),
+    procs: list('procs'),
+    notices: list('notices'),
+    msg: list('msg'),
+    geo: {
+      FX, FY, FH, WALL0, WALL1, PITCH, CARD_X, CARD_W, CARD_H,
+      HUDY: /HUDY=FY\+FH\+(\d+)/.test(html) ? FY + FH + +/HUDY=FY\+FH\+(\d+)/.exec(html)![1] : NaN,
+      STRIPY: /STRIPY=FY\+FH\+(\d+)/.test(html) ? FY + FH + +/STRIPY=FY\+FH\+(\d+)/.exec(html)![1] : NaN,
+    },
+  };
+}
+
 /** The stage's name with pair 2 on it — set word for word on card 6e837be0 (the mock-up's canvas label describes an earlier drawing). */
 const HEATMAP_LABEL =
   "Before: the monthly AI bill keeps growing, most licences go unused, and the team's trust in AI drops. After: the week's lost hours by department; one AI system on each hot spot until it cools down, licences go to zero and trust rises. Start where it pays, then grow from what works.";
@@ -165,13 +197,23 @@ const tetris = mockupTetris(readFileSync(TETRIS_MOCKUP, 'utf8'));
 const board = mockupTetrisGeometry(readFileSync(TETRIS_MOCKUP, 'utf8'));
 const heatmap = mockupHeatmap(readFileSync(HEATMAP_MOCKUP, 'utf8'));
 const heat = mockupHeatmapGeometry(readFileSync(HEATMAP_MOCKUP, 'utf8'));
-/** T2: the selector mock-up, with pair 1's way out as agreed for the Tetris. */
+const plugs = mockupPlugs(readFileSync(PLUGS_MOCKUP, 'utf8'));
+/** The selector mock-up as it stands: four pairs (the historical reference). */
+const selectorMockup = mockupProblem(readFileSync(SELECTOR_MOCKUP, 'utf8'));
+/** The pair Ibai dropped on 2026-10-06 (card 544e2a13): nothing of it may reach the page. */
+const dropped = selectorMockup.pairs[3];
+/**
+ * T2 as decided: the selector mock-up's first three pairs, counted «of 3», with
+ * pair 1's way out as agreed for the Tetris.
+ */
 const problem = (() => {
   const p = mockupProblem(readFileSync(SELECTOR_MOCKUP, 'utf8'));
+  p.pairs = p.pairs.slice(0, 3).map((q) => ({ ...q, n: q.n.replace(/ of 4$/, ' of 3') }));
   p.pairs[0] = { ...p.pairs[0], solution: tetris.solution, solutionText: tetris.solutionText };
   return p;
 })();
-const drawingLabel = mockupDrawingLabel(html);
+/** The stage's name with pair 3 on it: the plugs canvas's label, word for word. */
+const plugsLabel = plugs.label;
 /** The stage's name with pair 1 on it: the Tetris canvas's label, then the words its last frame shows. */
 const sentence = (s: string) => s.charAt(0) + s.slice(1).toLowerCase();
 const tetrisLabel = `${tetris.label} ${sentence(tetris.head.join(' '))} ${tetris.sub}`;
@@ -179,7 +221,7 @@ const PICK = /pick one/i;
 
 /** The chunks of T2's motion, as Vite names them after their source files. */
 const TEXT_CHUNK = /\/_astro\/story-text-motion\.[^/]*\.js$/;
-const DRAWING_CHUNK = /\/_astro\/story-(motion|drawing|tetris|heatmap|svg-recorder)\.[^/]*\.js$/;
+const DRAWING_CHUNK = /\/_astro\/story-(motion|tetris|heatmap|plugs|svg-recorder)\.[^/]*\.js$/;
 
 /** Every script URL the page asks for, from before the first byte. */
 function scriptRequests(page: import('@playwright/test').Page) {
@@ -232,6 +274,22 @@ async function expectHeatmapStill(page: import('@playwright/test').Page) {
   await expect(host).toHaveAccessibleName(HEATMAP_LABEL);
 }
 
+/** Pair 3's last frame, still, is what the stage holds: the plugs SVG, the close, four owned systems, nothing stopped, no canvas. */
+async function expectPlugsStill(page: import('@playwright/test').Page) {
+  const host = t2(page).locator('[data-pv-story-drawing]');
+  await expect(host.locator('svg[data-pv-plugs-still]')).toHaveCount(1);
+  await expect(host.locator('canvas')).toHaveCount(0);
+  const words = (await host.locator('svg text').allTextContents()).map((w) => w.trim());
+  for (const w of [...plugs.close, ...plugs.under, ...plugs.procs]) expect(words, `the last frame says ${w}`).toContain(w);
+  for (const p of plugs.procs) expect(words, `${plugs.sys} · ${p}`).toContain(`${plugs.sys} · ${p}`);
+  expect(words.filter((w) => w === plugs.yours), `four «${plugs.yours}»`).toHaveLength(4);
+  expect(words).toContain(`${plugs.owned}  4/4`);
+  expect(words).toContain(`${plugs.live}  4/4`);
+  // Nothing of the timeline's middle stays: no notice, no message line, nothing stopped.
+  for (const w of [...plugs.notices, ...plugs.msg, 'STOPPED']) expect(words, `${w} is gone by the end`).not.toContain(w);
+  await expect(host).toHaveAccessibleName(plugsLabel);
+}
+
 /**
  * The stage's box and the drawing inside it: the drawing is the board's ratio
  * (4:5), whole inside the box and centred in it. «Whole» is measured, not
@@ -281,10 +339,10 @@ async function expectNoStageCaption(page: import('@playwright/test').Page) {
       .map((el) => el.outerHTML);
   });
   expect(extra, 'nothing on the stage but the drawing').toEqual([]);
-  await expect(page.locator('#problem').getByText(/^\s*\d\s*\/\s*4\s*$/)).toHaveCount(0);
+  await expect(page.locator('#problem').getByText(/^\s*\d\s*\/\s*[34]\s*$/)).toHaveCount(0);
 }
 
-/** Every word of T2 is on screen: eyebrow, heading, drawing, and the four pairs open and resolved. */
+/** Every word of T2 is on screen: eyebrow, heading, drawing, and the three pairs open and resolved. */
 async function expectProblemComplete(page: import('@playwright/test').Page, label = tetrisLabel) {
   const sec = t2(page);
   await expect(sec).toBeVisible();
@@ -354,7 +412,6 @@ test.describe('new home page preview', () => {
     expect(problem.eyebrow).toBe('Where most companies get stuck');
     expect(problem.title).toBe('Everyone talks about AI. Nobody tells you where to start.');
     expect(problem.tabsLabel).toBe('Where companies get stuck');
-    expect(drawingLabel.length).toBeGreaterThan(80);
     // Pair 1 as agreed with Ibai on 2026-10-04 (card 00b8dd08), read off the Tetris mock-up.
     expect(tetris.problem, 'the Tetris mock-up is pair 1').toBe(problem.pairs[0].problem);
     expect(tetris.solution).toBe('We make the system fit the need');
@@ -375,14 +432,41 @@ test.describe('new home page preview', () => {
     expect(heatmap.sys).toBe('AI SYSTEM');
     expect([heatmap.built, heatmap.saved, heatmap.trust, heatmap.unusedL].every((w) => w.length > 5)).toBe(true);
     expect(heat).toMatchObject({ W: 400, H: 500, DY: 50, GY: 96, CW: 56, CH: 40, fz0: 22, maxW: 360, step: 0.5, closeY: 66, layout: true, namesAtLeft: true });
-    expect(problem.pairs).toHaveLength(4);
-    expect(problem.pairs.map((p) => p.n)).toEqual(['Problem 1 of 4', 'Problem 2 of 4', 'Problem 3 of 4', 'Problem 4 of 4']);
+    // Pair 3's drawing, read off the plugs mock-up (card 544e2a13); its card texts are pair 3's.
+    expect(plugs.problem, 'the plugs mock-up is pair 3').toBe(problem.pairs[2].problem);
+    expect(plugs.solution).toBe(problem.pairs[2].solution);
+    expect(plugs.problemText).toBe(problem.pairs[2].problemText);
+    expect(plugs.solutionText).toBe(problem.pairs[2].solutionText);
+    expect(plugs.label.length).toBeGreaterThan(80);
+    expect(plugs.label).toContain("your company's asset");
+    expect(plugs.close).toEqual(['BUILT FOR YOU.', 'YOURS TO KEEP.']);
+    expect(plugs.under).toEqual(['No more rent. What we build', "becomes your company's asset."]);
+    expect(plugs.procs).toEqual(['LEADS', 'ORDERS', 'REPORTS', 'SUPPORT']);
+    expect(plugs.notices).toEqual(['ACQUIRED', 'PLAN CHANGE', 'SHUTDOWN', 'NEW TERMS']);
+    expect(plugs.msg).toHaveLength(6);
+    expect([plugs.owned, plugs.live, plugs.yours, plugs.sys]).toEqual(['DIGITAL ASSETS', 'STILL RUNNING', 'YOUR ASSET', 'SYSTEM']);
+    expect(plugs.geo).toMatchObject({ FX: 40, FY: 75, FH: 270, WALL0: 230, WALL1: 360, HUDY: 369, STRIPY: 393 });
+    // The selector mock-up still has four pairs — the decision, not the mock-up, says three.
+    expect(selectorMockup.pairs).toHaveLength(4);
+    expect(dropped.problem).toBe('Your data teaches them');
+    expect(problem.pairs).toHaveLength(3);
+    expect(problem.pairs.map((p) => p.n)).toEqual(['Problem 1 of 3', 'Problem 2 of 3', 'Problem 3 of 3']);
     for (const p of problem.pairs) {
       expect(p.problem.length).toBeGreaterThan(5);
       expect(p.problemText.length).toBeGreaterThan(60);
       expect(p.solution.length).toBeGreaterThan(5);
       expect(p.solutionText.length).toBeGreaterThan(60);
     }
+  });
+
+  test('T2 has three pairs: no trace of the dropped fourth, and nothing counts «of 4»', async ({ request }) => {
+    const served = decode((await (await request.get(ROUTE)).text()).replace(/&#39;/g, "'"));
+    for (const w of [dropped.problem, dropped.problemText, dropped.solution, dropped.solutionText]) {
+      expect(served, `«${w}» is gone`).not.toContain(w);
+    }
+    expect(served).not.toMatch(/Problem \d of 4/);
+    for (const p of problem.pairs) expect(served).toContain(p.n);
+    expect(served.match(/<template data-pv-frame/g), 'one still frame per pair').toHaveLength(3);
   });
 
   test('is served, noindex, and announces no language twin', async ({ request }) => {
@@ -474,6 +558,19 @@ test.describe('new home page preview', () => {
       await expectHeatmapStill(page);
     });
 
+    test('T2: pair 3\'s last frame is served too, still, under its own name', async ({ page }) => {
+      await page.goto(ROUTE);
+      const frame = page.locator('template[data-pv-frame]').nth(2);
+      await expect(frame).toHaveAttribute('data-pv-label', plugsLabel);
+      await page.evaluate(() => {
+        const host = document.querySelector('[data-pv-story-drawing]')!;
+        const t = document.querySelectorAll<HTMLTemplateElement>('template[data-pv-frame]')[2];
+        host.replaceChildren(t.content.cloneNode(true));
+        host.setAttribute('aria-label', t.dataset.pvLabel ?? '');
+      });
+      await expectPlugsStill(page);
+    });
+
     test('nothing says "pick one", in the page or in what it serves', async ({ page }) => {
       const res = await page.goto(ROUTE);
       expect(await res!.text()).not.toMatch(PICK);
@@ -502,7 +599,8 @@ test.describe('new home page preview', () => {
     await tab(page, 2).click();
     await expect(tab(page, 2)).toHaveAttribute('aria-selected', 'true');
     expect(await stageShowsFinalFrame(page, 2)).toBe(true);
-    await expectProblemComplete(page, drawingLabel);
+    await expectPlugsStill(page);
+    await expectProblemComplete(page, plugsLabel);
     // Back on pair 1: its last frame again, still — chosen twice, still still.
     await tab(page, 0).click();
     await tab(page, 0).click();
@@ -533,14 +631,14 @@ test.describe('new home page preview', () => {
   });
 
   test.describe('with motion', () => {
-    test('1440: the four pairs are WAI-ARIA tabs with a roving tabindex', async ({ page }) => {
+    test('1440: the three pairs are WAI-ARIA tabs with a roving tabindex', async ({ page }) => {
       await page.setViewportSize({ width: 1440, height: 900 });
       await page.goto(ROUTE);
       const list = t2(page).getByRole('tablist', { name: problem.tabsLabel });
       await expect(list).toHaveAttribute('aria-orientation', 'vertical');
       const tabs = list.getByRole('tab');
-      await expect(tabs).toHaveCount(4);
-      for (let i = 0; i < 4; i++) {
+      await expect(tabs).toHaveCount(3);
+      for (let i = 0; i < 3; i++) {
         const name = `${problem.pairs[i].n} ${problem.pairs[i].problem}`;
         await expect(tabs.nth(i)).toHaveAccessibleName(name);
         await expect(tabs.nth(i)).toHaveAttribute('aria-selected', String(i === 0));
@@ -569,11 +667,11 @@ test.describe('new home page preview', () => {
       await page.keyboard.press('ArrowLeft');
       await expectOn(1);
       await page.keyboard.press('End');
-      await expectOn(3);
+      await expectOn(2);
       await page.keyboard.press('ArrowDown');
       await expectOn(0);
       await page.keyboard.press('ArrowUp');
-      await expectOn(3);
+      await expectOn(2);
       await page.keyboard.press('Home');
       await expectOn(0);
     });
@@ -596,12 +694,20 @@ test.describe('new home page preview', () => {
       await expect(sol1.locator('.pv-done')).toHaveText(problem.pairs[0].solution, { timeout: 5000 });
       await expect(first.locator('xpath=..')).toHaveClass(/is-struck/);
 
-      // The drawing is moving, not a still: two moments of pair 3 differ.
+      // The drawing is moving, not a still: two moments of pair 3's canvas differ.
       await tab(page, 2).click();
-      const svgAt = () => page.locator('[data-pv-story-drawing]').innerHTML();
-      const a = await svgAt();
+      const cv = sec.locator('[data-pv-story-drawing] canvas[data-pv-plugs]');
+      await expect(cv).toHaveCount(1);
+      const pixelsAt = () =>
+        cv.evaluate((c: HTMLCanvasElement) => {
+          const { data } = c.getContext('2d')!.getImageData(0, 0, c.width, c.height);
+          let h = 0;
+          for (let i = 0; i < data.length; i += 4) h = (h * 31 + data[i] + data[i + 1] * 3 + data[i + 2] * 7) | 0;
+          return h;
+        });
+      const a = await pixelsAt();
       await page.waitForTimeout(400);
-      const b = await svgAt();
+      const b = await pixelsAt();
       expect(a, 'the drawing animates on a wide screen').not.toBe(b);
 
       // The chosen pair opens and resolves; the others are closed; pair 1 stays struck.
@@ -615,14 +721,96 @@ test.describe('new home page preview', () => {
       // Never chosen, never struck.
       await expect(sec.getByText(problem.pairs[1].problem, { exact: true }).locator('xpath=..')).not.toHaveClass(/is-struck/);
 
-      // Nothing moves on by itself.
+      // Nothing moves on by itself: the chosen pair stays chosen (its own timeline
+      // plays on; that is the drawing, not the selector).
       await page.waitForTimeout(4000);
       await expect(tab(page, 2)).toHaveAttribute('aria-selected', 'true');
       await expect(sec.locator('[role="tab"][aria-selected="true"]')).toHaveCount(1);
-      // ...and the drawing has settled: no frame changes once in order.
-      const c = await svgAt();
-      await page.waitForTimeout(400);
-      expect(await svgAt()).toBe(c);
+    });
+
+    test('1440: pair 3 is the plugs timeline: it starts when chosen, and choosing it again starts it over', async ({ page }) => {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(ROUTE);
+      const sec = t2(page);
+      await sec.locator('[data-pv-stage]').scrollIntoViewIfNeeded();
+      await expect(sec.locator('[data-pv-story-drawing] canvas[data-pv-tetris]')).toHaveCount(1);
+      await tab(page, 2).click();
+      const canvas = sec.locator('[data-pv-story-drawing] canvas[data-pv-plugs]');
+      await expect(canvas).toHaveCount(1);
+      await expect(sec.locator('[data-pv-story-drawing] canvas')).toHaveCount(1);
+      await expect(sec.locator('[data-pv-story-drawing]')).toHaveAccessibleName(plugsLabel);
+      /**
+       * A fingerprint of the frame, and how much of it is a stopped process's
+       * card: the canon's grey `--color-surface-2`, which no running card uses.
+       */
+      const frame = () =>
+        canvas.evaluate((cv: HTMLCanvasElement) => {
+          const off = getComputedStyle(cv.parentElement!).getPropertyValue('--color-surface-2').trim();
+          const hex = off.startsWith('#') ? off.slice(1) : 'f3f3f3';
+          const [r, g, b] = [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16));
+          const { data } = cv.getContext('2d')!.getImageData(0, 0, cv.width, cv.height);
+          let stopped = 0;
+          let hash = 0;
+          for (let i = 0; i < data.length; i += 4) {
+            if (data[i] === r && data[i + 1] === g && data[i + 2] === b) stopped++;
+            hash = (hash * 31 + data[i] + data[i + 1] * 3 + data[i + 2] * 7) | 0;
+          }
+          return { stopped: stopped / (cv.width * cv.height), hash };
+        });
+
+      // From the start: four processes running, none stopped.
+      await page.waitForTimeout(150);
+      const start = await frame();
+      expect(start.stopped, 'nothing stopped at the start').toBeLessThan(0.002);
+      // It moves: a notice lands and LEADS goes dark (stops ≈3.7 s in).
+      await page.waitForTimeout(4400);
+      const later = await frame();
+      expect(later.hash, 'the canvas moves').not.toBe(start.hash);
+      expect(later.stopped, 'a process has stopped').toBeGreaterThan(start.stopped + 0.005);
+
+      // Chosen again while on screen: it starts over — nothing stopped again.
+      await tab(page, 2).click();
+      await page.waitForTimeout(150);
+      expect((await frame()).stopped, 'back to all running').toBeLessThan(0.002);
+      await page.waitForTimeout(4400);
+      expect((await frame()).stopped, 'and it plays again').toBeGreaterThan(start.stopped + 0.005);
+
+      // Pairs 1 and 2 untouched by it: each comes back as its own timeline.
+      await tab(page, 1).click();
+      await expect(sec.locator('[data-pv-story-drawing] canvas[data-pv-heatmap]')).toHaveCount(1);
+      await expect(canvas).toHaveCount(0);
+      await tab(page, 0).click();
+      await expect(sec.locator('[data-pv-story-drawing] canvas[data-pv-tetris]')).toHaveCount(1);
+      await expect(sec.locator('[data-pv-story-drawing]')).toHaveAccessibleName(tetrisLabel);
+    });
+
+    test('pair 3\'s still frame is the mock-up\'s 4:5 board: the company, the HUD, the systems and the close where the mock-up puts them', async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.goto(ROUTE);
+      await tab(page, 2).click();
+      const svg = page.locator('[data-pv-story-drawing] svg[data-pv-plugs-still]');
+      await expect(svg).toHaveAttribute('viewBox', '0 0 400 500');
+      const { FX, FY, FH, WALL1, PITCH, CARD_X, CARD_W, CARD_H, HUDY, STRIPY } = plugs.geo;
+      const got = await svg.evaluate((el) => ({
+        rects: [...el.querySelectorAll('rect')].map((r) => ({ x: +r.getAttribute('x')!, y: +r.getAttribute('y')!, w: +r.getAttribute('width')!, h: +r.getAttribute('height')!, stroke: (r.getAttribute('style') ?? '').includes('stroke:') })),
+        texts: [...el.querySelectorAll('text')].map((t) => ({ text: t.textContent ?? '', x: +t.getAttribute('x')!, y: +t.getAttribute('y')! })),
+      }));
+      const text = (t: string) => got.texts.find((x) => x.text === t)!;
+      // The paper covers the whole board: no band left unpainted.
+      expect(got.rects[0], 'paper over the whole board').toEqual({ x: 0, y: 0, w: 400, h: 500, stroke: false });
+      // The company, its wall already moved out to WALL1.
+      expect(got.rects.find((r) => r.stroke && r.x === FX && r.y === FY), 'the company').toEqual({ x: FX, y: FY, w: WALL1 - FX, h: FH, stroke: true });
+      expect(text('YOUR COMPANY')).toEqual({ text: 'YOUR COMPANY', x: (FX + WALL1) / 2, y: FY + FH - 11 });
+      // Four process cards, one per row, PITCH apart.
+      const rowC = (i: number) => FY + 18 + i * PITCH + CARD_H / 2;
+      for (let i = 0; i < 4; i++) {
+        expect(got.rects.some((r) => r.stroke && r.x === CARD_X && r.w === CARD_W && r.h === CARD_H && Math.abs(r.y - (rowC(i) - CARD_H / 2)) < 0.01), `card ${i + 1}`).toBe(true);
+        expect(Math.abs(text(`${plugs.sys} · ${plugs.procs[i]}`).y - (rowC(i) + 0.5)), `${plugs.procs[i]}'s system on its row`).toBeLessThan(0.01);
+      }
+      // The HUD below the company, spanning it; the close under it, centred.
+      expect(text(`${plugs.owned}  4/4`)).toMatchObject({ x: FX, y: HUDY });
+      expect(text(`${plugs.live}  4/4`)).toMatchObject({ x: WALL1, y: HUDY });
+      expect(text(plugs.close[0])).toMatchObject({ x: 200, y: STRIPY + 2 });
     });
 
     test('1440: pair 1 is the Tetris timeline, and choosing it starts it over', async ({ page }) => {
@@ -847,7 +1035,7 @@ test.describe('new home page preview', () => {
       await page.setViewportSize({ width: 1440, height: 900 });
       await page.goto(ROUTE);
       const sec = t2(page);
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < problem.pairs.length; i++) {
         await tab(page, i).click();
         const box = await page.evaluate(() => {
           const q = (s: string) => document.querySelector(`#problem ${s}`)!.getBoundingClientRect();
@@ -864,12 +1052,12 @@ test.describe('new home page preview', () => {
       await page.setViewportSize({ width: 1440, height: 900 });
       await page.goto(ROUTE);
       const heights = new Set<number>();
-      for (const i of [0, 1, 2, 3, 0]) {
+      for (const i of [0, 1, 2, 0]) {
         await tab(page, i).click();
-        if (i <= 1) await expect(t2(page).locator('[data-pv-story-drawing] canvas')).toHaveCount(1);
+        await expect(t2(page).locator('[data-pv-story-drawing] canvas')).toHaveCount(1);
         await page.waitForTimeout(150);
         const g = await stageGeometry(page);
-        expect(g.tag, `pair ${i + 1}: drawn as`).toBe(i <= 1 ? 'canvas' : 'svg');
+        expect(g.tag, `pair ${i + 1}: drawn as`).toBe('canvas');
         expect(Math.abs(g.box.top - g.list.top), `pair ${i + 1}: box top = list top`).toBeLessThanOrEqual(2);
         expect(Math.abs(g.box.bottom - g.list.bottom), `pair ${i + 1}: box bottom = list bottom`).toBeLessThanOrEqual(2);
         expectContained(g, `pair ${i + 1}`);
@@ -919,20 +1107,21 @@ test.describe('new home page preview', () => {
         expect(await stageShowsFinalFrame(page, 0)).toBe(true);
         await expectTetrisStill(page);
 
-        // Choosing pair 4: the text animates — caught half-way: problem not yet
+        // Choosing pair 3: the text animates — caught half-way: problem not yet
         // struck, way out not yet written — then resolves.
-        await tab(page, 3).click();
-        const p4 = problem.pairs[3];
-        const sol4 = sec.getByRole('heading', { level: 3, name: p4.solution });
-        expect(await sol4.locator('.pv-rest').textContent(), 'the way out is still being written').not.toBe('');
-        // The drawing changed to pair 4 at once, in order, still.
-        expect(await stageShowsFinalFrame(page, 3)).toBe(true);
+        await tab(page, 2).click();
+        const p3 = problem.pairs[2];
+        const sol3 = sec.getByRole('heading', { level: 3, name: p3.solution });
+        expect(await sol3.locator('.pv-rest').textContent(), 'the way out is still being written').not.toBe('');
+        // The drawing changed to pair 3's last frame at once, still.
+        expect(await stageShowsFinalFrame(page, 2)).toBe(true);
+        await expectPlugsStill(page);
         await page.waitForTimeout(300);
-        expect(await stageShowsFinalFrame(page, 3), 'no motion in the drawing').toBe(true);
+        expect(await stageShowsFinalFrame(page, 2), 'no motion in the drawing').toBe(true);
 
-        await expect(sol4.locator('.pv-done')).toHaveText(p4.solution, { timeout: 5000 });
-        await expect(sec.getByText(p4.solutionText, { exact: true })).toBeVisible();
-        await expect(sec.getByText(p4.problem, { exact: true }).locator('xpath=..')).toHaveClass(/is-struck/);
+        await expect(sol3.locator('.pv-done')).toHaveText(p3.solution, { timeout: 5000 });
+        await expect(sec.getByText(p3.solutionText, { exact: true })).toBeVisible();
+        await expect(sec.getByText(p3.problem, { exact: true }).locator('xpath=..')).toHaveClass(/is-struck/);
         await expect(sec.getByText(p1.problem, { exact: true }).locator('xpath=..')).toHaveClass(/is-struck/);
 
         // Pair 2: its last frame, still — chosen once or twice — while its text plays.

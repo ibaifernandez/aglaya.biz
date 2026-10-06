@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T2 · animación 3 · Los enchufes — maqueta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap">
+<style>
+:root{--bg:#fff;--surface:#f5f5f4;--ink:#0a0a0a;--muted:rgba(10,10,10,.68);--faint:rgba(10,10,10,.45);--line:rgba(10,10,10,.10);--brand:#e8003d;--brand-ink:#b5002f;--green:#9fc243;
+  --f-display:"Outfit","Arial Black",system-ui,sans-serif;--f-body:"Inter",system-ui,sans-serif;--f-mono:"Space Mono",ui-monospace,monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--ink);font:16px/1.6 var(--f-body);-webkit-font-smoothing:antialiased}
+h3{font-family:var(--f-display);font-weight:900;text-transform:uppercase;letter-spacing:-.02em;line-height:.92;margin:0}
+p{margin:0}
+.mono{font-family:var(--f-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase}
+.note{background:#0a0a0a;color:#fcfcfc;font:12px/1.5 var(--f-mono);padding:14px clamp(16px,4vw,56px)}
+.note b{color:var(--green)}
+.wrap{max-width:1200px;margin:0 auto;padding:48px clamp(16px,4vw,56px)}
+.board{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(24px,4vw,56px);align-items:start}
+.tab{background:var(--bg);border:1px solid var(--ink);border-left:4px solid var(--brand);padding:18px 20px}
+.n{color:var(--brand-ink)}
+.prob-h{font-size:clamp(20px,2vw,26px);margin-top:6px;color:var(--faint);text-decoration:line-through;text-decoration-color:var(--brand);text-decoration-thickness:.09em}
+.prob-p{color:var(--muted);margin-top:10px;font-size:15px}
+.sol-h{margin-top:16px;font-size:clamp(22px,2.2vw,30px);color:var(--brand-ink)}
+.sol-p{margin-top:10px;font-size:15px}
+.stage{position:relative;aspect-ratio:4/5;background:var(--bg);border:1px solid var(--line)}
+.stage canvas{display:block;width:100%;height:100%}
+.ctrl{display:flex;gap:10px;align-items:center;margin-top:14px}
+.ctrl button{font:700 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--ink);background:var(--ink);color:#fff;padding:10px 12px;cursor:pointer}
+.ctrl span{color:var(--faint)}
+@media (max-width:860px){.board{grid-template-columns:1fr}.stage{order:-1}}
+</style>
+</head>
+<body>
+<div class="note"><b>MAQUETA · ANIMACIÓN 3 · «LOS ENCHUFES»</b> — Antes: cada proceso de tu empresa funciona enchufado a un proveedor de fuera; llegan avisos y cada proveedor tira de su cable: el proceso se para. Mensaje. Después: la empresa lo mete dentro, se construye un sistema propio por proceso; los avisos rebotan y nada se apaga.</div>
+<div class="wrap">
+  <div class="board">
+    <div>
+      <div class="tab">
+        <div class="n mono">Problem 3 of 4</div>
+        <h3 class="prob-h">Rented tools</h3>
+        <p class="prob-p">Most companies run on a dozen tools they rent. When the contract ends, the work those tools did for you leaves with them.</p>
+        <h3 class="sol-h">Built for you, yours to keep</h3>
+        <p class="sol-p">What we build runs on systems your company controls. When we leave the room, everything keeps running.</p>
+      </div>
+      <p class="mono" style="margin-top:14px;color:var(--faint)">(texto actual de la pareja 3, sin tocar)</p>
+    </div>
+    <div>
+      <div class="stage"><canvas id="cv" width="800" height="1000" role="img" aria-label="Before: each of your company&#39;s processes runs plugged into an outside vendor you rent from; one by one the vendor is acquired, shuts down, changes its terms or its plan, pulls the plug, and the process stops. After: your company brings it inside and builds one system per process, a digital asset of its own; the same notices land on the roof and nothing stops. Built for you, yours to keep. No more rent: what we build becomes your company&#39;s asset."></canvas></div>
+      <div class="ctrl"><button id="replay" type="button">Replay</button><span class="mono" id="phase"></span></div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var cv=document.getElementById('cv'),ctx=cv.getContext('2d'),S=2;
+  var Q=new URLSearchParams(location.search),EXPORT=Q.get('export')==='1';
+  if(EXPORT){cv.width=1080;cv.height=1350;S=1080/400;}
+  var LANG=Q.get('lang')==='es'?'es':'en';
+  var TX={
+    en:{procs:['LEADS','ORDERS','REPORTS','SUPPORT'],vendors:['CRM','ORDER APP','BI TOOL','HELPDESK'],rented:'RENTED',running:'RUNNING',stopped:'STOPPED',
+        notices:['ACQUIRED','PLAN CHANGE','SHUTDOWN','NEW TERMS'],owned:'DIGITAL ASSETS',live:'STILL RUNNING',company:'YOUR COMPANY',
+        rentMonths:'MONTHS OF RENT',month:'MONTH',rent0:'RENT',sys:'SYSTEM',yours:'YOUR ASSET',msg:['IT ONLY WORKS','WHILE YOU PAY','IF NOT ACQUIRED','IF NOT SHUT DOWN',"IF TERMS DON'T CHANGE","IF PLANS DON'T CHANGE"],c1:'BUILT FOR YOU.',c2:'YOURS TO KEEP.',c3:['No more rent. What we build','becomes your company\'s asset.']},
+    es:{procs:['LEADS','PEDIDOS','INFORMES','SOPORTE'],vendors:['CRM','APP PEDIDOS','BI','HELPDESK'],rented:'ALQUILADO',running:'FUNCIONA',stopped:'PARADO',
+        notices:['COMPRADA','CAMBIO DE PLAN','CIERRE','NUEVAS CONDICIONES'],owned:'ACTIVOS DIGITALES',live:'FUNCIONANDO',company:'TU EMPRESA',
+        rentMonths:'MESES DE ALQUILER',month:'MES',rent0:'ALQUILER',sys:'SISTEMA',yours:'TU ACTIVO',msg:['SOLO FUNCIONA','MIENTRAS PAGUES','SI NO LA COMPRAN','SI NO CIERRA','SI NO CAMBIAN LAS CONDICIONES','SI NO CAMBIAN LOS PLANES'],c1:'HECHO PARA TI.',c2:'Y ES TUYO.',c3:['Se acabó el alquiler: lo que construimos','pasa a ser un activo de tu empresa.']}
+  }[LANG];
+  var CALM=matchMedia('(prefers-reduced-motion: reduce)').matches||location.hash==='#planta-baja';
+  var INK='#0a0a0a',RED='#e8003d',REDINK='#b5002f',MONO='"Space Mono", monospace',DISP='Outfit, sans-serif';
+  // Geometría (lienzo lógico 400×500)
+  var FX=40,FY=75,FH=270,WALL0=230,WALL1=360,PITCH=62,CARD_X=52,CARD_W=98,CARD_H=42,VX=280,VW=80,VH=30,HUDY=FY+FH+24,STRIPY=FY+FH+48;
+  function rowC(i){return FY+18+i*PITCH+CARD_H/2;}
+  // ANTES: avisos en este orden (índice de proceso)
+  var ORDER=[0,2,3,1],EV0=2.2,EVS=1.7,PULL_AT=1.0,PULL=0.45;
+  function evT(i){return EV0+ORDER.indexOf(i)*EVS;}           // aviso al proveedor del proceso i
+  function stopT(i){return evT(i)+PULL_AT+PULL;}               // el proceso se para
+  var T_B_END=EV0+3*EVS+PULL_AT+PULL+1.0,FADE=0.8,MPM=0.35;    // MPM: segundos por mes
+  var T_MSG=T_B_END+FADE+0.2,MSG_AT=[0,0.9,2.1,3.0,3.9,4.8],MSG_DUR=7.6,MSG_OUT=T_MSG+MSG_DUR,MSG_FADE=0.6;
+  var T_A=MSG_OUT+MSG_FADE+0.2,T_WALL=T_A+0.5,WALL_DUR=0.9;
+  var T_K0=T_WALL+WALL_DUR+0.3,STEP=1.1;
+  var T_N0=T_K0+4*STEP+0.2,NST=0.8;
+  var T_CAP=T_N0+3*NST+0.45+3.2,CAP2=1.4,T_END=T_CAP+2*CAP2+4.0;
+  var BMONTHS=Math.floor(T_B_END/MPM);
+  function cl(v){return v<0?0:v>1?1:v;}function ease(v){return v<.5?2*v*v:1-Math.pow(-2*v+2,2)/2;}function lerp(a,b,f){return a+(b-a)*f;}
+  function mix(a,b,f){var A=[1,3,5].map(function(i){return parseInt(a.substr(i,2),16);}),B=[1,3,5].map(function(i){return parseInt(b.substr(i,2),16);});return 'rgb('+A.map(function(v,i){return Math.round(lerp(v,B[i],f));}).join(',')+')';}
+  function builtT(i){return T_K0+i*STEP;}
+  function isRunning(T,i){return T<T_A?T<stopT(i):T>=builtT(i)+0.5;}
+  function fitFont(txt,max,start,min,w){var z=start;ctx.font=w+' '+z+'px '+(w==='900'?DISP:MONO);while(z>min&&ctx.measureText(txt).width>max){z-=.25;ctx.font=w+' '+z+'px '+(w==='900'?DISP:MONO);}return z;}
+  function pulseLine(x0,x1,y,T,on,a){
+    ctx.save();ctx.globalAlpha=a;ctx.lineWidth=1.3;ctx.strokeStyle=on?RED:'rgba(10,10,10,.25)';ctx.beginPath();
+    for(var x=x0;x<=x1;x+=1){var dy=0;if(on){var ph=((x-x0)+T*40)%34;dy=ph>14&&ph<17?-8:(ph>=17&&ph<20?5:0);}x===x0?ctx.moveTo(x,y+dy):ctx.lineTo(x,y+dy);}
+    ctx.stroke();ctx.restore();}
+  function drawCard(T,i,a){
+    var on=isRunning(T,i),y=rowC(i)-CARD_H/2;
+    ctx.save();ctx.globalAlpha=a;
+    ctx.fillStyle=on?'#fff':'#f4f4f4';ctx.fillRect(CARD_X,y,CARD_W,CARD_H);
+    ctx.strokeStyle=on?INK:'rgba(10,10,10,.25)';ctx.lineWidth=1.2;ctx.strokeRect(CARD_X,y,CARD_W,CARD_H);
+    ctx.textAlign='left';ctx.textBaseline='middle';ctx.font='700 9px '+MONO;ctx.fillStyle=on?INK:'rgba(10,10,10,.4)';ctx.fillText(TX.procs[i],CARD_X+8,y+14);
+    ctx.font='700 7px '+MONO;ctx.fillStyle=on?'rgba(10,10,10,.6)':RED;ctx.fillText(on?TX.running:TX.stopped,CARD_X+8,y+29);
+    ctx.restore();
+    pulseLine(CARD_X+58,CARD_X+CARD_W-8,y+22,T,on,a);
+  }
+  function drawBefore(T,a){
+    ctx.save();ctx.globalAlpha=a;
+    // la empresa
+    ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.strokeRect(FX,FY,WALL0-FX,FH);
+    ctx.font='700 7px '+MONO;ctx.fillStyle='rgba(10,10,10,.45)';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(TX.company,(FX+WALL0)/2,FY+FH-11);
+    for(var i=0;i<4;i++){
+      var cy=rowC(i),pull=ease(cl((T-evT(i)-PULL_AT)/PULL)),on=isRunning(T,i);
+      // cable de dentro (de la tarjeta a la toma de la pared)
+      ctx.strokeStyle=on?INK:'rgba(10,10,10,.22)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(CARD_X+CARD_W,cy);ctx.lineTo(WALL0,cy);ctx.stroke();
+      ctx.fillStyle=INK;ctx.fillRect(WALL0-3,cy-7,6,14); // la toma
+      // proveedor
+      ctx.fillStyle='#fff';ctx.fillRect(VX,cy-VH/2,VW,VH);ctx.strokeStyle='rgba(10,10,10,.5)';ctx.lineWidth=1;ctx.setLineDash([3,2]);ctx.strokeRect(VX,cy-VH/2,VW,VH);ctx.setLineDash([]);
+      ctx.fillStyle=INK;ctx.font='700 8px '+MONO;ctx.fillText(TX.vendors[i],VX+VW/2,cy-4);
+      ctx.fillStyle='rgba(10,10,10,.45)';ctx.font='700 6px '+MONO;ctx.fillText(TX.rented,VX+VW/2,cy+7);
+      // cable de fuera: el proveedor tira y la clavija sale de la toma
+      var px=lerp(WALL0+3,VX,pull);
+      if(px<VX-0.5){ctx.strokeStyle=INK;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(px,cy);ctx.lineTo(VX,cy);ctx.stroke();ctx.fillStyle=INK;ctx.fillRect(px,cy-4,7,8);}
+      if(pull>0&&pull<1){ctx.save();ctx.globalAlpha=a*(1-pull);ctx.strokeStyle=RED;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(WALL0+6,cy-6);ctx.lineTo(WALL0+12,cy-10);ctx.moveTo(WALL0+6,cy+6);ctx.lineTo(WALL0+12,cy+10);ctx.stroke();ctx.restore();}
+      // aviso
+      var na=cl((T-evT(i))/0.25)*(1-cl((T-stopT(i)-0.3)/0.4));
+      if(na>0){ctx.save();ctx.globalAlpha=a*na;var s=0.8+0.2*ease(cl((T-evT(i))/0.25));ctx.translate(VX+VW/2,cy-VH/2-9);ctx.scale(s,s);
+        ctx.font='700 6.5px '+MONO;var nw=ctx.measureText(TX.notices[i]).width+10;nw=Math.min(nw,118);ctx.fillStyle=RED;ctx.fillRect(-nw/2,-6,nw,12);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(TX.notices[i],0,.5);ctx.restore();}
+    }
+    ctx.restore();
+    for(var k=0;k<4;k++)drawCard(T,k,a);
+  }
+  function drawAfter(T,a){
+    var wall=lerp(WALL0,WALL1,ease(cl((T-T_WALL)/WALL_DUR)));
+    ctx.save();ctx.globalAlpha=a;
+    ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.strokeRect(FX,FY,wall-FX,FH);
+    ctx.font='700 7px '+MONO;ctx.fillStyle='rgba(10,10,10,.45)';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(TX.company,(FX+wall)/2,FY+FH-11);
+    for(var i=0;i<4;i++){
+      var cy=rowC(i),t0=builtT(i),d=ease(cl((T-t0)/0.5)),g=cl((T-t0-0.5)/0.4),on=isRunning(T,i);
+      if(T<t0)continue;
+      var BX=176,BW=106,bx=lerp(BX+60,BX,d);
+      ctx.save();ctx.globalAlpha=a*Math.min(1,d*2);
+      ctx.strokeStyle=on?INK:'rgba(10,10,10,.22)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(CARD_X+CARD_W,cy);ctx.lineTo(bx,cy);ctx.stroke();
+      ctx.fillStyle=mix(RED,INK,g);ctx.fillRect(bx,cy-15,BW,30);
+      ctx.fillStyle='#fff';ctx.font='700 7.5px '+MONO;ctx.textAlign='center';ctx.fillText(TX.sys+' · '+TX.procs[i],bx+BW/2,cy+.5);
+      // la toma propia
+      var tagA=cl((T-t0-0.6)/0.3);ctx.globalAlpha=a*tagA;ctx.strokeStyle=RED;ctx.lineWidth=1.2;var tw=WALL1-12-(BX+BW+10),tx=bx+BW+10;ctx.strokeRect(tx,cy-7,tw,14);ctx.fillStyle=REDINK;var yz=fitFont(TX.yours,tw-8,7,5,'700');ctx.font='700 '+yz+'px '+MONO;ctx.textAlign='center';ctx.fillText(TX.yours,tx+tw/2,cy+.5);
+      ctx.restore();
+    }
+    // avisos que caen y rebotan en el techo de la empresa
+    // en el orden del mensaje; se quedan posados en el techo y se borran justo antes del cierre
+    ctx.font='700 6.5px '+MONO;var NW=ORDER.map(function(p){return ctx.measureText(TX.notices[p]).width+10;}),GAPN=((WALL1-FX)-NW.reduce(function(x,y){return x+y;},0))/5,NX=[],acc=FX+GAPN;
+    NW.forEach(function(w){NX.push(acc+w/2);acc+=w+GAPN;});
+    var nOut=1-cl((T-(T_CAP-0.8))/0.4);
+    for(var n=0;n<4;n++){var t=T-(T_N0+n*NST);if(t<0)continue;var y,al=nOut,txt=TX.notices[ORDER[n]];
+      if(t<0.45){y=lerp(-12,FY-15,ease(t/0.45));}else{var b=t-0.45;y=FY-15-16*Math.abs(Math.sin(b*Math.PI/0.4))*Math.exp(-b*5);}
+      if(al<=0)continue;ctx.save();ctx.globalAlpha=a*al;ctx.font='700 6.5px '+MONO;var nw=NW[n];
+      ctx.fillStyle='#fff';ctx.fillRect(NX[n]-nw/2,y-6,nw,12);ctx.strokeStyle=RED;ctx.lineWidth=1;ctx.strokeRect(NX[n]-nw/2,y-6,nw,12);ctx.fillStyle=REDINK;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(txt,NX[n],y+.5);ctx.restore();}
+    ctx.restore();
+    for(var k=0;k<4;k++)drawCard(T,k,a);
+  }
+  function hud(T,a){
+    var owned=0,live=0;for(var i=0;i<4;i++){if(isRunning(T,i))live++;if(T>=T_A&&T>=builtT(i)+0.5)owned++;}
+    ctx.save();ctx.globalAlpha=a;ctx.textBaseline='alphabetic';var hs=fitFont(TX.owned+'  0/4'+TX.live+'  0/4',320-24,9,6,'700');ctx.font='700 '+hs+'px '+MONO;
+    ctx.textAlign='left';ctx.fillStyle=owned>0?REDINK:'rgba(10,10,10,.6)';ctx.fillText(TX.owned+'  '+owned+'/4',FX,HUDY);
+    ctx.textAlign='right';ctx.fillStyle=live<4?RED:(T>=T_A?REDINK:'rgba(10,10,10,.6)');ctx.fillText(TX.live+'  '+live+'/4',WALL1,HUDY);
+    ctx.restore();
+  }
+  function strip(T,a){
+    var N=60,W=WALL1-FX,cw=W/N,after=T>=T_A,m=after?BMONTHS+Math.max(0,Math.floor((T-T_A)/MPM)):Math.min(BMONTHS,Math.floor(T/MPM)+1);
+    ctx.save();ctx.globalAlpha=a;ctx.textBaseline='alphabetic';ctx.font='700 8px '+MONO;
+    ctx.textAlign='left';ctx.fillStyle=after?'rgba(10,10,10,.6)':REDINK;ctx.fillText(after?TX.month+'  '+m:TX.rentMonths+'  '+(m<10?'0':'')+m,FX,STRIPY-6);
+    if(after){ctx.textAlign='right';ctx.fillStyle=REDINK;ctx.fillText(TX.rent0+'  0',WALL1,STRIPY-6);}
+    for(var k=0;k<N;k++){var x=FX+k*cw;ctx.fillStyle=k<Math.min(m,BMONTHS)?RED:(k<m?INK:'#ececec');ctx.fillRect(x+.5,STRIPY,cw-1,8);}
+    ctx.restore();
+  }
+  function draw(T){
+    ctx.setTransform(S,0,0,S,0,0);ctx.fillStyle='#fff';ctx.fillRect(0,0,400,500);
+    var phase='';
+    if(T<T_B_END+FADE){var a=1-cl((T-T_B_END)/FADE);var ain=cl(T/0.3);drawBefore(T,a*ain);hud(T,a*ain);strip(T,a*ain);phase='BEFORE · rented';}
+    if(T>=T_MSG&&T<MSG_OUT+MSG_FADE){var out=1-cl((T-MSG_OUT)/MSG_FADE);
+      ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';var longest=TX.msg.reduce(function(a,b){return b.length>a.length?b:a;});var mz=fitFont(longest,340,26,12,'900');ctx.font='900 '+mz+'px '+DISP;
+      var LH=mz*1.12,GAP=mz*0.5,H=TX.msg.length*LH+GAP,y0=250-H/2+LH/2;
+      TX.msg.forEach(function(line,k){var ai=cl((T-T_MSG-MSG_AT[k])/0.35)*out,dy=(1-ease(cl((T-T_MSG-MSG_AT[k])/0.35)))*6;ctx.globalAlpha=ai;ctx.fillStyle=k<2?INK:RED;ctx.fillText(line,200,y0+k*LH+(k>=2?GAP:0)+dy);});
+      ctx.restore();phase='…';}
+    if(T>=T_A){var b=cl((T-T_A)/0.5),so=1-cl((T-T_CAP+0.4)/0.4);drawAfter(T,b);hud(T,b);strip(T,b*so);phase=T<T_N0?'AFTER · built in-house':'AFTER · notices bounce off';}
+    if(T>=T_CAP){var c1=cl((T-T_CAP)/0.4),c2=cl((T-T_CAP-CAP2)/0.4);ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';
+      var fz=fitFont(TX.c1.length>TX.c2.length?TX.c1:TX.c2,320,22,12,'900');ctx.font='900 '+fz+'px '+DISP;
+      ctx.globalAlpha=c1;ctx.fillStyle=REDINK;ctx.fillText(TX.c1,200,STRIPY+2);ctx.globalAlpha=c2;ctx.fillStyle=INK;ctx.fillText(TX.c2,200,STRIPY+2+fz*1.15);var c3=cl((T-T_CAP-2*CAP2)/0.4);ctx.globalAlpha=c3;ctx.fillStyle='rgba(10,10,10,.72)';ctx.font='400 10px Inter, sans-serif';TX.c3.forEach(function(l,k){ctx.fillText(l,200,STRIPY+2+fz*1.15+fz*0.95+k*14);});ctx.restore();phase='CLOSE';}
+    var el=document.getElementById('phase');if(el)el.textContent=phase;
+  }
+  var start=0,raf=0;
+  function loop(now){var T=(now-start)/1000;draw(Math.min(T,T_END));if(T<T_END)raf=requestAnimationFrame(loop);}
+  function play(){cancelAnimationFrame(raf);start=performance.now();raf=requestAnimationFrame(loop);}
+  document.getElementById('replay').addEventListener('click',function(){CALM?draw(T_END):play();});
+  if(EXPORT){window.__draw=function(T){draw(T);};window.__T_END=T_END;}
+  var go=function(){ if(EXPORT){window.__ready=true;return;} var mt=location.hash.match(/^#t=([\d.]+)/); if(mt){draw(+mt[1]);return;} if(CALM){draw(T_END);return;}
+    new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting&&!start)play();});},{threshold:.5}).observe(cv); draw(0); };
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(go);else go();
+})();
+</script>
+</body>
+</html>
