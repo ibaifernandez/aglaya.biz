@@ -52,7 +52,7 @@ const TX = {
   company: 'YOUR COMPANY',
   h1: 'THE RIGHT SYSTEMS,',
   h2: 'MADE FOR YOU.',
-  s1: 'Start from your actual needs and',
+  s1: 'Start from your real needs and',
   s2: 'let your company grow solid.',
 };
 

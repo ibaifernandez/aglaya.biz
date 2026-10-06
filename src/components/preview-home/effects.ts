@@ -16,7 +16,7 @@
  * BaseLayout mounts ClientRouter, so this (re)starts on `astro:page-load` and
  * tears everything down on `astro:before-swap`.
  *
- * T1 (and the header's button) move here. T2 needs no GSAP: its selector and
+ * T1, T3 and the header's button move here. T2 needs no GSAP: its selector and
  * its motion are ./story-selector.ts and the chunks it loads. Lenis smooth
  * scrolling from the mock-up is page-wide and no tramo built so far needs it,
  * so it is not loaded.
@@ -26,6 +26,8 @@ type Cleanup = () => void;
 
 const WAIT_CLASS = 'pv-fx-wait';
 const WAIT_MS = 2500;
+/** T3 · how far each row of cards travels with the scroll (row 0 is the wide card). */
+const ROW_SPEED = [0.05, 0.25, 0.12, 0.3];
 
 let cleanup: Cleanup | null = null;
 
@@ -87,6 +89,27 @@ async function start() {
       });
     }
 
+    // T3 · each pair of cards moves with the scroll at its row's speed, and
+    // «CAPABILITIES» slides across the back — values from t3-grid.html.
+    const cards = document.querySelector<HTMLElement>('[data-pv-cards]');
+    const built = document.querySelector<HTMLElement>('.pv-built');
+    if (cards && built) {
+      ROW_SPEED.forEach((s, row) => {
+        const els = cards.querySelectorAll(`[data-pv-row="${row}"]`);
+        if (!els.length) return;
+        gsap.fromTo(els, { y: s * 140 }, {
+          y: -s * 140,
+          ease: 'none',
+          scrollTrigger: { trigger: cards, start: 'top bottom', end: 'bottom top', scrub: true },
+        });
+      });
+      gsap.fromTo('.pv-depth-word', { xPercent: 0 }, {
+        xPercent: -35,
+        ease: 'none',
+        scrollTrigger: { trigger: built, start: 'top bottom', end: 'bottom top', scrub: true },
+      });
+    }
+
     // Magnetic buttons, only where there is a real pointer.
     if (window.matchMedia('(hover: hover)').matches) {
       document.querySelectorAll<HTMLElement>('[data-pv-magnet]').forEach((button) => {
@@ -106,6 +129,23 @@ async function start() {
         listeners.push(() => {
           button.removeEventListener('pointermove', move);
           button.removeEventListener('pointerleave', leave);
+        });
+      });
+
+      // T3 · the card under the pointer tilts toward it.
+      document.querySelectorAll<HTMLElement>('[data-pv-tilt]').forEach((card) => {
+        const move = (e: PointerEvent) => {
+          const r = card.getBoundingClientRect();
+          const dx = (e.clientX - r.left) / r.width - 0.5;
+          const dy = (e.clientY - r.top) / r.height - 0.5;
+          gsap.to(card, { rotateY: dx * 14, rotateX: -dy * 14, duration: 0.5, ease: 'power3.out' });
+        };
+        const leave = () => gsap.to(card, { rotateY: 0, rotateX: 0, duration: 0.5, ease: 'power3.out' });
+        card.addEventListener('pointermove', move);
+        card.addEventListener('pointerleave', leave);
+        listeners.push(() => {
+          card.removeEventListener('pointermove', move);
+          card.removeEventListener('pointerleave', leave);
         });
       });
     }

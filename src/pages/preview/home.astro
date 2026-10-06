@@ -6,7 +6,7 @@
  * untouched.
  *
  * Reference: docs/design/portada-nueva/portada-aglaya.html. Built tramo by
- * tramo; T1 and T2 are filled. Everything it uses lives in
+ * tramo; T1, T2 and T3 are filled. Everything it uses lives in
  * src/components/preview-home/ — dropping the preview means deleting that
  * folder and this file.
  */
@@ -14,8 +14,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PreviewHeader from '../../components/preview-home/PreviewHeader.astro';
 import Hook from '../../components/preview-home/Hook.astro';
 import Problem from '../../components/preview-home/Problem.astro';
+import Built from '../../components/preview-home/Built.astro';
 import PreviewFooter from '../../components/preview-home/PreviewFooter.astro';
 import '../../components/preview-home/preview-home.css';
+// The face of T1's paragraph — the page's largest paint. Same file the package's
+// @font-face points at (one hashed asset), asked for first so the faces further
+// down the page do not hold it up.
+import lcpFont from '@aglaya/design-tokens/fonts/Inter-Regular.otf?url';
 ---
 
 <BaseLayout
@@ -26,6 +31,7 @@ import '../../components/preview-home/preview-home.css';
   noindex
 >
   <div class="pv">
+    <link rel="preload" href={lcpFont} as="font" type="font/otf" crossorigin />
     <PreviewHeader />
     <main id="main-content">
       <!-- T1 · the hook -->
@@ -33,7 +39,7 @@ import '../../components/preview-home/preview-home.css';
       <!-- T2 · the problem -->
       <Problem />
       <!-- T3 · what we've built -->
-      <section class="pv-section" id="built" data-tramo="T3"></section>
+      <Built />
       <!-- T4 · the Orchestrator -->
       <section class="pv-section" id="orchestrator" data-tramo="T4"></section>
       <!-- T5 · how we work -->

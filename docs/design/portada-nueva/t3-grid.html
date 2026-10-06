@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T3 · Lo construido — maqueta de rejilla</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap">
+<style>
+:root{--bg:#fff;--surface:#f5f5f4;--ink:#0a0a0a;--muted:rgba(10,10,10,.68);--faint:rgba(10,10,10,.45);--line:rgba(10,10,10,.10);--brand:#e8003d;--brand-ink:#b5002f;--green:#9fc243;--on-brand:#fcfcfc;
+  --f-display:"Outfit","Arial Black",system-ui,sans-serif;--f-body:"Inter",system-ui,sans-serif;--f-mono:"Space Mono",ui-monospace,monospace;--gutter:clamp(16px,4vw,56px);--max:1200px}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--f-body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h2,h3{font-family:var(--f-display);font-weight:900;text-transform:uppercase;letter-spacing:-.02em;line-height:.92;margin:0;text-wrap:balance}
+p{margin:0}
+.note{background:#0a0a0a;color:#fcfcfc;font:12px/1.5 var(--f-mono);padding:14px var(--gutter)}
+.note b{color:var(--green)}
+.wrap{max-width:var(--max);margin:0 auto;padding-inline:var(--gutter)}
+.mono{font-family:var(--f-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase}
+.eyebrow{display:flex;align-items:center;gap:10px;color:var(--muted)}
+.eyebrow::before{content:"";width:28px;height:2px;background:var(--green);flex:none}
+.sec-h{font-size:clamp(36px,5.4vw,72px);margin-top:16px}
+.sec-h em{font-style:normal;color:var(--brand)}
+.lede{color:var(--muted);margin-top:16px;font-size:18px}
+.built{position:relative;overflow:hidden;padding-block:100px 140px;background:var(--surface)}
+.depth-word{position:absolute;top:150px;left:0;white-space:nowrap;font-family:var(--f-display);font-weight:900;font-size:clamp(90px,17vw,240px);line-height:1;color:transparent;-webkit-text-stroke:1px rgba(10,10,10,.12);pointer-events:none;user-select:none}
+/* Una ancha y tres parejas de cortas */
+.cards{position:relative;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin-top:56px;perspective:1000px}
+.card{min-width:0}
+.card.wide{grid-column:1 / -1}
+.card.wide h3{font-size:34px;margin-top:18px}
+.card.wide p{font-size:16px;max-width:60ch}
+.card-in{height:100%;background:var(--bg);border:1px solid var(--line);padding:22px;box-shadow:0 30px 60px -30px rgba(0,0,0,.22);transform-style:preserve-3d;will-change:transform;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.card h3{font-size:26px;margin-top:6px}
+.ours{margin-top:18px;color:var(--brand-ink);font-size:10px;letter-spacing:.18em}
+.card p{color:var(--muted);margin-top:10px;font-size:15px}
+.more{display:inline-block;margin-top:16px;font:700 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--brand-ink);border-bottom:2px solid var(--brand);padding-bottom:4px}
+.mini{height:110px;background:var(--surface);border:1px solid var(--line);padding:12px;display:flex;gap:8px;transform:translateZ(30px)}
+.mini.fleet{display:grid;grid-template-columns:repeat(9,1fr);gap:8px;align-items:center}
+.mini.fleet span{aspect-ratio:1;background:var(--bg);border:1px solid var(--ink);max-height:60px}
+.mini.fleet span.r{background:var(--brand);border-color:var(--brand);transform:scale(1.35)}
+.mini.cols>div{flex:1;display:flex;flex-direction:column;gap:6px}
+.mini.cols span{height:16px;background:var(--bg);border:1px solid var(--line)}
+.mini.cols span.r{border-left:3px solid var(--brand)}
+.mini.rows{flex-direction:column;gap:7px}
+.mini.rows span{display:flex;align-items:center;gap:8px;height:16px;font:10px var(--f-mono);color:var(--muted);letter-spacing:.06em}
+.mini.rows span i{width:8px;height:8px;background:var(--brand);flex:none}
+.mini.rows span i.g{background:var(--green)}
+.mini.rows span s{flex:1;height:6px;background:rgba(10,10,10,.08);text-decoration:none}
+.mini.flow{align-items:center;justify-content:space-between}
+.mini.flow span{flex:1;height:38px;border:1px solid var(--ink);display:grid;place-items:center;font:10px var(--f-mono);letter-spacing:.08em;background:var(--bg);text-align:center}
+.mini.flow span.r{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+.mini.flow b{width:14px;height:1px;background:var(--ink);flex:none}
+.mini.sw span{flex:1}
+@media (max-width:760px){.cards{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.card{transform:none!important}.card-in{transition:none}}
+</style>
+</head>
+<body>
+<div class="note"><b>MAQUETA · T3 · REJILLA (BOCETO)</b> — Una ancha (Orchestrator) y tres parejas de cortas. Cada corta: titular = la capacidad que se vende; etiqueta «OURS» = la herramienta nuestra que lo prueba. Cada pareja se mueve junta. «See how it works» sin enlace por ahora. Titular del grill: «Yours next». El resto de textos, provisional.</div>
+<section class="built" id="built">
+  <div class="depth-word" aria-hidden="true">CAPABILITIES · CAPABILITIES</div>
+  <div class="wrap">
+    <div class="eyebrow mono">What we've built</div>
+    <h2 class="sec-h">Built for us. <em>Yours next.</em></h2>
+    <p class="lede">Every system we built to run AGLAYA, told as what it would do for your company.</p>
+    <div class="cards">
+      <div class="card wide" data-row="0"><div class="card-in">
+        <div class="mini fleet"><span></span><span></span><span></span><span></span><span class="r"></span><span></span><span></span><span></span><span></span></div>
+        <h3>Orchestrator</h3><p>Our control room. It keeps one live map of every system we run and the rules between them, and it directs the AI agents that work on them: each with its role, its permissions and its audits, and a person who approves. Anyone can use AI. This is how a company is run on it.</p><span class="more">See how it works <span aria-hidden="true">→</span></span></div></div>
+      <div class="card" data-row="1"><div class="card-in">
+        <div class="mini flow"><span>Free tool</span><b></b><span>Real result</span><b></b><span class="r">Qualified lead</span></div>
+        <div class="ours mono">Ours · Scanner 21.719</div><h3>A lead magnet that works</h3><p>A free tool that solves a small, real problem for your visitors. They get something useful. You get a lead who has already seen what you're good at.</p><span class="more">See how it works <span aria-hidden="true">→</span></span></div></div>
+      <div class="card" data-row="1"><div class="card-in">
+        <div class="mini rows"><span><i></i><s></s>write today</span><span><i></i><s></s>write today</span><span><i class="g"></i><s></s>campaign</span><span><i class="g"></i><s></s>campaign</span></div>
+        <div class="ours mono">Ours · Outreach</div><h3>AI prospecting</h3><p>It reads your data sources and tells your sales team who to write to, how, why and when, and whether one by one or as a campaign.</p><span class="more">See how it works <span aria-hidden="true">→</span></span></div></div>
+      <div class="card" data-row="2"><div class="card-in">
+        <div class="mini rows"><span><i class="g"></i><s></s>consent 12:04</span><span><i class="g"></i><s></s>consent 12:31</span><span><i></i><s></s>no consent</span><span><i class="g"></i><s></s>consent 13:02</span></div>
+        <div class="ours mono">Ours · CRM + consent log</div><h3>A CRM of your own</h3><p>Your customer base on infrastructure you control, with no fee per seat. And every contact carries a record of how and when they agreed to hear from you.</p><span class="more">See how it works <span aria-hidden="true">→</span></span></div></div>
+      <div class="card" data-row="2"><div class="card-in">
+        <div class="mini flow"><span>Signup</span><b></b><span class="r">Wait 2d</span><b></b><span>Email</span></div>
+        <div class="ours mono">Ours · Automation panel</div><h3>Automations in order</h3><p>Your whole email machinery in one place: where each contact comes in, which automation it triggers, and a warning when your platform and your website stop matching. No more digging through your email platform to find out.</p><span class="more">See how it works <span aria-hidden="true">→</span></span></div></div>
+      <div class="card" data-row="3"><div class="card-in">
+        <div class="mini cols"><div><span></span><span class="r"></span><span></span></div><div><span class="r"></span><span></span></div><div><span></span></div></div>
+        <div class="ours mono">Ours · Kanban Desk</div><h3>One board for people and AI agents</h3><p>Each task becomes a card that people and agents work on: organise, build, review, decide. Every step stays written on the card, so you always know who did what and why.</p><span class="more">See how it works <span aria-hidden="true">→</span></span></div></div>
+      <div class="card" data-row="3"><div class="card-in">
+        <div class="mini sw"><span style="background:#000"></span><span style="background:var(--brand)"></span><span style="background:var(--green)"></span><span style="background:#fff;border:1px solid var(--line)"></span></div>
+        <div class="ours mono">Ours · Design System</div><h3>One source for your brand</h3><p>Your colours, type and voice in one place, read by every platform you run and by the AI agents that write for you. Change it once and every page follows.</p><span class="more">See how it works <span aria-hidden="true">→</span></span></div></div>
+    </div>
+  </div>
+</section>
+<div style="height:60vh;background:#000"></div>
+<script>
+(function(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  var SPEED=[0.05,0.25,0.12,0.3],cards=[].slice.call(document.querySelectorAll('.card[data-row]')),grid=document.querySelector('.cards'),word=document.querySelector('.depth-word'),sec=document.querySelector('.built');
+  function onScroll(){var r=grid.getBoundingClientRect(),vh=innerHeight,p=(vh-r.top)/(vh+r.height);p=Math.max(0,Math.min(1,p));
+    cards.forEach(function(c){var s=SPEED[+c.dataset.row];c.style.transform='translateY('+(s*140-p*s*280).toFixed(1)+'px)';});
+    var rs=sec.getBoundingClientRect(),q=Math.max(0,Math.min(1,(vh-rs.top)/(vh+rs.height)));word.style.transform='translateX('+(-35*q)+'%)';}
+  addEventListener('scroll',onScroll,{passive:true});onScroll();
+  if(matchMedia('(hover: hover)').matches)document.querySelectorAll('.card-in').forEach(function(c){
+    c.addEventListener('pointermove',function(e){var r=c.getBoundingClientRect(),dx=(e.clientX-r.left)/r.width-.5,dy=(e.clientY-r.top)/r.height-.5;c.style.transform='rotateY('+dx*14+'deg) rotateX('+(-dy*14)+'deg)';});
+    c.addEventListener('pointerleave',function(){c.style.transform='';});});
+})();
+</script>
+</body>
+</html>

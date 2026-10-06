@@ -25,7 +25,7 @@
  * frames travel as <template>s, inert and out of the DOM, each with its own
  * name, so changing pair without the motion module costs no script.
  */
-import { problem } from './copy';
+import { problem, rich } from './copy';
 import { tetrisFinalMarkup, TETRIS_PAIR } from './story-tetris';
 import { heatmapFinalMarkup, HEATMAP_PAIR } from './story-heatmap';
 import { plugsFinalMarkup, PLUGS_PAIR } from './story-plugs';
@@ -56,7 +56,7 @@ const frames = problem.pairs.map((_, i) => ({ svg: PIECES[i].svg(), label: PIECE
         </div>
         {problem.pairs.map((pair, i) => (
           <div class="pv-panel" id={`pv-panel-${i}`} data-pv-panel style={`--row: ${i * 2 + 2}`}>
-            <p class="pv-prob-p">{pair.problemText}</p>
+            <p class="pv-prob-p">{rich(pair.problemText).map((p) => (p.em ? <em>{p.text}</em> : p.strong ? <strong>{p.text}</strong> : p.text))}</p>
             <h3 class="pv-sol-h" aria-label={pair.solution}>
               <span class="pv-done" aria-hidden="true">{pair.solution}</span><span class="pv-caret" aria-hidden="true"></span><span class="pv-rest" aria-hidden="true"></span>
             </h3>
@@ -74,7 +74,9 @@ const frames = problem.pairs.map((_, i) => ({ svg: PIECES[i].svg(), label: PIECE
 
 <style>
   /* ---------- Ground floor ---------- */
-  .pv-story { background: var(--color-surface); }
+  .pv-story {
+    background: var(--color-surface);
+  }
   .pv-story-in { padding-block: 60px; }
 
   .pv-board {
@@ -138,6 +140,12 @@ const frames = problem.pairs.map((_, i) => ({ svg: PIECES[i].svg(), label: PIECE
     font-size: 15px;
   }
   .pv-prob-p { color: var(--color-muted); }
+  /* The grill's emphasis, both words the same: ink at 500 on the grey paragraph.
+     Inter Medium is a face the page loads anyway; an italic and a 700 were 131 KB
+     each on the way to the largest paint (card 82868b81, option B). No slant at
+     all, so never a fake one. */
+  .pv-prob-p em,
+  .pv-prob-p strong { font-style: normal; font-weight: 500; color: var(--color-text); }
   .pv-sol-p { color: var(--color-text); }
   .pv-sol-h {
     margin-top: 16px;
