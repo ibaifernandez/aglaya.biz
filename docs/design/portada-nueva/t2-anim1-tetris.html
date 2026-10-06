@@ -34,7 +34,7 @@ p{margin:0}
 </style>
 </head>
 <body>
-<div class="note"><b>MAQUETA · ANIMACIÓN 1 · «AGLAYA TE ARREGLA EL TETRIS»</b> — 1 caen las herramientas · 2 fundido · 3 «So many tools. What did they solve?» · 4 fundido · 5 se revela la forma real de la empresa y cada necesidad recibe su pieza · 6 lo que encaja se integra. Cierre: «The right systems, made for you.» + «Start from your actual needs and let your company grow solid.» Sin cifra prometida.</div>
+<div class="note"><b>MAQUETA · ANIMACIÓN 1 · «AGLAYA TE ARREGLA EL TETRIS»</b> — 1 caen las herramientas · 2 fundido · 3 «So many tools. What did they solve?» · 4 fundido · 5 se revela la forma real de la empresa y cada necesidad recibe su pieza · 6 lo que encaja se integra. Cierre: «The right systems, made for you.» + «Start from your real needs and let your company grow solid.» Sin cifra prometida.</div>
 <div class="wrap">
   <div class="board">
     <div>
@@ -48,7 +48,7 @@ p{margin:0}
       <p class="mono" style="margin-top:14px;color:var(--faint)">(textos acordados con Ibai el 2026-10-04)</p>
     </div>
     <div>
-      <div class="stage"><canvas id="cv" width="800" height="1000" role="img" aria-label="Before: AI tools fall faster and faster onto your company, piling up with gaps until they overflow. After: we start from your real needs, the gaps, and each one gets the piece that fits; the rows complete and clear."></canvas></div>
+      <div class="stage"><canvas id="cv" width="800" height="1000" role="img" aria-label="Before: AI tools fall faster and faster onto your company, piling up with gaps until they overflow. After: we start from your real needs, the gaps, and each one gets a system built for it that fits in place."></canvas></div>
       <div class="ctrl"><button id="replay" type="button">Replay</button><span class="mono" id="phase"></span></div>
     </div>
   </div>
@@ -60,7 +60,7 @@ p{margin:0}
   var CALM=matchMedia('(prefers-reduced-motion: reduce)').matches||location.hash==='#planta-baja';
   var Q=new URLSearchParams(location.search),LANG=Q.get('lang')==='es'?'es':'en',EXPORT=Q.get('export')==='1';
   var TX={
-    en:{bought:'TOOLS BOUGHT',built:'SYSTEMS BUILT',met:'NEEDS MET',m1:'SO MANY TOOLS.',m2a:'WHAT DID THEY ',m2b:'SOLVE?',needs:['SALES','REPORTING','SUPPORT','HIRING'],builtFor:'BUILT FOR',company:'YOUR COMPANY',h1:'THE RIGHT SYSTEMS,',h2:'MADE FOR YOU.',s1:'Start from your actual needs and',s2:'let your company grow solid.'},
+    en:{bought:'TOOLS BOUGHT',built:'SYSTEMS BUILT',met:'NEEDS MET',m1:'SO MANY TOOLS.',m2a:'WHAT DID THEY ',m2b:'SOLVE?',needs:['SALES','REPORTING','SUPPORT','HIRING'],builtFor:'BUILT FOR',company:'YOUR COMPANY',h1:'THE RIGHT SYSTEMS,',h2:'MADE FOR YOU.',s1:'Start from your real needs and',s2:'let your company grow solid.'},
     es:{bought:'HERRAMIENTAS COMPRADAS',built:'SISTEMAS CONSTRUIDOS',met:'NECESIDADES CUBIERTAS',m1:'TANTÍSIMAS HERRAMIENTAS, PERO…',m2a:'¿VERDADERAMENTE',m2b:'CADA UNA RESUELVE UN PROBLEMA?',red:'RESUELVE',needs:['VENTAS','INFORMES','SOPORTE','RRHH'],builtFor:'HECHO PARA',company:'TU EMPRESA',h1:'LOS SISTEMAS ADECUADOS,',h2:'HECHOS PARA TI.',s1:'Empieza por tus necesidades reales',s2:'y deja que tu empresa crezca sólida.'}
   }[LANG];
   var COLS=13,ROWS=14,C=26,OX=31,OY=78; // 4:5 (400×500): casillas más grandes para llenar el alto

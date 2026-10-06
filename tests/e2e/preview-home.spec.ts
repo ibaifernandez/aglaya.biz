@@ -22,9 +22,15 @@ import { fileURLToPath } from 'node:url';
  *     teaches them») on 2026-10-06 (card 544e2a13); the decision rules over
  *     that mock-up, which stays as the historical reference;
  *   - its T2 heading, selector and stage inside one 1440 × 900 screen;
+ *   - its T3 the sketch t3-grid.html built: one wide card and three pairs of
+ *     short ones, readable with JavaScript off and still with reduced motion;
  *   - WCAG 2 AA clean with reduced motion.
  *
- * The words are not copied into this file. They are read out of the reference
+ * The words of the grill of 2026-10-06 (minutes b7d39088, card 82868b81) ARE
+ * written here, in `GRILL`, because no mock-up carries them except T3's: they
+ * are Ibai's decisions, copied from the card, not from the page.
+ *
+ * Every other word is not copied into this file. They are read out of the reference
  * mock-ups committed at docs/design/portada-nueva/ — portada-aglaya.html (T1),
  * t2-selector.html (T2, minus its fourth pair), t2-anim1-tetris.html (pair 1's
  * way out, its paragraph, and its drawing), t2-anim2-heatmap.html (pair 2's
@@ -42,6 +48,33 @@ const SELECTOR_MOCKUP = fileURLToPath(new URL('../../docs/design/portada-nueva/t
 const TETRIS_MOCKUP = fileURLToPath(new URL('../../docs/design/portada-nueva/t2-anim1-tetris.html', import.meta.url));
 const HEATMAP_MOCKUP = fileURLToPath(new URL('../../docs/design/portada-nueva/t2-anim2-heatmap.html', import.meta.url));
 const PLUGS_MOCKUP = fileURLToPath(new URL('../../docs/design/portada-nueva/t2-anim3-plugs.html', import.meta.url));
+const T3_MOCKUP = fileURLToPath(new URL('../../docs/design/portada-nueva/t3-grid.html', import.meta.url));
+
+/** The grill of 2026-10-06, word for word from card 82868b81 (decisions 3, 6–8, 11–14 of minutes b7d39088). */
+const GRILL = {
+  hookSub:
+    'We bring AI into your company: a few hours for a one-off task, one project when you need a specific system, or a whole stack when your company is ready for its next big step. We work with a team of AI agents under rules, audits and human control. Everything we build is yours, and designed to keep running without us.',
+  title: 'Everyone sells you AI tools. Nobody starts from your company.',
+  /** Pair 1's paragraph as read; «the one» in italic, «actually» in bold. */
+  texts: [
+    {
+      problemText: 'Chatbots, copilots, agents, automations. Each one promises to be the one that matters. But the one that actually matters is your company.',
+      em: 'the one',
+      strong: 'actually',
+      solutionText: 'Stop bending off-the-shelf tools to fit your company. We sit with each department, find what needs solving, and build each need a system made for it.',
+    },
+    {
+      problemText: 'Licences nobody uses, a bill that grows every month, and a team that stops trusting AI before it does anything useful.',
+      solutionText: 'We find where your team loses the most hours and put AI right there first. Licences nobody uses go. Then we grow from what works.',
+    },
+    {
+      problemText: 'Your company runs on tools you rent. If the vendor is bought, shuts down or changes its terms, the work those tools did for you stops with them.',
+      solutionText: "What we build runs on infrastructure your company controls. You don't pay us rent for it: it's an asset of your own.",
+    },
+  ],
+  tetrisLabel:
+    'Before: AI tools fall faster and faster onto your company, piling up with gaps until they overflow. After: we start from your real needs, the gaps, and each one gets a system built for it that fits in place. The right systems, made for you. Start from your real needs and let your company grow solid.',
+};
 
 const decode = (s: string) => s.replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
 
@@ -192,7 +225,10 @@ const HEATMAP_LABEL =
   "Before: the monthly AI bill keeps growing, most licences go unused, and the team's trust in AI drops. After: the week's lost hours by department; one AI system on each hot spot until it cools down, licences go to zero and trust rises. Start where it pays, then grow from what works.";
 
 const html = readFileSync(MOCKUP, 'utf8');
-const hook = mockupHook(html);
+/** T1: the mock-up's words, but the paragraph the grill set. */
+const hook = { ...mockupHook(html), sub: GRILL.hookSub };
+/** The mock-up's old paragraph: gone since the grill. */
+const oldHookSub = mockupHook(html).sub;
 const tetris = mockupTetris(readFileSync(TETRIS_MOCKUP, 'utf8'));
 const board = mockupTetrisGeometry(readFileSync(TETRIS_MOCKUP, 'utf8'));
 const heatmap = mockupHeatmap(readFileSync(HEATMAP_MOCKUP, 'utf8'));
@@ -208,8 +244,14 @@ const dropped = selectorMockup.pairs[3];
  */
 const problem = (() => {
   const p = mockupProblem(readFileSync(SELECTOR_MOCKUP, 'utf8'));
-  p.pairs = p.pairs.slice(0, 3).map((q) => ({ ...q, n: q.n.replace(/ of 4$/, ' of 3') }));
-  p.pairs[0] = { ...p.pairs[0], solution: tetris.solution, solutionText: tetris.solutionText };
+  p.pairs = p.pairs.slice(0, 3).map((q, i) => ({
+    ...q,
+    n: q.n.replace(/ of 4$/, ' of 3'),
+    problemText: GRILL.texts[i].problemText,
+    solutionText: GRILL.texts[i].solutionText,
+  }));
+  p.pairs[0] = { ...p.pairs[0], solution: tetris.solution };
+  p.title = GRILL.title;
   return p;
 })();
 /** The stage's name with pair 3 on it: the plugs canvas's label, word for word. */
@@ -217,6 +259,28 @@ const plugsLabel = plugs.label;
 /** The stage's name with pair 1 on it: the Tetris canvas's label, then the words its last frame shows. */
 const sentence = (s: string) => s.charAt(0) + s.slice(1).toLowerCase();
 const tetrisLabel = `${tetris.label} ${sentence(tetris.head.join(' '))} ${tetris.sub}`;
+/** T3 as the sketch writes it: heading, cards in order (row, «Ours · …», title, paragraph), the link that is not one yet. */
+export function mockupBuilt(src: string) {
+  const one = (s: string, re: RegExp) => decode((re.exec(s)?.[1] ?? '').replace(/&#39;/g, "'"));
+  const h2 = /<h2 class="sec-h">([\s\S]*?)<\/h2>/.exec(src)?.[1] ?? '';
+  return {
+    eyebrow: one(src, /class="eyebrow mono">([^<]+)</),
+    title: decode(h2.replace(/<[^>]+>/g, '')),
+    titleEm: one(h2, /<em>([^<]+)<\/em>/),
+    lede: one(src, /class="lede">([^<]+)</),
+    depthWord: one(src, /class="depth-word"[^>]*>([^<·]+)/),
+    // Each card runs from its `data-row` to the next one (cards nest divs, so no closing tag can end it).
+    cards: [...src.matchAll(/<div class="card[^"]*" data-row="(\d)">([\s\S]*?)(?=<div class="card[^"]*" data-row=|<\/section>)/g)].map(([, row, c]) => ({
+      row: +row,
+      ours: one(c, /class="ours mono">([^<]+)</),
+      title: one(c, /<h3>([^<]+)<\/h3>/),
+      text: one(c, /<\/h3><p>([^<]+)<\/p>/),
+    })),
+    more: one(src, /class="more">([^<]+?)\s*</),
+    speed: (/SPEED=\[([^\]]+)\]/.exec(src)?.[1] ?? '').split(',').map(Number),
+  };
+}
+const t3 = mockupBuilt(readFileSync(T3_MOCKUP, 'utf8'));
 const PICK = /pick one/i;
 
 /** The chunks of T2's motion, as Vite names them after their source files. */
@@ -404,23 +468,23 @@ test.describe('new home page preview', () => {
       expect(m.maxWidth).toBe('none');
       expect(Math.abs(m.width - m.inner), `paragraph ${m.width}px vs container ${m.inner}px`).toBeLessThanOrEqual(1);
       expect(m.sideways, 'no horizontal scroll').toBeLessThanOrEqual(0);
-      if (w === 1440) expect(m.lines, 'two lines at 1440, as in Ibai’s capture').toBe(2);
+      // Two lines in Ibai's capture of the old paragraph; the grill's is longer and takes three.
+      if (w === 1440) expect(m.lines, 'three lines at 1440').toBe(3);
     });
   }
 
   test('the reference mock-ups yield the T2 words (the reader is not blind)', () => {
     expect(problem.eyebrow).toBe('Where most companies get stuck');
-    expect(problem.title).toBe('Everyone talks about AI. Nobody tells you where to start.');
+    expect(problem.title).toBe('Everyone sells you AI tools. Nobody starts from your company.');
     expect(problem.tabsLabel).toBe('Where companies get stuck');
     // Pair 1 as agreed with Ibai on 2026-10-04 (card 00b8dd08), read off the Tetris mock-up.
     expect(tetris.problem, 'the Tetris mock-up is pair 1').toBe(problem.pairs[0].problem);
     expect(tetris.solution).toBe('We make the system fit the need');
-    expect(tetris.solutionText).toBe(
-      'Stop bending off-the-shelf tools to fit your company. We sit with each department, find what actually needs solving, and build each need a system made for it.',
-    );
     expect(tetris.label.length).toBeGreaterThan(80);
     expect(tetris.head).toEqual(['THE RIGHT SYSTEMS,', 'MADE FOR YOU.']);
-    expect(tetris.sub).toBe('Start from your actual needs and let your company grow solid.');
+    expect(tetris.sub).toBe('Start from your real needs and let your company grow solid.');
+    // Decision 10: the label says what the drawing shows now, and ends on its last words.
+    expect(tetrisLabel).toBe(GRILL.tetrisLabel);
     expect(tetris.builtFor).toBe('BUILT FOR');
     expect(tetris.needs).toEqual(['SALES', 'REPORTING', 'SUPPORT', 'HIRING']);
     // Pair 2's drawing, read off the heat-map mock-up (card 6e837be0).
@@ -435,8 +499,6 @@ test.describe('new home page preview', () => {
     // Pair 3's drawing, read off the plugs mock-up (card 544e2a13); its card texts are pair 3's.
     expect(plugs.problem, 'the plugs mock-up is pair 3').toBe(problem.pairs[2].problem);
     expect(plugs.solution).toBe(problem.pairs[2].solution);
-    expect(plugs.problemText).toBe(problem.pairs[2].problemText);
-    expect(plugs.solutionText).toBe(problem.pairs[2].solutionText);
     expect(plugs.label.length).toBeGreaterThan(80);
     expect(plugs.label).toContain("your company's asset");
     expect(plugs.close).toEqual(['BUILT FOR YOU.', 'YOURS TO KEEP.']);
@@ -1139,6 +1201,143 @@ test.describe('new home page preview', () => {
         expect(scripts.filter((u) => DRAWING_CHUNK.test(u)), 'drawing motion NOT downloaded').toEqual([]);
       });
     }
+  });
+
+  test('the grill of 2026-10-06 reached the page, and the words it replaced are gone', async ({ request }) => {
+    expect(t3.cards, 'the T3 sketch reader is not blind').toHaveLength(7);
+    expect(t3.cards.map((c) => c.row)).toEqual([0, 1, 1, 2, 2, 3, 3]);
+    for (const c of t3.cards) expect(c.text.length, c.title).toBeGreaterThan(60);
+    expect(t3.speed).toEqual([0.05, 0.25, 0.12, 0.3]);
+    const served = decode((await (await request.get(ROUTE)).text()).replace(/&#39;/g, "'"));
+    for (const w of [
+      oldHookSub,
+      'Everyone talks about AI.',
+      'Nobody tells you where to start.',
+      'Everyone is selling one',
+      "data in places it shouldn't be",
+      'Most companies run on a dozen tools they rent.',
+      'When we leave the room, everything keeps running.',
+      'find what actually needs solving',
+      'Start from your actual needs',
+      'the rows complete and clear',
+      'Trello',
+      'Jira',
+    ]) {
+      expect(served, `«${w}» is gone`).not.toContain(w);
+    }
+    // No webfont from Google: every family comes from the design-tokens package.
+    expect(served).not.toContain('fonts.googleapis.com');
+  });
+
+  test('pair 1: «the one» in Inter\'s own italic, «actually» in bold', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(ROUTE);
+    const p = t2(page).locator('.pv-prob-p').first();
+    await expect(p).toHaveText(GRILL.texts[0].problemText);
+    const em = p.locator('em');
+    await expect(em).toHaveText(GRILL.texts[0].em!);
+    await expect(p.locator('strong')).toHaveText(GRILL.texts[0].strong!);
+    await expect(em).toHaveCSS('font-style', 'italic');
+    // A real italic face, not the browser slanting the upright one.
+    const real = await page.evaluate(async () => {
+      await document.fonts.ready;
+      await document.fonts.load('italic 400 15px Inter');
+      return [...document.fonts].some((f) => f.family.replace(/['"]/g, '') === 'Inter' && f.style === 'italic' && f.weight === '400' && f.status === 'loaded');
+    });
+    expect(real, 'Inter Italic 400 is served and loaded').toBe(true);
+  });
+
+  /** T3's cards, as the page shows them: row, «Ours · …», title, paragraph. */
+  const builtSection = (page: import('@playwright/test').Page) => page.locator('main#main-content section#built');
+  async function expectBuiltComplete(page: import('@playwright/test').Page) {
+    const sec = builtSection(page);
+    await expect(sec.getByText(t3.eyebrow, { exact: true })).toBeVisible();
+    await expect(sec.getByRole('heading', { level: 2, name: t3.title })).toBeVisible();
+    await expect(sec.locator('h2 em')).toHaveText(t3.titleEm);
+    await expect(sec.getByText(t3.lede, { exact: true })).toBeVisible();
+    const cards = sec.locator('[data-pv-row]');
+    await expect(cards).toHaveCount(t3.cards.length);
+    for (const [i, c] of t3.cards.entries()) {
+      const card = cards.nth(i);
+      await expect(card).toHaveAttribute('data-pv-row', String(c.row));
+      await expect(card.getByRole('heading', { level: 3, name: c.title, exact: true })).toBeVisible();
+      await expect(card.getByText(c.text, { exact: true })).toBeVisible();
+      if (c.ours) await expect(card.locator('.pv-ours')).toHaveText(c.ours);
+      else await expect(card.locator('.pv-ours')).toHaveCount(0);
+      await expect(card.getByText(t3.more)).toBeVisible();
+    }
+    // «See how it works» is not a link yet.
+    await expect(sec.getByRole('link')).toHaveCount(0);
+  }
+
+  test.describe('T3 with JavaScript off', () => {
+    test.use({ javaScriptEnabled: false });
+    test('T3 is complete and visible, word for word from the sketch', async ({ page }) => {
+      await page.goto(ROUTE);
+      await expectBuiltComplete(page);
+      await expect(builtSection(page).locator('.pv-depth-word')).toContainText(t3.depthWord.trim());
+    });
+  });
+
+  for (const [w, h] of [[1440, 900], [375, 812]] as const) {
+    test(`${w}: with reduced motion, T3 stays whole and still, its rows of pairs the same height, and nothing scrolls sideways`, async ({ page }) => {
+      await page.setViewportSize({ width: w, height: h });
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.goto(ROUTE);
+      await expectBuiltComplete(page);
+      await builtSection(page).scrollIntoViewIfNeeded();
+      await page.mouse.move(w / 2, h / 2);
+      await page.waitForTimeout(400);
+      const m = await page.evaluate(() => {
+        const els = [...document.querySelectorAll<HTMLElement>('#built [data-pv-row], #built [data-pv-tilt], #built .pv-depth-word')];
+        const rows = new Map<string, number[]>();
+        document.querySelectorAll<HTMLElement>('#built [data-pv-row]').forEach((c) => {
+          const r = c.dataset.pvRow!;
+          rows.set(r, [...(rows.get(r) ?? []), c.getBoundingClientRect().height]);
+        });
+        return {
+          moved: els.filter((e) => getComputedStyle(e).transform !== 'none').length,
+          heights: [...rows.entries()].filter(([r]) => r !== '0').map(([, hs]) => hs),
+          sideways: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+        };
+      });
+      expect(m.moved, 'nothing of T3 is moved').toBe(0);
+      expect(m.sideways, 'no horizontal scroll').toBeLessThanOrEqual(0);
+      if (w === 1440) {
+        const all = m.heights.flat();
+        expect(Math.max(...all) - Math.min(...all), `row heights ${all.join(', ')}`).toBeLessThanOrEqual(1);
+      }
+    });
+  }
+
+  test('1440: with motion, each pair of T3 moves with the scroll at its row\'s speed, together', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(ROUTE);
+    await page.waitForFunction(() => !document.documentElement.classList.contains('pv-fx-wait'));
+    const ys = async () =>
+      page.evaluate(() =>
+        [...document.querySelectorAll<HTMLElement>('#built [data-pv-row]')].map((c) => ({
+          row: +c.dataset.pvRow!,
+          y: new DOMMatrixReadOnly(getComputedStyle(c).transform).m42,
+        })),
+      );
+    await page.evaluate(() => window.scrollTo(0, document.querySelector<HTMLElement>('#built')!.offsetTop - 300));
+    await page.waitForTimeout(600);
+    const a = await ys();
+    await page.evaluate(() => window.scrollBy(0, 600));
+    await page.waitForTimeout(600);
+    const b = await ys();
+    const delta = (row: number) => {
+      const d = a.filter((c) => c.row === row).map((c, i) => c.y - b.filter((x) => x.row === row)[i].y);
+      expect(Math.max(...d) - Math.min(...d), `row ${row} moves together`).toBeLessThanOrEqual(0.5);
+      return d[0];
+    };
+    const d = [0, 1, 2, 3].map(delta);
+    for (const v of d) expect(v, 'scrolling down moves the cards up').toBeGreaterThan(0);
+    // Faster rows travel further, in the sketch's order of speeds.
+    expect(d[1]).toBeGreaterThan(d[2]);
+    expect(d[3]).toBeGreaterThan(d[1]);
+    expect(d[2]).toBeGreaterThan(d[0]);
   });
 
   test('passes axe WCAG 2 AA with reduced motion', async ({ page }) => {
