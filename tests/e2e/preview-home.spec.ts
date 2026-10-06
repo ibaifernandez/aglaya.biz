@@ -1568,8 +1568,13 @@ test.describe('new home page preview, in Spanish', () => {
         await expect(sec.getByRole('heading', { level: 3, name: pair.solution, exact: true })).toBeVisible();
         await expect(sec.getByText(pair.solutionText, { exact: true })).toBeVisible();
       }
-      await expect(sec.locator('.pv-prob-p em').first()).toHaveText('el que');
-      await expect(sec.locator('.pv-prob-p strong').first()).toHaveText('de verdad');
+      // Option B, as in English: both words ink at 500, no slant.
+      for (const [sel, word] of [['em', 'el que'], ['strong', 'de verdad']] as const) {
+        const el = sec.locator(`.pv-prob-p ${sel}`).first();
+        await expect(el).toHaveText(word);
+        await expect(el).toHaveCSS('font-style', 'normal');
+        await expect(el).toHaveCSS('font-weight', '500');
+      }
 
       const t3s = page.locator('main#main-content section#built');
       await expect(t3s.getByText(ES.built.eyebrow, { exact: true })).toBeVisible();
@@ -1586,6 +1591,10 @@ test.describe('new home page preview, in Spanish', () => {
         if (i > 0) await expect(cards.nth(i).locator('.pv-ours')).toHaveText(`${ES.built.ours.charAt(0)}${ES.built.ours.slice(1).toLowerCase()} · ${t3.cards[i].ours.replace(/^Ours · /, '')}`);
       }
       await expect(t3s.getByRole('link')).toHaveCount(0);
+      // The little drawings' words, from card 82868b81 (decorative, aria-hidden).
+      const minis = (await t3s.locator('.pv-mini').allTextContents()).join(' ').replace(/\s+/g, ' ');
+      for (const w of ['Gratis', 'Resultado real', 'Lead cualificado', 'escribir hoy', 'campaña', 'consiente 12:04', 'sin consentimiento', 'Alta', 'Esperar 2 d', 'Email']) expect(minis).toContain(w);
+      for (const w of ['Free tool', 'write today', 'consent 12', 'Signup', 'Wait 2d']) expect(minis, `no English: ${w}`).not.toContain(w);
 
       for (const [text, href] of ES.footer) await expect(page.locator('footer').getByRole('link', { name: text, exact: true })).toHaveAttribute('href', href);
       for (const id of ['top', 'problem', 'built', 'orchestrator', 'work', 'contact']) {

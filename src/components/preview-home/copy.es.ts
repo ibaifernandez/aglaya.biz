@@ -3,8 +3,8 @@
  * key for key (the `Copy` type there makes a missing key a build error).
  *
  * Translated by the delineante with Ibai's go-ahead, WORD FOR WORD from card
- * 26bcd318 (2026-10-06). The words inside T3's little drawings are not on the
- * card: they are the obrero's, decorative and `aria-hidden`, flagged on it.
+ * 26bcd318 (2026-10-06); the words inside T3's little drawings (decorative,
+ * `aria-hidden`) are the delineante's too, set on card 82868b81.
  * Kept here, inside the preview folder, for the same reason as ./copy.ts.
  */
 import type { Copy } from './copy';
@@ -122,13 +122,13 @@ export const es: Copy = {
           ours: 'CRM + consent log',
           title: 'Un CRM propio',
           text: 'Tu base de clientes en infraestructura que controlas, sin pagar por usuario. Y cada contacto lleva el registro de cómo y cuándo aceptó saber de ti.',
-          mini: { kind: 'rows', rows: [{ text: 'aceptó 12:04', green: true }, { text: 'aceptó 12:31', green: true }, { text: 'sin permiso' }, { text: 'aceptó 13:02', green: true }] },
+          mini: { kind: 'rows', rows: [{ text: 'consiente 12:04', green: true }, { text: 'consiente 12:31', green: true }, { text: 'sin consentimiento' }, { text: 'consiente 13:02', green: true }] },
         },
         {
           ours: 'Automation panel',
           title: 'Automatizaciones en orden',
           text: 'Toda tu maquinaria de email en un solo sitio: por dónde entra cada contacto, qué automatización activa y un aviso cuando tu plataforma y tu web dejan de cuadrar. Se acabó rebuscar en tu plataforma de email para averiguarlo.',
-          mini: { kind: 'flow', steps: [{ text: 'Alta' }, { text: 'Espera 2 d', red: true }, { text: 'Email' }] },
+          mini: { kind: 'flow', steps: [{ text: 'Alta' }, { text: 'Esperar 2 d', red: true }, { text: 'Email' }] },
         },
       ],
       [
