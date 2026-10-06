@@ -6,7 +6,10 @@
  * The motion is layered on top by ./effects.ts, which only ever animates FROM a
  * state it sets itself, so if it never runs nothing here is left hidden.
  */
-import { hook } from './copy';
+import { copyFor, type Lang } from './copy';
+
+const { lang = 'en' } = Astro.props as { lang?: Lang };
+const { hook } = copyFor(lang);
 ---
 
 <section class="pv-section pv-hook" id="top" data-tramo="T1">

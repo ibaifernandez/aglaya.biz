@@ -43,12 +43,15 @@ const TRANSLATED: Record<string, Alternates> = {
 };
 
 /**
- * Path prefixes published in ONE language on purpose, with no twin. A page under
- * one of these declares no `<link rel="alternate" hreflang>` at all (BaseLayout
- * asks `isUnpaired`): announcing `/es/preview/…` would send a crawler to a 404.
- * They are kept out of the sitemap by the filter in `astro.config.mjs`.
+ * Path prefixes that announce no twin. A page under one of these declares no
+ * `<link rel="alternate" hreflang>` at all (BaseLayout asks `isUnpaired`). The
+ * new home page preview has an English and a Spanish version, but both are
+ * `noindex`: an alternate pointing at a page search engines are told to drop is
+ * a contradiction, so neither declares the other. They link each other only
+ * through the header's «EN / ES», and are kept out of the sitemap by the filter
+ * in `astro.config.mjs`.
  */
-const UNPAIRED_PREFIXES = ['/preview/'];
+const UNPAIRED_PREFIXES = ['/preview/', '/es/preview/'];
 
 /** True for a page that has no language twin and must not announce one. */
 export function isUnpaired(pathname: string): boolean {

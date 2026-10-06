@@ -49,8 +49,8 @@ export default defineConfig({
           // Legal/util pages — no SEO value
           '/privacy/', '/es/privacidad/',
           '/cookies/', '/es/cookies/',
-          // Hidden preview of the new home page — unlinked, noindex, EN only
-          '/preview/home/',
+          // Hidden preview of the new home page — noindex, linked only from its twin
+          '/preview/home/', '/es/preview/home/',
         ];
         return !noindex.some(path => page.endsWith(path));
       },

@@ -10,6 +10,13 @@
  * i18n system like every other page's.
  */
 
+import { es } from './copy.es';
+
+export const meta = {
+  title: 'AGLAYA — preview',
+  description: 'Preview of the new AGLAYA home page.',
+} as const;
+
 export const nav = {
   logo: 'AGLAYA',
   label: 'Main',
@@ -20,6 +27,10 @@ export const nav = {
   ],
   langCurrent: 'EN',
   langOther: 'ES',
+  /** «EN / ES» links the two previews — the only place either is linked from. */
+  langOtherHref: '/es/preview/home/',
+  langOtherName: 'Español',
+  langOtherCode: 'es',
   cta: { href: '#contact', text: 'Talk to us' },
 } as const;
 
@@ -213,3 +224,24 @@ export const built = {
     ],
   ],
 } as const;
+
+/* ---------- Both languages ---------- */
+
+/** The same shape with every word widened to `string`, so the Spanish twin must have every key and nothing else. */
+type Widen<T> = T extends string
+  ? string
+  : T extends boolean
+    ? boolean
+    : T extends readonly (infer U)[]
+      ? readonly Widen<U>[]
+      : T extends object
+        ? { readonly [K in keyof T]: Widen<T[K]> }
+        : T;
+
+const en = { meta, nav, hook, footer, problem, built };
+export type Copy = Widen<typeof en>;
+export type Lang = 'en' | 'es';
+
+
+/** Every word of the preview in `lang` (./copy.es.ts holds the Spanish). */
+export const copyFor = (lang: Lang): Copy => (lang === 'es' ? es : en);

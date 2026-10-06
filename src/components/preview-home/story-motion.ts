@@ -13,24 +13,26 @@
  * Talks to each drawing only through its public interface; whichever is not on
  * screen is unmounted, so the host holds one of them at a time.
  */
-import { createTetris, TETRIS_END, TETRIS_PAIR } from './story-tetris';
-import { createHeatmap, HEATMAP_END, HEATMAP_PAIR } from './story-heatmap';
-import { createPlugs, PLUGS_END, PLUGS_PAIR } from './story-plugs';
+import { createTetris, TETRIS_PAIR } from './story-tetris';
+import { createHeatmap, HEATMAP_PAIR } from './story-heatmap';
+import { createPlugs, PLUGS_PAIR } from './story-plugs';
 
 const clamp = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
 
 /** What a timeline drawing offers (./story-tetris.ts, ./story-heatmap.ts, ./story-plugs.ts). */
 interface Timeline {
+  /** Seconds it lasts, in the page's language (Spanish holds some lines longer). */
+  end: number;
   paint(T: number): void;
   play(): void;
   destroy(): void;
 }
 
-/** Each pair's drawing: how to mount it, and how long it lasts. */
-const TIMELINES: Record<number, { create: (host: HTMLElement) => Timeline; end: number }> = {
-  [TETRIS_PAIR]: { create: createTetris, end: TETRIS_END },
-  [HEATMAP_PAIR]: { create: createHeatmap, end: HEATMAP_END },
-  [PLUGS_PAIR]: { create: createPlugs, end: PLUGS_END },
+/** Each pair's drawing: how to mount it. It reads its language off the host. */
+const TIMELINES: Record<number, (host: HTMLElement) => Timeline> = {
+  [TETRIS_PAIR]: createTetris,
+  [HEATMAP_PAIR]: createHeatmap,
+  [PLUGS_PAIR]: createPlugs,
 };
 
 export interface StoryMotion {
@@ -51,14 +53,15 @@ export function createStoryMotion(host: HTMLElement): StoryMotion {
   const mount = (i: number): Timeline => {
     if (timeline?.pair !== i) {
       timeline?.t.destroy();
-      timeline = { pair: i, t: TIMELINES[i].create(host) };
+      timeline = { pair: i, t: TIMELINES[i](host) };
     }
     return timeline.t;
   };
 
   return {
     still(i, m) {
-      mount(i).paint(clamp(m) * TIMELINES[i].end);
+      const t = mount(i);
+      t.paint(clamp(m) * t.end);
     },
     play(i) {
       mount(i).play();

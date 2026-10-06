@@ -32,9 +32,11 @@ import { SvgCtx, type Ctx } from './story-svg-recorder';
 /** The pair (0-based) this drawing belongs to. */
 export const PLUGS_PAIR = 2;
 
-/* ---------- The words (mock-up `TX.en`) ---------- */
+/* ---------- The words (mock-up `TX.en` / `TX.es`) ---------- */
 
-const TX = {
+export type Lang = 'en' | 'es';
+
+const EN = {
   procs: ['LEADS', 'ORDERS', 'REPORTS', 'SUPPORT'],
   vendors: ['CRM', 'ORDER APP', 'BI TOOL', 'HELPDESK'],
   rented: 'RENTED',
@@ -54,6 +56,31 @@ const TX = {
   c2: 'YOURS TO KEEP.',
   c3: ['No more rent. What we build', "becomes your company's asset."],
 };
+const WORDS: Record<Lang, typeof EN> = {
+  en: EN,
+  es: {
+    procs: ['LEADS', 'PEDIDOS', 'INFORMES', 'SOPORTE'],
+    vendors: ['CRM', 'APP PEDIDOS', 'BI', 'HELPDESK'],
+    rented: 'ALQUILADO',
+    running: 'FUNCIONA',
+    stopped: 'PARADO',
+    notices: ['COMPRADA', 'CAMBIO DE PLAN', 'CIERRE', 'NUEVAS CONDICIONES'],
+    owned: 'ACTIVOS DIGITALES',
+    live: 'FUNCIONANDO',
+    company: 'TU EMPRESA',
+    rentMonths: 'MESES DE ALQUILER',
+    month: 'MES',
+    rent0: 'ALQUILER',
+    sys: 'SISTEMA',
+    yours: 'TU ACTIVO',
+    msg: ['SOLO FUNCIONA', 'MIENTRAS PAGUES', 'SI NO LA COMPRAN', 'SI NO CIERRA', 'SI NO CAMBIAN LAS CONDICIONES', 'SI NO CAMBIAN LOS PLANES'],
+    c1: 'HECHO PARA TI.',
+    c2: 'Y ES TUYO.',
+    c3: ['Se acabó el alquiler: lo que construimos', 'pasa a ser un activo de tu empresa.'],
+  },
+};
+/** The words of the language being drawn — set at the top of every draw. The timeline is the same in both. */
+let TX = EN;
 
 /* ---------- The board and the script (mock-up, unchanged) ---------- */
 
@@ -148,7 +175,8 @@ const builtT = (i: number) => T_K0 + i * STEP;
 const isRunning = (T: number, i: number) => (T < T_A ? T < stopT(i) : T >= builtT(i) + 0.5);
 
 /** Paint instant `T` (seconds, clamped to 0..PLUGS_END) on a W × H (400 × 500) board in `ctx`'s current transform. */
-export function drawPlugs(ctx: Ctx, T: number, P: Palette) {
+export function drawPlugs(ctx: Ctx, T: number, P: Palette, lang: Lang = 'en') {
+  TX = WORDS[lang];
   T = Math.max(0, Math.min(T, PLUGS_END));
   const fam = (w: string) => (w === '900' ? P.disp : P.mono);
   const fitFont = (txt: string, max: number, start: number, min: number, w: string) => {
@@ -498,9 +526,9 @@ const SERVER_PALETTE: Palette = {
 };
 
 /** The last frame, still, as SVG — the ground floor of pair 3. */
-export function plugsFinalMarkup(): string {
+export function plugsFinalMarkup(lang: Lang = 'en'): string {
   const ctx = new SvgCtx({ idPrefix: 'pv-plugs-clip' });
-  drawPlugs(ctx, PLUGS_END, SERVER_PALETTE);
+  drawPlugs(ctx, PLUGS_END, SERVER_PALETTE, lang);
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" aria-hidden="true" focusable="false" width="100%" height="100%" data-pv-plugs-still>${ctx}</svg>`;
 }
 
@@ -518,6 +546,8 @@ function rgbOf(c: string): [number, number, number] {
 }
 
 export interface Plugs {
+  /** Seconds of the timeline (the same in both languages). */
+  end: number;
   /** Paint instant `T` (seconds) still. */
   paint(T: number): void;
   /** Play the timeline from 0 to its end, then hold the last frame. */
@@ -534,6 +564,8 @@ export function createPlugs(host: HTMLElement): Plugs {
   // Its box (4:5, contained and centred in the host) is the host's CSS; the bitmap follows it.
   host.replaceChildren(cv);
   const ctx = cv.getContext('2d')!;
+  const lang: Lang = host.closest('[lang]')?.getAttribute('lang') === 'es' ? 'es' : 'en';
+  cv.dataset.pvLang = lang; // which words it draws, readable from outside
   const css = getComputedStyle(host);
   const tok = Object.fromEntries(Object.entries(ROLES).map(([k, v]) => [k, css.getPropertyValue(v).trim()])) as Record<Role, string>;
   const red = rgbOf(tok.red);
@@ -548,7 +580,7 @@ export function createPlugs(host: HTMLElement): Plugs {
   let scale = 1;
   const render = () => {
     ctx.setTransform(scale, 0, 0, scale, 0, 0);
-    drawPlugs(ctx, T, P);
+    drawPlugs(ctx, T, P, lang);
   };
   const size = () => {
     const w = cv.clientWidth || host.clientWidth || W;
@@ -573,6 +605,7 @@ export function createPlugs(host: HTMLElement): Plugs {
     .then(render, () => {});
 
   return {
+    end: PLUGS_END,
     paint(t) {
       cancelAnimationFrame(raf);
       T = t;
