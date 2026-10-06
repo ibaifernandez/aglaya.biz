@@ -74,7 +74,9 @@ const frames = problem.pairs.map((_, i) => ({ svg: PIECES[i].svg(), label: PIECE
 
 <style>
   /* ---------- Ground floor ---------- */
-  .pv-story { background: var(--color-surface); }
+  .pv-story {
+    background: var(--color-surface);
+  }
   .pv-story-in { padding-block: 60px; }
 
   .pv-board {
@@ -138,8 +140,10 @@ const frames = problem.pairs.map((_, i) => ({ svg: PIECES[i].svg(), label: PIECE
     font-size: 15px;
   }
   .pv-prob-p { color: var(--color-muted); }
-  /* The grill's emphasis: Inter's own italic (served by the package) and bold, in ink. */
-  .pv-prob-p strong { font-weight: 700; color: var(--color-text); }
+  /* The grill's emphasis: Inter's own italic (served by the package) for «the
+     one»; «actually» in ink at 500 — a face the header already loads, so the
+     emphasis costs no font file of its own (a 700 was 131 KB on the LCP's path). */
+  .pv-prob-p strong { font-weight: 500; color: var(--color-text); }
   .pv-sol-p { color: var(--color-text); }
   .pv-sol-h {
     margin-top: 16px;

@@ -1247,6 +1247,23 @@ test.describe('new home page preview', () => {
     expect(real, 'Inter Italic 400 is served and loaded').toBe(true);
   });
 
+  test('the emphasis costs no font file of its own: no Inter Bold, and T1\'s face is asked for first', async ({ page }) => {
+    // Card 82868b81, vigilante: a 700 for «actually» was 131 KB more on the way
+    // to the largest paint. «actually» is 500, a face the page loads anyway.
+    const fonts: string[] = [];
+    page.on('request', (r) => {
+      if (r.resourceType() === 'font') fonts.push(new URL(r.url()).pathname.split('/').pop()!);
+    });
+    await page.setViewportSize({ width: 412, height: 823 });
+    await page.goto(ROUTE, { waitUntil: 'networkidle' });
+    expect(fonts.length, 'fonts were requested (the check is not vacuous)').toBeGreaterThan(3);
+    expect(fonts.filter((f) => /^Inter-Bold\./.test(f))).toEqual([]);
+    await expect(t2(page).locator('.pv-prob-p strong').first()).toHaveCSS('font-weight', '500');
+    const preload = page.locator('link[rel="preload"][as="font"]');
+    await expect(preload).toHaveCount(1);
+    expect(await preload.getAttribute('href')).toMatch(/\/Inter-Regular\.[^/]+\.otf$/);
+  });
+
   /** T3's cards, as the page shows them: row, «Ours · …», title, paragraph. */
   const builtSection = (page: import('@playwright/test').Page) => page.locator('main#main-content section#built');
   async function expectBuiltComplete(page: import('@playwright/test').Page) {

@@ -17,6 +17,10 @@ import Problem from '../../components/preview-home/Problem.astro';
 import Built from '../../components/preview-home/Built.astro';
 import PreviewFooter from '../../components/preview-home/PreviewFooter.astro';
 import '../../components/preview-home/preview-home.css';
+// The face of T1's paragraph — the page's largest paint. Same file the package's
+// @font-face points at (one hashed asset), asked for first so the faces further
+// down the page do not hold it up.
+import lcpFont from '@aglaya/design-tokens/fonts/Inter-Regular.otf?url';
 ---
 
 <BaseLayout
@@ -27,6 +31,7 @@ import '../../components/preview-home/preview-home.css';
   noindex
 >
   <div class="pv">
+    <link rel="preload" href={lcpFont} as="font" type="font/otf" crossorigin />
     <PreviewHeader />
     <main id="main-content">
       <!-- T1 · the hook -->
