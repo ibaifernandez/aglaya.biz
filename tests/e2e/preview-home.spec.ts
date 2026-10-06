@@ -1229,27 +1229,31 @@ test.describe('new home page preview', () => {
     expect(served).not.toContain('fonts.googleapis.com');
   });
 
-  test('pair 1: «the one» in Inter\'s own italic, «actually» in bold', async ({ page }) => {
+  test('pair 1: «the one» and «actually» stand out the same way, ink at 500, with no slant', async ({ page }) => {
+    // Option B (card 82868b81): Inter Italic and Inter Bold were 131 KB each on
+    // the way to the largest paint; both words now use a face the page loads anyway.
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto(ROUTE);
     const p = t2(page).locator('.pv-prob-p').first();
     await expect(p).toHaveText(GRILL.texts[0].problemText);
-    const em = p.locator('em');
-    await expect(em).toHaveText(GRILL.texts[0].em!);
-    await expect(p.locator('strong')).toHaveText(GRILL.texts[0].strong!);
-    await expect(em).toHaveCSS('font-style', 'italic');
-    // A real italic face, not the browser slanting the upright one.
-    const real = await page.evaluate(async () => {
-      await document.fonts.ready;
-      await document.fonts.load('italic 400 15px Inter');
-      return [...document.fonts].some((f) => f.family.replace(/['"]/g, '') === 'Inter' && f.style === 'italic' && f.weight === '400' && f.status === 'loaded');
-    });
-    expect(real, 'Inter Italic 400 is served and loaded').toBe(true);
+    const ink = await p.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim());
+    const grey = await p.evaluate((el) => getComputedStyle(el).color);
+    for (const [sel, word] of [['em', GRILL.texts[0].em!], ['strong', GRILL.texts[0].strong!]] as const) {
+      const el = p.locator(sel);
+      await expect(el).toHaveText(word);
+      await expect(el).toHaveCSS('font-style', 'normal');
+      await expect(el).toHaveCSS('font-weight', '500');
+      const color = await el.evaluate((e) => getComputedStyle(e).color);
+      expect(color, `${word} is not the paragraph's grey`).not.toBe(grey);
+      expect(await page.evaluate(([c, t]) => { const d = document.createElement('i'); d.style.color = t; document.body.append(d); const r = getComputedStyle(d).color === c; d.remove(); return r; }, [color, ink]), `${word} is in ink`).toBe(true);
+    }
   });
 
-  test('the emphasis costs no font file of its own: no Inter Bold, and T1\'s face is asked for first', async ({ page }) => {
-    // Card 82868b81, vigilante: a 700 for «actually» was 131 KB more on the way
-    // to the largest paint. «actually» is 500, a face the page loads anyway.
+  test('the emphasis costs no font file of its own: no Inter Bold or Italic, and T1\'s face is asked for first', async ({ browser }) => {
+    // Card 82868b81, vigilante: a 700 and an italic were 131 KB each on the way to
+    // the largest paint. Measured on the ground floor (no JavaScript), as the
+    // Lighthouse condition is: with JavaScript the closed panels are not drawn.
+    const page = await (await browser.newContext({ javaScriptEnabled: false })).newPage();
     const fonts: string[] = [];
     page.on('request', (r) => {
       if (r.resourceType() === 'font') fonts.push(new URL(r.url()).pathname.split('/').pop()!);
@@ -1257,8 +1261,7 @@ test.describe('new home page preview', () => {
     await page.setViewportSize({ width: 412, height: 823 });
     await page.goto(ROUTE, { waitUntil: 'networkidle' });
     expect(fonts.length, 'fonts were requested (the check is not vacuous)').toBeGreaterThan(3);
-    expect(fonts.filter((f) => /^Inter-Bold\./.test(f))).toEqual([]);
-    await expect(t2(page).locator('.pv-prob-p strong').first()).toHaveCSS('font-weight', '500');
+    expect(fonts.filter((f) => /^Inter-(Bold\.|[A-Za-z]*Italic)/.test(f)), 'no face just for the emphasis').toEqual([]);
     const preload = page.locator('link[rel="preload"][as="font"]');
     await expect(preload).toHaveCount(1);
     expect(await preload.getAttribute('href')).toMatch(/\/Inter-Regular\.[^/]+\.otf$/);

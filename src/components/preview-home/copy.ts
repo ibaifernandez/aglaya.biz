@@ -54,8 +54,9 @@ export const footer = {
  * Emphasis inside a sentence, written the way the grill wrote it: `_italic_`
  * and `**bold**`. `rich()` cuts a string into the pieces Problem.astro renders
  * as <em> / <strong>; `plain()` is the same sentence with the marks gone, which
- * is what a reader (and a test) reads. Inter's real italic is served by the
- * design-tokens package, so the <em> is never a slanted fake.
+ * is what a reader (and a test) reads. Both are drawn the same, ink at 500 with
+ * no slant (Problem.astro): the italic face cost 131 KB on the way to the
+ * largest paint (card 82868b81, option B).
  */
 export type Piece = { text: string; em?: boolean; strong?: boolean };
 const MARKS = /(\*\*[^*]+\*\*|_[^_]+_)/;
