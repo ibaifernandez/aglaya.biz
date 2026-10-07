@@ -131,23 +131,6 @@ async function start() {
           button.removeEventListener('pointerleave', leave);
         });
       });
-
-      // T3 · the card under the pointer tilts toward it.
-      document.querySelectorAll<HTMLElement>('[data-pv-tilt]').forEach((card) => {
-        const move = (e: PointerEvent) => {
-          const r = card.getBoundingClientRect();
-          const dx = (e.clientX - r.left) / r.width - 0.5;
-          const dy = (e.clientY - r.top) / r.height - 0.5;
-          gsap.to(card, { rotateY: dx * 14, rotateX: -dy * 14, duration: 0.5, ease: 'power3.out' });
-        };
-        const leave = () => gsap.to(card, { rotateY: 0, rotateX: 0, duration: 0.5, ease: 'power3.out' });
-        card.addEventListener('pointermove', move);
-        card.addEventListener('pointerleave', leave);
-        listeners.push(() => {
-          card.removeEventListener('pointermove', move);
-          card.removeEventListener('pointerleave', leave);
-        });
-      });
     }
   });
   // The from-states are set now; the hold is no longer needed.

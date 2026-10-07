@@ -7,9 +7,14 @@
  * of short ones; the three rows of pairs are the same height.
  *
  * The motion is ./effects.ts: each pair of cards moves with the scroll at its
- * row's speed (`data-pv-row`), «CAPABILITIES» slides across the back, and on a
- * real pointer (`hover: hover`) the card under it tilts. All of it animates FROM
- * states it sets itself; if it never runs, nothing here is left out of place.
+ * row's speed (`data-pv-row`) and «CAPABILITIES» slides across the back. No 3D:
+ * the sketch's tilt and depth went on 2026-10-07 (card e726ee8c, Ibai: «ni luce
+ * ni informa»). All of it animates FROM states it sets itself; if it never
+ * runs, nothing here is left out of place.
+ *
+ * Each card is a column: drawing, label, title and paragraph from the top,
+ * «See how it works» held to the bottom, so the two links of a pair sit on one
+ * line whatever the length of their paragraphs or the language.
  *
  * Colours are the canon's tokens; where the sketch spelled a hex, this file
  * names the token that carries it.
@@ -34,14 +39,14 @@ const cards = [
     <div class="pv-cards" data-pv-cards>
       {cards.map((c) => (
         <article class:list={['pv-card', { 'pv-card--wide': c.wide }]} data-pv-row={c.row}>
-          <div class="pv-card-in" data-pv-tilt>
+          <div class="pv-card-in">
             <div class:list={['pv-mini', `pv-mini--${c.mini.kind}`]} aria-hidden="true">
               {c.mini.kind === 'fleet' && Array.from({ length: 9 }, (_, i) => <span class:list={{ 'is-r': i === 4 }}></span>)}
               {c.mini.kind === 'flow' && c.mini.steps.map((s, i) => (
                 <Fragment>{i > 0 && <b></b>}<span class:list={{ 'is-r': s.red }}>{s.text}</span></Fragment>
               ))}
               {c.mini.kind === 'rows' && c.mini.rows.map((r) => (
-                <span><i class:list={{ 'is-g': r.green }}></i><s></s>{r.text}</span>
+                <span><i class:list={{ 'is-g': r.green }}></i><s></s><b>{r.text}</b></span>
               ))}
               {c.mini.kind === 'cols' && (
                 <Fragment>
@@ -100,10 +105,8 @@ const cards = [
     grid-template-rows: auto repeat(3, 1fr);
     gap: 24px;
     margin-top: 56px;
-    perspective: 1000px;
   }
-  /* preserve-3d so the tilt of .pv-card-in keeps the grid's perspective while the card itself is moved by the scroll. */
-  .pv-card { min-width: 0; transform-style: preserve-3d; }
+  .pv-card { min-width: 0; }
   .pv-card--wide { grid-column: 1 / -1; }
   .pv-card-in {
     height: 100%;
@@ -111,7 +114,8 @@ const cards = [
     border: 1px solid var(--color-border);
     padding: 22px;
     box-shadow: 0 30px 60px -30px color-mix(in srgb, var(--color-text) 22%, transparent);
-    transform-style: preserve-3d;
+    display: flex;
+    flex-direction: column;
   }
   .pv-card h3 { font-size: 26px; margin-top: 6px; }
   .pv-card--wide h3 { font-size: 34px; margin-top: 18px; }
@@ -127,9 +131,11 @@ const cards = [
     font-size: 10px;
     letter-spacing: 0.18em;
   }
+  /* The link at the bottom of the card, at least 16px under the paragraph. */
+  .pv-card p { margin-bottom: 16px; }
   .pv-more {
-    display: inline-block;
-    margin-top: 16px;
+    align-self: flex-start;
+    margin-top: auto;
     font: 700 11px/1 var(--font-mono);
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -146,7 +152,6 @@ const cards = [
     padding: 12px;
     display: flex;
     gap: 8px;
-    transform: translateZ(30px);
   }
   .pv-mini--fleet {
     display: grid;
@@ -167,16 +172,22 @@ const cards = [
   .pv-mini--cols > div { flex: 1; display: flex; flex-direction: column; gap: 6px; }
   .pv-mini--cols span { height: 16px; background: var(--color-bg); border: 1px solid var(--color-border); }
   .pv-mini--cols span.is-r { border-left: 3px solid var(--color-brand); }
-  .pv-mini--rows { flex-direction: column; gap: 7px; }
-  .pv-mini--rows > span {
-    display: flex;
+  /* Rows: dot, bar, label. One grid for all of them, the label column as wide as
+     the widest label and right-aligned, so every bar ends at the same x. */
+  .pv-mini--rows {
+    display: grid;
+    grid-template-columns: 8px minmax(0, 1fr) max-content;
+    gap: 7px 8px;
+    align-content: start;
     align-items: center;
-    gap: 8px;
-    height: 16px;
+  }
+  .pv-mini--rows > span {
+    display: contents;
     font: 10px var(--font-mono);
     color: var(--color-muted);
     letter-spacing: 0.06em;
   }
+  .pv-mini--rows > span > b { height: 16px; display: flex; align-items: center; justify-content: flex-end; font-weight: 400; }
   .pv-mini--rows i { width: 8px; height: 8px; background: var(--color-brand); flex: none; }
   .pv-mini--rows i.is-g { background: var(--pv-green); }
   .pv-mini--rows s {

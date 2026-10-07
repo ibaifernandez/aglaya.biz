@@ -1311,7 +1311,7 @@ test.describe('new home page preview', () => {
       await page.mouse.move(w / 2, h / 2);
       await page.waitForTimeout(400);
       const m = await page.evaluate(() => {
-        const els = [...document.querySelectorAll<HTMLElement>('#built [data-pv-row], #built [data-pv-tilt], #built .pv-depth-word')];
+        const els = [...document.querySelectorAll<HTMLElement>('#built [data-pv-row], #built .pv-card-in, #built .pv-depth-word')];
         const rows = new Map<string, number[]>();
         document.querySelectorAll<HTMLElement>('#built [data-pv-row]').forEach((c) => {
           const r = c.dataset.pvRow!;
@@ -1659,7 +1659,7 @@ test.describe('new home page preview, in Spanish', () => {
       await expectStillEs(page, 1);
       const m = await page.evaluate(() => ({
         sideways: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-        moved: [...document.querySelectorAll<HTMLElement>('#built [data-pv-row], #built [data-pv-tilt]')].filter((e) => getComputedStyle(e).transform !== 'none').length,
+        moved: [...document.querySelectorAll<HTMLElement>('#built [data-pv-row], #built .pv-card-in')].filter((e) => getComputedStyle(e).transform !== 'none').length,
       }));
       expect(m.sideways, 'no horizontal scroll').toBeLessThanOrEqual(0);
       expect(m.moved, 'T3 still').toBe(0);
@@ -1691,4 +1691,93 @@ test.describe('new home page preview, in Spanish', () => {
       .analyze();
     expect(results.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target).join(', ')}`)).toEqual([]);
   });
+});
+
+/* =====================================================================
+ * T3 · the finish (card e726ee8c, 2026-10-07), both previews: no 3D, each
+ * drawing exactly as wide as its card's text, Outreach's bars ending on one
+ * x, and the two «See how it works» of a pair on one line.
+ * ===================================================================== */
+
+/** T3's geometry, measured: drawings against text, bar ends, link tops, anything 3D. */
+async function t3Finish(page: import('@playwright/test').Page) {
+  return page.evaluate(() => {
+    const r = (e: Element) => e.getBoundingClientRect();
+    const cards = [...document.querySelectorAll<HTMLElement>('#built [data-pv-row]')];
+    const edges = cards.map((c) => {
+      const mini = r(c.querySelector('.pv-mini')!);
+      const text = [c.querySelector('h3')!, c.querySelector('p')!, c.querySelector('.pv-ours')].filter(Boolean).map((e) => r(e!));
+      return {
+        title: c.querySelector('h3')!.textContent,
+        dl: Math.max(...text.map((t) => Math.abs(t.left - mini.left))),
+        // The text column's right edge is the title's box (a block as wide as the
+        // column); the wide card's paragraph stops at 60ch on purpose, so it is not one.
+        dr: Math.abs(r(c.querySelector('h3')!).right - mini.right),
+      };
+    });
+    const bars = [...document.querySelectorAll('#built .pv-mini--rows')].map((m) => [...m.querySelectorAll('s')].map((s) => r(s).right));
+    const pairs = [1, 2, 3].map((row) => cards.filter((c) => c.dataset.pvRow === String(row)).map((c) => r(c.querySelector('.pv-more')!).top));
+    const threeD = [...document.querySelectorAll<HTMLElement>('#built, #built *')]
+      .map((e) => ({ e, cs: getComputedStyle(e) }))
+      .filter(({ e, cs }) => cs.perspective !== 'none' || cs.transformStyle === 'preserve-3d' || (/matrix3d/.test(cs.transform) && !e.matches('[data-pv-row]')))
+      .map(({ e }) => e.className);
+    return { edges, bars, pairs, threeD };
+  });
+}
+
+function expectT3Finish(m: Awaited<ReturnType<typeof t3Finish>>, what: string) {
+  expect(m.edges).toHaveLength(7);
+  for (const e of m.edges) {
+    expect(e.dl, `${what} · ${e.title}: drawing's left edge = text's`).toBeLessThanOrEqual(1);
+    expect(e.dr, `${what} · ${e.title}: drawing's right edge = text's`).toBeLessThanOrEqual(1);
+  }
+  expect(m.bars.length, `${what}: two drawings of rows (Outreach, CRM)`).toBe(2);
+  for (const ends of m.bars) {
+    expect(ends).toHaveLength(4);
+    expect(Math.max(...ends) - Math.min(...ends), `${what}: every bar ends at one x`).toBeLessThanOrEqual(1);
+  }
+  for (const [i, tops] of m.pairs.entries()) {
+    expect(tops, `${what}: pair ${i + 1} has two links`).toHaveLength(2);
+    expect(Math.abs(tops[0] - tops[1]), `${what}: pair ${i + 1}'s «See how it works» on one line`).toBeLessThanOrEqual(1);
+  }
+  expect(m.threeD, `${what}: nothing 3D in T3`).toEqual([]);
+}
+
+test.describe('T3 finish (card e726ee8c)', () => {
+  for (const route of [ROUTE, ES_ROUTE]) {
+    for (const [w, h] of [[1440, 900], [768, 1024]] as const) {
+      test(`${route} ${w}: drawings as wide as the text, bars even, links on one line, nothing 3D (reduced motion)`, async ({ page }) => {
+        await page.setViewportSize({ width: w, height: h });
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await page.goto(route);
+        await page.locator('#built').scrollIntoViewIfNeeded();
+        expectT3Finish(await t3Finish(page), `${route} ${w}`);
+      });
+    }
+
+    test(`${route}: the same without JavaScript`, async ({ browser }) => {
+      const page = await (await browser.newContext({ javaScriptEnabled: false, viewport: { width: 1440, height: 900 } })).newPage();
+      await page.goto(route);
+      expectT3Finish(await t3Finish(page), `${route} no JS`);
+    });
+
+    test(`${route} 1440: with motion, a card under the pointer does not tilt, and the rows still move with the scroll`, async ({ page }) => {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(route);
+      await page.waitForFunction(() => !document.documentElement.classList.contains('pv-fx-wait'));
+      const card = page.locator('#built .pv-card-in').nth(1);
+      await card.scrollIntoViewIfNeeded();
+      const box = (await card.boundingBox())!;
+      await page.mouse.move(box.x + box.width * 0.9, box.y + box.height * 0.1);
+      await page.mouse.move(box.x + box.width * 0.85, box.y + box.height * 0.15);
+      await page.waitForTimeout(600);
+      expect(await card.evaluate((e) => getComputedStyle(e).transform)).toBe('none');
+      const y = () => page.evaluate(() => new DOMMatrixReadOnly(getComputedStyle(document.querySelector('#built [data-pv-row="1"]')!).transform).m42);
+      const a = await y();
+      await page.evaluate(() => window.scrollBy(0, 400));
+      await page.waitForTimeout(600);
+      expect(await y(), 'the rows still move with the scroll').not.toBe(a);
+      expectT3Finish(await t3Finish(page), `${route} motion`);
+    });
+  }
 });
