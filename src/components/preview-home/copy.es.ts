@@ -91,21 +91,25 @@ export const es: Copy = {
   },
   work: {
     eyebrow: 'Cómo trabajamos contigo',
+    cta: 'Hablemos',
     phrase: 'Tú decides cuánto de nosotros necesitas. Empieza poco a poco, quédate mientras te sirva y vete cuando quieras.',
     ways: [
       {
+        id: 'hours',
         n: 'Opción uno',
         title: 'Unas horas',
         text: 'Trabajo con IA por horas, para lo que surja, grande o pequeño.',
         items: ['Desarrollo asistido por IA', 'Marketing asistido por IA', 'Creatividad con IA generativa'],
       },
       {
+        id: 'project',
         n: 'Opción dos',
         title: 'Un proyecto',
         text: 'Un sistema concreto, construido y entregado. Tuyo desde el primer día.',
         items: ['Un asistente comercial alimentado con tus propios datos', 'Una web que vende y carga rápido', 'Una automatización que acaba con una tarea semanal'],
       },
       {
+        id: 'stack',
         n: 'Opción tres',
         title: 'Un stack completo',
         text: 'Llevamos la IA a toda tu empresa, del primer sistema al stack completo, hasta que tu equipo la maneje solo.',

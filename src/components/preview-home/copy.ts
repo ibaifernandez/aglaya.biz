@@ -253,27 +253,32 @@ export const orch = {
 } as const;
 
 /**
- * T5 · how we work — the grill of 2026-10-12 (card ccd9b760). The phrase is
- * typed with the scroll on a wide screen; the three ways go from least to most,
- * named as in T1's paragraph (a few hours, one project, a whole stack).
+ * T5 · how we work — the grill of 2026-10-12 (card ccd9b760), laid out compact
+ * (card f0b32a34): the three ways from least to most, named as in T1's
+ * paragraph, each with its «Talk to us». `id` marks the way on the link
+ * (`data-way`) so T6's form can preselect it once it exists.
  */
 export const work = {
   eyebrow: 'How we work with you',
+  cta: 'Talk to us',
   phrase: 'You decide how much of us you need. Start small, stay as long as it helps, leave whenever you want.',
   ways: [
     {
+      id: 'hours',
       n: 'Way one',
       title: 'A few hours',
       text: 'AI work by the hour, for whatever comes up, big or small.',
       items: ['AI-assisted development', 'AI-assisted marketing', 'Creative work with generative AI'],
     },
     {
+      id: 'project',
       n: 'Way two',
       title: 'One project',
       text: 'A specific system, built and handed over. Yours from day one.',
       items: ['A sales assistant fed by your own data', 'A website that sells and loads fast', 'An automation that ends a weekly chore'],
     },
     {
+      id: 'stack',
       n: 'Way three',
       title: 'A whole stack',
       text: 'We lead AI across your company, from the first system to the whole stack, until your team runs it alone.',

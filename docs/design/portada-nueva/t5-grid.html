@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T5 · How we work — maqueta compacta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap">
+<style>
+:root{--bg:#fff;--surface:#f5f5f4;--ink:#0a0a0a;--muted:rgba(10,10,10,.68);--line:rgba(10,10,10,.10);--brand:#e8003d;--brand-ink:#b5002f;--green:#9fc243;
+  --f-display:"Outfit","Arial Black",system-ui,sans-serif;--f-body:"Inter",system-ui,sans-serif;--f-mono:"Space Mono",ui-monospace,monospace;--gutter:clamp(16px,4vw,56px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--f-body);-webkit-font-smoothing:antialiased}
+.note{background:#0a0a0a;color:#fcfcfc;font:12px/1.5 var(--f-mono);padding:14px var(--gutter)}
+.note b{color:var(--green)}
+.wrap{max-width:1200px;margin:0 auto;padding-inline:var(--gutter)}
+.work{padding-block:100px 110px}
+.eyebrow{display:flex;align-items:center;gap:10px;color:var(--muted);font:11px var(--f-mono);letter-spacing:.22em;text-transform:uppercase}
+.eyebrow::before{content:"";width:28px;height:2px;background:var(--green)}
+.sec-h{font-family:var(--f-display);font-weight:900;text-transform:uppercase;letter-spacing:-.02em;line-height:.92;margin:16px 0 0;font-size:clamp(36px,5.4vw,72px)}
+.ways{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:56px}
+.way{background:var(--bg);border:1px solid var(--line);border-top:4px solid var(--brand);padding:26px 24px;box-shadow:0 30px 60px -30px rgba(0,0,0,.22);display:flex;flex-direction:column}
+.way .n{font:11px var(--f-mono);letter-spacing:.22em;text-transform:uppercase;color:var(--brand-ink)}
+.way h3{font-family:var(--f-display);font-weight:900;text-transform:uppercase;letter-spacing:-.02em;line-height:.92;font-size:clamp(26px,2.6vw,34px);margin:10px 0 0}
+.way p{color:var(--muted);margin:12px 0 0;font-size:16px}
+.way ul{margin:16px 0 0;padding:0;list-style:none;display:grid;gap:6px;font-size:15px}
+.way li{padding-left:20px;position:relative}
+.way li::before{content:"";position:absolute;left:0;top:.75em;width:10px;height:2px;background:var(--brand)}
+.bg{background:var(--surface)}
+/* Esquema de AGLAYA: gris, rojo, negro */
+.way.c1{background:var(--surface);border-top-color:var(--ink)}
+.way.c2{background:var(--brand);color:#fcfcfc;border-color:var(--brand);border-top-color:var(--ink)}
+.way.c3{background:var(--ink);color:#fcfcfc;border-color:var(--ink);border-top-color:var(--brand)}
+.way.c2 .n,.way.c3 .n{color:rgba(252,252,252,.75)}
+.way.c2 p,.way.c3 p{color:rgba(252,252,252,.85)}
+.way.c2 li::before{background:#fcfcfc}
+.sec-h .rest{color:rgba(10,10,10,.08)}
+@media (max-width:860px){.ways{grid-template-columns:1fr}}
+.way{position:relative}
+.cta{align-self:flex-start;margin-top:auto;display:inline-block;font:700 11px/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;text-decoration:none;padding:13px 16px;background:var(--brand);color:#fcfcfc}
+.way ul{margin-bottom:22px}
+.way.c2 .cta{background:#fcfcfc;color:var(--brand-ink)}
+/* Escritorio: toda la tarjeta es el enlace (el ::after del botón la cubre). En móvil, solo el botón. */
+@media (hover:hover) and (min-width:861px){.cta::after{content:"";position:absolute;inset:0}.way{cursor:pointer}}
+/* Escritorio: la tarjeta bajo el ratón crece y sale hacia delante */
+@media (hover:hover) and (prefers-reduced-motion:no-preference){
+  .way{transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s cubic-bezier(.2,.8,.2,1)}
+  .way:hover{transform:translateY(-8px) scale(1.04);box-shadow:0 46px 80px -30px rgba(0,0,0,.38);position:relative;z-index:1}
+}
+</style>
+</head>
+<body>
+<div class="note"><b>MAQUETA · T5 COMPACTO</b> — Sin secciones fijadas ni scroll horizontal. La frase, del tamaño de los titulares de sección; sólida desde el primer momento, sin efecto. Las tres formas, en tres columnas con el esquema de AGLAYA (gris, rojo, negro), que se comparan de un vistazo (en móvil, apiladas). Cada tarjeta lleva «Talk to us»: en escritorio toda la tarjeta es el enlace; en móvil, solo el botón.</div>
+<div class="bg"><div style="height:30vh"></div></div>
+<section class="work">
+  <div class="wrap">
+    <div class="eyebrow">How we work with you</div>
+    <h2 class="sec-h">You decide how much of us you need. Start small, stay as long as it helps, leave whenever you want.</h2>
+    <div class="ways">
+      <div class="way c1"><div class="n">Way one</div><h3>A few hours</h3><p>AI work by the hour, for whatever comes up, big or small.</p><ul><li>AI-assisted development</li><li>AI-assisted marketing</li><li>Creative work with generative AI</li></ul><a class="cta" href="#contact" data-way="hours">Talk to us <span aria-hidden="true">→</span></a></div>
+      <div class="way c2"><div class="n">Way two</div><h3>One project</h3><p>A specific system, built and handed over. Yours from day one.</p><ul><li>A sales assistant fed by your own data</li><li>A website that sells and loads fast</li><li>An automation that ends a weekly chore</li></ul><a class="cta" href="#contact" data-way="project">Talk to us <span aria-hidden="true">→</span></a></div>
+      <div class="way c3"><div class="n">Way three</div><h3>A whole stack</h3><p>We lead AI across your company, from the first system to the whole stack, until your team runs it alone.</p><ul><li>Where AI pays off first, measured in your numbers</li><li>One system per department, all working together</li><li>Your people trained to keep it running</li></ul><a class="cta" href="#contact" data-way="stack">Talk to us <span aria-hidden="true">→</span></a></div>
+    </div>
+  </div>
+</section>
+<div class="bg"><div style="height:40vh"></div></div>
+
+</body>
+</html>
