@@ -1,0 +1,142 @@
+---
+/**
+ * T5 · how we work — the mock-up's `section.work` (card ccd9b760).
+ *
+ * Ground floor (no JavaScript, reduced motion, and every screen under 860px):
+ * the phrase written in full and the three ways stacked as compact cards,
+ * still. Nothing here holds the scroll.
+ *
+ * Above it, only on a wide screen (≥ 860px) with motion allowed, ./effects.ts
+ * adds `is-fx`: the phrase is typed letter by letter with the scroll while its
+ * stage stays pinned, then the three ways pass sideways (the mock-up's two
+ * effects). On a phone nothing is pinned and nothing moves sideways (Ibai).
+ *
+ * The phrase is the section's heading; its animated pieces are `aria-hidden`
+ * and the heading carries the whole sentence as its name.
+ */
+import { copyFor, type Lang } from './copy';
+
+const { lang = 'en' } = Astro.props as { lang?: Lang };
+const { work } = copyFor(lang);
+---
+
+<section class="pv-section pv-work" id="work" data-tramo="T5" data-pv-work>
+  <div class="pv-wrap pv-type-stage" data-pv-type-stage>
+    <div class="pv-eyebrow pv-mono">{work.eyebrow}</div>
+    <h2 class="pv-typed" aria-label={work.phrase} data-pv-typed>
+      <span class="pv-done" aria-hidden="true">{work.phrase}</span><span class="pv-caret" aria-hidden="true"></span><span class="pv-rest" aria-hidden="true"></span>
+    </h2>
+  </div>
+  <div class="pv-hz">
+    <div class="pv-hz-track" data-pv-hz>
+      {work.ways.map((way, i) => (
+        <article class:list={['pv-way', `pv-way--${i + 1}`]}>
+          <div class="pv-mono pv-way-n">{way.n}</div>
+          <h3>{way.title}</h3>
+          <p>{way.text}</p>
+          <ul>{way.items.map((item) => <li>{item}</li>)}</ul>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .pv-work { background: var(--color-bg); }
+
+  /* ---------- The phrase ---------- */
+  .pv-type-stage { padding-block: 100px 60px; }
+  .pv-typed {
+    font-size: clamp(30px, 5.2vw, 72px);
+    line-height: 1.02;
+    max-width: 20ch;
+    margin-top: 18px;
+  }
+  .pv-rest { color: color-mix(in srgb, var(--color-text) 8%, transparent); }
+  .pv-caret {
+    display: none;
+    width: 0.09em;
+    height: 0.82em;
+    background: var(--color-brand);
+    vertical-align: -0.06em;
+    margin-inline: 0.02em;
+    animation: pv-work-blink 1s steps(2) infinite;
+  }
+  @keyframes pv-work-blink { 50% { opacity: 0.15; } }
+
+  /* ---------- The three ways: stacked, compact (ground floor and phones) ---------- */
+  .pv-hz { overflow: hidden; }
+  .pv-hz-track {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0 var(--pv-gutter) 60px;
+    max-width: var(--pv-max);
+    margin: 0 auto;
+  }
+  .pv-way {
+    min-width: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .pv-way-n { opacity: 0.75; }
+  /* On the red panel the label stays at full strength: at 0.75 it fell under 4.5:1. */
+  .pv-way--2 .pv-way-n { opacity: 1; }
+  .pv-way h3 { font-size: clamp(28px, 5vw, 56px); }
+  .pv-way p { font-size: clamp(15px, 1.8vw, 20px); line-height: 1.45; max-width: 34ch; }
+  .pv-way ul {
+    margin: 4px 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 2px;
+    font-size: 14px;
+    line-height: 1.45;
+    max-width: 40ch;
+  }
+  .pv-way li { padding-left: 20px; position: relative; }
+  .pv-way li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 10px;
+    height: 2px;
+    background: currentColor;
+  }
+  /* Least to most: paper, red, night (mock-up .p1 .p2 .p3). */
+  .pv-way--1 { background: var(--color-surface); color: var(--color-text); }
+  .pv-way--2 { background: var(--color-brand); color: var(--pv-on-brand); }
+  .pv-way--3 { background: var(--color-text); color: var(--color-bg); }
+
+  /* ---------- Wide screen with motion (./effects.ts adds is-fx) ---------- */
+  .pv-work.is-fx .pv-type-stage {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .pv-work.is-fx .pv-caret { display: inline-block; }
+  .pv-work.is-fx .pv-hz-track {
+    flex-direction: row;
+    width: max-content;
+    max-width: none;
+    height: 100vh;
+    gap: 0;
+    padding: 0;
+    margin: 0;
+    align-items: stretch;
+  }
+  .pv-work.is-fx .pv-way {
+    width: min(86vw, 980px);
+    flex: none;
+    justify-content: center;
+    gap: 18px;
+    padding: 80px var(--pv-gutter);
+  }
+  .pv-work.is-fx .pv-way h3 { font-size: clamp(44px, 8vw, 120px); }
+  .pv-work.is-fx .pv-way p { font-size: clamp(17px, 1.8vw, 22px); }
+  .pv-work.is-fx .pv-way ul { font-size: 16px; gap: 6px; }
+</style>

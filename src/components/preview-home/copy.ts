@@ -252,7 +252,37 @@ export const orch = {
     'A task card goes round the team: an agent writes it, another builds it, another reviews it, another audits it and a person checks it. Every step is written on the card; if the review fails, it goes back. Once checked, the live map in the middle is updated.',
 } as const;
 
-const en = { meta, nav, hook, footer, problem, built, orch };
+/**
+ * T5 · how we work — the grill of 2026-10-12 (card ccd9b760). The phrase is
+ * typed with the scroll on a wide screen; the three ways go from least to most,
+ * named as in T1's paragraph (a few hours, one project, a whole stack).
+ */
+export const work = {
+  eyebrow: 'How we work with you',
+  phrase: 'You decide how much of us you need. Start small, stay as long as it helps, leave whenever you want.',
+  ways: [
+    {
+      n: 'Way one',
+      title: 'A few hours',
+      text: 'AI work by the hour, for whatever comes up, big or small.',
+      items: ['AI-assisted development', 'AI-assisted marketing', 'Creative work with generative AI'],
+    },
+    {
+      n: 'Way two',
+      title: 'One project',
+      text: 'A specific system, built and handed over. Yours from day one.',
+      items: ['A sales assistant fed by your own data', 'A website that sells and loads fast', 'An automation that ends a weekly chore'],
+    },
+    {
+      n: 'Way three',
+      title: 'A whole stack',
+      text: 'We lead AI across your company, from the first system to the whole stack, until your team runs it alone.',
+      items: ['Where AI pays off first, measured in your numbers', 'One system per department, all working together', 'Your people trained to keep it running'],
+    },
+  ],
+} as const;
+
+const en = { meta, nav, hook, footer, problem, built, orch, work };
 export type Copy = Widen<typeof en>;
 export type Lang = 'en' | 'es';
 
