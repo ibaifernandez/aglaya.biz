@@ -1,18 +1,20 @@
 ---
 /**
- * T5 · how we work — the mock-up's `section.work` (card ccd9b760).
+ * T5 · how we work, compact — the sketch `docs/design/portada-nueva/t5-grid.html`
+ * (card f0b32a34; it replaces the mock-up's pinned phrase and sideways panels,
+ * «innecesariamente masivo»). Nothing holds the scroll, on any screen.
  *
- * Ground floor (no JavaScript, reduced motion, and every screen under 860px):
- * the phrase written in full and the three ways stacked as compact cards,
- * still. Nothing here holds the scroll.
+ * The phrase, solid from the start, at the size of the section headings. Then
+ * three cards side by side (stacked under 860px), least to most, in AGLAYA's
+ * scheme — grey, red, ink — the same height, each with its «Talk to us» held to
+ * the bottom. The link goes to #contact and says which way it is (`data-way`),
+ * for T6's form to preselect it once it exists.
  *
- * Above it, only on a wide screen (≥ 860px) with motion allowed, ./effects.ts
- * adds `is-fx`: the phrase is typed letter by letter with the scroll while its
- * stage stays pinned, then the three ways pass sideways (the mock-up's two
- * effects). On a phone nothing is pinned and nothing moves sideways (Ibai).
- *
- * The phrase is the section's heading; its animated pieces are `aria-hidden`
- * and the heading carries the whole sentence as its name.
+ * On a real pointer and a wide screen the whole card is the link: the button's
+ * own ::after covers it, so there is still one link per card for a screen
+ * reader. On a phone only the button is, so a scroll is never taken for a tap.
+ * Under the pointer (motion allowed) the card comes forward: 4% larger, 8px up,
+ * a deeper shadow.
  */
 import { copyFor, type Lang } from './copy';
 
@@ -20,21 +22,18 @@ const { lang = 'en' } = Astro.props as { lang?: Lang };
 const { work } = copyFor(lang);
 ---
 
-<section class="pv-section pv-work" id="work" data-tramo="T5" data-pv-work>
-  <div class="pv-wrap pv-type-stage" data-pv-type-stage>
+<section class="pv-section pv-work" id="work" data-tramo="T5">
+  <div class="pv-wrap">
     <div class="pv-eyebrow pv-mono">{work.eyebrow}</div>
-    <h2 class="pv-typed" aria-label={work.phrase} data-pv-typed>
-      <span class="pv-done" aria-hidden="true">{work.phrase}</span><span class="pv-caret" aria-hidden="true"></span><span class="pv-rest" aria-hidden="true"></span>
-    </h2>
-  </div>
-  <div class="pv-hz">
-    <div class="pv-hz-track" data-pv-hz>
+    <h2 class="pv-sec-h pv-work-h">{work.phrase}</h2>
+    <div class="pv-ways">
       {work.ways.map((way, i) => (
         <article class:list={['pv-way', `pv-way--${i + 1}`]}>
           <div class="pv-mono pv-way-n">{way.n}</div>
           <h3>{way.title}</h3>
           <p>{way.text}</p>
           <ul>{way.items.map((item) => <li>{item}</li>)}</ul>
+          <a class="pv-way-cta" href="#contact" data-way={way.id}>{work.cta} <span aria-hidden="true">→</span></a>
         </article>
       ))}
     </div>
@@ -42,101 +41,121 @@ const { work } = copyFor(lang);
 </section>
 
 <style>
-  .pv-work { background: var(--color-bg); }
-
-  /* ---------- The phrase ---------- */
-  .pv-type-stage { padding-block: 100px 60px; }
-  .pv-typed {
-    font-size: clamp(30px, 5.2vw, 72px);
-    line-height: 1.02;
-    max-width: 20ch;
-    margin-top: 18px;
+  .pv-work {
+    background: var(--color-bg);
+    padding-block: 100px 110px;
   }
-  .pv-rest { color: color-mix(in srgb, var(--color-text) 8%, transparent); }
-  .pv-caret {
-    display: none;
-    width: 0.09em;
-    height: 0.82em;
-    background: var(--color-brand);
-    vertical-align: -0.06em;
-    margin-inline: 0.02em;
-    animation: pv-work-blink 1s steps(2) infinite;
-  }
-  @keyframes pv-work-blink { 50% { opacity: 0.15; } }
+  /* The section headings' size (.pv-sec-h, as T2 and T3), and no max-width. */
+  .pv-work-h { max-width: none; }
 
-  /* ---------- The three ways: stacked, compact (ground floor and phones) ---------- */
-  .pv-hz { overflow: hidden; }
-  .pv-hz-track {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 0 var(--pv-gutter) 60px;
-    max-width: var(--pv-max);
-    margin: 0 auto;
+  .pv-ways {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    margin-top: 56px;
   }
   .pv-way {
+    position: relative;
     min-width: 0;
-    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    padding: 26px 24px;
+    border: 1px solid var(--color-border);
+    border-top: 4px solid var(--color-brand);
+    box-shadow: 0 30px 60px -30px color-mix(in srgb, var(--color-text) 22%, transparent);
   }
-  .pv-way-n { opacity: 0.75; }
-  /* On the red panel the label stays at full strength: at 0.75 it fell under 4.5:1. */
-  .pv-way--2 .pv-way-n { opacity: 1; }
-  .pv-way h3 { font-size: clamp(28px, 5vw, 56px); }
-  .pv-way p { font-size: clamp(15px, 1.8vw, 20px); line-height: 1.45; max-width: 34ch; }
+  .pv-way-n { color: var(--color-brand-dark); }
+  .pv-way h3 {
+    font-size: clamp(26px, 2.6vw, 34px);
+    margin-top: 10px;
+  }
+  .pv-way p {
+    color: var(--color-muted);
+    margin-top: 12px;
+    font-size: 16px;
+  }
   .pv-way ul {
-    margin: 4px 0 0;
+    margin: 16px 0 22px;
     padding: 0;
     list-style: none;
     display: grid;
-    gap: 2px;
-    font-size: 14px;
-    line-height: 1.45;
-    max-width: 40ch;
+    gap: 6px;
+    font-size: 15px;
   }
   .pv-way li { padding-left: 20px; position: relative; }
   .pv-way li::before {
     content: '';
     position: absolute;
     left: 0;
-    top: 0.7em;
+    top: 0.75em;
     width: 10px;
     height: 2px;
-    background: currentColor;
+    background: var(--color-brand);
   }
-  /* Least to most: paper, red, night (mock-up .p1 .p2 .p3). */
-  .pv-way--1 { background: var(--color-surface); color: var(--color-text); }
-  .pv-way--2 { background: var(--color-brand); color: var(--pv-on-brand); }
-  .pv-way--3 { background: var(--color-text); color: var(--color-bg); }
+  .pv-way-cta {
+    align-self: flex-start;
+    margin-top: auto;
+    display: inline-block;
+    font: 700 11px/1 var(--font-mono);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 13px 16px;
+    background: var(--color-brand);
+    color: var(--pv-on-brand);
+  }
 
-  /* ---------- Wide screen with motion (./effects.ts adds is-fx) ---------- */
-  .pv-work.is-fx .pv-type-stage {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  /* AGLAYA's scheme, least to most: grey, red, ink. */
+  .pv-way--1 {
+    background: var(--color-surface);
+    border-top-color: var(--color-text);
   }
-  .pv-work.is-fx .pv-caret { display: inline-block; }
-  .pv-work.is-fx .pv-hz-track {
-    flex-direction: row;
-    width: max-content;
-    max-width: none;
-    height: 100vh;
-    gap: 0;
-    padding: 0;
-    margin: 0;
-    align-items: stretch;
+  .pv-way--2 {
+    background: var(--color-brand);
+    color: var(--pv-on-brand);
+    border-color: var(--color-brand);
+    border-top-color: var(--color-text);
   }
-  .pv-work.is-fx .pv-way {
-    width: min(86vw, 980px);
-    flex: none;
-    justify-content: center;
-    gap: 18px;
-    padding: 80px var(--pv-gutter);
+  .pv-way--3 {
+    background: var(--color-text);
+    color: var(--color-bg);
+    border-color: var(--color-text);
+    border-top-color: var(--color-brand);
   }
-  .pv-work.is-fx .pv-way h3 { font-size: clamp(44px, 8vw, 120px); }
-  .pv-work.is-fx .pv-way p { font-size: clamp(17px, 1.8vw, 22px); }
-  .pv-work.is-fx .pv-way ul { font-size: 16px; gap: 6px; }
+  .pv-way--2 .pv-way-n,
+  .pv-way--3 .pv-way-n,
+  .pv-way--2 p,
+  .pv-way--3 p { color: inherit; }
+  .pv-way--2 li::before { background: currentColor; }
+  .pv-way--2 .pv-way-cta {
+    background: var(--color-bg);
+    color: var(--color-brand-dark);
+  }
+
+  @media (max-width: 860px) {
+    .pv-ways { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  /* A real pointer on a wide screen: the whole card is the link. */
+  @media (hover: hover) and (min-width: 861px) {
+    .pv-way-cta::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
+    .pv-way { cursor: pointer; }
+  }
+  /* …and under it the card comes forward. */
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .pv-way {
+      transition:
+        transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+        box-shadow 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .pv-way:hover {
+      transform: translateY(-8px) scale(1.04);
+      box-shadow: 0 46px 80px -30px color-mix(in srgb, var(--color-text) 38%, transparent);
+      z-index: 1;
+    }
+  }
 </style>

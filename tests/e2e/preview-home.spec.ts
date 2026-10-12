@@ -2014,6 +2014,7 @@ async function expectT5Words(page: import('@playwright/test').Page, w: (typeof T
   const sec = t5Section(page);
   await expect(sec.getByText(w.eyebrow, { exact: true })).toBeVisible();
   await expect(sec.getByRole('heading', { level: 2, name: w.phrase, exact: true })).toBeVisible();
+  await expect(sec.locator('h2')).toHaveText(w.phrase);
   const ways = sec.locator('.pv-way');
   await expect(ways).toHaveCount(3);
   for (const [i, way] of w.ways.entries()) {
@@ -2025,95 +2026,127 @@ async function expectT5Words(page: import('@playwright/test').Page, w: (typeof T
   }
 }
 
-/** Written in full, stacked, nothing pinned, nothing moved, nothing sideways. */
-async function expectT5Calm(page: import('@playwright/test').Page) {
-  const m = await page.evaluate(() => {
+/** T5's layout, measured: cards, their colours, links, and anything that holds the scroll. */
+async function t5Layout(page: import('@playwright/test').Page) {
+  return page.evaluate(() => {
     const sec = document.querySelector('#work')!;
-    const done = sec.querySelector('[data-pv-typed] .pv-done')!.textContent;
-    const ways = [...sec.querySelectorAll('.pv-way')].map((e) => e.getBoundingClientRect());
+    const cs = (e: Element) => getComputedStyle(e);
+    const root = cs(document.documentElement);
+    const tok = (n: string) => { const d = document.createElement('i'); d.style.color = root.getPropertyValue(n); document.body.append(d); const c = cs(d).color; d.remove(); return c; };
+    const ways = [...sec.querySelectorAll<HTMLElement>('.pv-way')];
+    const r = ways.map((w) => w.getBoundingClientRect());
+    const ctas = [...sec.querySelectorAll<HTMLAnchorElement>('.pv-way-cta')];
+    const eyebrow = sec.querySelector('.pv-eyebrow')!.getBoundingClientRect();
     return {
-      fx: sec.classList.contains('is-fx'),
-      pinned: sec.querySelectorAll('.pin-spacer').length,
-      track: getComputedStyle(sec.querySelector('[data-pv-hz]')!).transform,
-      written: done === sec.querySelector('[data-pv-typed]')!.getAttribute('aria-label'),
-      stacked: ways.every((r, i) => i === 0 || (r.top >= ways[i - 1].bottom - 0.5 && Math.abs(r.left - ways[0].left) < 1)),
-      heights: ways.map((r) => Math.round(r.height)),
+      ink: tok('--color-text'), red: tok('--color-brand'), grey: tok('--color-surface'), white: tok('--color-bg'),
+      colors: ways.map((w) => ({ bg: cs(w).backgroundColor, fg: cs(w).color, top: cs(w).borderTopColor })),
+      ctaColors: ctas.map((a) => ({ bg: cs(a).backgroundColor, fg: cs(a).color })),
+      heights: r.map((x) => x.height),
+      ctaTops: ctas.map((a) => a.getBoundingClientRect().top),
+      side: r.every((x) => Math.abs(x.top - r[0].top) < 1),
+      stacked: r.every((x, i) => i === 0 || (x.top >= r[i - 1].bottom - 0.5 && Math.abs(x.left - r[0].left) < 1)),
+      content: r[0].bottom - eyebrow.top,
+      links: ctas.map((a) => ({ href: a.getAttribute('href'), way: a.dataset.way })),
+      linkCount: sec.querySelectorAll('a').length,
+      pinned: document.querySelectorAll('.pin-spacer').length,
+      moved: ways.filter((w) => cs(w).transform !== 'none').length,
       sideways: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      typedLeft: sec.querySelectorAll('[data-pv-typed], .pv-caret, .pv-rest').length,
     };
   });
-  expect(m.fx, 'no effects class').toBe(false);
-  expect(m.pinned, 'nothing pinned').toBe(0);
-  expect(m.track, 'the ways do not move sideways').toBe('none');
-  expect(m.written, 'the phrase is written in full').toBe(true);
-  expect(m.stacked, 'the three ways are stacked').toBe(true);
-  expect(m.sideways, 'no sideways page scroll').toBeLessThanOrEqual(0);
-  return m;
 }
 
-test.describe('T5 · how we work (card ccd9b760)', () => {
+/** What holds everywhere: no pin, no sideways, every link to #contact with its way, one link per card, the phrase solid. */
+function expectT5Common(m: Awaited<ReturnType<typeof t5Layout>>) {
+  expect(m.pinned, 'nothing pinned').toBe(0);
+  expect(m.sideways, 'no sideways page scroll').toBeLessThanOrEqual(0);
+  expect(m.typedLeft, 'no typing pieces: the phrase is solid').toBe(0);
+  expect(m.links).toEqual([{ href: '#contact', way: 'hours' }, { href: '#contact', way: 'project' }, { href: '#contact', way: 'stack' }]);
+  expect(m.linkCount, 'one link per card').toBe(3);
+}
+
+test.describe('T5 · how we work, compact (cards ccd9b760 + f0b32a34)', () => {
   for (const lang of ['en', 'es'] as const) {
     const w = T5[lang];
+    const cta = lang === 'en' ? 'Talk to us' : 'Hablemos';
     test.describe(lang, () => {
       test.describe('without JavaScript', () => {
         test.use({ javaScriptEnabled: false });
-        test(`${w.route}: T5 reads in full, hours → project → stack, written and stacked`, async ({ page }) => {
+        test(`${w.route}: T5 reads in full, hours → project → stack, each with «${cta}»`, async ({ page }) => {
+          await page.setViewportSize({ width: 1440, height: 900 });
           await page.goto(w.route);
           await expectT5Words(page, w);
-          await expectT5Calm(page);
+          for (const i of [0, 1, 2]) await expect(t5Section(page).locator('.pv-way').nth(i).getByRole('link', { name: cta, exact: true })).toBeVisible();
+          expectT5Common(await t5Layout(page));
         });
       });
 
-      test(`${w.route} 375, motion allowed: nothing holds the scroll, the ways are compact cards, two to a screen`, async ({ page }) => {
-        await page.setViewportSize({ width: 375, height: 812 });
+      test(`${w.route} 1440: one screen, three equal cards in AGLAYA's scheme, buttons level, nothing held`, async ({ page }) => {
+        await page.setViewportSize({ width: 1440, height: 900 });
         await page.goto(w.route);
         await page.waitForFunction(() => !document.documentElement.classList.contains('pv-fx-wait'));
         await t5Section(page).scrollIntoViewIfNeeded();
-        await page.mouse.wheel(0, 600);
-        await page.waitForTimeout(500);
+        await page.mouse.wheel(0, 400);
+        await page.waitForTimeout(400);
         await expectT5Words(page, w);
-        const m = await expectT5Calm(page);
-        for (const h of m.heights) expect(h, 'a compact card').toBeLessThanOrEqual(320);
-        expect(m.heights[0] + m.heights[1], 'about two to a screen').toBeLessThanOrEqual(812);
+        const m = await t5Layout(page);
+        expectT5Common(m);
+        expect(m.side, 'three columns').toBe(true);
+        expect(m.content, 'the phrase and the cards fit one 900px screen').toBeLessThanOrEqual(900);
+        expect(Math.max(...m.heights) - Math.min(...m.heights), 'the same height').toBeLessThanOrEqual(1);
+        expect(Math.max(...m.ctaTops) - Math.min(...m.ctaTops), 'buttons level').toBeLessThanOrEqual(1);
+        expect(m.colors).toEqual([
+          { bg: m.grey, fg: m.ink, top: m.ink },
+          { bg: m.red, fg: m.white, top: m.ink },
+          { bg: m.ink, fg: m.white, top: m.red },
+        ]);
+        expect(m.ctaColors).toEqual([{ bg: m.red, fg: m.white }, { bg: m.white, fg: expect.any(String) }, { bg: m.red, fg: m.white }]);
+        expect(m.ctaColors[1].fg, 'red text on the white button').not.toBe(m.white);
       });
 
-      test(`${w.route} 1440, reduced motion: written, stacked, still`, async ({ page }) => {
+      test(`${w.route} 1440: a click in the middle of a card goes to #contact, and the card comes forward under the pointer`, async ({ page }) => {
+        await page.setViewportSize({ width: 1440, height: 900 });
+        await page.goto(w.route);
+        const card = t5Section(page).locator('.pv-way').nth(1);
+        await card.scrollIntoViewIfNeeded();
+        const box = (await card.boundingBox())!;
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height * 0.3);
+        await page.waitForTimeout(500);
+        const t = await card.evaluate((e) => new DOMMatrixReadOnly(getComputedStyle(e).transform));
+        expect(t.a, 'about 4% larger').toBeCloseTo(1.04, 2);
+        expect(t.f, 'about 8px up').toBeCloseTo(-8, 0);
+        await page.mouse.click(box.x + box.width / 2, box.y + box.height * 0.3);
+        await expect(page).toHaveURL(/#contact$/);
+      });
+
+      test(`${w.route} 1440, reduced motion: the card does not move under the pointer`, async ({ page }) => {
         await page.setViewportSize({ width: 1440, height: 900 });
         await page.emulateMedia({ reducedMotion: 'reduce' });
         await page.goto(w.route);
-        await expectT5Words(page, w);
-        await expectT5Calm(page);
+        const card = t5Section(page).locator('.pv-way').nth(0);
+        await card.scrollIntoViewIfNeeded();
+        const box = (await card.boundingBox())!;
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+        await page.waitForTimeout(500);
+        expect((await t5Layout(page)).moved).toBe(0);
       });
 
-      test(`${w.route} 1440, with motion: the phrase is typed with the scroll on a pinned stage, then the ways pass sideways`, async ({ page }) => {
-        await page.setViewportSize({ width: 1440, height: 900 });
+      test(`${w.route} 375: stacked, only the button is a link, nothing moves, nothing sideways`, async ({ page }) => {
+        await page.setViewportSize({ width: 375, height: 812 });
         await page.goto(w.route);
-        await page.waitForFunction(() => !document.documentElement.classList.contains('pv-fx-wait'));
-        await expect(t5Section(page)).toHaveClass(/is-fx/);
-        // Measure where T5 starts only once the faces are in and the triggers re-measured.
-        await page.evaluate(() => document.fonts.ready);
-        await page.waitForTimeout(500);
-        // Still named in full while its pieces are typed.
-        await expect(t5Section(page).getByRole('heading', { level: 2, name: w.phrase, exact: true })).toBeVisible();
-        const top = await t5Section(page).evaluate((s) => s.getBoundingClientRect().top + window.scrollY);
-        const at = async (dy: number) => {
-          // The site scrolls smoothly (CSS); jump instead, then let the scrub settle.
-          await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }), top + dy);
-          await page.waitForTimeout(500);
-          return page.evaluate(() => ({
-            typed: document.querySelector('[data-pv-typed] .pv-done')!.textContent!.length,
-            stage: Math.round(document.querySelector('[data-pv-type-stage]')!.getBoundingClientRect().top),
-            x: new DOMMatrixReadOnly(getComputedStyle(document.querySelector('[data-pv-hz]')!).transform).m41,
-          }));
-        };
-        const a = await at(200);
-        const b = await at(800);
-        const c = await at(1400);
-        expect(a.typed, 'typing has started').toBeGreaterThan(0);
-        expect(b.typed, 'more typed further down').toBeGreaterThan(a.typed);
-        expect(c.typed, 'all typed').toBe(w.phrase.length);
-        expect(Math.abs(a.stage) + Math.abs(b.stage), 'the stage stays pinned at the top').toBeLessThanOrEqual(2);
-        const d = await at(1440 * 1.6 + 900 + 600);
-        expect(d.x, 'the ways move sideways').toBeLessThan(-100);
+        const card = t5Section(page).locator('.pv-way').nth(1);
+        await card.scrollIntoViewIfNeeded();
+        await expectT5Words(page, w);
+        const m = await t5Layout(page);
+        expectT5Common(m);
+        expect(m.stacked, 'stacked').toBe(true);
+        expect(m.moved, 'nothing moved').toBe(0);
+        // A tap on the card's text is not a tap on the link.
+        await card.locator('p').click();
+        await page.waitForTimeout(300);
+        expect(page.url()).not.toMatch(/#contact$/);
+        await card.getByRole('link').click();
+        await expect(page).toHaveURL(/#contact$/);
       });
 
       test(`${w.route}: passes axe WCAG 2 AA on T5, reduced motion`, async ({ page }) => {
