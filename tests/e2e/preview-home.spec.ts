@@ -1979,3 +1979,149 @@ test.describe('T4 · the Orchestrator (card 8d7af9ae)', () => {
     });
   }
 });
+
+/* =====================================================================
+ * T5 · how we work (card ccd9b760, 2026-10-12), both previews. Words copied
+ * from the card. Wide screen with motion: typed with the scroll, pinned, then
+ * sideways. Phone, no JS, reduced motion: written, stacked, nothing held.
+ * ===================================================================== */
+
+const T5 = {
+  en: {
+    route: ROUTE,
+    eyebrow: 'How we work with you',
+    phrase: 'You decide how much of us you need. Start small, stay as long as it helps, leave whenever you want.',
+    ways: [
+      { n: 'Way one', title: 'A few hours', text: 'AI work by the hour, for whatever comes up, big or small.', items: ['AI-assisted development', 'AI-assisted marketing', 'Creative work with generative AI'] },
+      { n: 'Way two', title: 'One project', text: 'A specific system, built and handed over. Yours from day one.', items: ['A sales assistant fed by your own data', 'A website that sells and loads fast', 'An automation that ends a weekly chore'] },
+      { n: 'Way three', title: 'A whole stack', text: 'We lead AI across your company, from the first system to the whole stack, until your team runs it alone.', items: ['Where AI pays off first, measured in your numbers', 'One system per department, all working together', 'Your people trained to keep it running'] },
+    ],
+  },
+  es: {
+    route: ES_ROUTE,
+    eyebrow: 'Cómo trabajamos contigo',
+    phrase: 'Tú decides cuánto de nosotros necesitas. Empieza poco a poco, quédate mientras te sirva y vete cuando quieras.',
+    ways: [
+      { n: 'Opción uno', title: 'Unas horas', text: 'Trabajo con IA por horas, para lo que surja, grande o pequeño.', items: ['Desarrollo asistido por IA', 'Marketing asistido por IA', 'Creatividad con IA generativa'] },
+      { n: 'Opción dos', title: 'Un proyecto', text: 'Un sistema concreto, construido y entregado. Tuyo desde el primer día.', items: ['Un asistente comercial alimentado con tus propios datos', 'Una web que vende y carga rápido', 'Una automatización que acaba con una tarea semanal'] },
+      { n: 'Opción tres', title: 'Un stack completo', text: 'Llevamos la IA a toda tu empresa, del primer sistema al stack completo, hasta que tu equipo la maneje solo.', items: ['Dónde rinde antes la IA, medido en tus números', 'Un sistema por departamento, todos trabajando juntos', 'Tu gente formada para mantenerlo en marcha'] },
+    ],
+  },
+};
+const t5Section = (page: import('@playwright/test').Page) => page.locator('main#main-content section#work');
+
+async function expectT5Words(page: import('@playwright/test').Page, w: (typeof T5)['en']) {
+  const sec = t5Section(page);
+  await expect(sec.getByText(w.eyebrow, { exact: true })).toBeVisible();
+  await expect(sec.getByRole('heading', { level: 2, name: w.phrase, exact: true })).toBeVisible();
+  const ways = sec.locator('.pv-way');
+  await expect(ways).toHaveCount(3);
+  for (const [i, way] of w.ways.entries()) {
+    const card = ways.nth(i);
+    await expect(card.locator('.pv-way-n')).toHaveText(way.n);
+    await expect(card.getByRole('heading', { level: 3, name: way.title, exact: true })).toBeVisible();
+    await expect(card.getByText(way.text, { exact: true })).toBeVisible();
+    expect((await card.locator('li').allTextContents()).map((x) => x.trim())).toEqual(way.items);
+  }
+}
+
+/** Written in full, stacked, nothing pinned, nothing moved, nothing sideways. */
+async function expectT5Calm(page: import('@playwright/test').Page) {
+  const m = await page.evaluate(() => {
+    const sec = document.querySelector('#work')!;
+    const done = sec.querySelector('[data-pv-typed] .pv-done')!.textContent;
+    const ways = [...sec.querySelectorAll('.pv-way')].map((e) => e.getBoundingClientRect());
+    return {
+      fx: sec.classList.contains('is-fx'),
+      pinned: sec.querySelectorAll('.pin-spacer').length,
+      track: getComputedStyle(sec.querySelector('[data-pv-hz]')!).transform,
+      written: done === sec.querySelector('[data-pv-typed]')!.getAttribute('aria-label'),
+      stacked: ways.every((r, i) => i === 0 || (r.top >= ways[i - 1].bottom - 0.5 && Math.abs(r.left - ways[0].left) < 1)),
+      heights: ways.map((r) => Math.round(r.height)),
+      sideways: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    };
+  });
+  expect(m.fx, 'no effects class').toBe(false);
+  expect(m.pinned, 'nothing pinned').toBe(0);
+  expect(m.track, 'the ways do not move sideways').toBe('none');
+  expect(m.written, 'the phrase is written in full').toBe(true);
+  expect(m.stacked, 'the three ways are stacked').toBe(true);
+  expect(m.sideways, 'no sideways page scroll').toBeLessThanOrEqual(0);
+  return m;
+}
+
+test.describe('T5 · how we work (card ccd9b760)', () => {
+  for (const lang of ['en', 'es'] as const) {
+    const w = T5[lang];
+    test.describe(lang, () => {
+      test.describe('without JavaScript', () => {
+        test.use({ javaScriptEnabled: false });
+        test(`${w.route}: T5 reads in full, hours → project → stack, written and stacked`, async ({ page }) => {
+          await page.goto(w.route);
+          await expectT5Words(page, w);
+          await expectT5Calm(page);
+        });
+      });
+
+      test(`${w.route} 375, motion allowed: nothing holds the scroll, the ways are compact cards, two to a screen`, async ({ page }) => {
+        await page.setViewportSize({ width: 375, height: 812 });
+        await page.goto(w.route);
+        await page.waitForFunction(() => !document.documentElement.classList.contains('pv-fx-wait'));
+        await t5Section(page).scrollIntoViewIfNeeded();
+        await page.mouse.wheel(0, 600);
+        await page.waitForTimeout(500);
+        await expectT5Words(page, w);
+        const m = await expectT5Calm(page);
+        for (const h of m.heights) expect(h, 'a compact card').toBeLessThanOrEqual(320);
+        expect(m.heights[0] + m.heights[1], 'about two to a screen').toBeLessThanOrEqual(812);
+      });
+
+      test(`${w.route} 1440, reduced motion: written, stacked, still`, async ({ page }) => {
+        await page.setViewportSize({ width: 1440, height: 900 });
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await page.goto(w.route);
+        await expectT5Words(page, w);
+        await expectT5Calm(page);
+      });
+
+      test(`${w.route} 1440, with motion: the phrase is typed with the scroll on a pinned stage, then the ways pass sideways`, async ({ page }) => {
+        await page.setViewportSize({ width: 1440, height: 900 });
+        await page.goto(w.route);
+        await page.waitForFunction(() => !document.documentElement.classList.contains('pv-fx-wait'));
+        await expect(t5Section(page)).toHaveClass(/is-fx/);
+        // Measure where T5 starts only once the faces are in and the triggers re-measured.
+        await page.evaluate(() => document.fonts.ready);
+        await page.waitForTimeout(500);
+        // Still named in full while its pieces are typed.
+        await expect(t5Section(page).getByRole('heading', { level: 2, name: w.phrase, exact: true })).toBeVisible();
+        const top = await t5Section(page).evaluate((s) => s.getBoundingClientRect().top + window.scrollY);
+        const at = async (dy: number) => {
+          // The site scrolls smoothly (CSS); jump instead, then let the scrub settle.
+          await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }), top + dy);
+          await page.waitForTimeout(500);
+          return page.evaluate(() => ({
+            typed: document.querySelector('[data-pv-typed] .pv-done')!.textContent!.length,
+            stage: Math.round(document.querySelector('[data-pv-type-stage]')!.getBoundingClientRect().top),
+            x: new DOMMatrixReadOnly(getComputedStyle(document.querySelector('[data-pv-hz]')!).transform).m41,
+          }));
+        };
+        const a = await at(200);
+        const b = await at(800);
+        const c = await at(1400);
+        expect(a.typed, 'typing has started').toBeGreaterThan(0);
+        expect(b.typed, 'more typed further down').toBeGreaterThan(a.typed);
+        expect(c.typed, 'all typed').toBe(w.phrase.length);
+        expect(Math.abs(a.stage) + Math.abs(b.stage), 'the stage stays pinned at the top').toBeLessThanOrEqual(2);
+        const d = await at(1440 * 1.6 + 900 + 600);
+        expect(d.x, 'the ways move sideways').toBeLessThan(-100);
+      });
+
+      test(`${w.route}: passes axe WCAG 2 AA on T5, reduced motion`, async ({ page }) => {
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await page.goto(w.route);
+        const results = await new AxeBuilder({ page }).include('#work').withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
+        expect(results.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target).join(', ')}`)).toEqual([]);
+      });
+    });
+  }
+});

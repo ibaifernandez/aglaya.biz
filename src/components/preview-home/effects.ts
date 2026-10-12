@@ -16,7 +16,7 @@
  * BaseLayout mounts ClientRouter, so this (re)starts on `astro:page-load` and
  * tears everything down on `astro:before-swap`.
  *
- * T1, T3, T4's words and the header's button move here (T4's drawing is
+ * T1, T3, T4's words, T5 and the header's button move here (T4's drawing is
  * ./orchestrator-stage.ts). T2 needs no GSAP: its selector and
  * its motion are ./story-selector.ts and the chunks it loads. Lenis smooth
  * scrolling from the mock-up is page-wide and no tramo built so far needs it,
@@ -117,6 +117,43 @@ async function start() {
         // screen (T5 and T6 are still empty); then the end is the page's end, so
         // every word gets lit.
         scrollTrigger: { trigger: '.pv-lit', start: 'clamp(top 80%)', end: 'clamp(bottom 45%)', scrub: true },
+      });
+    }
+
+    // T5 · only on a wide screen: the phrase is typed with the scroll while its
+    // stage is pinned, then the three ways pass sideways (mock-up «Texto que se
+    // escribe» + «Horizontal»). Under 860px nothing is pinned (card ccd9b760).
+    const work = document.querySelector<HTMLElement>('[data-pv-work]');
+    if (work && window.matchMedia('(min-width: 860px)').matches) {
+      const typed = work.querySelector<HTMLElement>('[data-pv-typed]')!;
+      const full = typed.getAttribute('aria-label') ?? '';
+      const done = typed.querySelector<HTMLElement>('.pv-done')!;
+      const rest = typed.querySelector<HTMLElement>('.pv-rest')!;
+      const render = (p: number) => {
+        const n = Math.round(full.length * p);
+        done.textContent = full.slice(0, n);
+        rest.textContent = full.slice(n);
+      };
+      work.classList.add('is-fx');
+      render(0);
+      ScrollTrigger.create({
+        trigger: work.querySelector('[data-pv-type-stage]'),
+        start: 'top top',
+        end: '+=160%',
+        pin: true,
+        scrub: true,
+        onUpdate: (st) => render(Math.min(1, st.progress * 1.12)),
+      });
+      const track = work.querySelector<HTMLElement>('[data-pv-hz]')!;
+      const dist = () => Math.max(0, track.scrollWidth - window.innerWidth);
+      gsap.to(track, {
+        x: () => -dist(),
+        ease: 'none',
+        scrollTrigger: { trigger: track, start: 'top top', end: () => `+=${dist()}`, pin: true, scrub: 1, invalidateOnRefresh: true },
+      });
+      listeners.push(() => {
+        work.classList.remove('is-fx');
+        render(1); // back to the ground floor: the phrase written
       });
     }
 
