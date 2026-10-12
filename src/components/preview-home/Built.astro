@@ -7,7 +7,8 @@
  * of short ones; the three rows of pairs are the same height.
  *
  * The motion is ./effects.ts: each pair of cards moves with the scroll at its
- * row's speed (`data-pv-row`) and «CAPABILITIES» slides across the back. No 3D:
+ * row's speed (`data-pv-row`). No word across the back since 2026-10-12 (card
+ * 8d7af9ae, Ibai: «no aporta nada»), and no 3D:
  * the sketch's tilt and depth went on 2026-10-07 (card e726ee8c, Ibai: «ni luce
  * ni informa»). All of it animates FROM states it sets itself; if it never
  * runs, nothing here is left out of place.
@@ -31,7 +32,6 @@ const cards = [
 ---
 
 <section class="pv-section pv-built" id="built" data-tramo="T3">
-  <div class="pv-depth-word" aria-hidden="true">{built.depthWord} · {built.depthWord}</div>
   <div class="pv-wrap">
     <div class="pv-eyebrow pv-mono">{built.eyebrow}</div>
     <h2 class="pv-sec-h">{built.title} <em>{built.titleEm}</em></h2>
@@ -75,20 +75,6 @@ const cards = [
     overflow: hidden;
     padding-block: 100px 140px;
     background: var(--color-surface);
-  }
-  .pv-depth-word {
-    position: absolute;
-    top: 150px;
-    left: 0;
-    white-space: nowrap;
-    font-family: var(--font-display);
-    font-weight: 900;
-    font-size: clamp(90px, 17vw, 240px);
-    line-height: 1;
-    color: transparent;
-    -webkit-text-stroke: 1px color-mix(in srgb, var(--color-text) 12%, transparent);
-    pointer-events: none;
-    user-select: none;
   }
   .pv-built .pv-wrap { position: relative; }
   .pv-built-lede {
