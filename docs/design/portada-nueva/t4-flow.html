@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T4 · Orchestrator — maqueta del dibujo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap">
+<style>
+:root{--night:#000;--night-ink:#fcfcfc;--night-muted:rgba(252,252,252,.7);--brand:#e8003d;--green:#9fc243;
+  --f-display:"Outfit","Arial Black",system-ui,sans-serif;--f-body:"Inter",system-ui,sans-serif;--f-mono:"Space Mono",ui-monospace,monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--night);color:var(--night-ink);font:16px/1.6 var(--f-body);-webkit-font-smoothing:antialiased}
+.note{background:#fff;color:#0a0a0a;font:12px/1.5 var(--f-mono);padding:14px clamp(16px,4vw,56px)}
+.note b{color:#b5002f}
+.wrap{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,56px)}
+.grid{display:grid;grid-template-columns:1fr 1.1fr;gap:24px;align-items:center;min-height:min(96vh,860px);padding-block:90px 60px}
+.eyebrow{display:flex;align-items:center;gap:10px;color:var(--green);font:11px var(--f-mono);letter-spacing:.22em;text-transform:uppercase}
+.eyebrow::before{content:"";width:28px;height:2px;background:var(--brand)}
+h2{font-family:var(--f-display);font-weight:900;text-transform:uppercase;letter-spacing:-.02em;line-height:.92;margin:16px 0 0;font-size:clamp(42px,6vw,88px)}
+h2 span{color:var(--brand)}
+.lit{font-family:var(--f-display);font-weight:700;font-size:clamp(22px,2.4vw,32px);line-height:1.2;max-width:30ch;margin-top:24px}
+.stage{width:100%;aspect-ratio:1;max-width:640px;justify-self:center}
+canvas{display:block;width:100%;height:100%}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="note"><b>MAQUETA · T4 · DIBUJO DEL ORCHESTRATOR (en lugar de la bola 3D)</b> — Una tarea en forma de tarjeta pasa de mano en mano: un agente la escribe, otro la construye, otro la revisa, otro la audita y una persona la comprueba. Cada paso queda escrito en la tarjeta. Si la revisión falla, vuelve atrás. Al aprobarse, el mapa vivo del centro se actualiza. Texto de la izquierda: el de la maqueta original, sin tocar.</div>
+<section>
+  <div class="wrap grid">
+    <div>
+      <div class="eyebrow">The difference</div>
+      <h2>The <span>Orchestrator</span></h2>
+      <p class="lit">A team of AI agents that works with rules, audits and control. Each one knows its job, nobody steps on anybody, and every failure has an owner. That's why what we deliver arrives tested, documented and ready to hand over. Anyone can use AI. We run a team.</p>
+    </div>
+    <div class="stage"><canvas id="cv" width="1000" height="1000" role="img" aria-label="A task card goes round the team: an agent writes it, another builds it, another reviews it, another audits it and a person checks it. Every step is written on the card; if the review fails, it goes back. Once approved, the live map in the middle is updated."></canvas></div>
+  </div>
+</section>
+<script>
+(function(){
+  var cv=document.getElementById('cv'),ctx=cv.getContext('2d'),S=2;
+  var INK='#fcfcfc',RED='#e8003d',GREEN='#9fc243',MONO='"Space Mono", monospace',DISP='Outfit, sans-serif';
+  var CALM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Cinco manos en un pentágono (lienzo lógico 500×500)
+  var CX=250,CY=262,R=182;
+  var DEF=[{k:'SPEC',who:'AGENT',log:'spec written'},{k:'BUILD',who:'AGENT',log:'built + tested'},{k:'REVIEW',who:'AGENT',log:'reviewed: ok'},{k:'AUDIT',who:'AGENT',log:'audited'},{k:'CHECK',who:'PERSON',log:'checked by a person'}];
+  var ST=DEF.map(function(d,i){var a=-Math.PI/2+i*2*Math.PI/5;return {k:d.k,who:d.who,log:d.log,x:CX+R*Math.cos(a),y:CY+R*Math.sin(a)};});
+  var MOVE=0.8,DWELL=1.0;
+  var TASKS=[{n:12,fail:false},{n:13,fail:true},{n:14,fail:false}];
+  var steps=[],t=0;
+  TASKS.forEach(function(task,ti){
+    var seq=task.fail?[0,1,2,'fix',1,2,3,4]:[0,1,2,3,4],prev=null;
+    seq.forEach(function(s){
+      if(s==='fix'){steps.push({ti:ti,type:'fix',t0:t,t1:t+DWELL});t+=DWELL;return;}
+      steps.push({ti:ti,type:'move',from:prev,to:s,t0:t,t1:t+MOVE});t+=MOVE;
+      steps.push({ti:ti,type:'dwell',at:s,t0:t,t1:t+DWELL});t+=DWELL;prev=s;});
+    steps.push({ti:ti,type:'ship',t0:t,t1:t+0.9});t+=1.1;});
+  var PERIOD=t+0.8;
+  function cl(v){return v<0?0:v>1?1:v;}function ease(v){return v<.5?2*v*v:1-Math.pow(-2*v+2,2)/2;}function lerp(a,b,f){return a+(b-a)*f;}
+  function cardPos(i){return {x:lerp(ST[i].x,CX,0.42),y:lerp(ST[i].y,CY,0.42)};} // la tarjeta, junto a su estación, hacia dentro
+  function state(T){
+    var r={card:null,active:-1,log:[],done:0,back:0,fix:false,ti:-1,ship:0},cur=-1,log=[];
+    for(var i=0;i<steps.length;i++){var s=steps[i];
+      if(s.ti!==cur){cur=s.ti;log=[];}
+      if(T<s.t0)break;
+      var f=cl((T-s.t0)/(s.t1-s.t0));r.ti=s.ti;
+      if(s.type==='move'){var A=s.from===null?{x:CX,y:-50}:cardPos(s.from),B=cardPos(s.to),e=ease(f);r.card={x:lerp(A.x,B.x,e),y:lerp(A.y,B.y,e)};r.active=-1;r.fix=false;}
+      if(s.type==='dwell'){r.card=cardPos(s.at);r.active=s.at;if(f>=0.5&&log[log.length-1]!==ST[s.at].log)log.push(ST[s.at].log);}
+      if(s.type==='fix'){r.card=cardPos(2);r.active=2;r.fix=true;log[log.length-1]='reviewed: fix it';}
+      if(s.type==='ship'){var e2=ease(f),P=cardPos(4);r.card={x:lerp(P.x,CX,e2),y:lerp(P.y,CY,e2),scale:1-0.7*e2,fade:1-cl((f-0.6)/0.4)};r.active=-1;r.ship=f;}
+      r.log=log.slice();}
+    steps.forEach(function(s){if(s.type==='ship'&&T>=s.t1)r.done++;if(s.type==='fix'&&T>=s.t0+0.4)r.back++;});
+    return r;}
+  function draw(T){
+    ctx.setTransform(S,0,0,S,0,0);ctx.fillStyle='#000';ctx.fillRect(0,0,500,500);
+    var st=state(T);
+    ctx.strokeStyle='rgba(252,252,252,.14)';ctx.lineWidth=1;ctx.setLineDash([3,4]);ctx.beginPath();ST.forEach(function(s,i){i?ctx.lineTo(s.x,s.y):ctx.moveTo(s.x,s.y);});ctx.closePath();ctx.stroke();ctx.setLineDash([]);
+    // mapa vivo
+    var MS=22;ctx.font='700 7px '+MONO;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(252,252,252,.55)';ctx.fillText('LIVE MAP',CX,CY-44);
+    for(var g=0;g<9;g++){var gx=CX+((g%3)-1)*(MS+5),gy=CY+(Math.floor(g/3)-1)*(MS+5)+6,hot=st.ship>0.7&&g>=st.done*3&&g<st.done*3+3;
+      ctx.fillStyle=hot?RED:(g<st.done*3?'rgba(252,252,252,.85)':'rgba(252,252,252,.08)');ctx.fillRect(gx-MS/2,gy-MS/2,MS,MS);}
+    // estaciones
+    ST.forEach(function(s,i){var on=st.active===i,w=100,h=42,fx=on&&st.fix;
+      ctx.fillStyle=on&&!fx?RED:'#000';ctx.fillRect(s.x-w/2,s.y-h/2,w,h);
+      ctx.strokeStyle=on?RED:'rgba(252,252,252,.5)';ctx.lineWidth=1.4;ctx.strokeRect(s.x-w/2,s.y-h/2,w,h);
+      ctx.fillStyle=fx?RED:INK;ctx.font='900 14px '+DISP;ctx.fillText(fx?'FIX IT':s.k,s.x,s.y-5);
+      ctx.font='700 7px '+MONO;ctx.fillStyle=on&&!fx?'#fff':(s.who==='PERSON'?GREEN:'rgba(252,252,252,.55)');ctx.fillText(s.who,s.x,s.y+11);});
+    // tarjeta
+    if(st.card){var c=st.card,sc=c.scale||1,fa=c.fade==null?1:c.fade,cw=104,ch=64;
+      ctx.save();ctx.globalAlpha=fa;ctx.translate(c.x,c.y);ctx.scale(sc,sc);
+      ctx.fillStyle='#fff';ctx.fillRect(-cw/2,-ch/2,cw,ch);ctx.fillStyle=RED;ctx.fillRect(-cw/2,-ch/2,3,ch);
+      ctx.fillStyle='#0a0a0a';ctx.textAlign='left';ctx.font='700 7.5px '+MONO;ctx.fillText('TASK #'+TASKS[st.ti].n,-cw/2+8,-ch/2+10);
+      ctx.font='400 6.5px '+MONO;st.log.slice(-4).forEach(function(l,k){ctx.fillStyle=l.indexOf('fix')>=0?RED:'rgba(10,10,10,.7)';ctx.fillText('✓ '+l,-cw/2+8,-ch/2+23+k*10);});
+      ctx.restore();ctx.textAlign='center';}
+    ctx.font='700 8px '+MONO;ctx.textBaseline='alphabetic';ctx.textAlign='left';ctx.fillStyle='rgba(252,252,252,.6)';ctx.fillText('TASKS DONE  '+('0'+st.done).slice(-2),20,22);
+    ctx.textAlign='right';ctx.fillStyle=st.back?RED:'rgba(252,252,252,.6)';ctx.fillText('SENT BACK  '+('0'+st.back).slice(-2),480,22);
+    ctx.textAlign='center';ctx.textBaseline='middle';}
+  window.__draw=draw;window.__PERIOD=PERIOD;
+  if(CALM){draw(PERIOD-0.81);return;}
+  var start=performance.now();
+  function loop(now){draw(((now-start)/1000)%PERIOD);requestAnimationFrame(loop);}
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

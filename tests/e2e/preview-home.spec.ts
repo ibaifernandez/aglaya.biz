@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { geometry as orchGeometry } from '../../src/components/preview-home/story-orchestrator';
 
 /**
  * THE HIDDEN PREVIEW OF THE NEW HOME PAGE (`/preview/home/`).
@@ -50,6 +51,7 @@ const TETRIS_MOCKUP = fileURLToPath(new URL('../../docs/design/portada-nueva/t2-
 const HEATMAP_MOCKUP = fileURLToPath(new URL('../../docs/design/portada-nueva/t2-anim2-heatmap.html', import.meta.url));
 const PLUGS_MOCKUP = fileURLToPath(new URL('../../docs/design/portada-nueva/t2-anim3-plugs.html', import.meta.url));
 const T3_MOCKUP = fileURLToPath(new URL('../../docs/design/portada-nueva/t3-grid.html', import.meta.url));
+const T4_MOCKUP = fileURLToPath(new URL('../../docs/design/portada-nueva/t4-flow.html', import.meta.url));
 
 /** The grill of 2026-10-06, word for word from card 82868b81 (decisions 3, 6–8, 11–14 of minutes b7d39088). */
 const GRILL = {
@@ -1297,7 +1299,9 @@ test.describe('new home page preview', () => {
     test('T3 is complete and visible, word for word from the sketch', async ({ page }) => {
       await page.goto(ROUTE);
       await expectBuiltComplete(page);
-      await expect(builtSection(page).locator('.pv-depth-word')).toContainText(t3.depthWord.trim());
+      // The sketch's word across the back went on 2026-10-12 (card 8d7af9ae).
+      await expect(builtSection(page).getByText(t3.depthWord.trim())).toHaveCount(0);
+      await expect(builtSection(page).locator('.pv-depth-word')).toHaveCount(0);
     });
   });
 
@@ -1580,7 +1584,8 @@ test.describe('new home page preview, in Spanish', () => {
       await expect(t3s.getByText(ES.built.eyebrow, { exact: true })).toBeVisible();
       await expect(t3s.getByRole('heading', { level: 2, name: ES.built.title })).toBeVisible();
       await expect(t3s.getByText(ES.built.lede, { exact: true })).toBeVisible();
-      await expect(t3s.locator('.pv-depth-word')).toContainText(ES.built.depthWord);
+      await expect(t3s.getByText(ES.built.depthWord)).toHaveCount(0);
+      await expect(t3s.locator('.pv-depth-word')).toHaveCount(0);
       const cards = t3s.locator('[data-pv-row]');
       await expect(cards).toHaveCount(ES.built.cards.length);
       for (const [i, c] of ES.built.cards.entries()) {
@@ -1778,6 +1783,199 @@ test.describe('T3 finish (card e726ee8c)', () => {
       await page.waitForTimeout(600);
       expect(await y(), 'the rows still move with the scroll').not.toBe(a);
       expectT3Finish(await t3Finish(page), `${route} motion`);
+    });
+  }
+});
+
+/* =====================================================================
+ * T4 · the Orchestrator (card 8d7af9ae, 2026-10-12), both previews.
+ *
+ * The section's words are Ibai's decisions and the delineante's Spanish,
+ * copied from the card. The drawing's English words are read off the sketch
+ * t4-flow.html; its Spanish ones are the card's.
+ * ===================================================================== */
+
+/** The sketch's drawing words: stations and who mans them, the card's notes, the map, the counters. */
+export function mockupT4(html: string) {
+  const def = [...(/var DEF=\[([\s\S]*?)\];/.exec(html)?.[1] ?? '').matchAll(/\{k:'([^']+)',who:'([^']+)',log:'([^']+)'\}/g)];
+  return {
+    stations: def.map((m) => m[1]),
+    who: def.map((m) => m[2]),
+    log: def.map((m) => m[3]),
+    fixIt: /'FIX IT'/.test(html) ? 'FIX IT' : '',
+    map: /fillText\('([^']+)',CX,CY-44\)/.exec(html)?.[1] ?? '',
+    done: /fillText\('([^']+)  '\+\('0'\+st\.done\)/.exec(html)?.[1] ?? '',
+    back: /fillText\('([^']+)  '\+\('0'\+st\.back\)/.exec(html)?.[1] ?? '',
+  };
+}
+const t4 = mockupT4(readFileSync(T4_MOCKUP, 'utf8'));
+
+const T4 = {
+  en: {
+    route: ROUTE,
+    eyebrow: 'The difference',
+    title: 'The Orchestrator',
+    red: 'Orchestrator',
+    lit: "Every task is written down before it is built. Then it is reviewed by an agent that didn't build it, audited by another agent, and checked by a person. When something fails, you know where and why. What we hand over arrives tested and documented.",
+    litRed: 'a person',
+    more: 'See how it works',
+    label: 'A task card goes round the team: an agent writes it, another builds it, another reviews it, another audits it and a person checks it. Every step is written on the card; if the review fails, it goes back. Once checked, the live map in the middle is updated.',
+    stations: t4.stations,
+    agent: t4.who[0],
+    person: t4.who[4],
+    map: t4.map,
+    counters: [`${t4.done}  03`, `${t4.back}  01`],
+  },
+  es: {
+    route: ES_ROUTE,
+    eyebrow: 'La diferencia',
+    title: 'El Orchestrator',
+    red: 'Orchestrator',
+    lit: 'Cada tarea se escribe antes de construirse. Después la revisa un agente que no la ha construido, la audita otro agente y la comprueba una persona. Cuando algo falla, sabes dónde y por qué. Lo que entregamos llega probado y documentado.',
+    litRed: 'una persona',
+    more: 'Mira cómo funciona',
+    label: 'Una tarjeta de tarea da la vuelta al equipo: un agente la escribe, otro la construye, otro la revisa, otro la audita y una persona la comprueba. Cada paso queda escrito en la tarjeta; si la revisión falla, vuelve atrás. Una vez comprobada, el mapa vivo del centro se actualiza.',
+    stations: ['ENCARGO', 'CONSTRUYE', 'REVISA', 'AUDITA', 'COMPRUEBA'],
+    agent: 'AGENTE',
+    person: 'PERSONA',
+    map: 'MAPA VIVO',
+    counters: ['TAREAS HECHAS  03', 'DEVUELTAS  01'],
+  },
+};
+
+const t4Section = (page: import('@playwright/test').Page) => page.locator('main#main-content section#orchestrator');
+
+/** T4 reads in full and lit: eyebrow, heading with its red word, paragraph with its red ending, the link that is not one. */
+async function expectT4Words(page: import('@playwright/test').Page, w: (typeof T4)['en']) {
+  const sec = t4Section(page);
+  await expect(sec.getByText(w.eyebrow, { exact: true })).toBeVisible();
+  await expect(sec.getByRole('heading', { level: 2, name: w.title })).toBeVisible();
+  await expect(sec.locator('h2 span')).toHaveText(w.red);
+  const lit = sec.locator('.pv-lit');
+  await expect(lit).toHaveText(w.lit);
+  expect((await lit.locator('.is-r').allTextContents()).join(' ')).toBe(w.litRed);
+  await expect(sec.getByText(w.more)).toBeVisible();
+  await expect(sec.getByRole('link')).toHaveCount(0);
+  // The heading's one long word fits its column: nothing of it is cut.
+  const cut = await sec.locator('h2').evaluate((h) => h.scrollWidth - h.clientWidth);
+  expect(cut, 'the heading fits its column').toBeLessThanOrEqual(1);
+}
+
+/** The stage holds the still frame: the five stations and who mans them, the whole map lit, three done, one sent back, no card. */
+async function expectT4Still(page: import('@playwright/test').Page, w: (typeof T4)['en']) {
+  const host = t4Section(page).locator('[data-pv-orch-stage]');
+  await expect(host).toHaveAccessibleName(w.label);
+  await expect(host.locator('svg[data-pv-orch-still]')).toHaveCount(1);
+  await expect(host.locator('canvas')).toHaveCount(0);
+  const words = (await host.locator('svg text').allTextContents()).map((x) => x.trim());
+  for (const s of w.stations) expect(words, `station ${s}`).toContain(s);
+  expect(words.filter((x) => x === w.agent), `four ${w.agent}`).toHaveLength(4);
+  expect(words.filter((x) => x === w.person), `one ${w.person}`).toHaveLength(1);
+  for (const x of [w.map, ...w.counters]) expect(words).toContain(x);
+  expect(words.some((x) => /#\d+$/.test(x)), 'no task card on the still frame').toBe(false);
+  // The whole map lit: nine cells in the night's strong ink.
+  const lit = await host.locator('svg rect').evaluateAll((rs) => rs.filter((r) => /color-mix\(in srgb, var\(--color-bg\) 85%/.test(r.getAttribute('style') ?? '')).length);
+  expect(lit, 'the nine cells of the map, lit').toBe(9);
+  const box = await host.boundingBox();
+  expect(Math.abs(box!.width - box!.height), 'the stage is square').toBeLessThanOrEqual(1);
+}
+
+test.describe('T4 · the Orchestrator (card 8d7af9ae)', () => {
+  test('the sketch reader is not blind', () => {
+    expect(t4.stations).toEqual(['SPEC', 'BUILD', 'REVIEW', 'AUDIT', 'CHECK']);
+    expect(t4.who).toEqual(['AGENT', 'AGENT', 'AGENT', 'AGENT', 'PERSON']);
+    expect(t4.log).toHaveLength(5);
+    expect([t4.fixIt, t4.map, t4.done, t4.back]).toEqual(['FIX IT', 'LIVE MAP', 'TASKS DONE', 'SENT BACK']);
+  });
+
+  // Not the module's own MAP_GAP: a guard that reads its threshold from the code
+  // it guards agrees with any change to it. 16px, as set on card 8d7af9ae's build;
+  // the sketch's placement left 10.
+  const ROOM = 16;
+  test(`the card never touches the live map: ≥ ${ROOM}px beside every station (Ibai)`, () => {
+    const { map, cards } = orchGeometry();
+    expect(cards).toHaveLength(5);
+    for (const [i, c] of cards.entries()) {
+      const room = Math.max(map.left - c.right, c.left - map.right, map.top - c.bottom, c.top - map.bottom);
+      expect(room, `beside ${t4.stations[i]}`).toBeGreaterThanOrEqual(ROOM);
+    }
+  });
+
+  for (const lang of ['en', 'es'] as const) {
+    const w = T4[lang];
+    test.describe(`${lang}`, () => {
+      test.describe('without JavaScript', () => {
+        test.use({ javaScriptEnabled: false });
+        test(`${w.route}: T4 reads in full, lit, and stands still`, async ({ page }) => {
+          await page.goto(w.route);
+          await expectT4Words(page, w);
+          await expectT4Still(page, w);
+          for (const op of await t4Section(page).locator('.pv-w').evaluateAll((ws) => ws.map((x) => getComputedStyle(x).opacity))) expect(op).toBe('1');
+        });
+      });
+
+      for (const [vw, vh, motion] of [[1440, 900, 'reduce'], [375, 812, 'no-preference']] as const) {
+        test(`${w.route} ${vw} (${motion}): the still frame, never the drawing's code, and nothing sideways`, async ({ page }) => {
+          await page.setViewportSize({ width: vw, height: vh });
+          await page.emulateMedia({ reducedMotion: motion });
+          const scripts = scriptRequests(page);
+          await page.goto(w.route);
+          await page.waitForLoadState('networkidle');
+          await t4Section(page).scrollIntoViewIfNeeded();
+          await page.waitForTimeout(500);
+          await expectT4Still(page, w);
+          expect(scripts.filter((u) => /\/_astro\/story-orchestrator\./.test(u)), 'drawing not downloaded').toEqual([]);
+          expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
+          if (motion === 'reduce') {
+            await expectT4Words(page, w);
+            for (const op of await t4Section(page).locator('.pv-w').evaluateAll((ws) => ws.map((x) => getComputedStyle(x).opacity))) expect(op).toBe('1');
+          }
+        });
+      }
+
+      test(`${w.route} 1440: with motion, the drawing loops on a canvas in its language while on screen, and stops off screen`, async ({ page }) => {
+        await page.setViewportSize({ width: 1440, height: 900 });
+        await page.goto(w.route);
+        const host = t4Section(page).locator('[data-pv-orch-stage]');
+        await host.scrollIntoViewIfNeeded();
+        const cv = host.locator('canvas[data-pv-orch]');
+        await expect(cv).toHaveCount(1, { timeout: 10_000 });
+        await expect(cv).toHaveAttribute('data-pv-lang', lang);
+        await expect(host).toHaveAccessibleName(w.label);
+        const hash = () => cv.evaluate((c: HTMLCanvasElement) => { const d = c.getContext('2d')!.getImageData(0, 0, c.width, c.height).data; let h = 0; for (let i = 0; i < d.length; i += 97) h = (h * 31 + d[i]) | 0; return h; });
+        const a = await hash();
+        await page.waitForTimeout(1200);
+        expect(await hash(), 'it moves while on screen').not.toBe(a);
+        await page.evaluate(() => window.scrollTo(0, 0));
+        await page.waitForTimeout(400);
+        const b = await hash();
+        await page.waitForTimeout(1200);
+        expect(await hash(), 'it stands still off screen').toBe(b);
+      });
+
+      test(`${w.route} 1440: with motion, the paragraph's words light up with the scroll`, async ({ page }) => {
+        await page.setViewportSize({ width: 1440, height: 900 });
+        await page.goto(w.route);
+        await page.waitForFunction(() => !document.documentElement.classList.contains('pv-fx-wait'));
+        const top = await t4Section(page).evaluate((s) => s.getBoundingClientRect().top + window.scrollY);
+        await page.evaluate((y) => window.scrollTo(0, y - 820), top);
+        await page.waitForTimeout(500);
+        const ops = async () => (await t4Section(page).locator('.pv-w').evaluateAll((ws) => ws.map((x) => +getComputedStyle(x).opacity)));
+        const early = await ops();
+        expect(Math.min(...early), 'dim before it is read').toBeLessThan(0.5);
+        // Past the end of the scrub: the paragraph's bottom above 45% of the screen.
+        await page.evaluate(() => { const r = document.querySelector('.pv-lit')!.getBoundingClientRect(); window.scrollBy(0, r.bottom - innerHeight * 0.3); });
+        await page.waitForTimeout(600);
+        expect(Math.min(...(await ops())), 'lit once read').toBeGreaterThan(0.95);
+        await expectT4Words(page, w);
+      });
+
+      test(`${w.route}: passes axe WCAG 2 AA with T4, reduced motion`, async ({ page }) => {
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await page.goto(w.route);
+        const results = await new AxeBuilder({ page }).include('#orchestrator').withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
+        expect(results.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target).join(', ')}`)).toEqual([]);
+      });
     });
   }
 });

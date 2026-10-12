@@ -8,7 +8,7 @@
  * declare. The current home page is untouched.
  *
  * Reference: docs/design/portada-nueva/portada-aglaya.html. Built tramo by
- * tramo; T1, T2 and T3 are filled. Everything it uses lives in this folder —
+ * tramo; T1 to T4 are filled. Everything it uses lives in this folder —
  * dropping the preview means deleting it and the two route files.
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -16,6 +16,7 @@ import PreviewHeader from './PreviewHeader.astro';
 import Hook from './Hook.astro';
 import Problem from './Problem.astro';
 import Built from './Built.astro';
+import Orchestrator from './Orchestrator.astro';
 import PreviewFooter from './PreviewFooter.astro';
 import { copyFor, type Lang } from './copy';
 import './preview-home.css';
@@ -40,7 +41,7 @@ const { meta } = copyFor(lang);
       <!-- T3 · what we've built -->
       <Built lang={lang} />
       <!-- T4 · the Orchestrator -->
-      <section class="pv-section" id="orchestrator" data-tramo="T4"></section>
+      <Orchestrator lang={lang} />
       <!-- T5 · how we work -->
       <section class="pv-section" id="work" data-tramo="T5"></section>
       <!-- T6 · let's talk -->
@@ -53,4 +54,5 @@ const { meta } = copyFor(lang);
 <script>
   import './effects';
   import './story-selector';
+  import './orchestrator-stage';
 </script>

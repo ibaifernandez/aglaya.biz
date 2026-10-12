@@ -171,7 +171,6 @@ export const built = {
   title: 'Built for us.',
   titleEm: 'Yours next.',
   lede: 'Every system we built to run AGLAYA, told as what it would do for your company.',
-  depthWord: 'CAPABILITIES',
   more: 'See how it works',
   oursPrefix: 'Ours',
   wide: {
@@ -238,7 +237,22 @@ type Widen<T> = T extends string
         ? { readonly [K in keyof T]: Widen<T[K]> }
         : T;
 
-const en = { meta, nav, hook, footer, problem, built };
+/**
+ * T4 · the Orchestrator — the grill of 2026-10-12 (card 8d7af9ae, decisions
+ * 2–7). The paragraph's `**…**` is its red ending; its words light up with the
+ * scroll. The drawing's words live with the drawing (./story-orchestrator.ts).
+ */
+export const orch = {
+  eyebrow: 'The difference',
+  title: 'The',
+  titleEm: 'Orchestrator',
+  lit: 'Every task is written down before it is built. Then it is reviewed by an agent that didn\'t build it, audited by another agent, and checked by **a person**. When something fails, you know where and why. What we hand over arrives tested and documented.',
+  more: 'See how it works',
+  label:
+    'A task card goes round the team: an agent writes it, another builds it, another reviews it, another audits it and a person checks it. Every step is written on the card; if the review fails, it goes back. Once checked, the live map in the middle is updated.',
+} as const;
+
+const en = { meta, nav, hook, footer, problem, built, orch };
 export type Copy = Widen<typeof en>;
 export type Lang = 'en' | 'es';
 

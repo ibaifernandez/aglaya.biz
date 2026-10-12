@@ -1,0 +1,99 @@
+---
+/**
+ * T4 · the Orchestrator — the mock-up's section (`section.orch.night`, two
+ * columns, words on the left, drawing on the right) with the drawing of the
+ * sketch `docs/design/portada-nueva/t4-flow.html` instead of the 3D ball
+ * (card 8d7af9ae).
+ *
+ * Ground floor: every word served and lit, and the drawing's still frame (SVG,
+ * drawn by the same code as its canvas). Above it:
+ *   ./effects.ts            the paragraph's words light up with the scroll;
+ *   ./orchestrator-stage.ts the drawing loops on a <canvas> while on screen,
+ *                           on a wide screen with motion allowed.
+ *
+ * The section is night: its paper is `--color-text` and its ink `--color-bg`
+ * (the canon has no night tokens in light mode).
+ */
+import { copyFor, rich, type Lang } from './copy';
+import { orchestratorFinalMarkup } from './story-orchestrator';
+
+const { lang = 'en' } = Astro.props as { lang?: Lang };
+const { orch } = copyFor(lang);
+/* Word by word, so the scroll can light them one at a time; the `**…**` words are the red ending. */
+const words = rich(orch.lit).flatMap((p) => p.text.split(/(\s+)/).filter(Boolean).map((w) => ({ w, red: !!p.strong })));
+---
+
+<section class="pv-section pv-orch" id="orchestrator" data-tramo="T4">
+  <div class="pv-wrap pv-orch-grid">
+    <div class="pv-orch-text">
+      <div class="pv-eyebrow pv-mono">{orch.eyebrow}</div>
+      <h2 class="pv-orch-h">{orch.title} <span>{orch.titleEm}</span></h2>
+      <p class="pv-lit">{words.map(({ w, red }) => (/^\s+$/.test(w) ? w : <span class:list={['pv-w', { 'is-r': red }]}>{w}</span>))}</p>
+      <span class="pv-orch-more">{orch.more} <span aria-hidden="true">→</span></span>
+    </div>
+    <div class="pv-orch-stage" role="img" aria-label={orch.label} data-pv-orch-stage set:html={orchestratorFinalMarkup(lang)}></div>
+  </div>
+</section>
+
+<style>
+  .pv-orch {
+    overflow: hidden;
+    background: var(--color-text);
+    color: var(--color-bg);
+  }
+  .pv-orch-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: 24px;
+    align-items: center;
+    min-height: min(96vh, 860px);
+    padding-block: 90px 60px;
+  }
+  /* The night's eyebrow: green words, red rule (mock-up `.night .eyebrow`). */
+  .pv-orch .pv-eyebrow { color: var(--pv-green); }
+  .pv-orch .pv-eyebrow::before { background: var(--color-brand); }
+  /* «ORCHESTRATOR» is one word of ≈7.8em: at the mock-up's 88px it is wider than
+     its column and was cut. Sized by the column (12.5% of it), up to 88px. */
+  .pv-orch-text { min-width: 0; container-type: inline-size; }
+  .pv-orch-h {
+    font-size: min(88px, 12.5cqi);
+    margin-top: 16px;
+  }
+  .pv-orch-h span { color: var(--color-brand); }
+  .pv-lit {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(22px, 2.4vw, 32px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    max-width: 30ch;
+    margin-top: 24px;
+  }
+  .pv-lit .is-r { color: var(--color-brand); }
+  /* «See how it works», as on the T3 cards (not a link yet), in the night's ink. */
+  .pv-orch-more {
+    display: inline-block;
+    margin-top: 32px;
+    font: 700 11px/1 var(--font-mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--color-brand);
+    padding-bottom: 4px;
+  }
+  .pv-orch-stage {
+    width: 100%;
+    aspect-ratio: 1;
+    max-width: 640px;
+    justify-self: center;
+  }
+  .pv-orch-stage :global(svg),
+  .pv-orch-stage :global(canvas) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: 860px) {
+    .pv-orch-grid { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+  }
+</style>

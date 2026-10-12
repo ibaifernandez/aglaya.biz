@@ -89,12 +89,20 @@ export const es: Copy = {
       },
     ],
   },
+  orch: {
+    eyebrow: 'La diferencia',
+    title: 'El',
+    titleEm: 'Orchestrator',
+    lit: 'Cada tarea se escribe antes de construirse. Después la revisa un agente que no la ha construido, la audita otro agente y la comprueba **una persona**. Cuando algo falla, sabes dónde y por qué. Lo que entregamos llega probado y documentado.',
+    more: 'Mira cómo funciona',
+    label:
+      'Una tarjeta de tarea da la vuelta al equipo: un agente la escribe, otro la construye, otro la revisa, otro la audita y una persona la comprueba. Cada paso queda escrito en la tarjeta; si la revisión falla, vuelve atrás. Una vez comprobada, el mapa vivo del centro se actualiza.',
+  },
   built: {
     eyebrow: 'Lo que hemos construido',
     title: 'Hecho para nosotros.',
     titleEm: 'El siguiente, el tuyo.',
     lede: 'Cada sistema que construimos para hacer funcionar AGLAYA, contado como lo que haría por tu empresa.',
-    depthWord: 'CAPACIDADES',
     more: 'Mira cómo funciona',
     oursPrefix: 'Nuestro',
     wide: {

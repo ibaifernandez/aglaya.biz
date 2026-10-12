@@ -16,7 +16,8 @@
  * BaseLayout mounts ClientRouter, so this (re)starts on `astro:page-load` and
  * tears everything down on `astro:before-swap`.
  *
- * T1, T3 and the header's button move here. T2 needs no GSAP: its selector and
+ * T1, T3, T4's words and the header's button move here (T4's drawing is
+ * ./orchestrator-stage.ts). T2 needs no GSAP: its selector and
  * its motion are ./story-selector.ts and the chunks it loads. Lenis smooth
  * scrolling from the mock-up is page-wide and no tramo built so far needs it,
  * so it is not loaded.
@@ -89,11 +90,10 @@ async function start() {
       });
     }
 
-    // T3 · each pair of cards moves with the scroll at its row's speed, and
-    // «CAPABILITIES» slides across the back — values from t3-grid.html.
+    // T3 · each pair of cards moves with the scroll at its row's speed — values
+    // from t3-grid.html.
     const cards = document.querySelector<HTMLElement>('[data-pv-cards]');
-    const built = document.querySelector<HTMLElement>('.pv-built');
-    if (cards && built) {
+    if (cards) {
       ROW_SPEED.forEach((s, row) => {
         const els = cards.querySelectorAll(`[data-pv-row="${row}"]`);
         if (!els.length) return;
@@ -103,10 +103,20 @@ async function start() {
           scrollTrigger: { trigger: cards, start: 'top bottom', end: 'bottom top', scrub: true },
         });
       });
-      gsap.fromTo('.pv-depth-word', { xPercent: 0 }, {
-        xPercent: -35,
+    }
+
+    // T4 · the paragraph's words light up one by one with the scroll (mock-up
+    // `#litText`). Served lit: this dims them first, then scrubs them back.
+    const lit = document.querySelectorAll('.pv-lit .pv-w');
+    if (lit.length) {
+      gsap.fromTo(lit, { opacity: 0.15 }, {
+        opacity: 1,
+        stagger: 0.1,
         ease: 'none',
-        scrollTrigger: { trigger: built, start: 'top bottom', end: 'bottom top', scrub: true },
+        // clamp(): the page may end before the paragraph's bottom reaches 45% of the
+        // screen (T5 and T6 are still empty); then the end is the page's end, so
+        // every word gets lit.
+        scrollTrigger: { trigger: '.pv-lit', start: 'clamp(top 80%)', end: 'clamp(bottom 45%)', scrub: true },
       });
     }
 
