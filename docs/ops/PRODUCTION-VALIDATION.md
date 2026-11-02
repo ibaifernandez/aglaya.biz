@@ -42,7 +42,7 @@ The current production implementation is expected to behave as follows:
   - `service_interest = roi_audit`
 - Resend sends immediate user-facing confirmation emails for contact and dispatch flows.
 - MailerLite groups are used for dispatch plus tier-based contact segmentation when configured.
-- Sentry captures browser runtime, Astro SSR, and Netlify Function failures when DSN configuration is present.
+- Sentry captures browser runtime and Netlify Function failures when DSN configuration is present.
 
 ## Resolved Production Blockers
 

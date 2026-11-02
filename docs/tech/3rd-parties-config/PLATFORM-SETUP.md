@@ -168,7 +168,7 @@ SENTRY_PROJECT = <your-sentry-project-slug>
 ### Paso 4 — Confirmar archivos de integración
 El setup actual usa:
 
-- `astro.config.mjs` → integración oficial `@sentry/astro` para SSR
+- `astro.config.mjs` → integración oficial `@sentry/astro` (solo en compilación: salida estática, sin servidor)
 - `sentry.server.config.js` → init server-side
 - `src/components/SentryBrowser.astro` → browser-side init bundleado por Astro
 - `netlify/functions/_sentry.ts` → captura de excepciones en Functions

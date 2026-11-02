@@ -53,7 +53,7 @@ Configured in **Site settings → Environment variables**
 | `MAILERLITE_API_KEY` | All | MailerLite API authentication |
 | `MAILERLITE_SUSCRIPCIONES_GROUP_ID` | All | Footer dispatch subscription group |
 | `PUBLIC_SENTRY_DSN` | All | Public browser DSN and shared runtime fallback |
-| `SENTRY_DSN` | All | Optional server-only DSN override for Astro SSR and Netlify Functions |
+| `SENTRY_DSN` | All | Optional server-only DSN override for Netlify Functions |
 | `SENTRY_AUTH_TOKEN` | Build | Optional source-map upload token |
 | `SENTRY_ORG` | Build | Sentry org slug for source-map uploads |
 | `SENTRY_PROJECT` | Build | Sentry project slug for source-map uploads |
@@ -123,10 +123,10 @@ Configured in **Site settings → Environment variables**
 ### 🐞 Sentry (Error Tracking)
 - **Status:** ✅ Active when DSN is configured.
 - **Browser runtime:** `src/components/SentryBrowser.astro`
-- **Astro SSR:** `@sentry/astro` integration in `astro.config.mjs`
+- **Astro build:** `@sentry/astro` integration in `astro.config.mjs` (no server at runtime: static output, no adapter)
 - **Netlify Functions:** `netlify/functions/_sentry.ts`
 - **Source maps:** optional; require `SENTRY_AUTH_TOKEN` + `SENTRY_ORG` + `SENTRY_PROJECT`
-- **Privacy:** `sendDefaultPii: false` across browser, SSR, and functions
+- **Privacy:** `sendDefaultPii: false` across browser and functions
 
 **Recommended alerts** (Sentry → Project Settings → Alerts):
 

@@ -68,7 +68,7 @@ Si el pipeline falla, **el Deploy en Netlify se bloquea automáticamente** (vía
 ---
 
 ## 📐 Integration Philosophy
-- **Framework:** Astro 6.x (SSR Mode).
+- **Framework:** Astro 6.x (salida estática, sin adaptador).
 - **Styling:** Tailwind v4.
 - **Security:** hCaptcha obligatorio en todos los puntos de entrada de datos.
 - **Accessibility:** Ningún despliegue permitido con violaciones WCAG 2AA.

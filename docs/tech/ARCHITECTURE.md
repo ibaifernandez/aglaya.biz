@@ -136,7 +136,7 @@ BaseLayout.astro
 ## Observability Model
 
 - **Browser**: `SentryBrowser.astro`
-- **SSR**: `@sentry/astro` server integration
+- **Astro server**: none at runtime — static output, no adapter; `@sentry/astro` stays in the config but only runs at build time
 - **Functions**: `netlify/functions/_sentry.ts`
 - **Analytics**: GTM gated behind cookie consent
 - **Health monitoring**: UptimeRobot monitors public routes

@@ -1,7 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
-import netlify from '@astrojs/netlify';
 import sitemap from '@astrojs/sitemap';
 import sentry from '@sentry/astro';
 import tailwindcss from '@tailwindcss/vite';
@@ -16,9 +15,13 @@ const hasSentrySourceMaps = Boolean(
 );
 
 // https://astro.build/config
+// No adapter, on purpose. Every page is prerendered and the forms use
+// netlify/functions/, so nothing needs Astro's server. The Netlify adapter would
+// deploy a catch-all `ssr` function that only ever answers scanners' 404s, and
+// each one counts against the account's function limit. Guarded by
+// tests/unit/no-ssr-function.test.ts.
 export default defineConfig({
   site: SITE,
-  adapter: netlify(),
   integrations: [
     sitemap({
       // Every entry carries its own language equivalents. Without this the map
