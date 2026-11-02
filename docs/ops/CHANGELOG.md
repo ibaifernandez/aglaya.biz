@@ -22,6 +22,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Changed — 2026-11-02
+
+- **El sitio deja de desplegar la función `ssr`.** `adapter: netlify()` obligaba a Astro a salida de servidor aunque todas las páginas estén prerrenderizadas, y el adaptador publicaba una función en `/*` que atendía cada ruta inexistente. Medido el 2026-11-02 en una hora: 90 de 90 invocaciones fueron 404, 83 de ellas de dos IP de escáneres, ninguna sirvió contenido. Sin adaptador, Netlify sirve `dist/404.html` sin ejecutar nada y con el mismo cuerpo.
+  - Se pierde la protección contra versiones desfasadas (`?dpl=`, `X-Netlify-Deploy-ID`).
+  - `netlify/functions/` (contacto, cotizador, Dispatch) no cambia.
+  - Guardado por `tests/unit/no-ssr-function.test.ts`.
+
 ### Changed — 2026-09-20
 
 - **El código deja de escribir a cuatro grupos de MailerLite borrados.** El 2026-09-01 el operador eliminó `[AGLAYA.biz] Cualificados`, `No cualificados`, `Borderline` y `Cotizaciones` (cero suscriptores; automations apagadas desde mayo-2026). Comprobado en vivo contra la cuenta el 2026-09-20: de los grupos de esta nave sólo sobreviven `Dispatch` y `Contacto`. El código seguía apuntando a los IDs muertos, así que cada alta devolvía 404 — capturado en Sentry (`stage=mailerlite-sync`) sin que el visitante lo notara.

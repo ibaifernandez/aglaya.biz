@@ -132,7 +132,7 @@ That file controls:
 |---|---|---|
 | Netlify | ibaifernandez (Legacy Free) | Proyecto `aglaya` activo |
 | ~~Netlify AGLAYA~~ | ~~AGLAYA team~~ | ~~Eliminar — créditos agotados~~ |
-| Sentry | Managed in dashboard | Observability project for browser + SSR/runtime errors |
+| Sentry | Managed in dashboard | Observability project for browser + Netlify Function errors |
 | Resend | info@aglaya.biz | 3.000 emails/mes gratis |
 | hCaptcha | ibaifernandez | Bot protection (reemplaza Turnstile) |
 | Cloudflare | ibaifernandez | DNS (proxy) |

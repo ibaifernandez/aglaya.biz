@@ -4,12 +4,12 @@
 **AGLAYA** ("The Uncomfortable Agency") — bilingual (EN/ES) digital marketing agency website built with Astro, deployed on Netlify.
 
 ## Tech Stack
-- **Framework**: Astro 6.x (SSR via Netlify adapter)
+- **Framework**: Astro 6.x (static output, no adapter, no SSR function)
 - **Styling**: Tailwind CSS v4 (design tokens in `src/styles/global.css`)
 - **Serverless**: Netlify Functions (`netlify/functions/`)
 - **Email**: Resend API
 - **Bot Protection**: hCaptcha
-- **Error Tracking**: Sentry (browser + Astro SSR + Netlify Functions when DSN is configured)
+- **Error Tracking**: Sentry (browser + Netlify Functions when DSN is configured)
 - **Monitoring**: UptimeRobot
 - **Testing**: Vitest (unit) + Playwright (E2E) + Axe-core (a11y)
 
@@ -73,7 +73,7 @@ docs/                # Project documentation
 | `HCAPTCHA_SECRET` | Server | hCaptcha secret key |
 | `PUBLIC_HCAPTCHA_SITE_KEY` | Client | hCaptcha site key (fallback hardcoded in ContactForm) |
 | `PUBLIC_SENTRY_DSN` | Client | Sentry DSN shared with browser runtime and as server fallback |
-| `SENTRY_DSN` | Server | Optional server-only DSN override for Astro SSR and Netlify Functions |
+| `SENTRY_DSN` | Server | Optional server-only DSN override for Netlify Functions |
 | `SENTRY_AUTH_TOKEN` | Build | Optional source-map upload token |
 | `SENTRY_ORG` | Build | Optional Sentry org slug for source-map upload |
 | `SENTRY_PROJECT` | Build | Optional Sentry project slug for source-map upload |
@@ -138,7 +138,7 @@ The cost was not the broken command. It was that the suite appeared unrunnable l
 A hand-written version in a document ages on its own and keeps sounding authoritative after it stops being true. `engines` is checked by the package manager; this line was checked by nobody.
 
 ## Do NOT
-- Modify `astro.config.mjs` without understanding the Netlify adapter implications.
+- Add an adapter to `astro.config.mjs` or a `prerender = false` route: it deploys a catch-all function that counts against the account's limit (`tests/unit/no-ssr-function.test.ts`).
 - Use `React`, `Vue`, or other UI frameworks — this is a pure Astro project.
 - Hardcode strings — use the i18n system.
 - Skip accessibility testing when modifying UI components.

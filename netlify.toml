@@ -21,11 +21,10 @@
 
 # Portuguese is no longer published (2026-09-24): the site is EN + ES. ONE rule
 # sends every old /pt/ address to its Spanish twin; no per-page rules. Listed
-# first so no later rule can claim a /pt/ path. `force = true` because the
-# Astro Netlify adapter serves unmatched paths through its SSR function, and a
-# non-forced rule is only a fallback — the function could answer (with a 404)
-# before the redirect is consulted. With src/pages/pt/ gone there is no static
-# file for it to shadow, so forcing costs nothing. A translated slug keeps its
+# first so no later rule can claim a /pt/ path. `force = true` is a leftover
+# from when the Astro adapter's SSR function could answer before a non-forced
+# rule; that function is gone, but with src/pages/pt/ gone too there is no static
+# file for it to shadow, so forcing still costs nothing. A translated slug keeps its
 # Portuguese spelling (/pt/privacidade/ -> /es/privacidade/); that miss was
 # accepted as a 404, and the /es/privacidade/ rule below happens to rescue it.
 # Guarded by tests/unit/no-portuguese.test.ts.
