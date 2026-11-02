@@ -24,8 +24,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ### Changed — 2026-11-02
 
-- **El sitio deja de desplegar la función `ssr`.** `adapter: netlify()` obligaba a Astro a salida de servidor aunque todas las páginas estén prerrenderizadas, y el adaptador publicaba una función en `/*` que atendía cada ruta inexistente. Medido el 2026-11-02 en una hora: 90 de 90 invocaciones fueron 404, 83 de ellas de dos IP de escáneres, ninguna sirvió contenido. Sin adaptador, Netlify sirve `dist/404.html` sin ejecutar nada y con el mismo cuerpo.
-  - Se pierde la protección contra versiones desfasadas (`?dpl=`, `X-Netlify-Deploy-ID`).
+- **El sitio deja de desplegar la función `ssr`.** `adapter: netlify()` obligaba a Astro a salida de servidor aunque todas las páginas estén prerrenderizadas, y el adaptador publicaba una función en `/*` que atendía cada ruta inexistente. Medido el 2026-11-02 en una hora: 90 de 90 invocaciones fueron 404, 83 de ellas de dos IP de escáneres, ninguna sirvió contenido. Sin adaptador, Netlify sirve `dist/404.html` sin ejecutar nada y con el mismo contenido. Comprobado en Deploy Preview, donde ese 404 gana además las cabeceras de `public/_headers`, CSP incluida.
+  - Se pierden la protección contra versiones desfasadas (`?dpl=`, `X-Netlify-Deploy-ID`) y la etiqueta `sentry-route-name` del middleware de `@sentry/astro`.
   - `netlify/functions/` (contacto, cotizador, Dispatch) no cambia.
   - Guardado por `tests/unit/no-ssr-function.test.ts`.
 
